@@ -70,7 +70,7 @@ path.write_text(
 )
 ```
 
-4. Cada wheel publicado tem identidade imutável. Para outra release, incremente a versão do pacote em `pyproject.toml`, `PROVIDER_VERSION` no provider e `VERSION` no promotor; ajuste o smoke CI que confere a versão, regenere `uv.lock` e siga o README. Não reutilize o nome de uma release já distribuída para bytes diferentes.
+4. Cada wheel publicado tem identidade imutável. Para outra release, incremente a versão do pacote em `pyproject.toml`, `__version__` em `src/mcp_loki_updates/__init__.py`, `PROVIDER_VERSION` no provider e `VERSION` no promotor; ajuste o smoke CI que confere a versão, regenere `uv.lock` e siga o README. Não reutilize o nome de uma release já distribuída para bytes diferentes.
 5. Confira `git status` e as diferenças; prepare no índice somente as fontes revisadas. O teste `test_instruction_snapshot_from_git_index_is_valid` carrega os bytes que o Git realmente entregará e detecta diferenças de hashes após normalização. Execute testes, lint, tipos e smoke antes da promoção. Não edite o índice para fazer um snapshot inválido parecer aceito.
 
 ## Adicionar domínio e evoluir ferramentas
@@ -88,7 +88,7 @@ Testes de contrato não demonstram que o ChatGPT descobriu uma tool nova. Para c
 3. Depois do sync sem editable descrito no README, rode `uv run --no-sync python scripts/promote.py --wheel CAMINHO_DO_WHEEL --loki-path CAMINHO_DO_CHECKOUT_LOKI`. O script exige destino explícito, valida allowlist/ZIP, identidade, versão e RECORD, compara os membros do pacote com o fonte corrente e valida somente os dados extraídos com o provider confiável. Não importa nem executa código do wheel.
 4. Revise `vendor/mcp_loki_updates-0.1.0-py3-none-any.whl` e o JSON `.provenance.json`. Ele registra SHA256, hashes por membro, HEAD/tree quando existentes e dirty explícito. HEAD/tree nulos significam repo ainda sem commit. Hash e proveniência local não equivalem a assinatura de release.
 5. No Loki, fixe a dependência local em `tool.uv.sources` e nos extras `mcp-updates` e `dev`; regenere `uv.lock` com uv e revise lock, integração e regressões do host. O script não altera esses arquivos. Wheel e provenance existentes com bytes diferentes são recusados; suba a versão para outra release.
-6. Prepare a revisão/PR conforme as regras dos dois repos. Commit, push, publicação remota e implantação dependem do escopo autorizado. Esta entrega encerra na preparação local.
+6. Prepare a revisão/PR conforme as regras dos dois repos. Commit, push, publicação remota e implantação dependem do escopo autorizado. A publicação posterior desta integração está registrada em [HOMOLOGATION.md](HOMOLOGATION.md); autorização de publicação de branch não autoriza merge ou deploy em produção.
 
 O pipeline CI executa sync congelado, pytest, ruff, mypy, build e smoke do wheel instalado em venv separado. O artefato do workflow facilita revisão; não publica no registry e não implanta. Os scripts de assinatura e launchers desktop permanecem nos seus projetos de origem.
 
@@ -98,7 +98,7 @@ O array de comandos do Nixpacks conserva `...` antes do sync adicional: isso man
 
 A dependência não entra na instalação base: o exportador do kit desktop assinado lê somente as dependências base e continua gerando requisitos com hashes sem referência ao wheel local. Sem conector habilitado, stdio e `/healthz` funcionam sem importar o provider. Com `CONNECTOR_ENABLED=true`, sua ausência ou snapshot inicial inválido impede iniciar a candidata.
 
-O repositório local foi inicializado e ainda não tem remoto GitHub ou commit de release. Para publicar futuramente, configurar o remoto aprovado, revisar/commitar as fontes e deixar a CI gerar o artefato; promover o wheel no PR do Project Loki com o lock correspondente. O deploy continua no Coolify/Nixpacks existente, após autorização de produção. Não foi criado um webhook, pull automático ou pipeline público de deploy.
+O remoto [T0minh0/MCP_Loki](https://github.com/T0minh0/MCP_Loki) foi configurado e recebeu o commit inicial `c0af9ed`, na branch `feature/dynamic-instructions`; a CI desse commit passou. O consumidor está no PR draft #145 do Project Loki, candidato `aa6fe61`, base `3ff2533`, com wheel e lock correspondentes. A suíte completa e a homologação mediram `b963d93`; o commit posterior altera somente o teste do subprocesso do cofre, preservando o runtime. A CI remota do consumidor ficou pendente por orientação do usuário após o bloqueio de cobrança/limite de gastos; não foi declarada aprovada nem desabilitada. A [homologação local](HOMOLOGATION.md) delimita a evidência técnica disponível. O deploy continua no Coolify/Nixpacks existente, após autorização de produção. Não foi criado um webhook, pull automático ou pipeline público de deploy. A [preparação de 20/10/2026](COOLIFY_PREPARATION.md) registra os metadados configurados no recurso existente e alerta que o auto-deploy de `main` já estava ativo.
 
 Na implantação com conector habilitado, conferir `/healthz`: `build`, `schema` e `dynamic_instructions` devem corresponder à release aprovada. Com OAuth individual, chamar `loki_verificar_versao` ou consultar a versão dentro de `runtime_instructions` em `meu_acesso`; comparar `backend_build`, versões e `release_sha256`. Build `desconhecido` permanece uma lacuna a resolver na configuração de release, nunca evidência de paridade. A nova inicialização valida o provider antes das migrations. Nenhuma migration ou alteração de OAuth foi adicionada por esta feature.
 
@@ -134,5 +134,7 @@ Use referências de evidências privadas no ambiente apropriado, sem trazê-las 
 ## Rollback
 
 Antes da implantação autorizada, registre build backend, wheel/digest, lock e versão de instruções anteriores. O rollback restaura o **conjunto** revisado: build backend e wheel/lock correspondentes. Um wheel anterior não deve ser renomeado com a versão nova. Siga o runbook operacional do Loki; este repo não aciona infraestrutura.
+
+Confira também a diferença entre o schema implantado e a base aprovada do consumidor. Esta feature não cria migration, mas a base `3ff2533` já inclui `0041`. O rollback do pacote não autoriza downgrade de banco nem garante que uma imagem anterior seja compatível com migrations intermediárias. A migration `0041` possui recusa de downgrade quando existem cálculos operacionais de férias; não contorne essa guarda.
 
 Se a falha for apenas de novo conteúdo em um processo em execução, a retenção do último snapshot válido limita a falha; ela não substitui rollback de release ou restauração após reinício. O provedor sinaliza degradação. Não editar permissões, clientes OAuth, tokens ou bancos como forma de voltar instruções. Para kits desktop, preserve o pin/assinatura e o mecanismo de rollback já existente; não edite `expected_build` para vencer preflight.

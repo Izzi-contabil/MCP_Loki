@@ -1,15 +1,22 @@
 # Entrega local — MCP Loki
 
-A implementação está preparada em dois repositórios locais. Não houve commit,
-push, publicação no GitHub, implantação, alteração de contas ou uso de dados reais.
-O lançamento e o aceite das quatro contas continuam pendentes.
+A entrega inicial preparou a implementação em dois repositórios locais, sem
+implantação, alteração de contas ou uso de dados reais. Em 20/10/2026, o remoto da
+fonte já está publicado e a CI de `c0af9ed` passou; os metadados do recurso existente foram
+preparados no Coolify conforme [o registro específico](COOLIFY_PREPARATION.md).
+O PR consumidor foi publicado como draft #145, agora em `aa6fe61`, base
+`3ff2533`. O runtime medido é o mesmo de `b963d93`; o commit posterior corrige
+somente o ambiente de subprocesso de um teste legado. Lançamento e aceite das
+quatro contas continuam pendentes. A validação
+posterior está registrada em [HOMOLOGATION.md](HOMOLOGATION.md); a CI remota do
+backend fica pendente por orientação do usuário.
 
 ## Onde está o trabalho
 
 | Local | Estado |
 |---|---|
-| `Izzi/MCP_Loki` | Novo Git independente, branch `feature/dynamic-instructions`, sem HEAD e sem remoto |
-| `<perfil-do-operador>/.local/izzi-worktrees/mcp-dynamic-updates-20261019` | Integração no Loki, branch `feature/mcp-dynamic-updates-20261019`, base `64d8e02ecab7749cc8c16b1c2a3ed4bf63ca24c1` |
+| `Izzi/MCP_Loki` | Git independente publicado em `T0minh0/MCP_Loki`, branch `feature/dynamic-instructions`, commit inicial `c0af9ed` |
+| `<perfil-do-operador>/.local/izzi-worktrees/mcp-dynamic-updates-20261019` | Integração no Loki, branch `feature/mcp-dynamic-updates-20261019`, PR #145; base `3ff2533`, candidato `aa6fe61` |
 | `Izzi/Project_loki` | Checkout original em `0742bfcb`; alterações preexistentes preservadas |
 
 O checkout original era anterior ao conector atual. Por isso, a integração foi
@@ -66,7 +73,8 @@ Na fonte `MCP_Loki`:
   `test_repository_masked.py`;
 - `pyproject.toml`, `uv.lock`, `.gitattributes`, `.gitignore`, `AGENTS.md`,
   `.github/workflows/ci.yml` e `README.md`;
-- `docs/IMPLEMENTATION.md`, `docs/MCP_UPDATES.md` e este relatório.
+- `docs/IMPLEMENTATION.md`, `docs/MCP_UPDATES.md`, `docs/COOLIFY_PREPARATION.md`,
+  `docs/HOMOLOGATION.md` e este relatório.
 
 No worktree do Project Loki:
 
@@ -76,11 +84,14 @@ No worktree do Project Loki:
 - `src/loki/main.py` — health condicionado ao conector;
 - `pyproject.toml`, `uv.lock`, `nixpacks.toml` e `.github/workflows/ci.yml`;
 - `vendor/mcp_loki_updates-0.1.0-py3-none-any.whl` e seu `.provenance.json`;
-- `tests/fixtures/mcp_contract_64d8e02_masked.json`;
+- `tests/fixtures/mcp_contract_64d8e02_masked.json` e
+  `tests/fixtures/mcp_contract_3ff2533_masked.json`, preservando o baseline inicial;
 - `tests/unit/test_dynamic_instructions_masked.py`;
 - `tests/integration/test_dynamic_instructions_masked.py`;
 - `tests/integration/test_connector_http_masked.py` — expectativa de catálogo
   pendente atualizada para incluir somente as novas consultas de metadados;
+- `tests/unit/test_kit_https_auth_masked.py` — transmite o caminho Python ao
+  subprocesso do teste legado de exclusão mútua do cofre;
 - `docs/MCP_UPDATES.md` — runbook no consumidor.
 
 ## Identidade do artefato
@@ -94,10 +105,11 @@ No worktree do Project Loki:
 | SHA256 do manifest de instruções | `ff39a63c78b609cd4001906a17e76149c4401e3d00952b1bf98f93b3e65dc730` |
 
 O recomendado `0.5.0` não é alegação de pacote ChatGPT publicado. A proveniência
-registra HEAD/tree nulos e árvore suja porque o novo repo ainda não tem commit.
+registra HEAD/tree nulos e árvore suja porque o artefato foi construído antes do
+primeiro commit da fonte; a publicação posterior não reescreve essa evidência.
 Hash e proveniência local não são assinatura de release nem prova de implantação.
 
-## Validação executada
+## Validação inicial executada
 
 Os testes usaram fixtures sintéticas e Postgres descartável dedicado. Nenhum
 teste apontou para o banco operacional ou alterou funcionário/processo real.
@@ -150,16 +162,19 @@ O teste do deploy executa o preflight com snapshot válido e inválido antes de
 qualquer migration. O ensaio real Nixpacks executou apenas instalação e smoke;
 não executou start, migrations ou implantação.
 
-A suíte completa do Project Loki com cobertura mínima e o workflow GitHub não
-foram executados nesta máquina. As suítes selecionadas não certificam produção.
+Na entrega inicial, a suíte completa do Project Loki com cobertura mínima e a CI
+consumidora estavam pendentes. A retomada de 20/10/2026 está registrada em
+[HOMOLOGATION.md](HOMOLOGATION.md). A CI GitHub da fonte publicada passou, conforme
+o registro do preparo Coolify. As suítes selecionadas não certificam produção.
 Regressões com leitura segura POSIX falharam no Windows e passaram no ensaio Linux;
 não foi enfraquecido o leitor seguro para fazê-las passar no Windows.
 
-Na conferência final de 20/10/2026, fonte, wheel e proveniência coincidiram byte a
-byte, e o snapshot carregou os domínios esperados com health `ok`. Os XMLs dos
-ensaios anteriores foram relidos para conferir os resultados. Docker estava
-indisponível nessa retomada; os resultados Linux acima são dos ensaios concluídos,
-sem alegação de nova execução Linux ou de disponibilidade do ambiente de produção.
+Na primeira conferência de 20/10/2026, os membros do pacote no wheel coincidiram
+com a fonte, o digest do arquivo conferiu com a proveniência e o snapshot carregou
+os domínios esperados com health `ok`. Os XMLs dos ensaios anteriores foram relidos.
+Docker estava indisponível naquele momento e voltou posteriormente. Os resultados
+Linux desta seção são históricos; as novas execuções e a homologação local estão
+em [HOMOLOGATION.md](HOMOLOGATION.md), sem atestar disponibilidade de produção.
 
 ## Atualizações futuras e lançamento
 
@@ -167,13 +182,14 @@ O [runbook](MCP_UPDATES.md) contém atualização de conteúdo, hashes, SemVer,
 adição de domínio, evolução de ferramentas, tabela deploy/ZIP/ação do usuário,
 rollback e checklist individual das quatro contas.
 
-1. Revisar a fonte e a integração. Configurar o remoto aprovado de `MCP_Loki`,
-   preparar commits/PRs e executar a CI dos dois repos. Não criar pull de código
-   não revisado no servidor.
+1. Revisar o PR consumidor #145 e os resultados locais registrados. A CI remota
+   ficou pendente por orientação do usuário. Não criar pull de código não revisado
+   no servidor; observar o auto-deploy de `main` antes de integrar o PR.
 2. Promover o wheel validado, versionado e imutável para `vendor/`; manter pin e
    lock correspondentes no consumidor. Releases futuras precisam de versão nova.
-3. Validar em staging pela instalação Nixpacks e pelos contratos antigos/novos.
-   Conferir build real, health, hashes e ferramenta de versão autenticada.
+3. Usar o ensaio técnico local como evidência delimitada; validar login Google e
+   conexão ChatGPT reais em ambiente autorizado. Conferir build real, health,
+   hashes e ferramenta de versão autenticada.
 4. Somente após autorização explícita, implantar com o Coolify existente e
    preservar o build anterior para rollback do conjunto backend/wheel/lock.
 5. Validar uma conta piloto e depois as demais. Observar chamadas antigas,

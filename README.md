@@ -45,3 +45,11 @@ CI valida pacote, testes, lint, tipos e importação do wheel instalado em ambie
 
 O [relatório de entrega local](docs/DELIVERY.md) registra os arquivos, validações,
 compatibilidade observada e pendências de lançamento e aceite das quatro contas.
+
+A [preparação no Coolify Trabalho](docs/COOLIFY_PREPARATION.md) registra a
+configuração aplicada no projeto Izzi, a CI publicada e o que falta antes do
+lançamento autorizado.
+
+A [homologação técnica local](docs/HOMOLOGATION.md) registra o candidato do PR
+consumidor, os testes Linux e os limites do ensaio isolado. A CI remota do backend
+ficou pendente por orientação do usuário; isso não equivale a um check aprovado.
