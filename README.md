@@ -53,3 +53,8 @@ lançamento autorizado.
 A [homologação técnica local](docs/HOMOLOGATION.md) registra o candidato do PR
 consumidor, os testes Linux e os limites do ensaio isolado. A CI remota do backend
 ficou pendente por orientação do usuário; isso não equivale a um check aprovado.
+
+A [publicação autorizada em produção](docs/PRODUCTION_RELEASE.md), em 20/10/2026,
+registra o build implantado, o health e as instruções recebidas pela conta
+autenticada. Login no outro dispositivo e aceite das quatro instalações são
+verificações individuais.

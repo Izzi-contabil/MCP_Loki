@@ -4,10 +4,10 @@ A entrega inicial preparou a implementação em dois repositórios locais, sem
 implantação, alteração de contas ou uso de dados reais. Em 20/10/2026, o remoto da
 fonte já está publicado e a CI de `c0af9ed` passou; os metadados do recurso existente foram
 preparados no Coolify conforme [o registro específico](COOLIFY_PREPARATION.md).
-O PR consumidor foi publicado como draft #145, agora em `aa6fe61`, base
-`3ff2533`. O runtime medido é o mesmo de `b963d93`; o commit posterior corrige
-somente o ambiente de subprocesso de um teste legado. Lançamento e aceite das
-quatro contas continuam pendentes. A validação
+O PR consumidor #145 foi integrado, após autorização explícita, no build
+`c91c145` e publicado pelo Coolify. O [registro de produção](PRODUCTION_RELEASE.md)
+confirma health e acesso autenticado; login no outro dispositivo e aceite das
+quatro instalações continuam pendentes. A validação
 posterior está registrada em [HOMOLOGATION.md](HOMOLOGATION.md); a CI remota do
 backend fica pendente por orientação do usuário.
 
@@ -16,7 +16,7 @@ backend fica pendente por orientação do usuário.
 | Local | Estado |
 |---|---|
 | `Izzi/MCP_Loki` | Git independente publicado em `T0minh0/MCP_Loki`, branch `feature/dynamic-instructions`, commit inicial `c0af9ed` |
-| `<perfil-do-operador>/.local/izzi-worktrees/mcp-dynamic-updates-20261019` | Integração no Loki, branch `feature/mcp-dynamic-updates-20261019`, PR #145; base `3ff2533`, candidato `aa6fe61` |
+| `<perfil-do-operador>/.local/izzi-worktrees/mcp-dynamic-updates-20261019` | Integração no Loki, branch `feature/mcp-dynamic-updates-20261019`, PR #145 integrado em `c91c145`; candidato preservado `aa6fe61` |
 | `Izzi/Project_loki` | Checkout original em `0742bfcb`; alterações preexistentes preservadas |
 
 O checkout original era anterior ao conector atual. Por isso, a integração foi
@@ -74,7 +74,7 @@ Na fonte `MCP_Loki`:
 - `pyproject.toml`, `uv.lock`, `.gitattributes`, `.gitignore`, `AGENTS.md`,
   `.github/workflows/ci.yml` e `README.md`;
 - `docs/IMPLEMENTATION.md`, `docs/MCP_UPDATES.md`, `docs/COOLIFY_PREPARATION.md`,
-  `docs/HOMOLOGATION.md` e este relatório.
+  `docs/HOMOLOGATION.md`, `docs/PRODUCTION_RELEASE.md` e este relatório.
 
 No worktree do Project Loki:
 
@@ -182,7 +182,9 @@ O [runbook](MCP_UPDATES.md) contém atualização de conteúdo, hashes, SemVer,
 adição de domínio, evolução de ferramentas, tabela deploy/ZIP/ação do usuário,
 rollback e checklist individual das quatro contas.
 
-1. Revisar o PR consumidor #145 e os resultados locais registrados. A CI remota
+Para as próximas releases:
+
+1. Revisar o PR consumidor e os resultados locais registrados. A CI remota
    ficou pendente por orientação do usuário. Não criar pull de código não revisado
    no servidor; observar o auto-deploy de `main` antes de integrar o PR.
 2. Promover o wheel validado, versionado e imutável para `vendor/`; manter pin e

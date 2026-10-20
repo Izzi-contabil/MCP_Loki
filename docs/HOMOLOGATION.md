@@ -1,5 +1,8 @@
 # Homologação técnica local — 20/10/2026
 
+Este registro descreve os ensaios anteriores ao lançamento. A implantação
+posterior, autorizada pelo usuário, está em [PRODUCTION_RELEASE.md](PRODUCTION_RELEASE.md).
+
 A integração está publicada no PR draft #145 do Project Loki, branch
 `feature/mcp-dynamic-updates-20261019`. A suíte completa e a aplicação isolada
 mediram `b963d93ce60f9f10c5db8c20e053fa1b039445ac`, sobre a base `3ff2533`.

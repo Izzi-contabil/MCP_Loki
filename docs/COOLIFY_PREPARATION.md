@@ -1,5 +1,8 @@
 # Preparação no Coolify Trabalho — 20/10/2026
 
+Registro da preparação anterior ao lançamento. A implantação posterior,
+autorizada pelo usuário, está em [PRODUCTION_RELEASE.md](PRODUCTION_RELEASE.md).
+
 O pacote está publicado em [T0minh0/MCP_Loki](https://github.com/T0minh0/MCP_Loki),
 branch padrão `feature/dynamic-instructions`, commit inicial `c0af9ed`.
 A [CI desse commit](https://github.com/T0minh0/MCP_Loki/actions/workflows/ci.yml)
