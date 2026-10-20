@@ -1,0 +1,42 @@
+name: Validate MCP Loki updates
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+      - name: Install locked development dependencies
+        run: uv sync --locked --all-extras --no-editable
+      - name: Tests
+        run: uv run --no-sync pytest
+      - name: Lint and format
+        run: |
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+      - name: Types
+        run: uv run --no-sync mypy src scripts
+      - name: Build wheel
+        run: uv build --wheel
+      - name: Smoke installed wheel away from sources
+        shell: bash
+        run: |
+          uv venv .wheel-smoke --python 3.11
+          uv pip install --python .wheel-smoke/bin/python --no-deps dist/*.whl
+          cd "$(mktemp -d)"
+          "${{ github.workspace }}/.wheel-smoke/bin/python" -I -c "from mcp_loki_updates import InstructionsProvider, __version__; p=InstructionsProvider(); assert __version__ == '0.1.0'; assert len(p.domains()) == 8; assert p.health()['status'] == 'ok'; assert p.get('geral')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mcp-loki-updates-wheel
+          path: dist/*.whl
+          if-no-files-found: error

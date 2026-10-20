@@ -1,0 +1,3 @@
+# Manifest hashes refer to these exact UTF-8/LF bytes on every platform.
+* text=auto eol=lf
+*.whl binary
