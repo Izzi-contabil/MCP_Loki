@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "instructions_version": "1.2.0",
+  "instructions_version": "1.2.1",
   "contract_version": "1.0.0",
   "plugin_version": "0.5.0",
   "minimum_plugin_version": "0.4.0",
@@ -11,8 +11,8 @@
       "content_sha256": "efc6ff878f851c74deefd0a1bd8da526749bc55f5841b76bb6a0f5b47e2f946e"
     },
     "admissao": {
-      "metadata_sha256": "2ef0796ce2a67166ff73b8ba6b3a6cfeb15c5c800c87c27b94f925341fa23b2a",
-      "content_sha256": "1c98e38f7f97f5f88cb31bd697a61ef2d8f45c578a25b63ba2ef5d7414098ab9"
+      "metadata_sha256": "998bda7960b6ccbc27af15a1c2b26c262f0558ec8439e67d8c2e624d1beaeb10",
+      "content_sha256": "d622fd9a1b80ff5528ddc8a1396e554e913b9171ac0428ae512b04d40c08f44e"
     },
     "rescisao": {
       "metadata_sha256": "ba54404ef56f4e48c2d592b4dd1425e33b63a22b54beddd177ec3618890b8f35",
@@ -31,8 +31,8 @@
       "content_sha256": "4d92225570e85baccd05315942d86df029a2a03e969c0dccc1f56cbc1cfe41ae"
     },
     "documentos": {
-      "metadata_sha256": "f9e45e79216e00bd26f897e26b953e01fe277c83a24a0cb943cd71764740cfb8",
-      "content_sha256": "d99a4758393e0d801566ffc039aa84b1d4e2480e0bbeab74785336fec34fb245"
+      "metadata_sha256": "7881aafd355c809ef862c93625bd583a344e2cf9c7bbb2d17752e534b4bbdbad",
+      "content_sha256": "78fafc725ec761dbd675b0b8053ff270456719ff1396da79043cd91b2b589f65"
     },
     "aprovacoes": {
       "metadata_sha256": "e2fedd9d0663cb7c1ba9797396f35f8e054b5bc9c1f3c4e2c964f3e60b92e089",
@@ -42,8 +42,8 @@
   "changes": {
     "backend": [],
     "instructions": [
-      "Orienta a leitura do periodo salarial explicito com fonte, ausencia e conflito, sem adotar Mensalista como padrao.",
-      "Exige conferencia do valor integral no campo Por e investigacao de overflow sem apagar o fato ou aprovar o caso."
+      "Distingue emissao de CTPS digital de expedicao, tipo de certificado de categoria militar e normalizacao documental sustentada de abreviacao inventada.",
+      "Preserva a orientacao salarial explicita da instrucao de admissao 1.2.0, os demais dominios e todos os gates do host."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",

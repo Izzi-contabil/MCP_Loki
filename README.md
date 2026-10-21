@@ -4,12 +4,15 @@ Este repositório mantém o pacote `mcp-loki-updates`, as instruções versionad
 
 O pacote não é um servidor MCP independente. Identidade Google/OAuth, permissões, banco, documentos, cálculos e decisões continuam no Project Loki. O conteúdo deste repositório não concede acesso nem representa aceite humano.
 
-A candidata usa pacote `0.1.2` e instruções de admissão `1.2.0`. Geral,
-documentos e rescisão permanecem em `1.1.0`; os demais domínios, em `1.0.0`.
+A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
+passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
 O [guia operacional](docs/OPERATIONAL_GUIDANCE_20261021.md) registra a entrega
 anterior e o [ajuste de período salarial](docs/ADMISSION_PERIOD_20261021.md)
 registra a leitura do campo e seus limites. Publicação e entrega autenticada
 exigem recibos próprios.
+
+O [complemento de mapeamento documental](docs/SOURCE_MAPPING_20261021.md)
+registra os limites para CTPS digital, categoria militar e siglas de emissor.
 
 | Versão inicial | Valor |
 |---|---|
@@ -39,7 +42,7 @@ uv run --no-sync ruff check .
 uv run --no-sync ruff format --check .
 uv run --no-sync mypy src scripts
 uv build --wheel
-uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.2-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
+uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.3-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
 ```
 
 No Windows com Python 3.11 e locale cp1252, um checkout em caminho acentuado pode falhar ao ler o `.pth` de uma instalação editable. `--no-editable` e `--no-sync` evitam esse caminho; depois de editar o pacote, sincronize novamente antes de validar sua cópia instalada. Os testes também exercitam o fonte e o smoke deve instalar o wheel fora do checkout.
