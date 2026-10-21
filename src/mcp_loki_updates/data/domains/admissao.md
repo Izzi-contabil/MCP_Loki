@@ -36,6 +36,14 @@ Separe data de admissão, data de emissão do ASO e datas dos exames. Use a soli
 
 Procure o ASO nos anexos e nos canais já autorizados antes de declarar que não foi enviado. Se disponível, leia tipo de exame, emissão, procedimentos/datas, médico, CRM/UF e resultado conforme o original. Não invente campos de SST no payload admissional: preserve o documento e relate o que o contrato não suporta. Se não houver ASO, registre a ausência sem fabricar lançamento; siga a possibilidade de pacote parcial indicada pelo runtime. Preparação documental não atesta cumprimento de SST, conclusão legal da admissão ou transmissão ao eSocial.
 
+### Documentos de identificação e significado dos campos
+
+Confira a modalidade e o rótulo da data na CTPS. A data de emissão ou de extração de uma CTPS digital não comprova, por si, a data de expedição da carteira física e não deve preencher automaticamente `empregado.data_expedicao_ctps`. Preserve a emissão digital como fato separado quando o contrato não tiver destino correspondente; uma equivalência exige fundamento explícito no contrato e na fonte. Não derive número, série ou UF da CTPS a partir do CPF, de outro documento ou do endereço.
+
+O título “Certificado de Dispensa de Incorporação” identifica um tipo documental; não comprova a categoria de reservista. Transcreva o número identificador no caminho aceito e preencha `empregado.documento_militar_categoria` somente com categoria explicitamente informada e qualificada. Não use o título do certificado nem “CDI” como categoria padrão.
+
+No órgão emissor do RG, confira a sigla e a UF atribuídas ao próprio emissor. Pode usar uma sigla também impressa no original, com o literal extenso e o localizador preservados como fundamento da normalização. Sem sigla ou UF explícitas, conserve o que foi informado e a lacuna correspondente; não invente abreviação ou UF para fazer o texto caber. Falha de espaço é problema a diagnosticar no documento, sem truncar ou trocar o fato.
+
 ### Endereço, sexo e raça/cor
 
 Endereço vem do comprovante ou formulário admissional e de atualização específica do cliente. Preserve a divergência; a resposta geral não estabelece precedência universal entre comprovante e formulário. Cadastro anterior só é fonte atual com qualificação correspondente.
