@@ -4,6 +4,13 @@ Este repositório mantém o pacote `mcp-loki-updates`, as instruções versionad
 
 O pacote não é um servidor MCP independente. Identidade Google/OAuth, permissões, banco, documentos, cálculos e decisões continuam no Project Loki. O conteúdo deste repositório não concede acesso nem representa aceite humano.
 
+## Distribuição do kit do operador
+
+O [passo a passo de atualização diária](docs/DAILY_OPERATOR_UPDATES.md) configura
+o plugin de orientações do Claude Code para Ana no Mac e Samuel no Windows/Linux,
+preservando o MCP e o OAuth existentes. O repositório privado distribui o plugin
+por Git; o kit Windows assinado continua com seu canal próprio no Project Loki.
+
 A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
 passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
 O [guia operacional](docs/OPERATIONAL_GUIDANCE_20261021.md) registra a entrega

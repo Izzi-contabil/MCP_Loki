@@ -1,0 +1,5 @@
+{
+  "name": "loki-equipe",
+  "owner": {"name": "The Mind Ops"},
+  "plugins": [{"name": "loki-orientacoes", "source": "./plugins/loki-bootstrap"}]
+}
