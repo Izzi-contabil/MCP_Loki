@@ -7,6 +7,8 @@ import re
 import stat
 import warnings
 import zipfile
+from collections.abc import Iterator
+from datetime import date, datetime, time, timedelta
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
@@ -182,7 +184,9 @@ def _images(
                 image.seek(index)
                 if image.width * image.height > 40_000_000:
                     raise ReadError("image_size_limit")
-                frame = ImageOps.exif_transpose(image).convert("RGB")
+                frame = ImageOps.exif_transpose(image).convert("RGBA")
+                background = Image.new("RGBA", frame.size, "white")
+                frame = Image.alpha_composite(background, frame).convert("RGB")
                 buffer = io.BytesIO()
                 frame.save(buffer, format="PNG")
                 path = output / f"{prefix}image-{index + 1:04d}.png"
@@ -195,6 +199,16 @@ def _images(
                     }
                 )
     return units, count
+
+
+def _cell_value(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, timedelta):
+        return {"days": value.days, "seconds": value.seconds, "microseconds": value.microseconds}
+    if isinstance(value, (date, datetime, time)):
+        return value.isoformat()
+    raise ReadError("unsupported_cell_value_type")
 
 
 def _xlsx(content: bytes, budget: dict[str, int]) -> list[dict[str, Any]]:
@@ -222,13 +236,18 @@ def _xlsx(content: bytes, budget: dict[str, int]) -> list[dict[str, Any]]:
                         "locator": f"sheet:{sheet.title}!{cell.coordinate}",
                         "sheet": sheet.title,
                         "cell": cell.coordinate,
-                        "value": value
-                        if isinstance(value, (str, int, float, bool))
-                        else value.isoformat(),
+                        "value": _cell_value(value),
+                        "value_kind": type(value).__name__,
+                        "excel_type": cell.data_type,
+                        "number_format": cell.number_format,
                     }
                     if cell.data_type == "f":
                         unit.update(
-                            formula=value, cached_value=cached_cell.value, needs_review=True
+                            formula=value,
+                            cached_value=_cell_value(cached_cell.value),
+                            cached_value_kind=type(cached_cell.value).__name__,
+                            cached_excel_type=cached_cell.data_type,
+                            needs_review=True,
                         )
                     units.append(unit)
                     if len(units) > MAX_UNITS:
@@ -258,6 +277,18 @@ def _document_text(element: Any, depth: int = 0) -> str:
             parts.append(_document_text(child, depth + 1))
         parts.append(child.tail or "")
     return "".join(parts)
+
+
+def _ods_rows(element: Any, namespace: str, depth: int = 0) -> Iterator[Any]:
+    if depth > 100:
+        raise ReadError("xml_depth_limit")
+    for child in element:
+        if child.tag == namespace + "table-row":
+            yield child
+        elif child.tag in {
+            namespace + kind for kind in ("table-header-rows", "table-rows", "table-row-group")
+        }:
+            yield from _ods_rows(child, namespace, depth + 1)
 
 
 def _office(content: bytes, suffix: str, budget: dict[str, int]) -> list[dict[str, Any]]:
@@ -295,9 +326,9 @@ def _office(content: bytes, suffix: str, budget: dict[str, int]) -> list[dict[st
         for table in root.iter(table_ns + "table"):
             name = table.get(table_ns + "name", "")
             row_number = 0
-            for row in table.findall(table_ns + "table-row"):
+            for row in _ods_rows(table, table_ns):
                 repeat = int(row.get(table_ns + "number-rows-repeated", "1"))
-                if repeat > MAX_UNITS:
+                if not 1 <= repeat <= MAX_UNITS:
                     raise ReadError("cell_limit")
                 for _ in range(repeat):
                     row_number += 1

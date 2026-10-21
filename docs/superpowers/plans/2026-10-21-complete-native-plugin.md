@@ -60,3 +60,8 @@ defusedxml/jsonschema, Claude Code e Codex nativos.
 - Ruff, formato e mypy9sources passaram. Diagnóstico pelo uv/lock real passou
   fora do checkout. Wheels dos três módulos nativos cobrem as cinco combinações
   anunciadas. Wheel provider0.1.3 apenas smoke local; fontes/provider inalterados.
+- Revisão final125testes reproduziu quatro Important (gruposODS, alpha de imagem,
+  contenção de todo cacheGit, normalização temporalXLSX) e um Minor (tipoExcel).
+  Todos foram confirmados RED e corrigidos GREEN, com130testes no resultado.
+  Duração é preservada por dias/segundos/microssegundos, sem float de arredondamento;
+  cache e tipo Excel permanecem distintos da fórmula/valor.

@@ -345,3 +345,95 @@ def test_odt_headings_and_explicit_spaces_are_not_dropped(tmp_path):
         archive.writestr("content.xml", xml)
     result = read_document(source, tmp_path / "leitura")
     assert [u["text"] for u in result["units"]] == ["Título sintético", "Ana  Silva\t0\nLinha"]
+
+
+def test_ods_grouped_and_header_rows_keep_real_row_numbers(tmp_path):
+    source = tmp_path / "agrupadas.ods"
+    row = "<t:table-row><t:table-cell><text:p>{}</text:p></t:table-cell></t:table-row>"
+    xml = (
+        '<root xmlns:t="urn:oasis:names:tc:opendocument:xmlns:table:1.0" '
+        'xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"><t:table t:name="Dados">'
+        "<t:table-header-rows>" + row.format("cabecalho") + "</t:table-header-rows>"
+        "<t:table-row-group>"
+        + row.format("grupo")
+        + "</t:table-row-group>"
+        + row.format("normal")
+        + "</t:table></root>"
+    )
+    with zipfile.ZipFile(source, "w") as archive:
+        archive.writestr("content.xml", xml)
+    units = read_document(source, tmp_path / "leitura")["units"]
+    assert [u["text"] for u in units] == ["cabecalho", "grupo", "normal"]
+    assert [u["locator"] for u in units] == [f"sheet:Dados/row:{n}/column:1" for n in [1, 2, 3]]
+
+
+def test_transparent_images_are_composited_without_losing_dark_text(tmp_path):
+    from PIL import Image
+
+    source = tmp_path / "transparente.png"
+    image = Image.new("RGBA", (20, 30), (0, 0, 0, 0))
+    image.putpixel((4, 4), (0, 0, 0, 255))
+    image.save(source)
+    unit = read_document(source, tmp_path / "leitura")["units"][0]
+    with Image.open(unit["image"]) as rendered:
+        assert rendered.getpixel((0, 0)) == (255, 255, 255)
+        assert rendered.getpixel((4, 4)) == (0, 0, 0)
+
+
+def test_xlsx_formula_date_cache_is_serializable(tmp_path):
+    from openpyxl import Workbook
+
+    book = Workbook()
+    book.active["A1"] = "=DATE(2026,10,21)"
+    book.active["A1"].number_format = "yyyy-mm-dd"
+    buffer = io.BytesIO()
+    book.save(buffer)
+    source = tmp_path / "data.xlsx"
+    with zipfile.ZipFile(buffer) as original, zipfile.ZipFile(source, "w") as modified:
+        for entry in original.infolist():
+            content = original.read(entry)
+            if entry.filename == "xl/worksheets/sheet1.xml":
+                content = content.replace(b"<v></v>", b"<v>46316</v>").replace(
+                    b"<v />", b"<v>46316</v>"
+                )
+                assert b"46316" in content
+            modified.writestr(entry, content)
+    unit = read_document(source, tmp_path / "leitura")["units"][0]
+    assert unit["formula"] == "=DATE(2026,10,21)"
+    assert unit["cached_value"] == "2026-10-21T00:00:00"
+
+
+def test_entire_git_and_native_cache_are_not_private_workspaces(tmp_path, monkeypatch):
+    from loki_readers import private
+
+    repo = tmp_path / "marketplace"
+    (repo / ".git").mkdir(parents=True)
+    plugin = repo / "plugins/loki-bootstrap"
+    plugin.mkdir(parents=True)
+    monkeypatch.setattr(private, "PLUGIN_ROOT", plugin)
+    with pytest.raises(ReadError, match="repository|plugin_cache"):
+        private.private_directory(repo / "private-documents")
+    cache = tmp_path / "profile/plugins/cache/loki-equipe"
+    cache.mkdir(parents=True)
+    with pytest.raises(ReadError, match="plugin_cache"):
+        private.private_directory(cache / "private-documents")
+
+
+def test_xlsx_preserves_durations_and_distinguishes_errors_from_text(tmp_path):
+    from datetime import timedelta
+
+    from openpyxl import Workbook
+
+    book = Workbook()
+    book.active["A1"] = timedelta(hours=27, minutes=30)
+    book.active["A1"].number_format = "[h]:mm"
+    book.active["B1"] = "#N/A"
+    book.active["C1"] = "#N/A"
+    book.active["C1"].data_type = "s"
+    source = tmp_path / "ponto.xlsx"
+    book.save(source)
+    units = read_document(source, tmp_path / "leitura")["units"]
+    assert units[0]["value"] == {"days": 1, "seconds": 12600, "microseconds": 0}
+    assert units[0]["value_kind"] == "timedelta"
+    assert units[1]["excel_type"] == "e"
+    assert units[2]["excel_type"] == "s"

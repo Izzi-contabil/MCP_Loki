@@ -31,6 +31,13 @@ def private_directory(output: Path) -> Path:
     plugin_root = PLUGIN_ROOT.resolve()
     if output == plugin_root or plugin_root in output.parents:
         raise ReadError("output_inside_plugin_cache")
+    for parent in (output, *output.parents):
+        if (parent / ".git").exists():
+            raise ReadError("output_inside_repository_or_plugin_cache")
+        if (parent.name == "cache" and parent.parent.name == "plugins") or (
+            parent.name == "marketplaces" and parent.parent.name in {"plugins", ".tmp"}
+        ):
+            raise ReadError("output_inside_plugin_cache")
     if output.exists():
         raise ReadError("output_exists")
     missing = [path for path in reversed(output.parents) if not path.exists()]

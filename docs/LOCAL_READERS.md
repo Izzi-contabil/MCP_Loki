@@ -20,10 +20,10 @@ As bibliotecas não interpretam regras trabalhistas nem executam LLM/OCR remoto.
 | PDF textual | Texto e PNG por página selecionada; total de páginas |
 | PDF digitalizado | PNG por página; leitura visual/OCR pela própria harness |
 | PNG/JPEG/TIFF/BMP/WebP | PNG por frame, mantendo conferência visual pendente |
-| XLSX | Células, tipos, fórmulas e cache separados, sem recalcular |
+| XLSX | Células/tipos/formatos, datas e durações; fórmulas e cache separados |
 | XLS | Células/tipos e modo de data Excel, sem executar macros |
 | DOCX | Parágrafos do corpo, tabelas, cabeçalhos/rodapés, notas/comentários |
-| ODT/ODS | Parágrafos ou células/atributos, sem executar fórmulas |
+| ODT/ODS | Parágrafos/títulos ou células, incluindo cabeçalhos/linhas agrupadas |
 | CSV/TXT/MD/JSON/XML | Linhas/células ou texto, codificação explícita |
 | ZIP | Leitura dos membros suportados em memória, sem extrair caminhos no disco |
 
