@@ -1,162 +1,225 @@
-# Atualização diária — Ana e Samuel
+# Ana e Samuel — atualização diária pelo repositório
 
-Este procedimento mantém a instalação HTTPS e o OAuth Loki já configurados.
-O kit consulta releases assinadas em `T0minh0/MCP_Loki`; ninguém precisa receber
-outro ZIP por mensagem. O programa baixa e verifica os bundles automaticamente.
+Ana usa **Claude Code no Mac**. Samuel usa **Claude Code no Windows e no Linux**;
+configure cada máquina separadamente. O OAuth permanece na conexão MCP que já
+funciona no Claude. Não remova o servidor, não troque seu nome/URL e não exporte
+credenciais. O acesso pessoal ao GitHub é uma autorização separada.
 
-O canal deve ser **privado** porque os bundles incluem código do Project Loki.
-Antônio adicionará os operadores aos autorizados posteriormente. O acesso de
-leitura ao GitHub é separado do Google/OAuth que eles já usam no Loki.
+Este perfil instala `loki-orientacoes`, um plugin declarativo que consulta as
+instruções atuais do servidor. Não tem servidor MCP, hooks, leitores locais ou
+cofre próprio. Ele complementa o kit anterior; a atualização dos leitores do kit
+Windows assinado tem outro procedimento, no Project Loki.
 
-## Antes de configurar os computadores — Antônio
+## Antes de começar — Antônio, no servidor Linux
 
-1. Publicar a versão validada do backend que contém o atualizador, seguindo os
-   gates de release do Project Loki. Conferir o build completo no `/healthz`.
-2. Garantir que `T0minh0/MCP_Loki` está privado e liberar leitura para cada pessoa.
-3. No computador administrativo com a chave já provisionada, construir o bundle
-   assinado desse **mesmo commit** pelo `scripts/operator_release.py construir`.
-   A chave de assinatura permanece com Antônio; não entra em CI ou nos PCs deles.
-   No checkout administrativo atualizado, informar os caminhos locais existentes:
+1. Integrar a PR deste repositório após a revisão e os testes. Estes comandos
+   pressupõem que `.claude-plugin/marketplace.json`, o plugin e o atualizador já
+   estão na branch padrão `feature/dynamic-instructions`. Enquanto a PR estiver
+   em rascunho, o procedimento é preparação, não distribuição disponível.
+2. `T0minh0/MCP_Loki` já foi tornado **privado**, conforme sua decisão. Adicionar
+   as contas pessoais da equipe com leitura quando desejar; nenhum convite foi
+   enviado nesta implementação.
+3. Para publicar novas orientações locais, revisar a alteração e aumentar a
+   versão em `plugins/loki-bootstrap/.claude-plugin/plugin.json`. Manter o
+   `skills/loki-bootstrap/SKILL.md` igual ao `SKILL.md` estável. O marketplace é
+   distribuído por Git privado; este perfil declarativo **não usa a assinatura
+   dos bundles executáveis Windows**. Não adicionar MCP, hooks ou executáveis ao
+   plugin por esse canal. O código do agendador instalado uma vez fica estável;
+   uma mudança nele requer repetir a configuração, após revisão.
+4. Conteúdo do provider continua exigindo nova versão de wheel, promoção e deploy
+   do backend pelos gates existentes. Um push neste repositório não implanta o
+   serviço. O domínio, a hospedagem, o banco e o Shadow das 05h não mudam.
 
-   ```powershell
-   $lokiBuild = (Invoke-RestMethod 'https://loki.themindops.com/healthz').build
-   $lokiSigningKey = Read-Host 'Caminho da chave de release ja provisionada neste computador'
-   $lokiReleaseOutput = Read-Host 'Pasta privada de saida fora do repositorio'
-   uv run --no-sync python scripts/operator_release.py construir --chave-release $lokiSigningKey --saida $lokiReleaseOutput --rev $lokiBuild
-   ```
+## Preparação comum — no computador de cada pessoa
 
-   O comando imprime o caminho do bundle assinado; usar esse arquivo no passo
-   seguinte. Não copiar a chave para o servidor ou para os operadores.
-4. Publicar pelo novo comando do Project Loki:
+No terminal que já abre o Claude Code, confirmar:
 
-   ```text
-   uv run --no-sync python scripts/publish_operator_release.py --bundle CAMINHO_DO_BUNDLE_ASSINADO --verifier scripts/operator_release.py --signers plugins/loki-operador/setup/release_signers --dry-run
-   uv run --no-sync python scripts/publish_operator_release.py --bundle CAMINHO_DO_BUNDLE_ASSINADO --verifier scripts/operator_release.py --signers plugins/loki-operador/setup/release_signers
-   ```
-
-5. Conservar o recibo com tag, SHA do bundle e `bootstrap_sha256`. A tag publicada
-   será `operator-<build completo>` e os assets serão o bundle desse build e
-   `install-repository.ps1`. O publicador verifica assinatura, recusa canal público
-   e não substitui um asset existente por bytes diferentes.
-
-Sem uma release assinada correspondente ao build servido, o atualizador conserva
-a instalação e registra falha. Repositório/branch atualizado sozinho não entrega
-uma versão instalável. Na primeira migração, coordenar publicação e configuração
-antes de considerar o fluxo pronto para os operadores.
-
-## Configurar uma vez no computador da pessoa
-
-Executar como o **mesmo usuário Windows** que já usa o Loki, sem executar como
-outro administrador. Repetir independentemente para Ana e Samuel.
-
-1. Confirmar que o kit funciona e localizar sua pasta. O padrão é
-   `%LOCALAPPDATA%/Izzi-Loki`, contendo `active.json`. Se usou outra pasta, informar
-   esse caminho em `-Root`. A migração recusa instalações de outro formato;
-   não remove nem converte configurações OAuth nativas/SSH automaticamente.
-2. Localizar a pasta **trusted** da instalação original, com
-   `operator_release.py`, `release_signers`, `privacy.py` e
-   `private_directory.ps1`. Ela fornece o verificador/pin já confiáveis.
-   Preservar esses arquivos; se não estiverem disponíveis, Antônio deve
-   reconciliar a instalação antes do bootstrap. Não usar um pin novo do download.
-3. Ter [GitHub CLI](https://cli.github.com/) e o CLI da harness utilizada
-   disponíveis no terminal. Entrar no GitHub com a conta pessoal autorizada:
-
-   ```powershell
-   gh auth login --hostname github.com --web --git-protocol https
-   gh repo view T0minh0/MCP_Loki --json nameWithOwner,visibility
-   codex plugin --help
-   ```
-
-   No Codex, o CLI precisa oferecer `plugin add` e `plugin marketplace`.
-   Isso autentica a leitura do repositório; o OAuth Loki permanece no cofre.
-4. Baixar somente o bootstrap da release correspondente ao servidor:
-
-   ```powershell
-   $lokiBuild = (Invoke-RestMethod 'https://loki.themindops.com/healthz').build
-   if ($lokiBuild -notmatch '^[a-f0-9]{40}$') { throw 'Build invalido' }
-   $lokiSetup = Join-Path $env:TEMP ('loki-setup-' + [guid]::NewGuid().ToString('N'))
-   New-Item -ItemType Directory -Path $lokiSetup | Out-Null
-   gh release download ('operator-' + $lokiBuild) --repo T0minh0/MCP_Loki --pattern install-repository.ps1 --dir $lokiSetup
-   Get-FileHash -Algorithm SHA256 (Join-Path $lokiSetup 'install-repository.ps1')
-   ```
-
-   Conferir o hash com `bootstrap_sha256` do recibo administrativo antes de
-   executar. Este é o preparo único do canal confiável.
-5. Fechar o Codex (aplicativo e terminais) e mantê-lo fechado durante a
-   ativação. O CLI substitui seu cache; o atualizador adia a troca enquanto
-   detectar o Codex aberto. Informar a pasta trusted anterior e habilitar:
-
-   ```powershell
-   $lokiTrusted = Read-Host 'Caminho completo da pasta trusted original'
-   powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $lokiSetup 'install-repository.ps1') -Action enable -TrustedDirectory $lokiTrusted -Harness codex
-   ```
-
-   Para Claude Code, usar `-Harness claude`; para ambos, `-Harness both`.
-   Se a instalação não for a padrão, acrescentar `-Root 'CAMINHO_REAL'`.
-   A ação verifica a instalação, baixa o bundle, confere-o com o pin anterior,
-   extrai o atualizador, executa a primeira consulta e só então registra a tarefa.
-6. Abrir nova conversa na harness e pedir `meu_acesso`,
-   `loki_verificar_versao` e instruções `geral`/do processo. Confirmar a própria
-   identidade e `active`, sem reproduzir dados pessoais. No Claude Code, usar o
-   launcher `Abrir-Loki-Claude.ps1` da raiz da instalação.
-
-## Conferir a rotina
-
-A tarefa chama-se `Izzi-Loki-Update-<identificador da instalação>`. Ela executa
-diariamente às **07h de Brasília** e no login do usuário, sem armazenar senha.
-Se o PC estiver desligado/sem sessão, a consulta ocorre quando voltar a estar
-disponível com o usuário conectado. O Shadow do servidor continua às 05h.
-
-Na instalação padrão:
-
-```powershell
-$lokiUpdater = Join-Path $env:LOCALAPPDATA 'Izzi-Loki\repository-updater\install-repository.ps1'
-powershell -NoProfile -ExecutionPolicy Bypass -File $lokiUpdater -Action status
-powershell -NoProfile -ExecutionPolicy Bypass -File $lokiUpdater -Action run -Harness codex
-Get-ScheduledTask -TaskName 'Izzi-Loki-Update-*' | Get-ScheduledTaskInfo
+```text
+claude --version
+claude plugin --help
+gh auth login --hostname github.com --web --git-protocol https
+gh auth setup-git
+gh repo view T0minh0/MCP_Loki --json nameWithOwner,visibility
 ```
 
-Conferir `LastTaskResult=0` e o estado retornado pelo atualizador. Um
-resultado adiado mantém a instalação anterior e será tentado novamente no
-próximo disparo; para ativar antes, fechar o Codex e executar `run`. `atualizado`
-significa nova release ativa; `sem_atualizacao` significa mesmo build e instalação da harness conferida;
-`adiado_harness_em_uso` pede fechar o Codex e repetir `run`;
-`adiado_plugin_desativado` preserva um plugin que o usuário desligou. `falha` ou
-`intervencao_necessaria` exigem diagnóstico; não equivalem a sucesso.
+Usar a conta GitHub individual que recebeu leitura. `gh auth setup-git` configura
+o Git para usar a credencial pessoal já guardada pelo GitHub CLI, sem colocar
+um token na tarefa. São necessários Git, GitHub CLI, Claude Code nativo e
+[uv](https://docs.astral.sh/uv/getting-started/installation/). O uv instalará um
+Python 3.11 isolado, sem trocar o Python do sistema. No Windows, preferir o
+executável nativo `claude.exe`, evitando um wrapper npm `.cmd`.
 
-Para mudar o horário, repetir `-Action enable -Hour 7 -Minute 0` com o horário
-desejado, sempre interpretado em Brasília. Usar o mesmo `-Harness` configurado.
+Antes de instalar, abrir o Claude e pedir `meu_acesso`. Conferir a própria
+identidade e o acesso esperado. Se o MCP ainda não funcionar, resolver essa
+conexão existente antes da agenda; o atualizador não configura OAuth.
 
-## Falhas, desativação e rollback
+Registrar o marketplace privado e instalar somente as orientações:
 
-- Sem acesso GitHub: conferir convite/conta e `gh auth status` localmente.
-- Sem release do build: Antônio precisa publicar o bundle assinado correto.
-- OAuth expirado/revogado: usar o login pessoal já existente (`Entrar-Loki.cmd`)
-  e repetir a consulta. O job diário não abre navegador nem troca a identidade.
-- Lotes em andamento conservam seu build; não editar `expected_build` para
-  vencer o preflight. A mudança de versão pode exigir reconciliação do lote.
-- No Codex, encerrar as conversas/aplicativo antes da ativação e mantê-lo
-  fechado até o comando terminar. A detecção de processos adia a troca enquanto
-  estiver aberto; não iniciar o Codex durante o comando. Depois, abrir conversa
-  nova. No Claude, iniciar nova sessão pelo launcher após a atualização.
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File $lokiUpdater -Action disable
-powershell -NoProfile -ExecutionPolicy Bypass -File $lokiUpdater -Action rollback -Harness codex
+```text
+claude plugin marketplace add https://github.com/T0minh0/MCP_Loki.git
+claude plugin install loki-orientacoes@loki-equipe --scope user
+claude plugin list --json
 ```
 
-Desabilitar remove somente a tarefa. Rollback conserva documentos e OAuth, mas
-exige que o build anterior seja compatível com o backend servido; não faz
-rollback do servidor. Não apagar pastas de releases manualmente durante o uso.
+Isso não substitui o MCP antigo. Não instalar novamente o kit Windows nem criar
+outra conexão OAuth para seguir este guia.
 
-## Aceite separado por pessoa
+## Ana — Mac
 
-Registrar: acesso ao canal privado, bootstrap/hash conferidos, mesma identidade
-OAuth, documentos/checkpoints preservados, versão efetivamente carregada e
-execução manual/agendada da tarefa. Um teste Linux, um arquivo de configuração
-ou o sucesso de Antônio não comprovam o aceite Windows da Ana ou do Samuel.
+No Terminal, executar uma vez:
 
-Limite conhecido desta versão: um plugin Codex explicitamente desativado só é
-identificado após preparar a candidata. Execuções repetidas podem acumular
-releases sem uso; reativar o plugin para retomar, ou desabilitar a tarefa enquanto
-ele permanecer desligado. Não apagar releases de conversas em andamento.
+```bash
+set -e
+loki_root="$HOME/Library/Application Support/Loki-Claude-Updates"
+mkdir -p "$loki_root"
+git clone --branch feature/dynamic-instructions https://github.com/T0minh0/MCP_Loki.git "$loki_root/source"
+uv venv --python 3.11 "$loki_root/venv"
+uv pip install --python "$loki_root/venv/bin/python" --require-hashes -r "$loki_root/source/scripts/requirements-claude-updater.txt"
+"$loki_root/venv/bin/python" "$loki_root/source/scripts/claude_daily.py" configure --root "$loki_root" --claude "$(command -v claude)"
+"$loki_root/venv/bin/python" "$loki_root/claude_daily.py" run --root "$loki_root"
+mkdir -p "$HOME/Library/LaunchAgents"
+cp "$loki_root/com.themindops.loki-updates.plist" "$HOME/Library/LaunchAgents/"
+launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.themindops.loki-updates.plist"
+launchctl print "gui/$(id -u)/com.themindops.loki-updates"
+```
+
+Ao repetir o cadastro, descarregar primeiro com `launchctl bootout` usando o
+mesmo domínio `gui/$(id -u)` e arquivo plist. Não repetir `git clone` sobre uma
+pasta existente: para atualizar o instalador, fazer `git -C "$loki_root/source"
+pull --ff-only` e repetir `configure` após revisão.
+
+## Samuel — Linux
+
+No terminal da sua sessão de usuário:
+
+```bash
+set -e
+loki_root="$HOME/.local/share/loki-claude-updates"
+mkdir -p "$loki_root"
+git clone --branch feature/dynamic-instructions https://github.com/T0minh0/MCP_Loki.git "$loki_root/source"
+uv venv --python 3.11 "$loki_root/venv"
+uv pip install --python "$loki_root/venv/bin/python" --require-hashes -r "$loki_root/source/scripts/requirements-claude-updater.txt"
+"$loki_root/venv/bin/python" "$loki_root/source/scripts/claude_daily.py" configure --root "$loki_root" --claude "$(command -v claude)"
+"$loki_root/venv/bin/python" "$loki_root/claude_daily.py" run --root "$loki_root"
+mkdir -p "$HOME/.config/systemd/user"
+cp "$loki_root/loki-claude-update.service" "$loki_root/loki-claude-update.timer" "$HOME/.config/systemd/user/"
+systemctl --user daemon-reload
+systemctl --user enable --now loki-claude-update.timer
+systemctl --user list-timers loki-claude-update.timer
+```
+
+Requer systemd de usuário funcionando. Sem sessão persistente/linger, o timer
+para ao sair do usuário e consulta novamente após o próximo login. Não usar
+`sudo` para instalar na identidade de outra pessoa.
+
+## Samuel — Windows
+
+No PowerShell do mesmo usuário que já usa o Claude:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$lokiRoot = Join-Path $env:LOCALAPPDATA 'Loki-Claude-Updates'
+New-Item -ItemType Directory -Force $lokiRoot | Out-Null
+git clone --branch feature/dynamic-instructions https://github.com/T0minh0/MCP_Loki.git (Join-Path $lokiRoot 'source')
+if ($LASTEXITCODE -ne 0) { throw 'Clone falhou; agenda nao cadastrada.' }
+uv venv --python 3.11 (Join-Path $lokiRoot 'venv')
+if ($LASTEXITCODE -ne 0) { throw 'Python falhou; agenda nao cadastrada.' }
+$lokiPython = Join-Path $lokiRoot 'venv\Scripts\python.exe'
+uv pip install --python $lokiPython --require-hashes -r (Join-Path $lokiRoot 'source\scripts\requirements-claude-updater.txt')
+if ($LASTEXITCODE -ne 0) { throw 'Dependencia falhou; agenda nao cadastrada.' }
+& $lokiPython (Join-Path $lokiRoot 'source\scripts\claude_daily.py') configure --root $lokiRoot --claude (Get-Command claude.exe).Source
+if ($LASTEXITCODE -ne 0) { throw 'Configuracao falhou; agenda nao cadastrada.' }
+& $lokiPython (Join-Path $lokiRoot 'claude_daily.py') run --root $lokiRoot
+if ($LASTEXITCODE -ne 0) { throw 'Consulta falhou; agenda nao cadastrada.' }
+schtasks /Create /TN 'Loki-Claude-Update' /XML (Join-Path $lokiRoot 'loki-claude-update.xml') /F
+if ($LASTEXITCODE -ne 0) { throw 'Cadastro da tarefa falhou.' }
+schtasks /Run /TN 'Loki-Claude-Update'
+if ($LASTEXITCODE -ne 0) { throw 'Disparo da tarefa falhou.' }
+Get-ScheduledTaskInfo -TaskName 'Loki-Claude-Update'
+```
+
+A tarefa usa `InteractiveToken`, sem guardar senha. Requer a sessão do usuário
+conectada. A consulta é compensada quando a máquina/sessão voltar.
+
+## Horário, verificação e diagnóstico
+
+Um disparo leve por minuto verifica o relógio em `America/Sao_Paulo`. Só depois
+das **07h de Brasília** executa os dois comandos de atualização, uma vez por dia.
+Com a máquina disponível, começa em até aproximadamente um minuto após 07h;
+se estiver desligada ou sem sessão, consulta ao voltar depois desse horário.
+O tick não chama um modelo, não envia documentos e não abre login. Falhas também
+contam como uma tentativa no dia, evitando repetição de rede a cada minuto.
+
+Em Bash, consultar estado ou repetir imediatamente:
+
+```bash
+"$loki_root/venv/bin/python" "$loki_root/claude_daily.py" status --root "$loki_root"
+"$loki_root/venv/bin/python" "$loki_root/claude_daily.py" run --root "$loki_root"
+claude plugin list --json
+```
+
+No Windows, usar `& $lokiPython (Join-Path $lokiRoot 'claude_daily.py') status
+--root $lokiRoot` ou trocar `status` por `run` na mesma linha. `atualizado`
+registra que os comandos oficiais concluíram; pode não haver versão nova.
+`falha_consultar_claude` ou `iniciado` sem conclusão exige inspeção/repetição.
+O comando `run` devolve código 1 em falha. Um tick posterior já consultado no dia
+retorna 0 sem apagar o erro anterior de `status.json`; conferir o estado, além do
+resultado da tarefa.
+
+Para diagnosticar no terminal, executar `claude plugin marketplace update
+loki-equipe` e `claude plugin update loki-orientacoes@loki-equipe --scope user`
+na mesma sessão/identidade. Conferir acesso GitHub e o caminho do executável.
+Se usa `CLAUDE_CONFIG_DIR`, configurar a agenda no terminal com essa variável;
+o caminho e o PATH são preservados, sem copiar credenciais. Sem esse cuidado,
+o cliente pode usar outro perfil. Não salvar tokens em variáveis da tarefa.
+
+Após a atualização, iniciar nova conversa ou usar `/reload-plugins` no Claude.
+Executar `/loki-orientacoes:loki-bootstrap` e confirmar `meu_acesso` e as
+instruções `geral`/do domínio. Sessões abertas não comprovam recarga automática.
+
+## Desabilitar e voltar uma orientação
+
+Mac: descarregar e remover somente o cadastro deste job, para que não volte no
+próximo login:
+
+```bash
+launchctl bootout "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.themindops.loki-updates.plist"
+rm "$HOME/Library/LaunchAgents/com.themindops.loki-updates.plist"
+```
+
+Linux: `systemctl --user disable --now loki-claude-update.timer`.
+Windows: `schtasks /Change /TN 'Loki-Claude-Update' /Disable`.
+Isso para a agenda e preserva o MCP e o OAuth.
+
+Se uma orientação nova estiver errada, o caminho preferencial é revertê-la por
+PR e publicar uma **nova versão** do plugin. Para uma reversão local imediata,
+com a agenda parada e sem conversa em andamento: no clone `source`, usar
+`git checkout --detach COMMIT_VALIDADO_ANTERIOR` (SHA fornecido por Antônio),
+remover apenas o plugin `claude plugin uninstall loki-orientacoes@loki-equipe
+--scope user`, remover apenas esse marketplace com `claude plugin marketplace
+remove loki-equipe`, adicioná-lo pelo **caminho absoluto do clone source** e
+instalar `loki-orientacoes@loki-equipe` outra vez. Assim o Claude lê a versão
+fixada localmente. Conferir versão com `claude plugin list --json` e nova conversa.
+O rollback do plugin não faz rollback do backend nem do OAuth. A agenda fica
+parada até reconciliar a versão e restaurar o marketplace remoto; não prometer
+rollback automático transacional para esse perfil nativo.
+
+## Antônio — Codex e ChatGPT
+
+Seu servidor Linux é o ambiente de manutenção. Não executar estes cadastros de
+Claude para configurar Codex ou ChatGPT. Ambos continuam usando a conexão MCP
+existente; as instruções dinâmicas vêm do serviço publicado. Conferir `meu_acesso`
+e as ferramentas atuais em cada aplicativo. O ChatGPT não executa esta agenda
+local nem instala um marketplace Claude. Atualização de catálogo/conexão deve
+ser verificada na interface do aplicativo se necessário, sem presumir novo OAuth.
+
+## Aceite por máquina
+
+Conferir: acesso privado pessoal, plugin/versão habilitados, mesma identidade no
+MCP, orientações carregadas em conversa nova, execução manual concluída e um
+disparo real do agendador registrado em `status.json`. Não enviar dados pessoais
+ou tokens no recibo. Testes neste servidor não equivalem ao aceite no Mac ou
+no Windows. Nenhuma máquina da equipe foi configurada remotamente nesta tarefa.
+
+Referências: [marketplaces Claude](https://code.claude.com/docs/en/plugin-marketplaces),
+[comandos oficiais de plugins](https://code.claude.com/docs/en/plugins/cli-reference).
