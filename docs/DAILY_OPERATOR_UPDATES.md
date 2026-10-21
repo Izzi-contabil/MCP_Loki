@@ -16,6 +16,17 @@ leitura ao GitHub é separado do Google/OAuth que eles já usam no Loki.
 3. No computador administrativo com a chave já provisionada, construir o bundle
    assinado desse **mesmo commit** pelo `scripts/operator_release.py construir`.
    A chave de assinatura permanece com Antônio; não entra em CI ou nos PCs deles.
+   No checkout administrativo atualizado, informar os caminhos locais existentes:
+
+   ```powershell
+   $lokiBuild = (Invoke-RestMethod 'https://loki.themindops.com/healthz').build
+   $lokiSigningKey = Read-Host 'Caminho da chave de release ja provisionada neste computador'
+   $lokiReleaseOutput = Read-Host 'Pasta privada de saida fora do repositorio'
+   uv run --no-sync python scripts/operator_release.py construir --chave-release $lokiSigningKey --saida $lokiReleaseOutput --rev $lokiBuild
+   ```
+
+   O comando imprime o caminho do bundle assinado; usar esse arquivo no passo
+   seguinte. Não copiar a chave para o servidor ou para os operadores.
 4. Publicar pelo novo comando do Project Loki:
 
    ```text
@@ -71,7 +82,9 @@ outro administrador. Repetir independentemente para Ana e Samuel.
 
    Conferir o hash com `bootstrap_sha256` do recibo administrativo antes de
    executar. Este é o preparo único do canal confiável.
-5. Informar o caminho real da pasta trusted anterior e habilitar:
+5. Fechar o Codex (aplicativo e terminais) e mantê-lo fechado durante a
+   ativação. O CLI substitui seu cache; o atualizador adia a troca enquanto
+   detectar o Codex aberto. Informar a pasta trusted anterior e habilitar:
 
    ```powershell
    $lokiTrusted = Read-Host 'Caminho completo da pasta trusted original'
@@ -103,8 +116,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File $lokiUpdater -Action run -Ha
 Get-ScheduledTask -TaskName 'Izzi-Loki-Update-*' | Get-ScheduledTaskInfo
 ```
 
-Conferir `LastTaskResult=0` e o estado retornado pelo atualizador. `atualizado`
-significa nova release ativa; `sem_atualizacao` significa mesmo build;
+Conferir `LastTaskResult=0` e o estado retornado pelo atualizador. Um
+resultado adiado mantém a instalação anterior e será tentado novamente no
+próximo disparo; para ativar antes, fechar o Codex e executar `run`. `atualizado`
+significa nova release ativa; `sem_atualizacao` significa mesmo build e instalação da harness conferida;
+`adiado_harness_em_uso` pede fechar o Codex e repetir `run`;
 `adiado_plugin_desativado` preserva um plugin que o usuário desligou. `falha` ou
 `intervencao_necessaria` exigem diagnóstico; não equivalem a sucesso.
 
@@ -119,8 +135,10 @@ desejado, sempre interpretado em Brasília. Usar o mesmo `-Harness` configurado.
   e repetir a consulta. O job diário não abre navegador nem troca a identidade.
 - Lotes em andamento conservam seu build; não editar `expected_build` para
   vencer o preflight. A mudança de versão pode exigir reconciliação do lote.
-- Conversas abertas continuam usando o código carregado; abrir conversa nova
-  ou reiniciar a harness após atualizar.
+- No Codex, encerrar as conversas/aplicativo antes da ativação e mantê-lo
+  fechado até o comando terminar. A detecção de processos adia a troca enquanto
+  estiver aberto; não iniciar o Codex durante o comando. Depois, abrir conversa
+  nova. No Claude, iniciar nova sessão pelo launcher após a atualização.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File $lokiUpdater -Action disable
@@ -137,3 +155,8 @@ Registrar: acesso ao canal privado, bootstrap/hash conferidos, mesma identidade
 OAuth, documentos/checkpoints preservados, versão efetivamente carregada e
 execução manual/agendada da tarefa. Um teste Linux, um arquivo de configuração
 ou o sucesso de Antônio não comprovam o aceite Windows da Ana ou do Samuel.
+
+Limite conhecido desta versão: um plugin Codex explicitamente desativado só é
+identificado após preparar a candidata. Execuções repetidas podem acumular
+releases sem uso; reativar o plugin para retomar, ou desabilitar a tarefa enquanto
+ele permanecer desligado. Não apagar releases de conversas em andamento.
