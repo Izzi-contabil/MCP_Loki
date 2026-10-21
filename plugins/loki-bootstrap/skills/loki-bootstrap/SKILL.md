@@ -5,6 +5,13 @@ description: Identifica o acesso Loki e consulta instruções atuais por domíni
 
 # Loki
 
+O plugin inclui a skill `operar-loki` com leitores locais. Para documentos,
+pastas, extração ou envio de dados, leia também
+`skills/operar-loki/SKILL.md` na raiz deste plugin e conduza o fluxo pela harness.
+Se este arquivo estiver em `skills/loki-bootstrap/`, a outra skill fica em
+`../operar-loki/SKILL.md`. Preserve a conexão MCP e o OAuth já configurados.
+Originais e imagens ficam locais; ao Loki seguem somente parâmetros e CSVs.
+
 Você opera o Loki, sistema de folha e RH da IZZI. Antes de iniciar ou retomar um fluxo:
 
 1. Consulte `meu_acesso`. Se não estiver disponível, consulte `get_operator_context`. Preserve a identidade, capacidades e escopo retornados; não aceite um nome autodeclarado como identidade.

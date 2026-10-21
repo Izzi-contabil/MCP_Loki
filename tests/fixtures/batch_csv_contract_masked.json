@@ -1,0 +1,112 @@
+{
+  "schema_version": "loki.batch-csv/1",
+  "columns": [
+    "schema_version",
+    "record_key",
+    "revision",
+    "kind",
+    "state",
+    "path",
+    "value_type",
+    "value"
+  ],
+  "encoding": "utf-8-sig",
+  "delimiter": ";",
+  "path_format": "JSON Pointer; explicit parent object/array markers",
+  "roots": [
+    "declaration",
+    "source_ids",
+    "dependencies",
+    "missing_fields"
+  ],
+  "value_types": [
+    "string",
+    "integer",
+    "boolean",
+    "null",
+    "object",
+    "array"
+  ],
+  "limits": {
+    "max_bytes": 33554432,
+    "max_rows": 200000,
+    "max_records": 10000,
+    "max_depth": 64,
+    "max_array_index": 9999,
+    "max_cell_chars": 65536
+  },
+  "record_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "loki.batch-record/1",
+        "default": "loki.batch-record/1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "key": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,95}$",
+        "title": "Key",
+        "type": "string"
+      },
+      "kind": {
+        "enum": [
+          "reading",
+          "company_setup",
+          "onboarding_chunk",
+          "task"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "revision": {
+        "default": 1,
+        "minimum": 1,
+        "title": "Revision",
+        "type": "integer"
+      },
+      "state": {
+        "default": "ready",
+        "enum": [
+          "ready",
+          "pending"
+        ],
+        "title": "State",
+        "type": "string"
+      },
+      "source_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Ids",
+        "type": "array"
+      },
+      "dependencies": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Dependencies",
+        "type": "array"
+      },
+      "declaration": {
+        "additionalProperties": true,
+        "title": "Declaration",
+        "type": "object"
+      },
+      "missing_fields": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Missing Fields",
+        "type": "array"
+      }
+    },
+    "required": [
+      "key",
+      "kind",
+      "declaration"
+    ],
+    "title": "BatchCsvRecord",
+    "type": "object"
+  }
+}

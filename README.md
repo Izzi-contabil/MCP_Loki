@@ -1,6 +1,6 @@
 # MCP Loki — instruções e compatibilidade
 
-Este repositório mantém o pacote `mcp-loki-updates`, as instruções versionadas por domínio e um bootstrap curto para clientes Loki. O backend incorpora o wheel e entrega as instruções pelas ferramentas MCP autorizadas. Uma alteração neste repositório só alcança o serviço depois da promoção, revisão e implantação do backend.
+Este repositório mantém o pacote `mcp-loki-updates`, instruções versionadas por domínio e o plugin nativo com leitores locais para Claude Code e Codex. O backend incorpora o wheel e entrega instruções pelas ferramentas MCP autorizadas. Alterar o provider exige promoção, revisão e implantação do backend; o plugin local tem distribuição Git própria.
 
 O pacote não é um servidor MCP independente. Identidade Google/OAuth, permissões, banco, documentos, cálculos e decisões continuam no Project Loki. O conteúdo deste repositório não concede acesso nem representa aceite humano.
 
@@ -10,12 +10,17 @@ A branch padrão deste repositório privado é **`main`**. As instalações por 
 acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
 
 O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
-o plugin de orientações do Claude Code para Ana no Mac e Samuel no Windows/Linux,
-preservando o MCP e o OAuth existentes. O repositório privado distribui o plugin
-por Git; o kit Windows assinado continua com seu canal próprio no Project Loki.
+o plugin completo do Claude Code para Ana no Mac e Samuel no Windows/Linux,
+preservando o MCP e o OAuth existentes. Na versão1.1.0, `loki-orientacoes` mantém
+o nome para atualizar instalações anteriores e inclui `operar-loki`, leitores
+locais e preparação de CSV/parâmetros. A harness faz a leitura e os envios;
+originais ficam locais e o Loki recebe somente parâmetros e CSVs.
 O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
 com atualização automática pelo gerenciador nativo e a conexão MCP já existente.
-Os dois roteiros usam somente a harness, sem Python, uv ou agendador externo.
+Os dois roteiros usam auto-update nativo, sem agendador externo ou novos ZIPs.
+Os leitores usam uv e Python3.11/dependências com hashes, preparados no cache do
+usuário. Não incluem backend, conexão nova ou credenciais. O kit Windows legado
+assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).
 
 A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
 passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
@@ -42,7 +47,7 @@ O [bootstrap](plugins/loki-bootstrap/SKILL.md) orienta o cliente a identificar-s
 
 As respostas das duas ferramentas antigas recebem `runtime_instructions` de forma aditiva na integração do backend. Isso oferece um caminho para um cliente `0.4.0` que já consulta identidade receber orientação atualizada, sem trocar o ZIP. O modelo pode deixar de consultar uma ferramenta; o servidor continua responsável por autorização e validação. Instruções não garantem invocação ou execução.
 
-O marketplace privado distribui o bootstrap para Claude Code e Codex. Isso não publica um plugin no catálogo ChatGPT nem instala algo nessa conta. Consulte [MCP_UPDATES.md](docs/MCP_UPDATES.md) para refresh manual de ferramentas e diferenças entre ChatGPT e os kits desktop.
+O marketplace privado distribui as skills e os leitores para Claude Code e Codex. Isso não publica um plugin no catálogo ChatGPT nem instala algo nessa conta. Consulte [MCP_UPDATES.md](docs/MCP_UPDATES.md) para refresh manual de ferramentas e diferenças entre ChatGPT e os kits desktop.
 
 ## Desenvolvimento e promoção local
 
@@ -53,7 +58,7 @@ uv sync --locked --all-extras --no-editable
 uv run --no-sync pytest
 uv run --no-sync ruff check .
 uv run --no-sync ruff format --check .
-uv run --no-sync mypy src scripts
+uv run --no-sync mypy src scripts plugins/loki-bootstrap/skills/operar-loki/scripts
 uv build --wheel
 uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.3-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
 ```

@@ -25,7 +25,7 @@ jobs:
           uv run --no-sync ruff check .
           uv run --no-sync ruff format --check .
       - name: Types
-        run: uv run --no-sync mypy src scripts
+        run: uv run --no-sync mypy src scripts plugins/loki-bootstrap/skills/operar-loki/scripts
       - name: Build wheel
         run: uv build --wheel
       - name: Smoke installed wheel away from sources
@@ -40,3 +40,20 @@ jobs:
           name: mcp-loki-updates-wheel
           path: dist/*.whl
           if-no-files-found: error
+
+  native-readers:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+      - run: uv sync --locked --all-extras --no-editable
+      - name: Portable readers and harness-only requests
+        run: uv run --no-sync pytest tests/test_local_readers_masked.py tests/test_harness_exchange_masked.py tests/test_native_local_cli_masked.py tests/test_bootstrap_package_masked.py
+      - name: Locked shipped entrypoint
+        run: uv run --no-project --locked --python 3.11 --script plugins/loki-bootstrap/skills/operar-loki/scripts/loki_local.py doctor "${{ runner.temp }}/loki-native-doctor"

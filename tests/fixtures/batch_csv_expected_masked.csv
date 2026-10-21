@@ -1,0 +1,13 @@
+schema_version;record_key;revision;kind;state;path;value_type;value
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration;object;
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration/empty;array;
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration/false;boolean;false
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration/literal;string;=1+1
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration/null;null;
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration/path~1key~0;string;sintetico
+loki.batch-csv/1;reading-1;2;reading;pending;/declaration/zero;integer;0
+loki.batch-csv/1;reading-1;2;reading;pending;/source_ids;array;
+loki.batch-csv/1;reading-1;2;reading;pending;/source_ids/0;string;local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+loki.batch-csv/1;reading-1;2;reading;pending;/dependencies;array;
+loki.batch-csv/1;reading-1;2;reading;pending;/missing_fields;array;
+loki.batch-csv/1;reading-1;2;reading;pending;/missing_fields/0;string;pending
