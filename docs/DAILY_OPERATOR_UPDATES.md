@@ -4,6 +4,39 @@
 repetir a configuração em cada máquina. O plugin usa o MCP e o OAuth que vocês
 já têm. A atualização fica por conta do próprio Claude Code.
 
+**A partir da versão1.1.0, o mesmo plugin inclui os leitores locais.** A harness
+lê/confere os documentos e envia somente parâmetros e CSVs pela conexão existente.
+Originais e imagens ficam no computador. O nome `loki-orientacoes` foi mantido
+para atualizar instalações anteriores sem reinstalar ou refazer OAuth.
+
+## Pré-requisito dos leitores: uv
+
+Instalar `uv` uma única vez, se `uv --version` não funcionar. Não é necessário
+instalar Python nem clonar o backend: o uv prepara Python3.11 e as dependências
+fixadas pelo lock do plugin na primeira execução.
+
+Mac, se já usa Homebrew:
+
+```text
+brew install uv
+```
+
+Windows, no PowerShell:
+
+```text
+winget install --id astral-sh.uv -e
+```
+
+Linux, ou Mac sem Homebrew (instalador oficial):
+
+```sh
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Reabrir o terminal/Claude depois da instalação. Requisitos e formatos:
+[leitores locais](LOCAL_READERS.md). O helper usa bibliotecas portáveis; não
+depende de Poppler, Office, LibreOffice ou Tesseract instalado no sistema.
+
 ## 1. Confirmar acesso ao GitHub
 
 Depois que Antônio liberar a leitura do repositório privado `T0minh0/MCP_Loki`,
@@ -32,7 +65,7 @@ claude plugin list --json
 
 Conferir `loki-orientacoes` habilitado. Se já estiver instalado, manter a
 instalação e seguir para a etapa 3. Preservar o nome, a URL e o OAuth da conexão
-MCP existente. O plugin acrescenta orientações; não cadastra outro servidor.
+MCP existente. O plugin acrescenta orientações e leitores; não cadastra outro servidor.
 
 ## 3. Ligar o auto-update do Claude
 
@@ -49,7 +82,7 @@ iniciar uma sessão e atualiza os plugins instalados. Novas orientações entram
 na próxima sessão ou com `/reload-plugins` depois do aviso de atualização.
 
 O repositório privado precisa continuar acessível pela credencial do GitHub.
-Não é necessário instalar Python, uv, clonar o repositório manualmente ou
+Depois do pré-requisito uv, não é necessário instalar Python, clonar o repositório manualmente ou
 cadastrar tarefas no sistema operacional. Não há horário fixo às 07h nem
 consulta agendada com o Claude fechado.
 
@@ -66,6 +99,23 @@ atuais do servidor. Conferir a própria identidade e o acesso esperado. Não
 refazer OAuth se a conexão já funciona. A instalação por Git não concede
 permissões no Loki nem altera o catálogo de ferramentas automaticamente.
 
+Para iniciar o fluxo completo, executar na conversa:
+
+```text
+/loki-orientacoes:operar-loki
+```
+
+Pedir: **“Confira os leitores com o diagnóstico local, mantendo minha conexão
+OAuth. Depois leia os documentos que eu indicar e envie ao Loki somente os
+parâmetros e CSVs pela conexão existente.”** A harness resolve o caminho do
+script instalado, executa o diagnóstico e conduz os comandos. O operador
+permanece na conversa; não precisa invocar os leitores manualmente.
+
+O diagnóstico local não valida a conta remota. Conferir identidade/permissão
+pelo MCP e realizar um ensaio autorizado antes de trabalho real. Onboarding
+continua sujeito ao papel administrativo exigido no backend; o plugin não
+amplia permissões. Scripts não enviam PDFs, imagens ou ZIPs.
+
 Se uma atualização não chegar, executar no terminal:
 
 ```text
@@ -76,6 +126,9 @@ claude plugin list --json
 
 Depois, usar `/reload-plugins` ou iniciar nova conversa. Conferir o acesso
 GitHub se houver erro de autenticação; não remover o MCP para resolver Git.
+
+Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.0 ou superior em
+`claude plugin list --json`. Não desinstalar a conexão antiga para atualizar.
 
 ## Quem seguiu o roteiro anterior
 
@@ -90,9 +143,9 @@ O ChatGPT continua com a conexão MCP configurada no próprio aplicativo.
 
 Para publicar uma orientação nova, Antônio revisa e integra a alteração com
 nova versão em `plugins/loki-bootstrap/.claude-plugin/plugin.json`, mantendo as
-duas cópias da skill iguais. Esse canal distribui somente orientações. Mudanças
-do provider e do backend continuam exigindo os gates de build e publicação;
-leitores do kit Windows seguem seu canal assinado.
+duas cópias do bootstrap iguais. Esse canal distribui também a skill operacional,
+os scripts e o lock dos leitores. Mudanças do provider/backend continuam com
+seus gates de build e publicação; o kit Windows legado não é modificado.
 
 Referências: [auto-update no Claude](https://code.claude.com/docs/en/plugins/install#keep-plugins-updated),
 [credenciais do repositório privado](https://code.claude.com/docs/en/plugins/host-marketplace#what-background-auto-update-does-with-credentials).

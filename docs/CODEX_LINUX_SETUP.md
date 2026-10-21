@@ -2,13 +2,14 @@
 
 O plugin `loki-orientacoes@loki-equipe` usa o MCP e o OAuth já conectados.
 Este roteiro substitui o timer das 07h e deixa a atualização com o próprio
-Codex. Não instala leitores locais ou o kit executável Windows.
+Codex. A versão1.1.0 inclui leitores locais, a skill `operar-loki` e preparação
+de parâmetros/CSVs pela harness. O kit executável Windows antigo não é alterado.
 
 ## 1. Instalar uma vez
 
 No terminal do mesmo usuário/perfil que executa o Codex, conferir `codex --version`.
 O procedimento foi verificado no Codex 0.163.0. Git e GitHub CLI precisam estar
-instalados, com leitura pessoal de `T0minh0/MCP_Loki`. Se necessário, executar
+instalados, além de `uv` para os leitores, com leitura pessoal de `T0minh0/MCP_Loki`. Se necessário, executar
 `gh auth login --hostname github.com --web --git-protocol https` e
 `gh auth setup-git` antes da instalação.
 
@@ -37,6 +38,16 @@ Em conversa nova, selecionar a skill `loki-bootstrap` ou invocar `$loki-bootstra
 Pedir que consulte `meu_acesso` e as instruções `geral`. Conferir identidade e
 capacidades; a instalação no disco não comprova recarga numa conversa antiga.
 
+Para documentos e operação completa, selecionar `$operar-loki`. Pedir que rode
+o diagnóstico local e depois leia os documentos indicados. A harness localiza
+o script na skill instalada e o executa por uv com Python3.11 e lock; o lock
+acompanha as atualizações Git.
+
+Somente parâmetros e CSVs seguem para o Loki pela conexão já autenticada.
+Originais, imagens e estado ficam em workspace privado fora do cache do plugin.
+Python/dependências são preparados pelo uv sem importar cofre Windows ou copiar
+tokens. Ver [formatos e diagnóstico](LOCAL_READERS.md).
+
 ## 3. Conferir ou atualizar imediatamente
 
 Se precisar conferir uma publicação sem esperar o próximo ciclo nativo:
@@ -54,6 +65,9 @@ na credencial pessoal do Git; ela é separada do OAuth do Loki.
 Quem seguiu o roteiro anterior deve [remover a agenda externa](REMOVE_EXTERNAL_SCHEDULERS.md#codex-no-linux).
 O ChatGPT continua usando a conexão MCP existente no aplicativo; instalar o
 plugin local não instala outro plugin na conta ChatGPT.
+
+Quem já tinha1.0.2 deve conferir1.1.0 ou superior e as duas skills após upgrade.
+Reabrir a conversa para usar o pacote completo. Não reinstalar MCP/OAuth.
 
 Referências: [OpenAI Docs — marketplaces](https://developers.openai.com/plugins/build/plugins),
 [inicialização nativa no Codex 0.163.0](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manager.rs#L2823).

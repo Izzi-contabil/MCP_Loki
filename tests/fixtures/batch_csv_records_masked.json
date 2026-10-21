@@ -1,0 +1,23 @@
+[
+  {
+    "key": "reading-1",
+    "kind": "reading",
+    "revision": 2,
+    "state": "pending",
+    "source_ids": [
+      "local:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
+    "dependencies": [],
+    "missing_fields": [
+      "pending"
+    ],
+    "declaration": {
+      "zero": 0,
+      "false": false,
+      "null": null,
+      "empty": [],
+      "literal": "=1+1",
+      "path/key~": "sintetico"
+    }
+  }
+]

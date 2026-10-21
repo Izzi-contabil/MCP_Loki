@@ -1,5 +1,9 @@
 # Validação do fluxo nativo — 21/10/2026
 
+**Registro histórico da versão1.0.2.** O plugin completo1.1.0, incluindo leitores
+locais e preparação pela harness, é descrito em [LOCAL_READERS.md](LOCAL_READERS.md).
+Os números e o escopo abaixo referem-se à entrega anterior, só de orientações.
+
 O procedimento vigente usa auto-update da harness, conforme orientação expressa
 do usuário. Substitui os agendadores externos das PRs 4 e 5. Ana/macOS e
 Samuel/Windows+Linux continuam no Claude Code; Antônio usa Codex neste Linux.
