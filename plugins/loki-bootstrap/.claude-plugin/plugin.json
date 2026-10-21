@@ -1,5 +1,5 @@
 {
   "name": "loki-orientacoes",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Consulta as instruções atuais do Loki usando o MCP já conectado."
 }

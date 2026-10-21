@@ -6,12 +6,13 @@ O pacote não é um servidor MCP independente. Identidade Google/OAuth, permiss�
 
 ## Distribuição do kit do operador
 
-O [passo a passo de atualização diária](docs/DAILY_OPERATOR_UPDATES.md) configura
+O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
 o plugin de orientações do Claude Code para Ana no Mac e Samuel no Windows/Linux,
 preservando o MCP e o OAuth existentes. O repositório privado distribui o plugin
 por Git; o kit Windows assinado continua com seu canal próprio no Project Loki.
 O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
-com atualização diária pelo gerenciador nativo e a conexão MCP já existente.
+com atualização automática pelo gerenciador nativo e a conexão MCP já existente.
+Os dois roteiros usam somente a harness, sem Python, uv ou agendador externo.
 
 A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
 passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
