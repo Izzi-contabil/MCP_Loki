@@ -58,3 +58,8 @@ A [publicação autorizada em produção](docs/PRODUCTION_RELEASE.md), em 20/10/
 registra o build implantado, o health e as instruções recebidas pela conta
 autenticada. Login no outro dispositivo e aceite das quatro instalações são
 verificações individuais.
+
+O [handoff para o servidor pessoal](docs/HANDOFF_PERSONAL_SERVER.md) reúne as
+referências publicadas, os resultados e limites dos testes e a pendência de
+catálogo observada no piloto. Use esse checkpoint para retomar o trabalho sem
+reaplicar a integração já implantada.

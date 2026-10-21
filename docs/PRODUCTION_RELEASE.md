@@ -42,6 +42,14 @@ refresh do catálogo quando necessário. O ensaio autenticado pela ferramenta
 antiga não comprova descoberta das ferramentas novas. Compatibilidade do cliente
 permanece desconhecida quando ele não declara suas versões.
 
+Posteriormente, o usuário relatou no outro dispositivo o build `c91c145` e as
+instruções `1.0.0`, além do domínio `rescisao` obtido pelo fallback de
+`meu_acesso`. A ferramenta `loki_obter_instrucoes` não estava disponível nessa
+conexão. Esse relato confirma o recebimento pelo caminho antigo no piloto,
+sem comprovar refresh do catálogo, login observado pelo agente ou aceite das
+outras contas. O [handoff](HANDOFF_PERSONAL_SERVER.md) registra essa pendência
+para a continuidade no servidor pessoal.
+
 Não foram executadas operações em empregados, casos ou documentos de RH durante
 essa publicação. A CI remota do backend permaneceu pendente por orientação do
 usuário; não foi declarada aprovada. Os testes locais e seus limites estão em
