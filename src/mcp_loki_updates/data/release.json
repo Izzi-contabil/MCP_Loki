@@ -1,22 +1,22 @@
 {
   "schema_version": 1,
-  "instructions_version": "1.0.0",
+  "instructions_version": "1.1.0",
   "contract_version": "1.0.0",
   "plugin_version": "0.5.0",
   "minimum_plugin_version": "0.4.0",
-  "updated_at": "2026-10-19",
+  "updated_at": "2026-10-21",
   "domains": {
     "geral": {
-      "metadata_sha256": "9c64b320d4b8655dab4df0173ff7e83239a00ac9821b93e2b3ed4d825d3d0411",
-      "content_sha256": "97a3b2dbaadb305c09431a7876afc699b632ae0b4f135885f54cbeea76b6361d"
+      "metadata_sha256": "8c7d111a9c53490930ac2abb9ca9a5f920936c0f1e5a879d7c87a4dff647e323",
+      "content_sha256": "efc6ff878f851c74deefd0a1bd8da526749bc55f5841b76bb6a0f5b47e2f946e"
     },
     "admissao": {
-      "metadata_sha256": "3a95ceb5b03d811481aeacc1a8374c9029ef39ada823a3df149f5d20aa94b376",
-      "content_sha256": "81bf1b4a09c36ec82816ef95a20e264d3e896c8966a903cc570c2bec4f17f10c"
+      "metadata_sha256": "abeb2d878c2485ae152c4658c687755074630729335389842c41b8cace7adb79",
+      "content_sha256": "1043e4da3a1fac6b5ef101122bf59dddb94f16b4b62950d6138ad43dbac7ff3e"
     },
     "rescisao": {
-      "metadata_sha256": "bf2db6a9f305ddff16dc71a3070debc797b7b9768d93040c6ec0e12686de7e51",
-      "content_sha256": "7bad739aef769ee1fc98b5a11efe34f6b8f22de80f8568503954fb4f6adbfea8"
+      "metadata_sha256": "ba54404ef56f4e48c2d592b4dd1425e33b63a22b54beddd177ec3618890b8f35",
+      "content_sha256": "f731a8e9daa248003896255b86940da64ed86e9d2a3860f4d5de81bd9c50af4a"
     },
     "ferias": {
       "metadata_sha256": "3159811846175b731a09bcacd8ce7efa14b0a1478cd9b9a66d0c3aac8dc09ece",
@@ -31,8 +31,8 @@
       "content_sha256": "4d92225570e85baccd05315942d86df029a2a03e969c0dccc1f56cbc1cfe41ae"
     },
     "documentos": {
-      "metadata_sha256": "e0f5bdde1ce3ffc1af1e76fb4169948506751266368872cb791a75768fff2250",
-      "content_sha256": "1b263a4da0551f4d080cbdc5a8a1c539830348f099039b12134344110554b34e"
+      "metadata_sha256": "f9e45e79216e00bd26f897e26b953e01fe277c83a24a0cb943cd71764740cfb8",
+      "content_sha256": "d99a4758393e0d801566ffc039aa84b1d4e2480e0bbeab74785336fec34fb245"
     },
     "aprovacoes": {
       "metadata_sha256": "e2fedd9d0663cb7c1ba9797396f35f8e054b5bc9c1f3c4e2c964f3e60b92e089",
@@ -42,7 +42,9 @@
   "changes": {
     "backend": [],
     "instructions": [
-      "Primeiro snapshot Git revisado com oito dominios tecnicos."
+      "Orienta a harness na selecao de fontes de admissao, conflitos, ASO, VT, dependentes e estabelecimento, sem criar regras de calculo ou preencher dados ausentes.",
+      "Distingue anexos inacessiveis de ausentes na rescisao e exige qualificacao do historico antes de alegar consumo pelo calculador.",
+      "Preserva contratos, capacidades, gates humanos e a distincao entre feedback e assertividade medida."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
