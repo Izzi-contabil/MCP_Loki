@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import csv
 import json
 import os
 import plistlib
+import re
 import shutil
 import subprocess
 import sys
@@ -190,7 +192,14 @@ def configure(root: Path, claude: Path, *, platform: str = sys.platform) -> list
     element(element(trigger, "ScheduleByDay"), "DaysInterval", "1")
     element(element(triggers, "LogonTrigger"), "Enabled", "true")
     principal = element(element(task, "Principals"), "Principal", id="Operator")
-    identity = subprocess.check_output(["whoami"], text=True).strip()
+    # The SID is ASCII even when whoami's account name uses an OEM code page.
+    raw_identity = subprocess.check_output(["whoami", "/user", "/fo", "csv", "/nh"])
+    identities = list(csv.reader(raw_identity.decode("latin-1").splitlines()))
+    if len(identities) != 1 or len(identities[0]) != 2:
+        raise ValueError("identidade_windows_invalida")
+    identity = identities[0][1]
+    if not re.fullmatch(r"S-1-\d+(?:-\d+)+", identity):
+        raise ValueError("identidade_windows_invalida")
     element(principal, "UserId", identity)
     element(principal, "LogonType", "InteractiveToken")
     element(principal, "RunLevel", "LeastPrivilege")

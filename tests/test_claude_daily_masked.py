@@ -152,9 +152,15 @@ def test_default_profile_cannot_inherit_a_different_scheduler_profile(
 
 @pytest.mark.parametrize("platform", ["darwin", "linux", "win32"])
 def test_scheduler_uses_stable_absolute_runner_and_no_credentials(
-    tmp_path: Path, platform: str
+    tmp_path: Path, platform: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     daily = module()
+    if platform == "win32":
+        monkeypatch.setattr(
+            daily.subprocess,
+            "check_output",
+            lambda *_a, **_k: b'"synthetic\\operator","S-1-5-21-111-222-333-1001"\r\n',
+        )
     root = tmp_path / "café with spaces"
     paths = daily.configure(root, Path("/absolute/claude"), platform=platform)
     text = "\n".join(
@@ -182,3 +188,35 @@ def test_scheduler_uses_stable_absolute_runner_and_no_credentials(
         assert tree.find(".//t:Interval", ns).text == "PT1M"
         assert tree.find(".//t:LogonType", ns).text == "InteractiveToken"
         assert tree.find(".//t:MultipleInstancesPolicy", ns).text == "IgnoreNew"
+
+
+def test_windows_task_uses_sid_independent_of_username_encoding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import xml.etree.ElementTree as ET
+
+    daily = module()
+
+    def whoami(args: list[str], **kwargs: Any) -> Any:
+        if args == ["whoami"]:
+            return "synthetic\\caf‚"  # OEM byte 0x82 misdecoded as ANSI.
+        assert args == ["whoami", "/user", "/fo", "csv", "/nh"]
+        return b'"synthetic\\caf\x82","S-1-5-21-111-222-333-1001"\r\n'
+
+    monkeypatch.setattr(daily.subprocess, "check_output", whoami)
+    xml = daily.configure(tmp_path, Path("/claude"), platform="win32")[0]
+    ns = {"t": "http://schemas.microsoft.com/windows/2004/02/mit/task"}
+    assert ET.fromstring(xml.read_bytes()).find(".//t:UserId", ns).text == (
+        "S-1-5-21-111-222-333-1001"
+    )
+
+
+@pytest.mark.parametrize("output", [b"", b'"synthetic","not-a-sid"', b'"synthetic"'])
+def test_windows_task_refuses_an_unresolved_principal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, output: bytes
+) -> None:
+    daily = module()
+    monkeypatch.setattr(daily.subprocess, "check_output", lambda *_a, **_k: output)
+    with pytest.raises(ValueError, match="identidade_windows_invalida"):
+        daily.configure(tmp_path, Path("/claude"), platform="win32")
+    assert not (tmp_path / "loki-claude-update.xml").exists()

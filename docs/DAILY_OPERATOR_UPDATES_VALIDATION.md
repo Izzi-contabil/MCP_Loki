@@ -7,7 +7,7 @@ ou wheel. Kit Windows assinado e seus gates são outro perfil.
 
 Verificações executadas no Linux com Python3.11:
 
-- `pytest -q`: **91 passaram, 3 ignorados** por ausência de PowerShell no host.
+- `pytest -q`: **95 passaram, 3 ignorados** por ausência de PowerShell no host.
 - Os mesmos três probes de cadastro do guia foram executados em PowerShell real
   no container Microsoft, sem rede: falha configure, falha run e controle válido
   passaram. Isso não é Task Scheduler Windows real.
@@ -32,6 +32,9 @@ desativação Mac que não persistia ao login e cadastro após primeira falha. O
 Regressões observaram RED e GREEN: perfil padrão/herdado e customizado absoluto,
 comandos reais do guia Bash com falhas configure/run, remoção do plist instalado
 no Mac, e bloco PowerShell com run falho. Controles válidos de cadastro passaram.
+O cadastro Windows usa o SID ASCII do usuário, evitando erro de codificação do
+nome OEM/ANSI. O caso de nome acentuado falhou antes da correção e passou
+depois; identidades malformadas são recusadas, com controle SID válido.
 Nenhuma segunda revisão foi usada como substituto dos testes das correções.
 
 Decisão de implementação: uma tentativa diária após07h, inclusive quando falha;
