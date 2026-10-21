@@ -12,10 +12,9 @@ Windows assinado tem outro procedimento, no Project Loki.
 
 ## Antes de começar — Antônio, no servidor Linux
 
-1. Integrar a PR deste repositório após a revisão e os testes. Estes comandos
-   pressupõem que `.claude-plugin/marketplace.json`, o plugin e o atualizador já
-   estão na branch padrão `feature/dynamic-instructions`. Enquanto a PR estiver
-   em rascunho, o procedimento é preparação, não distribuição disponível.
+1. A [PR 4](https://github.com/T0minh0/MCP_Loki/pull/4) foi integrada em
+   21/10/2026. O marketplace, o plugin e o atualizador estão na branch padrão
+   `feature/dynamic-instructions`; os comandos abaixo já usam essa distribuição.
 2. `T0minh0/MCP_Loki` já foi tornado **privado**, conforme sua decisão. Adicionar
    as contas pessoais da equipe com leitura quando desejar; nenhum convite foi
    enviado nesta implementação.
@@ -206,12 +205,16 @@ rollback automático transacional para esse perfil nativo.
 
 ## Antônio — Codex e ChatGPT
 
-Seu servidor Linux é o ambiente de manutenção. Não executar estes cadastros de
-Claude para configurar Codex ou ChatGPT. Ambos continuam usando a conexão MCP
-existente; as instruções dinâmicas vêm do serviço publicado. Conferir `meu_acesso`
-e as ferramentas atuais em cada aplicativo. O ChatGPT não executa esta agenda
-local nem instala um marketplace Claude. Atualização de catálogo/conexão deve
-ser verificada na interface do aplicativo se necessário, sem presumir novo OAuth.
+O Codex aceita o mesmo pacote declarativo pelo seu gerenciador nativo de plugins.
+Seguir o [roteiro do Codex no Linux](CODEX_LINUX_SETUP.md), com instalação,
+atualização diária às 07h de Brasília e diagnóstico. Ele preserva a conexão MCP
+existente. Não executar os cadastros de tarefas do Claude para configurar Codex.
+
+O ChatGPT continua usando sua conexão MCP existente; as instruções dinâmicas vêm
+do serviço publicado. Conferir `meu_acesso` e as ferramentas atuais no aplicativo.
+A instalação local no Codex não instala o plugin na conta ChatGPT nem executa
+uma agenda nessa conta. Atualização de catálogo/conexão deve ser verificada na
+interface se necessário, sem presumir novo OAuth.
 
 ## Aceite por máquina
 

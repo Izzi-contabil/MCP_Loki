@@ -17,3 +17,16 @@ claude plugin install loki-orientacoes@loki-equipe --scope user
 
 Depois, em nova conversa, use `/loki-orientacoes:loki-bootstrap`.
 Veja o [agendamento para Mac, Windows e Linux](../../docs/DAILY_OPERATOR_UPDATES.md).
+
+## Codex no Linux
+
+O Codex aceita este mesmo pacote pelo gerenciador nativo:
+
+```text
+codex plugin marketplace add https://github.com/T0minh0/MCP_Loki.git --json
+codex plugin add loki-orientacoes@loki-equipe --json
+```
+
+Abrir conversa nova e usar `$loki-bootstrap`. O [roteiro do servidor Linux](../../docs/CODEX_LINUX_SETUP.md)
+inclui atualização diária às 07h de Brasília. A conexão MCP existente continua
+responsável pelo OAuth e pelas ferramentas; este plugin entrega orientações.

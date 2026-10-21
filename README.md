@@ -10,6 +10,8 @@ O [passo a passo de atualização diária](docs/DAILY_OPERATOR_UPDATES.md) confi
 o plugin de orientações do Claude Code para Ana no Mac e Samuel no Windows/Linux,
 preservando o MCP e o OAuth existentes. O repositório privado distribui o plugin
 por Git; o kit Windows assinado continua com seu canal próprio no Project Loki.
+O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
+com atualização diária pelo gerenciador nativo e a conexão MCP já existente.
 
 A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
 passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
@@ -36,7 +38,7 @@ O [bootstrap](plugins/loki-bootstrap/SKILL.md) orienta o cliente a identificar-s
 
 As respostas das duas ferramentas antigas recebem `runtime_instructions` de forma aditiva na integração do backend. Isso oferece um caminho para um cliente `0.4.0` que já consulta identidade receber orientação atualizada, sem trocar o ZIP. O modelo pode deixar de consultar uma ferramenta; o servidor continua responsável por autorização e validação. Instruções não garantem invocação ou execução.
 
-Não há manifest de distribuição ChatGPT neste repositório: essa fonte não foi encontrada na investigação. `plugins/loki-bootstrap/` contém somente `SKILL.md` e README. Consulte [MCP_UPDATES.md](docs/MCP_UPDATES.md) para refresh manual de ferramentas e diferenças entre ChatGPT e os kits desktop.
+O marketplace privado distribui o bootstrap para Claude Code e Codex. Isso não publica um plugin no catálogo ChatGPT nem instala algo nessa conta. Consulte [MCP_UPDATES.md](docs/MCP_UPDATES.md) para refresh manual de ferramentas e diferenças entre ChatGPT e os kits desktop.
 
 ## Desenvolvimento e promoção local
 

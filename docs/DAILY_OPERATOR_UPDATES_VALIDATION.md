@@ -1,5 +1,9 @@
 # Validação do perfil Claude — 21/10/2026
 
+O registro inicial abaixo antecede a integração da PR 4. A seção final registra
+a integração e a configuração efetiva do Codex neste servidor; o aceite nas
+máquinas da Ana e do Samuel permanece pendente.
+
 Escopo confirmado pelo usuário: Ana/macOS, Samuel/Windows+Linux, ambos Claude
 Code; Antônio/Codex+ChatGPT no servidor Linux. O plugin nativo é declarativo e
 usa o MCP já conectado. O pacote provider permanece 0.1.3, sem mudança de conteúdo
@@ -51,7 +55,45 @@ Não houve merge, deploy, envio de convites ou alteração de OAuth/sistema da A
 A CI GitHub não iniciou por pagamento/limite da conta; verificações locais não
 são anunciadas como CI hospedada verde.
 
+## Integração e Codex no Linux
+
+A PR 4 foi integrada, com autorização do usuário, em
+`6da6dc5183461f8026977e007e5210fbf7d5ee81`, na branch padrão
+`feature/dynamic-instructions`. Antes do merge, repetidos os 95 testes,
+Ruff e mypy. Sem threads de revisão pendentes. A anotação do check
+`119443507224` confirmou que o job não iniciou por cobrança/limite do GitHub.
+
+O CLI real Codex 0.163.0 instalou o mesmo pacote compatível em container sem
+rede ou credenciais. Uma URL HTTPS sintética redirecionada apenas dentro do
+container para Git local exercitou atualização 1.0.0 → 1.0.1. O comando
+`plugin marketplace upgrade loki-equipe` atualizou o manifesto no cache antes
+de qualquer chamada a `plugin list` ou nova instalação. Outro incremento
+1.0.1 → 1.0.2 manteve `enabled=false`. Repositório indisponível fez o comando
+falhar com código 1. Não se usa `plugin add` no agendamento.
+
+No servidor real, o marketplace foi adicionado por HTTPS ao GitHub privado,
+e `loki-orientacoes@loki-equipe` 1.0.0 foi instalado e habilitado. A configuração
+de servidores MCP e os hashes dos arquivos locais de autenticação permaneceram
+iguais após a instalação. O conector autenticado já existente respondeu a
+`meu_acesso`, `loki_verificar_versao` e `loki_obter_instrucoes(geral)`;
+isso confirma o acesso do chat, sem exportar OAuth para processos Linux.
+
+O bloco systemd de `CODEX_LINUX_SETUP.md` foi executado neste servidor.
+`systemd-analyze --user verify` passou e o serviço executou uma consulta real
+ao GitHub privado com `errors: []`, `Result=success` e `ExecMainStatus=0`.
+O timer está habilitado/ativo; próximo disparo observado: **22/10/2026 às
+10h UTC, 07h de Brasília**. O usuário já tinha `Linger=yes`. Não se afirma que
+um disparo futuro às 07h ocorreu nem que esta conversa carregou a skill nova.
+
+O complemento de documentação usa versão 1.0.1 do plugin, preservando o conteúdo
+da skill, o provider 0.1.3, o contrato e o backend. As instruções do Codex e a
+consulta diária dependem do seu gerenciador nativo; não foi criado launcher
+desktop ou novo manifesto ChatGPT. No checkout desse complemento, os 95 testes,
+Ruff e mypy passaram novamente. O aceite nas máquinas da equipe e a concessão
+de leitura no GitHub continuam a cargo de cada pessoa e de Antônio.
+
 Fontes: [comandos Claude](https://code.claude.com/docs/en/plugins/cli-reference),
 [marketplaces](https://code.claude.com/docs/en/plugin-marketplaces),
 [perfis](https://code.claude.com/docs/en/env-vars),
-[launchd](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html).
+[launchd](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html),
+[OpenAI Docs — plugins](https://developers.openai.com/plugins/build/plugins).
