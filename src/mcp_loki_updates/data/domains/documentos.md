@@ -25,3 +25,9 @@ Mantenha campos ausentes em `missing_fields` e conflitos sem resolução em `amb
 Antes de mapear um valor, confira o significado do campo de origem e do destino: título/tipo de documento não é categoria, emissão de extrato digital não é automaticamente expedição da carteira, e local de nascimento não se confunde com nacionalidade. Preserve fatos sem destino aceito em evidência separada, sem criar chave no payload. Diferença de formato, sigla ou data não prova divergência factual; qualifique a equivalência e conserve os literais, sem usar a saída da equipe como tabela de conversão.
 
 Se uma ferramenta recusar a declaração, preserve o erro, caminho do campo e versão do contrato. Corrija o formato com base no schema e na evidência; não repita variantes mudando fatos, não apague a trilha e não declare o problema resolvido só porque outro formato foi aceito. Consulte status/contrato corrente e informe o limite quando a recusa não for explicada.
+
+## Pacotes versionados por processo
+
+Leia `execution_modes`, `package_kind` e schemas de `versioned_case` no contrato corrente. Use as raízes tipadas `dados_alteracao_cadastral`, `dados_ocorrencia`, `dados_adiantamento`, `dados_aviso_ferias` e `dados_aviso_rescisao` somente nos respectivos processos suportados. Não copie campos financeiros para um aviso nem trate todo pacote como financeiro.
+
+Afastamento, alteração cadastral e ocorrência podem usar `simulate_case_version` para recibos/artefatos factuais JSON sem PDF e sem aplicação canônica, quando disponíveis. Conferência factual valida contexto, fontes, hashes e pendências pelos checks declarados. Avisos documentais e adiantamento financeiro têm seus próprios schemas e verificação de todas as páginas dos PDFs gerados. Aprovação de versão não aplica proposta ao cadastro, não lança folha, não paga, não compensa nem efetiva desligamento. Extração aplicada ao `case_payload` prepara apenas dados do caso.

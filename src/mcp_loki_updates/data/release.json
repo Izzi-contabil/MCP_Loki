@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "instructions_version": "1.2.1",
+  "instructions_version": "1.3.0",
   "contract_version": "1.0.0",
   "plugin_version": "0.5.0",
   "minimum_plugin_version": "0.4.0",
   "updated_at": "2026-10-21",
   "domains": {
     "geral": {
-      "metadata_sha256": "8c7d111a9c53490930ac2abb9ca9a5f920936c0f1e5a879d7c87a4dff647e323",
-      "content_sha256": "efc6ff878f851c74deefd0a1bd8da526749bc55f5841b76bb6a0f5b47e2f946e"
+      "metadata_sha256": "933ac30486478c67dcd43e990cc88e09558f55b8a0e09c44a9d5e2f5e41e390d",
+      "content_sha256": "02f570b7ee4037d75684990fadd00e71f7c07a480d2de252e2bd9a73516a71b4"
     },
     "admissao": {
       "metadata_sha256": "998bda7960b6ccbc27af15a1c2b26c262f0558ec8439e67d8c2e624d1beaeb10",
@@ -27,23 +27,45 @@
       "content_sha256": "5c27e97f89b351c58c73bdfa8bd83303d4ebfa02f0aa5012f5f1d246415697d4"
     },
     "afastamento": {
-      "metadata_sha256": "f4ec6fe24708d5a7c440e03a339911da2127f2640ff78172fd0db3e4281e84a5",
-      "content_sha256": "4d92225570e85baccd05315942d86df029a2a03e969c0dccc1f56cbc1cfe41ae"
+      "metadata_sha256": "5a939de7380e1add33656a02bb860ed91341006b7d151d728e60c81fe89bc62a",
+      "content_sha256": "34e69bc377737f0c83e1790dcadc1754f36b04f61a8dbf7b4356d1387bb1767a"
     },
     "documentos": {
-      "metadata_sha256": "7881aafd355c809ef862c93625bd583a344e2cf9c7bbb2d17752e534b4bbdbad",
-      "content_sha256": "78fafc725ec761dbd675b0b8053ff270456719ff1396da79043cd91b2b589f65"
+      "metadata_sha256": "1ca3c86086b994634da9caa9c2ea3874ad10e165890da3ded4e92e91504a2b89",
+      "content_sha256": "300f22fe7271051c71ddb1ab3601e7f9a1cd613105ce7a3a82ef163789007b18"
     },
     "aprovacoes": {
-      "metadata_sha256": "e2fedd9d0663cb7c1ba9797396f35f8e054b5bc9c1f3c4e2c964f3e60b92e089",
-      "content_sha256": "24f11d01493785ffb899c5991cd5638df1ea7fa675042d0c7b8215f3ebd624c1"
+      "metadata_sha256": "a1eb6f272432fa4605f70f051f52ca300724bc86ce2620f61f72531ca33112ee",
+      "content_sha256": "ec68970894ac7483d3234620617c11a89c401e36d4632445170aae49a77e46fa"
+    },
+    "alteracao_cadastral": {
+      "metadata_sha256": "c21adf1f54ab2beba59c0665ccc8fae611abf2df07beb617ceeb23174706c455",
+      "content_sha256": "6b804a54ae254040b3d0a3d0005aea092b90fec7c0efd521cc7888c950f4c442"
+    },
+    "ocorrencia": {
+      "metadata_sha256": "d53742f4abcf860424a75699504a354dc9f0cafd81fd0a9dd5dde265dc6c6b7f",
+      "content_sha256": "79459938715431d5af013e2733e23e8b888a9b7fbb2233e3068d63ac151f435a"
+    },
+    "adiantamento": {
+      "metadata_sha256": "7eac0a1e3daa4e93b56842c94645078686b6f6e668f0e1c74b414cbb3f29e1ab",
+      "content_sha256": "cca6207912053a78c6778b5abd3b0db3bad4f500def95ccc379e44eee51abdb8"
+    },
+    "aviso_ferias": {
+      "metadata_sha256": "1c9f60261eb605bd017ed17de2a87ce59f4715c06f2c05f2642f93505f355b5a",
+      "content_sha256": "9c5430a4d12567861acb3233d18c9541d0197a529267f794535a1a78b20166b8"
+    },
+    "aviso_rescisao": {
+      "metadata_sha256": "49ec8e203adfcc573640d0b1dee9ed6fb89d62b1b938b7dcba5ae3248e27cd3a",
+      "content_sha256": "d2d7ebe5a69967bfdb19c3a3236a9b1ac4babf3308b42e148cb0b1bf6bea674c"
     }
   },
   "changes": {
     "backend": [],
     "instructions": [
-      "Distingue emissao de CTPS digital de expedicao, tipo de certificado de categoria militar e normalizacao documental sustentada de abreviacao inventada.",
-      "Preserva a orientacao salarial explicita da instrucao de admissao 1.2.0, os demais dominios e todos os gates do host."
+      "Acrescenta guias condicionados aos contratos atuais para alteração cadastral, ocorrência, adiantamento automático e avisos autônomos.",
+      "Distingue execução factual versionada, pacote documental e cálculo financeiro, preservando pendências e gates humanos.",
+      "Preserva o contrato legado de autorização e orienta os cinco novos processos pela tela administrativa existente com prévia e confirmação humana.",
+      "Explicita os nomes de componentes aceitos na declaração parcial e a captura automática da base salarial fonteada pelo contexto do host."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",

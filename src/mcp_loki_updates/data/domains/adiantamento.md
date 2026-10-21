@@ -1,0 +1,15 @@
+# Adiantamento automático
+
+Antes de preparar este processo, consulte `get_dp_capabilities`, `list_workflows` e `get_document_processing_contract` com o processo correspondente. Confira `execution_modes`, `standalone_available`, `available_via` e o contrato `versioned_case` atual. Siga somente o caminho disponível e autorizado; ausência de executor ou schema mantém a pendência. Estas instruções não comprovam implantação, paridade ou validação financeira.
+
+A leitura deste guia exige `consultar` e o escopo do processo no host. Preparação, anexos, extração, simulação e revisão exigem suas próprias permissões e empresa autorizada; receber o guia não as concede. Confirme identidade do vínculo, competência e referência estável da ocorrência. Use os schemas e fontes por campo aceitos pelo host, preservando ausentes e conflitos.
+
+Quando o contrato confirmar o modo financeiro versionado e o motor `advance-v1`, prepare `dados_adiantamento` e use `simulate_case_version`. O cálculo automático seleciona uma `AdvancePolicy` vigente para empresa/CNPJ, episódio do empregado e data de referência. Não substitua o motor por valor pronto informado pela equipe nem por percentual digitado sem política qualificada.
+
+Os mapas recebidos `operands`, `facts` e `ratios` aceitam somente nomes de componentes sem `.`, `[` ou `]`; consulte o schema do contrato atual antes de declarar os campos. O operando reservado `contrato.salario_cents` pertence ao contexto capturado pelo host e não pode ser enviado nesses mapas. Quando a política qualificada pedir essa base, o host a captura do perfil vigente do vínculo, com fonte e data de efeito. Preserve a pendência se faltar perfil, fonte ou vigência; não substitua essa captura por salário ou base informados sem evidência.
+
+A política versionada identifica percentual, composição da base, elegibilidade, proporcionalidade, cortes, limites, deduções, incidências, ordem e arredondamento, com fontes. Uma regra explicitamente não aplicável difere de uma regra ausente. Ausência ou ambiguidade de política/operando produz `pending` e resultado dependente `None`, em branco no documento; não há percentual padrão nem ausência convertida em zero. Dinheiro de saída usa centavos inteiros. Resultado externo serve apenas de referência independente para comparação.
+
+Confira memória, operandos fonteados, política/versão/hash, contexto e demonstrativo devolvidos pelo contrato. Verifique todas as páginas dos PDFs e os artefatos da versão com os checks exigidos. Mudança de política, perfil, salário ou fonte exige nova captura e versão; não reescreva o resultado anterior. Caso real sem política completa conserva pendências mesmo quando o motor tiver validação sintética.
+
+Reservar ou aprovar a versão não confirma pagamento, compensação, desconto na folha ou estorno. Preserve referências estáveis e o estado de consumo apresentado pelo recibo; qualquer consumo futuro exige fonte de pagamento e writer autorizado com deduplicação. Não declare paridade ou 98% sem avaliação independente de casos completos.

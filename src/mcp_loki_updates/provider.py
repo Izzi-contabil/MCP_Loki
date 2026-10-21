@@ -14,7 +14,7 @@ from functools import total_ordering
 from pathlib import Path
 from typing import Any, cast
 
-PROVIDER_VERSION = "0.1.3"
+PROVIDER_VERSION = "0.1.4"
 SUPPORTED_CONTRACT_MAJOR = 1
 DOMAINS = (
     "geral",
@@ -25,6 +25,34 @@ DOMAINS = (
     "afastamento",
     "documentos",
     "aprovacoes",
+    "alteracao_cadastral",
+    "ocorrencia",
+    "adiantamento",
+    "aviso_ferias",
+    "aviso_rescisao",
+)
+# Process scopes follow the host enum, independently of instruction domains.
+PROCESS_TYPES = frozenset(
+    {
+        "admissao",
+        "folha_mensal",
+        "rescisao",
+        "ferias",
+        "decimo_terceiro",
+        "afastamento",
+        "transferencia",
+        "fechamento",
+        "informe_rendimentos",
+        "estagio",
+        "autonomo",
+        "pro_labore",
+        "distribuicao_lucros",
+        "alteracao_cadastral",
+        "ocorrencia",
+        "adiantamento",
+        "aviso_ferias",
+        "aviso_rescisao",
+    }
 )
 MAX_FILE_BYTES = 65536
 _CHANGES = {"backend", "instructions", "compatible_tools", "breaking_contract", "plugin"}
@@ -250,7 +278,7 @@ class InstructionsProvider:
                     raise _InvalidSnapshot
             permissions = _object(metadata["permissions"], {"capabilities", "processes"})
             _strings(permissions["capabilities"], {"consultar", "decidir_chat"})
-            _strings(permissions["processes"], set(DOMAINS[1:6]))
+            _strings(permissions["processes"], set(PROCESS_TYPES))
             text = text_content.decode("utf-8")
             if not text.strip():
                 raise _InvalidSnapshot

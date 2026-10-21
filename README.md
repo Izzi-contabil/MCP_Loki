@@ -22,8 +22,11 @@ Os leitores usam uv e Python3.11/dependências com hashes, preparados no cache d
 usuário. Não incluem backend, conexão nova ou credenciais. O kit Windows legado
 assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).
 
-A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
-passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
+A candidata usa pacote `0.1.4` e instruções `1.3.0`. Admissão permanece em `1.2.1`;
+geral/documentos passam a `1.2.0`, afastamento/aprovações a `1.1.0` e rescisão permanece em
+`1.1.0`. Os cinco novos guias de DP estão em `1.0.0`, assim como férias,
+décimo terceiro. Os [contratos e limites da candidata](docs/PENDING_DP_GUIDANCE_20261021.md)
+dependem da implementação e autorização verificadas no host atual.
 O [guia operacional](docs/OPERATIONAL_GUIDANCE_20261021.md) registra a entrega
 anterior e o [ajuste de período salarial](docs/ADMISSION_PERIOD_20261021.md)
 registra a leitura do campo e seus limites. Publicação e entrega autenticada
@@ -60,7 +63,7 @@ uv run --no-sync ruff check .
 uv run --no-sync ruff format --check .
 uv run --no-sync mypy src scripts plugins/loki-bootstrap/skills/operar-loki/scripts
 uv build --wheel
-uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.3-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
+uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.4-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
 ```
 
 No Windows com Python 3.11 e locale cp1252, um checkout em caminho acentuado pode falhar ao ler o `.pth` de uma instalação editable. `--no-editable` e `--no-sync` evitam esse caminho; depois de editar o pacote, sincronize novamente antes de validar sua cópia instalada. Os testes também exercitam o fonte e o smoke deve instalar o wheel fora do checkout.

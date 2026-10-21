@@ -19,6 +19,11 @@ DOMAINS = (
     "afastamento",
     "documentos",
     "aprovacoes",
+    "alteracao_cadastral",
+    "ocorrencia",
+    "adiantamento",
+    "aviso_ferias",
+    "aviso_rescisao",
 )
 
 
@@ -51,7 +56,7 @@ def reseal(root: Path, domain: str) -> None:
     write_json(root / "release.json", release)
 
 
-def test_packaged_provider_exposes_eight_safe_domains_and_defensive_copies() -> None:
+def test_packaged_provider_exposes_thirteen_safe_domains_and_defensive_copies() -> None:
     provider = provider_type()()
     assert provider.domains() == DOMAINS
     value = provider.get("admissao")
@@ -168,15 +173,15 @@ def test_rejects_invalid_snapshot_even_when_hashes_are_consistent(
 def test_metadata_is_sanitized_and_returns_domain_versions() -> None:
     provider = provider_type()()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.1.3"
+    assert metadata["provider_version"] == "0.1.4"
     assert metadata["mcp_contract_version"] == "1.0.0"
     assert metadata["versions_by_domain"] == {
         domain: "1.2.1"
         if domain == "admissao"
-        else "1.1.1"
-        if domain == "documentos"
+        else "1.2.0"
+        if domain in {"geral", "documentos"}
         else "1.1.0"
-        if domain in {"geral", "rescisao"}
+        if domain in {"afastamento", "rescisao", "aprovacoes"}
         else "1.0.0"
         for domain in DOMAINS
     }
