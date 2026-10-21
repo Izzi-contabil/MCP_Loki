@@ -6,6 +6,9 @@ O pacote não é um servidor MCP independente. Identidade Google/OAuth, permiss�
 
 ## Distribuição do kit do operador
 
+A branch padrão deste repositório privado é **`main`**. As instalações por Git
+acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
+
 O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
 o plugin de orientações do Claude Code para Ana no Mac e Samuel no Windows/Linux,
 preservando o MCP e o OAuth existentes. O repositório privado distribui o plugin
@@ -83,3 +86,7 @@ O [handoff para o servidor pessoal](docs/HANDOFF_PERSONAL_SERVER.md) reúne as
 referências publicadas, os resultados e limites dos testes e a pendência de
 catálogo observada no piloto. Use esse checkpoint para retomar o trabalho sem
 reaplicar a integração já implantada.
+
+As [notas históricas de migração ChatGPT/Codex](docs/CHATGPT_ACCOUNT_MIGRATION.md)
+foram preservadas como registro de 20/10/2026. Para a configuração vigente, usar
+os roteiros de instalação e auto-update acima.
