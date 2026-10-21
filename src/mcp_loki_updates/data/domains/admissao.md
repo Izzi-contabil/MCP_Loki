@@ -10,6 +10,14 @@ Separe dado extraído, dado ausente, divergência e decisão humana. Não preenc
 
 As orientações abaixo organizam a leitura e a preparação nos contratos existentes. Não criam campos, regras de cálculo ou poderes no host. Consulte também o domínio `documentos`. Para cada campo, mantenha original, hash, página/campo e motivo da seleção; registre conflito e ausência antes de montar a declaração. A resposta geral do DP esclarece o procedimento, mas não prova qual documento, data ou orientação foi usado em um caso individual. Documento produzido pela equipe para comparação não substitui o insumo do cliente.
 
+### Período salarial
+
+Leia `contrato.periodo_salario` separadamente do valor do salário e da categoria do vínculo. Quando o pedido apresentar explicitamente a forma de remuneração, como `Categoria: Mensalista`, registre o valor integral `Mensalista` nesse campo, com original, hash e localizador da página/campo. Confira pelo conteúdo que a categoria descreve o período de remuneração; a palavra Categoria sozinha não identifica categoria do vínculo ou código eSocial. Preserve conflitos entre fontes, sem escolher automaticamente o documento mais recente.
+
+Salário apresentado como montante, carga de 220 horas, valor compatível com piso ou rotina mensal de pagamento não confirma o período. Se a fonte não o disser ou a classificação for ambígua, preserve o branco e declare a ausência em `missing_fields` ou a ambiguidade no contrato vigente; não omita a lacuna nem adote Mensalista como padrão.
+
+Depois da preparação ou de uma correção autorizada, confira que o campo Por da ficha imprime o mesmo valor integral. Um erro de overflow é falha técnica a investigar: conserve o fato e registre o erro; não remova, abrevie ou substitua o período para fazer a geração passar. Caso em revisão exige o fluxo de ajuste/correção correspondente e nova conferência; a orientação não reabre nem aprova o caso automaticamente.
+
 ### Cargo e CBO
 
 Use o cargo da ficha admissional ou da confirmação específica do cliente para esta contratação. Cargo ausente exige confirmação; diploma, currículo e vínculo antigo não identificam o cargo atual. Preserve a nomenclatura informada pelo cliente.

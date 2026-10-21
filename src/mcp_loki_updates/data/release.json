@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "instructions_version": "1.1.0",
+  "instructions_version": "1.2.0",
   "contract_version": "1.0.0",
   "plugin_version": "0.5.0",
   "minimum_plugin_version": "0.4.0",
@@ -11,8 +11,8 @@
       "content_sha256": "efc6ff878f851c74deefd0a1bd8da526749bc55f5841b76bb6a0f5b47e2f946e"
     },
     "admissao": {
-      "metadata_sha256": "abeb2d878c2485ae152c4658c687755074630729335389842c41b8cace7adb79",
-      "content_sha256": "1043e4da3a1fac6b5ef101122bf59dddb94f16b4b62950d6138ad43dbac7ff3e"
+      "metadata_sha256": "2ef0796ce2a67166ff73b8ba6b3a6cfeb15c5c800c87c27b94f925341fa23b2a",
+      "content_sha256": "1c98e38f7f97f5f88cb31bd697a61ef2d8f45c578a25b63ba2ef5d7414098ab9"
     },
     "rescisao": {
       "metadata_sha256": "ba54404ef56f4e48c2d592b4dd1425e33b63a22b54beddd177ec3618890b8f35",
@@ -42,9 +42,8 @@
   "changes": {
     "backend": [],
     "instructions": [
-      "Orienta a harness na selecao de fontes de admissao, conflitos, ASO, VT, dependentes e estabelecimento, sem criar regras de calculo ou preencher dados ausentes.",
-      "Distingue anexos inacessiveis de ausentes na rescisao e exige qualificacao do historico antes de alegar consumo pelo calculador.",
-      "Preserva contratos, capacidades, gates humanos e a distincao entre feedback e assertividade medida."
+      "Orienta a leitura do periodo salarial explicito com fonte, ausencia e conflito, sem adotar Mensalista como padrao.",
+      "Exige conferencia do valor integral no campo Por e investigacao de overflow sem apagar o fato ou aprovar o caso."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
