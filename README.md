@@ -4,6 +4,15 @@ Este repositório mantém o pacote `mcp-loki-updates`, as instruções versionad
 
 O pacote não é um servidor MCP independente. Identidade Google/OAuth, permissões, banco, documentos, cálculos e decisões continuam no Project Loki. O conteúdo deste repositório não concede acesso nem representa aceite humano.
 
+## Distribuição do kit do operador
+
+O [passo a passo de atualização diária](docs/DAILY_OPERATOR_UPDATES.md) prepara
+o canal de releases assinadas para as instalações Windows existentes da Ana e
+do Samuel, reutilizando seu OAuth. O canal deve ser privado antes de receber
+bundles que contêm código do backend. Publicação da primeira release e aceite
+nos computadores são etapas próprias; o provider Python abaixo não instala
+atualizações nos PCs por conta própria.
+
 A candidata usa pacote `0.1.3` e instruções de admissão `1.2.1`. Documentos
 passa a `1.1.1`; geral e rescisão permanecem em `1.1.0`; os demais, em `1.0.0`.
 O [guia operacional](docs/OPERATIONAL_GUIDANCE_20261021.md) registra a entrega
