@@ -4,6 +4,13 @@ Este roteiro complementa `operar-loki` e `WORKFLOWS.md` em execuções agendadas
 filas e avaliações. Cada rodada usa a conexão MCP existente, o acesso efetivo e
 os contratos do serviço. A versão do plugin não identifica o build do Loki.
 
+O objetivo é reproduzir o trabalho real da equipe em todas as finalidades do DP.
+Cadastro, histórico, parâmetros, regras e fontes consumidos devem ser registrados
+nos contratos nativos do Loki; arquivos externos orientam a leitura e não formam
+um banco operacional paralelo. Não espere um kit de dados para começar uma tarefa
+que já tenha fontes suficientes. Documentos de clientes usam o Drive autorizado
+da organização, nunca uma conta pessoal indicada em referência histórica.
+
 ## Descoberta antes da fila
 
 Consulte `meu_acesso` (fallback: `get_operator_context`), leia as instruções
@@ -24,6 +31,9 @@ separadamente; não troque identidade, amplie permissões ou remova pins.
 Mantenha as referências estáveis da fila, pedido, caso, episódio e ocorrência.
 Confirme CNPJ, CPF, admissão e corte do consumidor. Consulte
 `get_company_employee_history` antes de pedir novamente um dado já fornecido.
+Consulte também `get_company_historical_state` no corte do consumidor quando
+precisar de saldos, ocorrências e coberturas tipados. Histórico opaco não vira
+automaticamente um fato tipado, e consulta não comprova consumo pelo cálculo.
 Quando aplicável, `preview_case_input_reuse` mostra fontes, ausências e conflitos;
 aplicação usa somente o plano autorizado e o hash corrente. Fixação por
 `pin_company_employee_history` ou seleção do estado tipado segue o contrato.
@@ -33,6 +43,7 @@ Se o operador indicar um índice privado de componentes qualificados, siga
 também [COMPARATIVE_TESTING.md](COMPARATIVE_TESTING.md). Confira a edição,
 os hashes e as retenções antes da seleção. Um arquivo privado deste servidor
 não está automaticamente disponível em outro computador.
+Sem esse índice, continue pelo cadastro, histórico e fontes autorizadas existentes.
 
 Separe pedido do cliente, histórico interno e referência produzida pela equipe.
 Congele a saída antes da comparação. Não complete entradas com o gabarito.
@@ -46,6 +57,27 @@ TXT, XLS e PDF podem conter referências históricas; conteúdo, empresa, episó
 e período definem o papel. Arquivo obtido não é operando qualificado. Data de
 registro de reajuste retroativo não é automaticamente o dia de efeito material.
 Sem esse dia, preserve a competência retroativa e a lacuna necessária ao cálculo.
+
+## Investigar e qualificar regras
+
+Quando faltar regra ou parâmetro derivável, use normas, ACT/CCT e histórico já
+acessíveis. Concilie categoria, território, empresa, vínculo e vigência. Registre
+fundamento e localizador, expressão, unidades, operandos, arredondamento, alcance,
+exceções e lacunas. Confira a hipótese em outras competências e pessoas e registre
+quais delas foram usadas para inferi-la e quais foram reservadas para conferência.
+Coincidência é evidência de avanço; divergência deve permanecer visível e motivar
+investigação de entrada, regra, produto ou referência. Valor pago fica como alvo
+da comparação, sem preencher um operando ausente. Não ajuste fatores por pessoa
+apenas para alcançar esse valor.
+
+Com suporte e autorização, registre os fatos e parâmetros pelos escritores
+vigentes, com fontes e hashes; confira a versão gravada e seu consumo pelo
+executor. Preserve os controles de mudança de configuração com evidência. Se o
+schema ou motor não expressar a regra, registre a reprodução e o ajuste de produto
+necessário; não substitua a regra por outro valor ou por uma fórmula disfarçada.
+Uma hipótese de regra não confirma um fato desconhecido do episódio. Só peça
+complemento após consultar o acervo disponível, indicando o fato e o período
+exatos que faltam ou as alternativas que a evidência não distingue.
 
 ## Escolha do executor
 
@@ -83,6 +115,20 @@ executor escolhido, artefatos conferidos, pendências e resultado. Use apenas
 classificações aceitas pelo schema do relatório externo; detalhe a limitação no
 comentário aplicável. Não converta preparo parcial em sucesso financeiro nem
 regrave julgamentos anteriores. Não aprove, publique, pague ou transmita.
+
+## Cobertura e acerto das tarefas
+
+Mantenha uma linha por pedido e finalidade, inclusive quando o tipo não chega à
+fila ou não possui executor disponível. Para cada processo, acompanhe recebidos,
+executados, conferidos, comparáveis, coincidentes, parciais e bloqueados, com
+período, denominador e exclusões explícitos. Registre campos e parcelas para
+diagnosticar diferenças, mantendo separado o acerto da tarefa completa.
+
+Use a meta autorizada para priorizar divergências e ampliar cobertura de todas
+as finalidades descobertas nos contratos. Tipos sem amostra continuam no mapa.
+Pacote parcial, cadastro pronto, teste técnico e percentual de campos de uma só
+finalidade não comprovam a meta geral. Preserve o indicador existente e acrescente
+o recorte por tarefa sem alterar contadores do sistema externo.
 
 ## Achados para o suporte
 

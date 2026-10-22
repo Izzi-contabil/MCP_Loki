@@ -14,6 +14,11 @@ Para rotina agendada, fila de processos ou avaliação de replicações, leia
 [ROUTINES.md](references/ROUTINES.md) antes de obter trabalho da fila. Continue
 pelos leitores e contratos deste guia; o roteiro não cria outro agendador.
 
+Na operação real, consulte cadastro, histórico e regras no Loki e leia as fontes
+nos canais autorizados. Um índice externo de componentes é opcional. Investigue
+regras deriváveis por normas aplicáveis e histórico, conforme ROUTINES.md;
+registre hipóteses, alcance e evidências antes de configurar sua execução.
+
 Para erros, bloqueios, sugestões ou achados destinados ao suporte, leia
 [registrar-problema-loki](../registrar-problema-loki/SKILL.md). Prepare o relato
 sanitizado e envie pela ação MCP existente quando houver autorização de suporte;
@@ -70,7 +75,8 @@ O cache do plugin só contém código; atualização não deve apagar trabalho.
 - Use hashes e localizadores observados: página, célula, linha ou membro ZIP.
   Classifique o papel pelo conteúdo; não use nome do arquivo como autoridade.
   Consulte schemas atuais antes de estruturar os fatos; dinheiro em centavos
-  inteiros, ausências/ambiguidades preservadas, sem completar por inferência.
+  inteiros, ausências e ambiguidades preservadas. Inferência de regra fonteada
+  não comprova ocorrência, retorno efetivo, escolha do trabalhador ou pagamento.
 - Mantenha insumos e referência oficial separados desde a leitura. Para segunda
   leitura independente, use outra sessão/contexto sem o resultado da primeira;
   releia o **original local**. Duas releituras do mesmo CSV não provam isso.
@@ -82,7 +88,8 @@ Se o operador indicar um índice privado para uma comparação, leia
 componentes. Confira a edição e os hashes, concilie empresa/episódio/competência
 e fontes no histórico nativo, aplique as retenções e registre o consumo real.
 Observação reportada, operando parcial e regra executável têm qualificações
-distintas; o índice não substitui o contrato do processo.
+distintas; o índice não substitui o contrato do processo. Sua ausência não impede
+operar com fontes e dados nativos suficientes nem justifica recadastro redundante.
 
 ## Preparar CSV e parâmetros, enviar pelo MCP
 

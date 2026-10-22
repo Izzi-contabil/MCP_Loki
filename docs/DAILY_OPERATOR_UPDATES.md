@@ -133,7 +133,7 @@ claude plugin list --json
 Depois, usar `/reload-plugins` ou iniciar nova conversa. Conferir o acesso
 GitHub se houver erro de autenticação; não remover o MCP para resolver Git.
 
-Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.2 ou superior em
+Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.4 ou superior em
 `claude plugin list --json`. Não desinstalar a conexão antiga para atualizar.
 
 Para a rotina existente no Claude Code, use a
@@ -142,7 +142,13 @@ Para a rotina existente no Claude Code, use a
 seleção de histórico e recibo por rodada. Atualização do plugin não altera
 o horário, o texto de uma tarefa agendada ou filtros de fila de outro sistema.
 
-## Comparar com componentes qualificados
+## Operação real e comparação opcional
+
+Na versão1.1.4, a rotina usa cadastro, histórico, regras e fontes do Loki e dos
+canais autorizados. Investiga parâmetros deriváveis por normas e passado e
+acompanha execução, comparação e pendências por tarefa e finalidade do DP.
+O índice de componentes abaixo é opcional, para comparações expressamente
+pedidas com esse material; sua ausência não bloqueia fontes nativas suficientes.
 
 Na versão1.1.1, `operar-loki` inclui o [roteiro de comparação privada](../plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md).
 O índice e os dados do cliente ficam em local privado indicado pelo operador,
