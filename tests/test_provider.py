@@ -61,8 +61,8 @@ def test_packaged_provider_exposes_thirteen_safe_domains_and_defensive_copies() 
     assert provider.domains() == DOMAINS
     value = provider.get("admissao")
     assert value["dominio"] == "admissao"
-    assert value["version"] == "1.2.1"
-    assert value["updated_at"] == "2026-10-21"
+    assert value["version"] == "1.2.3"
+    assert value["updated_at"] == "2026-10-22"
     assert value["instructions"].strip()
     assert value["permissions"] == {"capabilities": ["consultar"], "processes": ["admissao"]}
     value["permissions"]["capabilities"].clear()
@@ -173,10 +173,10 @@ def test_rejects_invalid_snapshot_even_when_hashes_are_consistent(
 def test_metadata_is_sanitized_and_returns_domain_versions() -> None:
     provider = provider_type()()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.1.4"
+    assert metadata["provider_version"] == "0.1.6"
     assert metadata["mcp_contract_version"] == "1.0.0"
     assert metadata["versions_by_domain"] == {
-        domain: "1.2.1"
+        domain: "1.2.3"
         if domain == "admissao"
         else "1.2.0"
         if domain in {"geral", "documentos"}
@@ -188,7 +188,7 @@ def test_metadata_is_sanitized_and_returns_domain_versions() -> None:
     assert "root" not in metadata
     assert "instructions" not in metadata
     metadata["versions_by_domain"]["admissao"] = "999.0.0"
-    assert provider.metadata()["versions_by_domain"]["admissao"] == "1.2.1"
+    assert provider.metadata()["versions_by_domain"]["admissao"] == "1.2.3"
 
 
 def test_rejects_symlinked_data_file(snapshot: Path, tmp_path: Path) -> None:
