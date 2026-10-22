@@ -1,6 +1,6 @@
 # Loki — leitores locais e operação pela harness
 
-Versão1.1.2. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
+Versão1.1.3. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
 quem já instalou receber o plugin completo pelo auto-update nativo Git.
 
 O pacote inclui `loki-bootstrap` e `operar-loki`, leitores de PDF/imagem,
@@ -28,6 +28,14 @@ Depois da atualização, use `/loki-orientacoes:operar-loki` no Claude ou
 assinado conserva seus próprios pins/preflight; esta distribuição não o altera
 nem importa seu cofre. ChatGPT mantém seu conector remoto e não executa esses
 leitores locais.
+
+Para achados, erros ou sugestões ao suporte, use
+`/loki-orientacoes:registrar-problema-loki` no Claude ou
+`$registrar-problema-loki` no Codex. A skill também é descoberta pelos guias
+de operação e rotina. Ela prepara relato sanitizado e usa `registrar_problema`
+na conexão MCP existente, dentro da autorização de suporte. Atualizar o plugin
+não atualiza o catálogo remoto: confira a ação e seu recibo antes de declarar
+entrega ao Discord. O webhook permanece no servidor.
 
 Rotinas agendadas usam o [roteiro incluído no plugin](skills/operar-loki/references/ROUTINES.md),
 consultado pelo bootstrap e pela skill operacional. Ele seleciona os executores

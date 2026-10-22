@@ -16,7 +16,7 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
     manifest = json.loads((plugin / ".claude-plugin/plugin.json").read_text())
     assert set(manifest) == {"name", "version", "description"}
     assert manifest["name"] == "loki-orientacoes"
-    assert manifest["version"] == "1.1.2"
+    assert manifest["version"] == "1.1.3"
     assert (plugin / "skills/loki-bootstrap/SKILL.md").read_bytes() == (
         plugin / "SKILL.md"
     ).read_bytes()
@@ -29,6 +29,8 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
         "SKILL.md",
         "README.md",
         "skills/loki-bootstrap/SKILL.md",
+        "skills/registrar-problema-loki/SKILL.md",
+        "skills/registrar-problema-loki/references/relato.json",
         "skills/operar-loki/SKILL.md",
         "skills/operar-loki/references/WORKFLOWS.md",
         "skills/operar-loki/references/ROUTINES.md",
@@ -41,3 +43,23 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
         "skills/operar-loki/scripts/loki_readers/exchange.py",
         "skills/operar-loki/scripts/loki_readers/workspace.py",
     }
+
+
+def test_feedback_skill_is_discoverable_and_uses_existing_authenticated_action() -> None:
+    plugin = ROOT / "plugins/loki-bootstrap"
+    skill = (plugin / "skills/registrar-problema-loki/SKILL.md").read_text()
+    example = json.loads(
+        (plugin / "skills/registrar-problema-loki/references/relato.json").read_text()
+    )
+    bootstrap = (plugin / "SKILL.md").read_text()
+    operator = (plugin / "skills/operar-loki/SKILL.md").read_text()
+    assert "registrar-problema-loki" in bootstrap
+    assert "registrar-problema-loki" in operator
+    assert "registrar_problema" in skill
+    assert "meu_acesso" in skill
+    assert "runtime.json" not in skill
+    assert example["schema_version"] == "loki.feedback/1"
+    assert example["kind"] == "ajuste"
+    assert example["severity"] == "baixa"
+    assert "TESTE" in example["summary"]
+    assert not any("webhook" in name or "token" in name for name in example)

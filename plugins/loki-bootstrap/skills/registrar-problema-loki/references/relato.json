@@ -1,0 +1,20 @@
+{
+  "schema_version": "loki.feedback/1",
+  "report_id": "7e691c0a-e492-471c-b84d-850e6c4746ca",
+  "kind": "ajuste",
+  "severity": "baixa",
+  "summary": "TESTE sintético de integração do suporte Loki",
+  "goal": "Validar o fluxo autorizado da harness até o recibo do Discord",
+  "expected": "Estado sent e identificador da mensagem no recibo",
+  "observed": "Teste de integração solicitado; não representa defeito de negócio",
+  "steps": ["Carregar a skill instalada", "Enviar relato sintético pela ação MCP"],
+  "attempts": [],
+  "impact": "Validação técnica do canal de suporte, sem dados de clientes",
+  "error": "não se aplica: teste sintético",
+  "references": [],
+  "harness": "não informada",
+  "harness_version": "não informada",
+  "model": "não informado",
+  "plugin_version": "não informada",
+  "kit_build": "não informado"
+}

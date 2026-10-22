@@ -84,6 +84,16 @@ classificações aceitas pelo schema do relatório externo; detalhe a limitaçã
 comentário aplicável. Não converta preparo parcial em sucesso financeiro nem
 regrave julgamentos anteriores. Não aprove, publique, pague ou transmita.
 
+## Achados para o suporte
+
+Para erro, bloqueio ou sugestão, siga
+[registrar-problema-loki](../../registrar-problema-loki/SKILL.md). Separe defeito
+reproduzido, divergência observada e falta de informação. Se a rotina já tiver
+autorização humana para avisar o suporte, envie o relato sanitizado pela ação
+`registrar_problema`; caso contrário, preserve-o para autorização. Registre ID,
+estado e identificador da mensagem quando houver entrega confirmada. Retomadas
+usam o mesmo ID/conteúdo; não repita execução de negócio para relatar um erro.
+
 ## Ativação no executor real
 
 Atualize o plugin pelo mecanismo nativo e confira a versão instalada. Recarregue
