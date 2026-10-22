@@ -1,6 +1,6 @@
 # Loki — leitores locais e operação pela harness
 
-Versão1.1.0. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
+Versão1.1.1. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
 quem já instalou receber o plugin completo pelo auto-update nativo Git.
 
 O pacote inclui `loki-bootstrap` e `operar-loki`, leitores de PDF/imagem,
@@ -8,6 +8,11 @@ planilhas, documentos de texto e arquivos estruturados, preparação de CSV e
 parâmetros e recibos locais. Os scripts/lock estão dentro da skill operacional.
 A harness interpreta e confere os documentos e chama o MCP já conectado.
 O Loki recebe somente parâmetros e CSVs; originais e renderizações ficam locais.
+
+O [roteiro de comparação](skills/operar-loki/references/COMPARATIVE_TESTING.md)
+orienta o uso de índices privados de componentes qualificados: edição/hashes,
+seleção por empresa/episódio/competência, retenções, unidades reportadas e recibo
+do consumo. Dados do cliente ficam fora do plugin e do Git.
 
 Nenhum servidor MCP, hook, token, runtime Windows ou código do backend é
 instalado. O OAuth permanece no aplicativo que já está conectado. Não há

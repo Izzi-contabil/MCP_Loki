@@ -66,6 +66,15 @@ O cache do plugin só contém código; atualização não deve apagar trabalho.
   leitura independente, use outra sessão/contexto sem o resultado da primeira;
   releia o **original local**. Duas releituras do mesmo CSV não provam isso.
 
+## Comparar com componentes já qualificados
+
+Se o operador indicar um índice privado para uma comparação, leia
+[COMPARATIVE_TESTING.md](references/COMPARATIVE_TESTING.md) antes de selecionar
+componentes. Confira a edição e os hashes, concilie empresa/episódio/competência
+e fontes no histórico nativo, aplique as retenções e registre o consumo real.
+Observação reportada, operando parcial e regra executável têm qualificações
+distintas; o índice não substitui o contrato do processo.
+
 ## Preparar CSV e parâmetros, enviar pelo MCP
 
 Leia [WORKFLOWS.md](references/WORKFLOWS.md) antes da primeira escrita. Os helpers
