@@ -16,7 +16,7 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
     manifest = json.loads((plugin / ".claude-plugin/plugin.json").read_text())
     assert set(manifest) == {"name", "version", "description"}
     assert manifest["name"] == "loki-orientacoes"
-    assert manifest["version"] == "1.1.1"
+    assert manifest["version"] == "1.1.2"
     assert (plugin / "skills/loki-bootstrap/SKILL.md").read_bytes() == (
         plugin / "SKILL.md"
     ).read_bytes()
@@ -32,6 +32,7 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
         "skills/operar-loki/SKILL.md",
         "skills/operar-loki/references/WORKFLOWS.md",
         "skills/operar-loki/references/ROUTINES.md",
+        "skills/operar-loki/references/COMPARATIVE_TESTING.md",
         "skills/operar-loki/scripts/loki_local.py",
         "skills/operar-loki/scripts/loki_local.py.lock",
         "skills/operar-loki/scripts/loki_readers/__init__.py",

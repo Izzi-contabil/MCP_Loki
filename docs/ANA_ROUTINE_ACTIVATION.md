@@ -1,6 +1,6 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
-O plugin `loki-orientacoes@loki-equipe` 1.1.1 distribui o
+O plugin `loki-orientacoes@loki-equipe` 1.1.2 distribui o
 [roteiro de rotina](../plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md).
 Ele complementa os leitores já distribuídos desde 1.1.0 e usa os contratos
 servidos pelo Loki. Não instala um servidor MCP, cria agendador ou altera OAuth.
@@ -17,7 +17,7 @@ claude plugin update loki-orientacoes@loki-equipe --scope user
 claude plugin list --json
 ```
 
-Conferir versão 1.1.1 ou superior e plugin habilitado. Se o plugin ainda não
+Conferir versão 1.1.2 ou superior e plugin habilitado. Se o plugin ainda não
 estiver instalado, seguir o [roteiro de instalação](DAILY_OPERATOR_UPDATES.md).
 Falha de acesso ao repositório privado permanece pendência; não substituir
 o OAuth do Loki por outra credencial. Manter auto-update ativo no marketplace.

@@ -29,6 +29,11 @@ aplicação usa somente o plano autorizado e o hash corrente. Fixação por
 `pin_company_employee_history` ou seleção do estado tipado segue o contrato.
 Consulta, fixação, consumo e cálculo são evidências distintas.
 
+Se o operador indicar um índice privado de componentes qualificados, siga
+também [COMPARATIVE_TESTING.md](COMPARATIVE_TESTING.md). Confira a edição,
+os hashes e as retenções antes da seleção. Um arquivo privado deste servidor
+não está automaticamente disponível em outro computador.
+
 Separe pedido do cliente, histórico interno e referência produzida pela equipe.
 Congele a saída antes da comparação. Não complete entradas com o gabarito.
 Ausência de folha histórica é diferente de dado ausente no pedido do cliente.
