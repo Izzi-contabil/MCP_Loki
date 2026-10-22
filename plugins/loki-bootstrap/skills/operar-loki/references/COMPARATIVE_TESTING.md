@@ -5,6 +5,9 @@ componentes já qualificados. O índice é uma referência de seleção da harne
 **não é contrato MCP, configuração empresarial, fonte primária ou autorização**.
 Schemas, permissões e fontes aceitas continuam sendo os do host atual.
 
+Este roteiro é opcional para uma comparação com material indicado pelo operador.
+A operação real segue ROUTINES.md e os dados nativos, sem depender desse índice.
+
 ## Descobrir e conferir o material
 
 1. Confirme acesso, instruções, workflows e contratos pelo MCP existente.

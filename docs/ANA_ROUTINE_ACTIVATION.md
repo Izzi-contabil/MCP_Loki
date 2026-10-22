@@ -1,11 +1,15 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
-O plugin `loki-orientacoes@loki-equipe` 1.1.2 distribui o
+O plugin `loki-orientacoes@loki-equipe` 1.1.4 distribui o
 [roteiro de rotina](../plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md).
 Ele complementa os leitores já distribuídos desde 1.1.0 e usa os contratos
 servidos pelo Loki. Não instala um servidor MCP, cria agendador ou altera OAuth.
 O provider Python e as instruções do servidor têm versões independentes;
 esta atualização de plugin não promove outro wheel ou implanta o backend.
+
+O roteiro usa cadastro e histórico nativos para reproduzir tarefas reais. Inclui
+investigação de regras por normas e histórico, conferência entre competências e
+cobertura por finalidade; não depende de um kit externo de dados do cliente.
 
 ## Atualizar na máquina que executa a rotina
 
@@ -17,7 +21,7 @@ claude plugin update loki-orientacoes@loki-equipe --scope user
 claude plugin list --json
 ```
 
-Conferir versão 1.1.2 ou superior e plugin habilitado. Se o plugin ainda não
+Conferir versão 1.1.4 ou superior e plugin habilitado. Se o plugin ainda não
 estiver instalado, seguir o [roteiro de instalação](DAILY_OPERATOR_UPDATES.md).
 Falha de acesso ao repositório privado permanece pendência; não substituir
 o OAuth do Loki por outra credencial. Manter auto-update ativo no marketplace.
@@ -32,7 +36,11 @@ Na sessão do Claude Code que alcança a configuração real da rotina, enviar:
 
 Atualize o roteiro da minha rotina existente do Loki para seguir ROUTINES.md
 da skill instalada antes de obter trabalho da fila. Confira a versão instalada,
-o acesso e os contratos atuais. Preserve a agenda, as referências e as
+o acesso e os contratos atuais. Use o cadastro e o histórico nativos e consulte
+as fontes autorizadas antes de pedir informações já fornecidas. Investigue as
+regras faltantes por normas e passado, com fontes, vigência e conferência entre
+competências; acompanhe todas as finalidades do DP. Preserve a agenda, as
+referências e as
 credenciais existentes. Não crie outra rotina. Se houver mais de uma candidata,
 identifique a rotina correta antes de alterar. Mostre o diff sem segredos e
 registre a configuração realmente salva. Não execute a fila neste passo.
