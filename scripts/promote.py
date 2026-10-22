@@ -19,7 +19,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = "mcp_loki_updates"
-VERSION = "0.1.4"
+VERSION = "0.1.6"
 WHEEL_NAME = f"{PACKAGE}-{VERSION}-py3-none-any.whl"
 INFO = f"{PACKAGE}-{VERSION}.dist-info/"
 MAX_WHEEL_BYTES = 8 * 1024 * 1024
