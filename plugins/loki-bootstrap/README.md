@@ -1,6 +1,6 @@
 # Loki — leitores locais e operação pela harness
 
-Versão1.1.0. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
+Versão1.1.1. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
 quem já instalou receber o plugin completo pelo auto-update nativo Git.
 
 O pacote inclui `loki-bootstrap` e `operar-loki`, leitores de PDF/imagem,
@@ -23,3 +23,10 @@ Depois da atualização, use `/loki-orientacoes:operar-loki` no Claude ou
 assinado conserva seus próprios pins/preflight; esta distribuição não o altera
 nem importa seu cofre. ChatGPT mantém seu conector remoto e não executa esses
 leitores locais.
+
+Rotinas agendadas usam o [roteiro incluído no plugin](skills/operar-loki/references/ROUTINES.md),
+consultado pelo bootstrap e pela skill operacional. Ele seleciona os executores
+pelo contrato corrente e preserva históricos, pendências e recibos de execução.
+Para vincular uma rotina existente no Claude Code, siga o
+[roteiro de ativação](../../docs/ANA_ROUTINE_ACTIVATION.md). Publicação pelo Git
+não comprova instalação ou alteração do agendamento na máquina do operador.
