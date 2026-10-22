@@ -11,7 +11,7 @@ acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
 
 O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
 o plugin completo do Claude Code para Ana no Mac e Samuel no Windows/Linux,
-preservando o MCP e o OAuth existentes. Na versão1.1.2, `loki-orientacoes` mantém
+preservando o MCP e o OAuth existentes. Na versão1.1.3, `loki-orientacoes` mantém
 o nome para atualizar instalações anteriores e inclui `operar-loki`, leitores
 locais e preparação de CSV/parâmetros. A harness faz a leitura e os envios;
 originais ficam locais e o Loki recebe somente parâmetros e CSVs.
@@ -21,6 +21,11 @@ preserva a agenda existente e exige conferência no ambiente do operador.
 O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
 com atualização automática pelo gerenciador nativo e a conexão MCP já existente.
 Os dois roteiros usam auto-update nativo, sem agendador externo ou novos ZIPs.
+O plugin1.1.3 inclui a skill
+[registrar-problema-loki](plugins/loki-bootstrap/skills/registrar-problema-loki/SKILL.md)
+para achados, erros e sugestões ao suporte Discord pela ação autenticada
+`registrar_problema`. O envio exige autorização de suporte e relato sanitizado;
+catálogo da conexão e recibo de entrega são conferidos separadamente.
 O plugin1.1.1 acrescenta o [roteiro para comparação privada com componentes
 qualificados](plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md),
 com seleção por contexto, retenções e registro dos dados efetivamente consumidos.

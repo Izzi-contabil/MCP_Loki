@@ -14,6 +14,11 @@ Para rotina agendada, fila de processos ou avaliação de replicações, leia
 [ROUTINES.md](references/ROUTINES.md) antes de obter trabalho da fila. Continue
 pelos leitores e contratos deste guia; o roteiro não cria outro agendador.
 
+Para erros, bloqueios, sugestões ou achados destinados ao suporte, leia
+[registrar-problema-loki](../registrar-problema-loki/SKILL.md). Prepare o relato
+sanitizado e envie pela ação MCP existente quando houver autorização de suporte;
+preserve o mesmo ID nas retomadas e confira o recibo de entrega.
+
 ## Começar e localizar os leitores
 
 1. Consulte `meu_acesso` (fallback `get_operator_context`), leia as instruções

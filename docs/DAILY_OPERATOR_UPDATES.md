@@ -88,6 +88,12 @@ consulta agendada com o Claude fechado.
 
 ## 4. Conferir o Loki
 
+A versão1.1.3 também distribui `/loki-orientacoes:registrar-problema-loki`.
+Use-a para relatos sanitizados de achados, erros e sugestões, com autorização
+de suporte já existente ou obtida antes de enviar. Confira `registrar_problema`
+no catálogo MCP; instalar a skill não atualiza ferramentas da conexão. Entrega
+real exige recibo `sent` e `resposta.message_id`, conforme a skill.
+
 Abrir uma conversa nova e executar:
 
 ```text
