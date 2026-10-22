@@ -127,8 +127,14 @@ claude plugin list --json
 Depois, usar `/reload-plugins` ou iniciar nova conversa. Conferir o acesso
 GitHub se houver erro de autenticação; não remover o MCP para resolver Git.
 
-Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.1 ou superior em
+Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.2 ou superior em
 `claude plugin list --json`. Não desinstalar a conexão antiga para atualizar.
+
+Para a rotina existente no Claude Code, use a
+[ativação do roteiro de rotina](ANA_ROUTINE_ACTIVATION.md). A versão1.1.2 inclui
+`references/ROUTINES.md` no plugin, com descoberta dos executores atuais,
+seleção de histórico e recibo por rodada. Atualização do plugin não altera
+o horário, o texto de uma tarefa agendada ou filtros de fila de outro sistema.
 
 ## Comparar com componentes qualificados
 

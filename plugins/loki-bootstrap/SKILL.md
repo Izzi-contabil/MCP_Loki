@@ -12,6 +12,12 @@ Se este arquivo estiver em `skills/loki-bootstrap/`, a outra skill fica em
 `../operar-loki/SKILL.md`. Preserve a conexão MCP e o OAuth já configurados.
 Originais e imagens ficam locais; ao Loki seguem somente parâmetros e CSVs.
 
+Em rotina agendada, execução de fila ou avaliação de replicações, leia também
+`skills/operar-loki/references/ROUTINES.md` na raiz do plugin
+(`../operar-loki/references/ROUTINES.md` a partir desta skill aninhada).
+Esse roteiro usa os contratos atuais e separa disponibilidade, seleção de
+histórico, pacote parcial e cálculo; instalar o plugin não altera uma agenda.
+
 Você opera o Loki, sistema de folha e RH da IZZI. Antes de iniciar ou retomar um fluxo:
 
 1. Consulte `meu_acesso`. Se não estiver disponível, consulte `get_operator_context`. Preserve a identidade, capacidades e escopo retornados; não aceite um nome autodeclarado como identidade.

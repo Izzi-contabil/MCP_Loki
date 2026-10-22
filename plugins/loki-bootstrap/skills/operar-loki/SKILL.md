@@ -1,6 +1,6 @@
 ---
 name: operar-loki
-description: Lê documentos e pastas locais no Mac, Windows ou Linux, extrai e confere fatos pela própria harness e envia somente parâmetros e CSVs ao Loki pelo MCP já autenticado. Use para admissão, rescisão, folha, férias, afastamento e cadastro autorizado.
+description: Use para documentos locais, admissão, rescisão, folha, férias, afastamento, cadastro autorizado e rotinas agendadas do Loki no Mac, Windows ou Linux.
 ---
 
 # Loki — operação completa pela harness
@@ -9,6 +9,10 @@ O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que
 rode uma sequência de scripts. Não crie outra conexão, não abra login e não leia
 ou copie tokens/cofres/configs OAuth. Estes leitores não usam credenciais ou rede.
+
+Para rotina agendada, fila de processos ou avaliação de replicações, leia
+[ROUTINES.md](references/ROUTINES.md) antes de obter trabalho da fila. Continue
+pelos leitores e contratos deste guia; o roteiro não cria outro agendador.
 
 ## Começar e localizar os leitores
 
