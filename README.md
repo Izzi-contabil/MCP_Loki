@@ -18,6 +18,11 @@ originais ficam locais e o Loki recebe somente parâmetros e CSVs.
 O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
 com atualização automática pelo gerenciador nativo e a conexão MCP já existente.
 Os dois roteiros usam auto-update nativo, sem agendador externo ou novos ZIPs.
+O plugin1.1.1 acrescenta o [roteiro para comparação privada com componentes
+qualificados](plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md),
+com seleção por contexto, retenções e registro dos dados efetivamente consumidos.
+Essa atualização do plugin não altera o provider0.1.4, suas instruções1.3.0,
+o backend ou as regras de cálculo.
 Os leitores usam uv e Python3.11/dependências com hashes, preparados no cache do
 usuário. Não incluem backend, conexão nova ou credenciais. O kit Windows legado
 assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).

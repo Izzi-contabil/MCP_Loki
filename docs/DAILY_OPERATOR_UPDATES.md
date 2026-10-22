@@ -127,8 +127,28 @@ claude plugin list --json
 Depois, usar `/reload-plugins` ou iniciar nova conversa. Conferir o acesso
 GitHub se houver erro de autenticação; não remover o MCP para resolver Git.
 
-Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.0 ou superior em
+Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.1 ou superior em
 `claude plugin list --json`. Não desinstalar a conexão antiga para atualizar.
+
+## Comparar com componentes qualificados
+
+Na versão1.1.1, `operar-loki` inclui o [roteiro de comparação privada](../plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md).
+O índice e os dados do cliente ficam em local privado indicado pelo operador,
+fora do repositório/cache. Informe essa localização na rotina existente:
+
+> Use operar-loki e o roteiro COMPARATIVE_TESTING.md da instalação carregada.
+> Leia o índice privado que indiquei, confira edição e hashes e concilie os
+> componentes com o histórico nativo do Loki. Aplique as retenções por empresa,
+> episódio e competência. Execute os componentes permitidos pelos contratos
+> atuais e registre linhas consumidas, fontes, pendências e versão do resultado.
+> Fixe o resultado do Loki antes de consultar o resultado da equipe e comparar.
+> Prepare somente o pacote privado para revisão, com as ressalvas preservadas.
+
+Esse texto pode ser incorporado ao pedido já autorizado no Claude Code; não
+cria nem altera agenda. O índice orienta seleção, não é contrato MCP ou fonte
+primária. Dados reportados não viram regra executável. Atualização no Git não
+comprova instalação ou execução no computador de outro operador: conferir
+versão, skill carregada, MCP e recibo de um ensaio real nesse ambiente.
 
 ## Quem seguiu o roteiro anterior
 
