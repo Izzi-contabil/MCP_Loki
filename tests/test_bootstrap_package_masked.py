@@ -1,6 +1,7 @@
 """The shared native plugin ships readers without replacing the OAuth connection."""
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +17,7 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
     manifest = json.loads((plugin / ".claude-plugin/plugin.json").read_text())
     assert set(manifest) == {"name", "version", "description"}
     assert manifest["name"] == "loki-orientacoes"
-    assert manifest["version"] == "1.1.4"
+    assert manifest["version"] == "1.1.5"
     assert (plugin / "skills/loki-bootstrap/SKILL.md").read_bytes() == (
         plugin / "SKILL.md"
     ).read_bytes()
@@ -29,6 +30,8 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
         "SKILL.md",
         "README.md",
         "skills/loki-bootstrap/SKILL.md",
+        "skills/investigar-regras-dp/SKILL.md",
+        "skills/investigar-regras-dp/references/QUALIFICACAO.md",
         "skills/registrar-problema-loki/SKILL.md",
         "skills/registrar-problema-loki/references/relato.json",
         "skills/operar-loki/SKILL.md",
@@ -63,3 +66,21 @@ def test_feedback_skill_is_discoverable_and_uses_existing_authenticated_action()
     assert example["severity"] == "baixa"
     assert "TESTE" in example["summary"]
     assert not any("webhook" in name or "token" in name for name in example)
+
+
+def test_investigation_is_reachable_and_all_its_markdown_links_resolve() -> None:
+    plugin = ROOT / "plugins/loki-bootstrap"
+    skill = plugin / "skills/investigar-regras-dp/SKILL.md"
+    for entry in (
+        plugin / "skills/operar-loki/SKILL.md",
+        plugin / "skills/operar-loki/references/ROUTINES.md",
+    ):
+        targets = {
+            (entry.parent / link).resolve()
+            for link in re.findall(r"\]\(([^)]+\.md)\)", entry.read_text())
+        }
+        assert skill.resolve() in targets
+    for entry in (skill, skill.parent / "references/QUALIFICACAO.md"):
+        for link in re.findall(r"\]\(([^)]+\.md)\)", entry.read_text()):
+            assert (entry.parent / link).is_file(), (entry, link)
+    assert skill.parent.name == "investigar-regras-dp"
