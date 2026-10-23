@@ -60,24 +60,17 @@ Sem esse dia, preserve a competência retroativa e a lacuna necessária ao cálc
 
 ## Investigar e qualificar regras
 
-Quando faltar regra ou parâmetro derivável, use normas, ACT/CCT e histórico já
-acessíveis. Concilie categoria, território, empresa, vínculo e vigência. Registre
-fundamento e localizador, expressão, unidades, operandos, arredondamento, alcance,
-exceções e lacunas. Confira a hipótese em outras competências e pessoas e registre
-quais delas foram usadas para inferi-la e quais foram reservadas para conferência.
-Coincidência é evidência de avanço; divergência deve permanecer visível e motivar
-investigação de entrada, regra, produto ou referência. Valor pago fica como alvo
-da comparação, sem preencher um operando ausente. Não ajuste fatores por pessoa
-apenas para alcançar esse valor.
+Ao encontrar falta de dado, fórmula, parâmetro ou divergência recorrente, leia e
+aplique [investigar-regras-dp](../../investigar-regras-dp/SKILL.md) como parte da
+rodada. Retome a investigação existente, consulte o acervo e qualifique hipóteses
+por normas e histórico antes de pedir complemento. Configuração do ERP é uma
+fonte possível, não um requisito universal quando outras fontes são suficientes.
 
-Com suporte e autorização, registre os fatos e parâmetros pelos escritores
-vigentes, com fontes e hashes; confira a versão gravada e seu consumo pelo
-executor. Preserve os controles de mudança de configuração com evidência. Se o
-schema ou motor não expressar a regra, registre a reprodução e o ajuste de produto
-necessário; não substitua a regra por outro valor ou por uma fórmula disfarçada.
-Uma hipótese de regra não confirma um fato desconhecido do episódio. Só peça
-complemento após consultar o acervo disponível, indicando o fato e o período
-exatos que faltam ou as alternativas que a evidência não distingue.
+O registro distingue calibração, validação reservada, regra gravada e consumo
+pelo executor. Regra não expressável no contrato/motor segue reprodução e fluxo
+autorizado de correção de produto; as partes independentes continuam. Preserve
+retenções e registre a próxima ação concreta no recibo da rodada. O avanço só
+encerra o bloqueio após execução e conferência pertinentes.
 
 ## Escolha do executor
 

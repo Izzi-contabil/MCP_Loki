@@ -15,9 +15,10 @@ Para rotina agendada, fila de processos ou avaliação de replicações, leia
 pelos leitores e contratos deste guia; o roteiro não cria outro agendador.
 
 Na operação real, consulte cadastro, histórico e regras no Loki e leia as fontes
-nos canais autorizados. Um índice externo de componentes é opcional. Investigue
-regras deriváveis por normas aplicáveis e histórico, conforme ROUTINES.md;
-registre hipóteses, alcance e evidências antes de configurar sua execução.
+nos canais autorizados. Um índice externo de componentes é opcional. Ao faltar dado, regra ou parâmetro, ou houver divergência recorrente, use
+[investigar-regras-dp](../investigar-regras-dp/SKILL.md) antes de declarar falta
+ou pedir export. A skill orienta inferência normativa/histórica, validação,
+registro, consumo e retomada, conforme os contratos e a autorização atuais.
 
 Para erros, bloqueios, sugestões ou achados destinados ao suporte, leia
 [registrar-problema-loki](../registrar-problema-loki/SKILL.md). Prepare o relato

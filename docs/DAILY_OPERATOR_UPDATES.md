@@ -133,7 +133,7 @@ claude plugin list --json
 Depois, usar `/reload-plugins` ou iniciar nova conversa. Conferir o acesso
 GitHub se houver erro de autenticação; não remover o MCP para resolver Git.
 
-Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.4 ou superior em
+Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.5 ou superior em
 `claude plugin list --json`. Não desinstalar a conexão antiga para atualizar.
 
 Para a rotina existente no Claude Code, use a
@@ -187,3 +187,11 @@ seus gates de build e publicação; o kit Windows legado não é modificado.
 
 Referências: [auto-update no Claude](https://code.claude.com/docs/en/plugins/install#keep-plugins-updated),
 [credenciais do repositório privado](https://code.claude.com/docs/en/plugins/host-marketplace#what-background-auto-update-does-with-credentials).
+
+## Investigação durante a operação — 1.1.5
+
+`/loki-orientacoes:investigar-regras-dp` também é descoberta pelos guias normais
+quando houver lacuna ou divergência. O método e o registro de qualificação
+acompanham a skill; dados ficam fora do cache. Confira versão instalada1.1.5,
+recarregue a sessão e registre uma execução observada antes de declarar adoção.
+Ver [ativação da rotina](ANA_ROUTINE_ACTIVATION.md).

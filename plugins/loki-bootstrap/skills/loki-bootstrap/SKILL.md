@@ -18,6 +18,12 @@ Em rotina agendada, execução de fila ou avaliação de replicações, leia tam
 Esse roteiro usa os contratos atuais e separa disponibilidade, seleção de
 histórico, pacote parcial e cálculo; instalar o plugin não altera uma agenda.
 
+Ao faltar dado, fórmula, parâmetro ou aparecer divergência recorrente, use
+`skills/investigar-regras-dp/SKILL.md` na raiz deste plugin
+(`../investigar-regras-dp/SKILL.md` a partir desta skill aninhada) antes de
+concluir que falta export. A investigação faz parte da operação e não concede
+permissões de desenvolvimento ou decisão.
+
 Para reportar erro, bloqueio, sugestão ou achado ao suporte Discord, leia
 `skills/registrar-problema-loki/SKILL.md` na raiz deste plugin
 (`../registrar-problema-loki/SKILL.md` a partir desta skill aninhada).

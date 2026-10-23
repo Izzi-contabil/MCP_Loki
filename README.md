@@ -11,7 +11,7 @@ acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
 
 O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
 o plugin completo do Claude Code para Ana no Mac e Samuel no Windows/Linux,
-preservando o MCP e o OAuth existentes. Na versão1.1.4, `loki-orientacoes` mantém
+preservando o MCP e o OAuth existentes. Na versão1.1.5, `loki-orientacoes` mantém
 o nome para atualizar instalações anteriores e inclui `operar-loki`, leitores
 locais e preparação de CSV/parâmetros. A harness faz a leitura e os envios;
 originais ficam locais e o Loki recebe somente parâmetros e CSVs.
@@ -21,7 +21,13 @@ preserva a agenda existente e exige conferência no ambiente do operador.
 O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
 com atualização automática pelo gerenciador nativo e a conexão MCP já existente.
 Os dois roteiros usam auto-update nativo, sem agendador externo ou novos ZIPs.
-A versão1.1.4 orienta a operação real com cadastro e histórico nativos, investigação
+A versão1.1.5 acrescenta [investigar-regras-dp](plugins/loki-bootstrap/skills/investigar-regras-dp/SKILL.md)
+como parte da operação ao faltar fórmula/dado ou surgir divergência recorrente.
+A skill organiza inferência por normas/ACT/CCT e holerites, testes reservados,
+registro/consumo e retomada dos consumidores. A configuração do ERP é uma fonte,
+sem ser requisito universal. Correções de dados/configuração usam os contratos
+atuais; defeito de produto segue reprodução, teste e publicação autorizados.
+A versão1.1.4 introduziu a operação real com cadastro e histórico nativos, investigação
 de regras por normas e passado, conferência entre competências e acompanhamento
 por tarefa e finalidade do DP. O índice externo de componentes permanece opcional;
 não é banco operacional nem pré-requisito de uma tarefa com fontes suficientes.
@@ -42,7 +48,7 @@ assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).
 A candidata usa pacote `0.1.6` e instruções `1.3.2`, com admissão em `1.2.3`.
 O [ajuste de opção FGTS](docs/ADMISSION_FGTS_20261022.md) orienta derivação
 normativa com vínculo e admissão qualificados, preservando exceções e revisão.
-O plugin continua em `1.1.4` e o contrato em `1.0.0`.
+O plugin passa a `1.1.5` e o contrato em `1.0.0`.
 geral/documentos passam a `1.2.0`, afastamento/aprovações a `1.1.0` e rescisão permanece em
 `1.1.0`. Os cinco novos guias de DP estão em `1.0.0`, assim como férias,
 décimo terceiro. Os [contratos e limites da candidata](docs/PENDING_DP_GUIDANCE_20261021.md)

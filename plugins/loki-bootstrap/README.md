@@ -1,6 +1,6 @@
 # Loki — leitores locais e operação pela harness
 
-Versão1.1.4. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
+Versão1.1.5. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
 quem já instalou receber o plugin completo pelo auto-update nativo Git.
 
 O pacote inclui `loki-bootstrap` e `operar-loki`, leitores de PDF/imagem,
@@ -8,6 +8,14 @@ planilhas, documentos de texto e arquivos estruturados, preparação de CSV e
 parâmetros e recibos locais. Os scripts/lock estão dentro da skill operacional.
 A harness interpreta e confere os documentos e chama o MCP já conectado.
 O Loki recebe somente parâmetros e CSVs; originais e renderizações ficam locais.
+
+A skill [investigar-regras-dp](skills/investigar-regras-dp/SKILL.md) integra a
+operação quando faltar dado, fórmula ou parâmetro, ou houver divergência
+recorrente. Pode ser invocada como `/loki-orientacoes:investigar-regras-dp`
+no Claude ou `$investigar-regras-dp` no Codex. Use normas e holerites para
+qualificar parâmetros, testar hipóteses e retomar tarefas com consumo comprovado.
+A skill distingue correção de dados/configuração de correção do produto;
+nenhuma instrução concede acesso de desenvolvimento ou decisão.
 
 Na operação real, o cadastro, histórico e parâmetros consumidos ficam no Loki.
 O roteiro de rotina inclui investigação de regras por normas e histórico e

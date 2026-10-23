@@ -79,3 +79,8 @@ conteúdo sintético e resumo TESTE; entrega confirmada exige `sent` e
 
 Referências: [OpenAI Docs — marketplaces](https://developers.openai.com/plugins/build/plugins),
 [inicialização nativa no Codex 0.163.0](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manager.rs#L2823).
+
+Na versão1.1.5, `$investigar-regras-dp` integra a operação de fórmulas,
+parâmetros e históricos incompletos. Bootstrap e operar-loki também encaminham
+para essa skill. Confira versão instalada e carregue uma conversa nova;
+publicação/instalação não comprovam execução da rotina de outro operador.
