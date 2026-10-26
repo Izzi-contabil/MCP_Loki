@@ -69,13 +69,16 @@ plugin local não instala outro plugin na conta ChatGPT.
 Quem já tinha1.0.2 deve conferir1.1.0 ou superior e as duas skills após upgrade.
 Reabrir a conversa para usar o pacote completo. Não reinstalar MCP/OAuth.
 
-Na versão1.1.3 ou superior há também `$registrar-problema-loki` para relatos
-sanitizados de achados, erros e sugestões ao Discord, com autorização de suporte.
+Na versão1.1.6, `$registrar-problema-loki` orienta relatos sanitizados, backlog
+Slack e propostas de correção, com autorização de suporte.
 Confira a skill instalada e a ação `registrar_problema` no catálogo da conexão
 existente. Se faltar a ação, atualize as ferramentas pelo aplicativo e confira
 novamente; o upgrade Git só atualiza o plugin local. Um teste autorizado usa
-conteúdo sintético e resumo TESTE; entrega confirmada exige `sent` e
-`resposta.message_id`. Leia o tratamento de pendência/incerteza na skill.
+conteúdo sintético e resumo TESTE. Guarde `report_id` e `problem_id` quando
+retornado; entrega confirmada exige `sent` e `message_id` no recibo. A fila
+retoma pendências no servidor; acompanhe o problema sem reenvio. Leia a skill
+para incerteza, decisão exclusiva do proprietário OAuth, publicação e confirmação
+humana da solução. O backend conserva recibos Discord com suporte novo desligado.
 
 Referências: [OpenAI Docs — marketplaces](https://developers.openai.com/plugins/build/plugins),
 [inicialização nativa no Codex 0.163.0](https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core-plugins/src/manager.rs#L2823).

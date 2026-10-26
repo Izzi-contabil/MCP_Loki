@@ -88,11 +88,15 @@ consulta agendada com o Claude fechado.
 
 ## 4. Conferir o Loki
 
-A versão1.1.3 também distribui `/loki-orientacoes:registrar-problema-loki`.
+A versão1.1.6 atualiza `/loki-orientacoes:registrar-problema-loki` para relatos,
+backlog Slack e propostas de correção.
 Use-a para relatos sanitizados de achados, erros e sugestões, com autorização
 de suporte já existente ou obtida antes de enviar. Confira `registrar_problema`
 no catálogo MCP; instalar a skill não atualiza ferramentas da conexão. Entrega
-real exige recibo `sent` e `resposta.message_id`, conforme a skill.
+real exige recibo `sent` e `message_id`, conforme a skill. Guarde `report_id` e
+`problem_id` quando retornado e acompanhe sem reenviar. A decisão do proprietário
+OAuth sobre a versão exata, a publicação e a confirmação humana da solução são
+etapas distintas. O backend conserva o caminho Discord com suporte novo desligado.
 
 Abrir uma conversa nova e executar:
 
