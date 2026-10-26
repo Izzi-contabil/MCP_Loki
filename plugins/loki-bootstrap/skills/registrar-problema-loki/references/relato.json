@@ -4,10 +4,13 @@
   "kind": "ajuste",
   "severity": "baixa",
   "summary": "TESTE sintético de integração do suporte Loki",
-  "goal": "Validar o fluxo autorizado da harness até o recibo do Discord",
-  "expected": "Estado sent e identificador da mensagem no recibo",
+  "goal": "Validar o fluxo autorizado da harness até o recibo do backend e a entrega ao suporte",
+  "expected": "Recibo persistido com report_id; no backlog Slack, problem_id e entrega posterior confirmada por state=sent e message_id",
   "observed": "Teste de integração solicitado; não representa defeito de negócio",
-  "steps": ["Carregar a skill instalada", "Enviar relato sintético pela ação MCP"],
+  "steps": [
+    "Carregar a skill instalada",
+    "Enviar relato sintético pela ação MCP"
+  ],
   "attempts": [],
   "impact": "Validação técnica do canal de suporte, sem dados de clientes",
   "error": "não se aplica: teste sintético",

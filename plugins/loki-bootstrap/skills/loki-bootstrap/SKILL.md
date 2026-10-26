@@ -24,11 +24,14 @@ Ao faltar dado, fórmula, parâmetro ou aparecer divergência recorrente, use
 concluir que falta export. A investigação faz parte da operação e não concede
 permissões de desenvolvimento ou decisão.
 
-Para reportar erro, bloqueio, sugestão ou achado ao suporte Discord, leia
+Para reportar erro, bloqueio, sugestão ou achado, acompanhar suporte Slack ou
+consultar uma proposta de correção, leia
 `skills/registrar-problema-loki/SKILL.md` na raiz deste plugin
 (`../registrar-problema-loki/SKILL.md` a partir desta skill aninhada).
-Envie somente relato sanitizado pela ação MCP existente, dentro da autorização
-de suporte. Instalar a skill não atualiza o catálogo da conexão nem prova entrega.
+Envie somente relato sanitizado pelo MCP existente, dentro da autorização de
+suporte. Backlog e recibos ficam no backend; decisão de software exige intenção
+humana do proprietário OAuth sobre a proposta exata. Instalar a skill não
+comprova atualização do catálogo, entrega, publicação ou solução.
 
 Você opera o Loki, sistema de folha e RH da IZZI. Antes de iniciar ou retomar um fluxo:
 

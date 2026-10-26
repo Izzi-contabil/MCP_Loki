@@ -1,6 +1,6 @@
 # Loki — leitores locais e operação pela harness
 
-Versão1.1.5. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
+Versão1.1.6. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
 quem já instalou receber o plugin completo pelo auto-update nativo Git.
 
 O pacote inclui `loki-bootstrap` e `operar-loki`, leitores de PDF/imagem,
@@ -45,10 +45,14 @@ leitores locais.
 Para achados, erros ou sugestões ao suporte, use
 `/loki-orientacoes:registrar-problema-loki` no Claude ou
 `$registrar-problema-loki` no Codex. A skill também é descoberta pelos guias
-de operação e rotina. Ela prepara relato sanitizado e usa `registrar_problema`
-na conexão MCP existente, dentro da autorização de suporte. Atualizar o plugin
-não atualiza o catálogo remoto: confira a ação e seu recibo antes de declarar
-entrega ao Discord. O webhook permanece no servidor.
+de operação e rotina. Ela prepara relato sanitizado por `registrar_problema`
+no MCP HTTPS OAuth existente, dentro da autorização de suporte, e orienta
+acompanhamento do backlog/recibo Slack no backend. O proprietário OAuth consulta
+diff, testes e revisão antes de decidir a versão exata da correção; publicação
+e confirmação da solução têm recibos distintos. O backend preserva Discord
+quando o suporte novo está desligado. Credenciais/canal ficam no servidor.
+Atualizar o plugin não atualiza o catálogo remoto nem comprova serviço ativo,
+entrega ou instalação individual. Provider0.1.6/instruções1.3.2 permanecem iguais.
 
 Rotinas agendadas usam o [roteiro incluído no plugin](skills/operar-loki/references/ROUTINES.md),
 consultado pelo bootstrap e pela skill operacional. Ele seleciona os executores

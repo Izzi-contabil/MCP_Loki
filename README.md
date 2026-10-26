@@ -11,7 +11,7 @@ acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
 
 O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
 o plugin completo do Claude Code para Ana no Mac e Samuel no Windows/Linux,
-preservando o MCP e o OAuth existentes. Na versão1.1.5, `loki-orientacoes` mantém
+preservando o MCP e o OAuth existentes. Na versão1.1.6, `loki-orientacoes` mantém
 o nome para atualizar instalações anteriores e inclui `operar-loki`, leitores
 locais e preparação de CSV/parâmetros. A harness faz a leitura e os envios;
 originais ficam locais e o Loki recebe somente parâmetros e CSVs.
@@ -31,11 +31,17 @@ A versão1.1.4 introduziu a operação real com cadastro e histórico nativos, i
 de regras por normas e passado, conferência entre competências e acompanhamento
 por tarefa e finalidade do DP. O índice externo de componentes permanece opcional;
 não é banco operacional nem pré-requisito de uma tarefa com fontes suficientes.
-O plugin1.1.3 inclui a skill
+O plugin1.1.6 atualiza a skill
 [registrar-problema-loki](plugins/loki-bootstrap/skills/registrar-problema-loki/SKILL.md)
-para achados, erros e sugestões ao suporte Discord pela ação autenticada
-`registrar_problema`. O envio exige autorização de suporte e relato sanitizado;
-catálogo da conexão e recibo de entrega são conferidos separadamente.
+para relatos sanitizados, acompanhamento do backlog Slack e propostas de
+correção pelo MCP HTTPS OAuth existente. `registrar_problema` preserva
+`loki.feedback/1`, UUID e recibos; a fila pertence ao backend. A decisão de
+software cabe ao proprietário OAuth ativo após consultar diff, testes e revisão
+da versão exata. Aprovar autoriza a publicação após os gates; confirmação de
+solução exige publicação e convite entregue. Com suporte novo desligado, o
+backend conserva o caminho legado Discord. A skill não altera o provider
+`0.1.6`, as instruções `1.3.2`, wheel ou lock. Catálogo, instalação, serviço
+ativo e entrega real exigem verificações próprias; a versão do plugin não os prova.
 O plugin1.1.1 acrescenta o [roteiro para comparação privada com componentes
 qualificados](plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md),
 com seleção por contexto, retenções e registro dos dados efetivamente consumidos.
@@ -48,7 +54,7 @@ assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).
 A candidata usa pacote `0.1.6` e instruções `1.3.2`, com admissão em `1.2.3`.
 O [ajuste de opção FGTS](docs/ADMISSION_FGTS_20261022.md) orienta derivação
 normativa com vínculo e admissão qualificados, preservando exceções e revisão.
-O plugin passa a `1.1.5` e o contrato em `1.0.0`.
+O plugin passa a `1.1.6` e o contrato em `1.0.0`.
 geral/documentos passam a `1.2.0`, afastamento/aprovações a `1.1.0` e rescisão permanece em
 `1.1.0`. Os cinco novos guias de DP estão em `1.0.0`, assim como férias,
 décimo terceiro. Os [contratos e limites da candidata](docs/PENDING_DP_GUIDANCE_20261021.md)
