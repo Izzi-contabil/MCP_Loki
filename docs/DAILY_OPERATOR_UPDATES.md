@@ -88,7 +88,7 @@ consulta agendada com o Claude fechado.
 
 ## 4. Conferir o Loki
 
-A versão1.1.6 atualiza `/loki-orientacoes:registrar-problema-loki` para relatos,
+A versão1.1.7 atualiza `/loki-orientacoes:registrar-problema-loki` para relatos,
 backlog Slack e propostas de correção.
 Use-a para relatos sanitizados de achados, erros e sugestões, com autorização
 de suporte já existente ou obtida antes de enviar. Confira `registrar_problema`
@@ -199,3 +199,8 @@ quando houver lacuna ou divergência. O método e o registro de qualificação
 acompanham a skill; dados ficam fora do cache. Confira versão instalada1.1.5,
 recarregue a sessão e registre uma execução observada antes de declarar adoção.
 Ver [ativação da rotina](ANA_ROUTINE_ACTIVATION.md).
+
+Na1.1.7, ao concluir execução com falha inesperada, a IA carrega a skill de
+suporte e registra quando já houver autorização no escopo. Pendência prevista
+não é defeito automático; falha de suporte não gera recursão. O leitor retorna
+support_handoff, sem enviar dados. [Escopo e limites](SUPPORT_COLLABORATION_20261027.md).

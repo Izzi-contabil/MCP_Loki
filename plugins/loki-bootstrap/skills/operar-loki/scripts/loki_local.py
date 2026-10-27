@@ -14,6 +14,7 @@ import json
 import sys
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 # The native plugin cache is immutable working code, not an output directory.
 sys.dont_write_bytecode = True
@@ -179,7 +180,27 @@ def main() -> int:
         return 0
     except Exception as error:
         code = str(error) if isinstance(error, ReadError) else "local_operation_failed"
-        print(json.dumps({"error": code}), file=sys.stderr)
+        print(
+            json.dumps(
+                {
+                    "error": code,
+                    "support_handoff": {
+                        "skill": "registrar-problema-loki",
+                        "next_action": "classify_failure_before_reporting",
+                        "report_id": str(uuid4()),
+                        "delivery": "not_sent_harness_must_use_existing_mcp",
+                        "support_authorization_required": True,
+                        "instruction": (
+                            "Carregue a skill de suporte. "
+                            "Distinga falha inesperada de pendência prevista; "
+                            "com autorização vigente, relate pelo MCP e "
+                            "preserve este ID nas retomadas. O leitor não enviou relato."
+                        ),
+                    },
+                }
+            ),
+            file=sys.stderr,
+        )
         return 1
 
 

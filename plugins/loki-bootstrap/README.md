@@ -1,6 +1,6 @@
 # Loki — leitores locais e operação pela harness
 
-Versão1.1.6. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
+Versão1.1.7. O nome instalado `loki-orientacoes@loki-equipe` foi mantido para
 quem já instalou receber o plugin completo pelo auto-update nativo Git.
 
 O pacote inclui `loki-bootstrap` e `operar-loki`, leitores de PDF/imagem,
@@ -52,7 +52,11 @@ diff, testes e revisão antes de decidir a versão exata da correção; publica�
 e confirmação da solução têm recibos distintos. O backend preserva Discord
 quando o suporte novo está desligado. Credenciais/canal ficam no servidor.
 Atualizar o plugin não atualiza o catálogo remoto nem comprova serviço ativo,
-entrega ou instalação individual. Provider0.1.6/instruções1.3.2 permanecem iguais.
+entrega ou instalação individual. Provider0.1.7/instruções1.3.3 acrescentam a
+orientação de fechamento com falha e acompanhamento de apoio/orientação sem código.
+O leitor falho retorna support_handoff para a harness classificar e registrar;
+não envia relato. Pendência prevista não vira erro automático. Veja o
+[escopo e os limites](../../docs/SUPPORT_COLLABORATION_20261027.md).
 
 Rotinas agendadas usam o [roteiro incluído no plugin](skills/operar-loki/references/ROUTINES.md),
 consultado pelo bootstrap e pela skill operacional. Ele seleciona os executores

@@ -4,6 +4,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from uuid import UUID
 
 SCRIPT = (
     Path(__file__).resolve().parents[1]
@@ -76,6 +77,33 @@ def test_error_never_echoes_private_document_contents(tmp_path):
     assert result.returncode == 1
     assert "PRIVATE_SYNTHETIC_MARKER" not in result.stdout + result.stderr
     assert not (tmp_path / "pedido/request.json").exists()
+
+
+def test_failure_instructs_harness_to_classify_and_report_without_sending_or_exposing_inputs(
+    tmp_path,
+):
+    source = tmp_path / "origem privada.csv"
+    source.write_bytes(b"%PDF-1.7 PRIVATE_SYNTHETIC_FAILURE")
+    result = run(
+        "csv-request",
+        source,
+        tmp_path / "pedido",
+        "--destination",
+        "case",
+        "--target",
+        "SYNTHETIC-1",
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stderr)
+    handoff = payload["support_handoff"]
+    assert handoff["skill"] == "registrar-problema-loki"
+    assert handoff["next_action"] == "classify_failure_before_reporting"
+    assert UUID(handoff["report_id"]).version == 4
+    assert handoff["delivery"] == "not_sent_harness_must_use_existing_mcp"
+    assert handoff["support_authorization_required"] is True
+    assert str(source) not in result.stderr
+    assert "PRIVATE_SYNTHETIC_FAILURE" not in result.stderr
+    assert not (tmp_path / "pedido").exists()
 
 
 def test_local_runtime_does_not_access_network_or_client_auth_stores(tmp_path):

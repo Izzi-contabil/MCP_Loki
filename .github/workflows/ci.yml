@@ -34,7 +34,7 @@ jobs:
           uv venv .wheel-smoke --python 3.11
           uv pip install --python .wheel-smoke/bin/python --no-deps dist/*.whl
           cd "$(mktemp -d)"
-          "${{ github.workspace }}/.wheel-smoke/bin/python" -I -c "from mcp_loki_updates import InstructionsProvider, __version__; p=InstructionsProvider(); assert __version__ == '0.1.6'; assert len(p.domains()) == 13; assert p.health()['status'] == 'ok'; assert p.get('geral')"
+          "${{ github.workspace }}/.wheel-smoke/bin/python" -I -c "from mcp_loki_updates import InstructionsProvider, __version__; p=InstructionsProvider(); assert __version__ == '0.1.7'; assert len(p.domains()) == 13; assert p.health()['status'] == 'ok'; assert p.get('geral')"
       - uses: actions/upload-artifact@v4
         with:
           name: mcp-loki-updates-wheel

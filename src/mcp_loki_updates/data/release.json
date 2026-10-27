@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "instructions_version": "1.3.2",
+  "instructions_version": "1.3.3",
   "contract_version": "1.0.0",
   "plugin_version": "0.5.0",
   "minimum_plugin_version": "0.4.0",
-  "updated_at": "2026-10-22",
+  "updated_at": "2026-10-27",
   "domains": {
     "geral": {
-      "metadata_sha256": "933ac30486478c67dcd43e990cc88e09558f55b8a0e09c44a9d5e2f5e41e390d",
-      "content_sha256": "02f570b7ee4037d75684990fadd00e71f7c07a480d2de252e2bd9a73516a71b4"
+      "metadata_sha256": "83732ed476f0615c247e67e46eb258784225adad5913750459c257740bc63c21",
+      "content_sha256": "449321cd998763a6e6d93108444772c00079ffcf0645c65a3707fa334c61123f"
     },
     "admissao": {
       "metadata_sha256": "4913cb4be9ce962cf31e40827967a08965e7f8ef95e825562a6f8d6d7f9dd9f9",
@@ -62,8 +62,8 @@
   "changes": {
     "backend": [],
     "instructions": [
-      "Orienta opção FGTS derivada da admissão para empregado CLT comum com regime, categoria e episódio qualificados; ancora a norma na edição SEFIP2022 conferida e explicita limite de acesso integral à referência2026.",
-      "Preserva opções declaradas, exceções, conflitos, snapshots e gates humanos; não cria padrão de data nem altera casos automaticamente."
+      "Orienta relato de falha inesperada autorizada, distinguindo pendência prevista e mantendo UUID, recibo e antirrecursão.",
+      "Inclui demandas de processo, melhoria e dúvida, apoio na thread e confirmação humana de orientação sem código; preserva gates de software e DP."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -71,7 +71,7 @@
     ],
     "breaking_contract": [],
     "plugin": [
-      "Bootstrap 0.5.0 recomendado; fallback preserva suporte ao plugin 0.4.0."
+      "Plugin nativo1.1.7 com instruções de fechamento de execução e orientação estruturada em falhas do leitor offline; sem transporte alternativo."
     ]
   }
 }

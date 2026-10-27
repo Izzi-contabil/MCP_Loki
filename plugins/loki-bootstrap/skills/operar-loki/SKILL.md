@@ -25,6 +25,13 @@ Para erros, bloqueios, sugestões ou achados destinados ao suporte, leia
 sanitizado e envie pela ação MCP existente quando houver autorização de suporte;
 preserve o mesmo ID nas retomadas e confira o recibo de entrega.
 
+Antes de encerrar uma execução com falha técnica persistente ou bloqueio
+inesperado, carregue essa skill de suporte e registre automaticamente quando
+já houver autorização no mesmo escopo. Uma resposta breve também informa o
+ID/recibo e a próxima ação. Documento ausente, recusa conforme contrato,
+cancelamento e teste negativo intencional são pendências/resultados previstos,
+não defeitos automáticos. Não faça relato recursivo de falha do próprio suporte.
+
 ## Começar e localizar os leitores
 
 1. Consulte `meu_acesso` (fallback `get_operator_context`), leia as instruções
