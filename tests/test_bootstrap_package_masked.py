@@ -8,13 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
-    catalog = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
+    catalog = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text(encoding="utf-8"))
     assert catalog["name"] == "loki-equipe"
     assert catalog["plugins"] == [
         {"name": "loki-orientacoes", "source": "./plugins/loki-bootstrap"}
     ]
     plugin = ROOT / "plugins/loki-bootstrap"
-    manifest = json.loads((plugin / ".claude-plugin/plugin.json").read_text())
+    manifest = json.loads((plugin / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
     assert set(manifest) == {"name", "version", "description"}
     assert manifest["name"] == "loki-orientacoes"
     assert manifest["version"] == "1.1.7"
@@ -50,12 +50,14 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
 
 def test_feedback_skill_is_discoverable_and_uses_existing_authenticated_action() -> None:
     plugin = ROOT / "plugins/loki-bootstrap"
-    skill = (plugin / "skills/registrar-problema-loki/SKILL.md").read_text()
+    skill = (plugin / "skills/registrar-problema-loki/SKILL.md").read_text(encoding="utf-8")
     example = json.loads(
-        (plugin / "skills/registrar-problema-loki/references/relato.json").read_text()
+        (plugin / "skills/registrar-problema-loki/references/relato.json").read_text(
+            encoding="utf-8"
+        )
     )
-    bootstrap = (plugin / "SKILL.md").read_text()
-    operator = (plugin / "skills/operar-loki/SKILL.md").read_text()
+    bootstrap = (plugin / "SKILL.md").read_text(encoding="utf-8")
+    operator = (plugin / "skills/operar-loki/SKILL.md").read_text(encoding="utf-8")
     assert "registrar-problema-loki" in bootstrap
     assert "registrar-problema-loki" in operator
     assert "registrar_problema" in skill
@@ -77,10 +79,10 @@ def test_investigation_is_reachable_and_all_its_markdown_links_resolve() -> None
     ):
         targets = {
             (entry.parent / link).resolve()
-            for link in re.findall(r"\]\(([^)]+\.md)\)", entry.read_text())
+            for link in re.findall(r"\]\(([^)]+\.md)\)", entry.read_text(encoding="utf-8"))
         }
         assert skill.resolve() in targets
     for entry in (skill, skill.parent / "references/QUALIFICACAO.md"):
-        for link in re.findall(r"\]\(([^)]+\.md)\)", entry.read_text()):
+        for link in re.findall(r"\]\(([^)]+\.md)\)", entry.read_text(encoding="utf-8")):
             assert (entry.parent / link).is_file(), (entry, link)
     assert skill.parent.name == "investigar-regras-dp"
