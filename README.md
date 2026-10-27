@@ -11,7 +11,7 @@ acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
 
 O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
 o plugin completo do Claude Code para Ana no Mac e Samuel no Windows/Linux,
-preservando o MCP e o OAuth existentes. Na versão1.1.6, `loki-orientacoes` mantém
+preservando o MCP e o OAuth existentes. Na versão1.1.7, `loki-orientacoes` mantém
 o nome para atualizar instalações anteriores e inclui `operar-loki`, leitores
 locais e preparação de CSV/parâmetros. A harness faz a leitura e os envios;
 originais ficam locais e o Loki recebe somente parâmetros e CSVs.
@@ -31,17 +31,19 @@ A versão1.1.4 introduziu a operação real com cadastro e histórico nativos, i
 de regras por normas e passado, conferência entre competências e acompanhamento
 por tarefa e finalidade do DP. O índice externo de componentes permanece opcional;
 não é banco operacional nem pré-requisito de uma tarefa com fontes suficientes.
-O plugin1.1.6 atualiza a skill
-[registrar-problema-loki](plugins/loki-bootstrap/skills/registrar-problema-loki/SKILL.md)
-para relatos sanitizados, acompanhamento do backlog Slack e propostas de
-correção pelo MCP HTTPS OAuth existente. `registrar_problema` preserva
-`loki.feedback/1`, UUID e recibos; a fila pertence ao backend. A decisão de
-software cabe ao proprietário OAuth ativo após consultar diff, testes e revisão
-da versão exata. Aprovar autoriza a publicação após os gates; confirmação de
-solução exige publicação e convite entregue. Com suporte novo desligado, o
-backend conserva o caminho legado Discord. A skill não altera o provider
-`0.1.6`, as instruções `1.3.2`, wheel ou lock. Catálogo, instalação, serviço
-ativo e entrega real exigem verificações próprias; a versão do plugin não os prova.
+O plugin1.1.7 atualiza [registrar-problema-loki](plugins/loki-bootstrap/skills/registrar-problema-loki/SKILL.md)
+para erros, processos, melhorias e dúvidas, com backlog Slack e propostas pelo
+MCP existente. Ao encerrar execução com falha inesperada no escopo autorizado,
+a IA registra relato sanitizado e preserva UUID/recibo. Pendência prevista não
+vira defeito; falha do suporte não gera relato recursivo. O leitor local retorna
+orientação estruturada, sem enviar nada por conta própria. A decisão de código
+continua no proprietário OAuth após diff/testes/revisão da versão exata.
+Orientação sem código tem confirmação humana própria, sem publicação fictícia
+ou aceite de DP. Com suporte novo desligado, o backend conserva o caminho
+legado Discord. A entrega inclui provider0.1.7/instruções1.3.3; veja
+[escopo e limites](docs/SUPPORT_COLLABORATION_20261027.md). Catálogo, instalação,
+serviço ativo e entrega real exigem provas próprias; publicar Git não comprova
+uso pelo executor da Ana.
 O plugin1.1.1 acrescenta o [roteiro para comparação privada com componentes
 qualificados](plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md),
 com seleção por contexto, retenções e registro dos dados efetivamente consumidos.
@@ -51,11 +53,11 @@ Os leitores usam uv e Python3.11/dependências com hashes, preparados no cache d
 usuário. Não incluem backend, conexão nova ou credenciais. O kit Windows legado
 assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).
 
-A candidata usa pacote `0.1.6` e instruções `1.3.2`, com admissão em `1.2.3`.
+A candidata usa pacote `0.1.7` e instruções `1.3.3`, com admissão em `1.2.3`.
 O [ajuste de opção FGTS](docs/ADMISSION_FGTS_20261022.md) orienta derivação
 normativa com vínculo e admissão qualificados, preservando exceções e revisão.
-O plugin passa a `1.1.6` e o contrato em `1.0.0`.
-geral/documentos passam a `1.2.0`, afastamento/aprovações a `1.1.0` e rescisão permanece em
+O plugin passa a `1.1.7` e o contrato em `1.0.0`.
+geral está em `1.3.0`, documentos em `1.2.0`, afastamento/aprovações a `1.1.0` e rescisão permanece em
 `1.1.0`. Os cinco novos guias de DP estão em `1.0.0`, assim como férias,
 décimo terceiro. Os [contratos e limites da candidata](docs/PENDING_DP_GUIDANCE_20261021.md)
 dependem da implementação e autorização verificadas no host atual.
@@ -95,7 +97,7 @@ uv run --no-sync ruff check .
 uv run --no-sync ruff format --check .
 uv run --no-sync mypy src scripts plugins/loki-bootstrap/skills/operar-loki/scripts
 uv build --wheel
-uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.6-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
+uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.7-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
 ```
 
 No Windows com Python 3.11 e locale cp1252, um checkout em caminho acentuado pode falhar ao ler o `.pth` de uma instalação editable. `--no-editable` e `--no-sync` evitam esse caminho; depois de editar o pacote, sincronize novamente antes de validar sua cópia instalada. Os testes também exercitam o fonte e o smoke deve instalar o wheel fora do checkout.

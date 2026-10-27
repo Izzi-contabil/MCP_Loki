@@ -173,13 +173,15 @@ def test_rejects_invalid_snapshot_even_when_hashes_are_consistent(
 def test_metadata_is_sanitized_and_returns_domain_versions() -> None:
     provider = provider_type()()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.1.6"
+    assert metadata["provider_version"] == "0.1.7"
     assert metadata["mcp_contract_version"] == "1.0.0"
     assert metadata["versions_by_domain"] == {
         domain: "1.2.3"
         if domain == "admissao"
+        else "1.3.0"
+        if domain == "geral"
         else "1.2.0"
-        if domain in {"geral", "documentos"}
+        if domain == "documentos"
         else "1.1.0"
         if domain in {"afastamento", "rescisao", "aprovacoes"}
         else "1.0.0"

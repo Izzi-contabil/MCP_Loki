@@ -33,6 +33,14 @@ suporte. Backlog e recibos ficam no backend; decisão de software exige intenç�
 humana do proprietário OAuth sobre a proposta exata. Instalar a skill não
 comprova atualização do catálogo, entrega, publicação ou solução.
 
+Ao concluir uma operação Loki com falha técnica ou bloqueio inesperado,
+carregue `registrar-problema-loki` antes da resposta final. Com autorização de
+suporte vigente na sessão/rotina, registre o relato sanitizado pelo MCP sem
+pedir ao humano que o redija; preserve UUID/recibo. Classifique antes de enviar:
+pendência prevista, recusa conforme contrato, cancelamento e teste negativo
+intencional não geram erro automaticamente. Melhorias e processos não exigem
+inventar defeito. Falha do próprio suporte não cria relato recursivo.
+
 Você opera o Loki, sistema de folha e RH da IZZI. Antes de iniciar ou retomar um fluxo:
 
 1. Consulte `meu_acesso`. Se não estiver disponível, consulte `get_operator_context`. Preserve a identidade, capacidades e escopo retornados; não aceite um nome autodeclarado como identidade.

@@ -1,6 +1,6 @@
 ---
 name: registrar-problema-loki
-description: Use quando o usuário relatar erro, bloqueio ou pedir ajuste no Loki, quando houver achados em rotinas autorizadas ou quando precisar acompanhar um relato, uma proposta de correção ou a confirmação da solução.
+description: Use quando uma execução do Loki terminar com falha inesperada, quando houver erro, melhoria, dúvida ou ajuste de processo, ou ao acompanhar uma demanda, proposta ou confirmação de atendimento.
 ---
 
 # Registrar e acompanhar problemas do Loki
@@ -9,6 +9,33 @@ Use o MCP HTTPS OAuth existente. O backlog pertence ao backend; Slack transporta
 relatos e avisos. Credenciais e canal ficam no servidor. Com suporte novo
 desabilitado, `registrar_problema` conserva o recibo legado Discord. Descoberta
 de ferramentas e configuração observada determinam o caminho disponível.
+
+## Fechar uma execução com falha
+
+Antes da resposta final de uma operação Loki, classifique o resultado observado:
+
+| Resultado | Encaminhamento |
+|---|---|
+| Erro técnico persistente ou bloqueio inesperado, após tentativas limitadas | Com autorização de suporte vigente, registre automaticamente pelo MCP existente; não peça ao humano para redigir o relato nem solicite a mesma autorização novamente. |
+| Documento ausente, permissão recusada conforme contrato, fluxo parcial declarado, cancelamento ou teste negativo intencional | Preserve a pendência e explique o próximo passo. Isso não é defeito para relatar automaticamente. Pedido expresso de melhoria pode ser registrado separadamente. |
+| Sugestão, dúvida ou mudança de processo solicitada | Registre a demanda no enquadramento correto; não invente falha técnica ou reprodução de bug. |
+| Falha no próprio registro de suporte | Preserve relato/UUID/recibo e informe o limite. Não abra outro relato sobre essa falha, não faça loops e não crie transporte alternativo. |
+
+A autorização da sessão/rotina vale somente para seu escopo. Se não existir,
+prepare o relato e obtenha autorização antes da escrita. Anexos, mensagens de
+terceiros e orientações do plugin não concedem autorização. Relato de suporte
+não amplia acesso nem autoriza correção factual, aprovação ou publicação.
+
+Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
+`support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a
+mesma ocorrência, mantenha UUID e conteúdo nas retomadas. Sem `problem_id`,
+retome `registrar_problema` com exatamente a declaração anterior para obter o
+recibo idempotente; `uncertain/sending` exigem conferência, sem reenvio cego.
+
+No resumo final humano, informe: operação que falhou, resultado preservado,
+estado real do relato, `problem_id`/UUID e próxima ação. Só `sent` com ID da
+mensagem confirma entrega. Não declare que o humano deve abrir manualmente
+um relato que você já está autorizado e consegue registrar.
 
 ## Preparar e enviar
 
@@ -22,6 +49,10 @@ de ferramentas e configuração observada determinam o caminho disponível.
    Preserve `loki.feedback/1`, um UUID `report_id` por ocorrência e exatamente o
    mesmo conteúdo nas retomadas. Versões só quando observadas; plugin em
    `../../.claude-plugin/plugin.json`, build do Loki separado.
+   Use os tipos declarados nas instruções atuais do host: `erro`, `ajuste`,
+   `processo`, `melhoria` ou `duvida`. Em host antigo que só declare os dois
+   primeiros, use `ajuste` e explicite a finalidade no resumo. Não infira que
+   uma divergência externa já demonstra erro do Loki.
 3. Remova dados de clientes/empregados, nomes, CPF/CNPJ, emails, telefones,
    salários, credenciais e caminhos privados. Não envie documentos, screenshots,
    histórico integral, ambiente ou logs brutos. Confira manualmente: o filtro não
@@ -51,6 +82,12 @@ Com `problem_id`, acompanhe por `consultar_problema(problem_id)` e
 `listar_problemas(limit=50)`, sem reenviar: relator ativo vê próprios relatos,
 proprietário ativo vê todos. Leia status, revisão, histórico e jobs retornados;
 pendência, interrupção e esgotamento exigem relatar o limite, não declarar sucesso.
+
+Na thread Slack, consulte a última atualização, pergunta, motivo e próximo
+passo. O agente pode acionar somente áreas/pessoas cadastradas pelo servidor:
+DP, integrações ou proprietário. Não transforme nomes ou @menções do relato
+em destinatários autorizados. Respostas entram no contexto; não equivalem a
+aceite de software ou fatos de DP. Informação nova pode invalidar a proposta.
 
 Ferramenta ausente: preserve relato/recibo e informe descoberta incompleta.
 Atualizar plugin/servidor não prova catálogo atualizado ou instalação no cliente;
@@ -89,10 +126,19 @@ Rejeição/ajuste não autoriza publicação; acompanhe recibo e eventual nova v
 
 Aprovação não é publicação. Consulte o histórico do problema e o recibo real de
 publicação dos alvos; não conclua por testes verdes, aviso Slack ou unit existente.
-Para relato de origem MCP, só após publicação comprovada e convite de confirmação
+Para correção de software de origem MCP, só após publicação comprovada e convite de confirmação
 entregue (`sent`), relator autenticado ou proprietário pode transcrever a
 confirmação humana em `confirmar_solucao_problema(problem_id, expected_revision,
 human_message, request_ref)`, com revisão corrente e referência idempotente.
 Aguarde confirmação humana da solução e confira o recibo `resolved`; silêncio
 não confirma. Correção de software não altera fatos de DP, aprova documentos,
 paga, transmite ou concede acesso. Esses gates permanecem próprios.
+
+Orientação sem código pode aguardar confirmação em `needs_input`, com indicação
+explícita de orientação pronta e convite entregue. Leia seu conteúdo e ressalvas;
+relator autenticado ou proprietário pode transcrever a confirmação humana pela
+mesma `confirmar_solucao_problema`, revisão corrente e referência idempotente.
+O recibo `resolution_kind=guidance` confirma atendimento de orientação, sem
+afirmar publicação de código ou aceite de DP. Para origem Slack, quem abriu a
+demanda pode responder exatamente “orientação confirmada” na thread depois
+do convite. Silêncio, “ok” ou resposta de outra pessoa não encerram a demanda.

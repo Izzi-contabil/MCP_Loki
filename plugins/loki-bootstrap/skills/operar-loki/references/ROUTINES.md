@@ -4,6 +4,14 @@ Este roteiro complementa `operar-loki` e `WORKFLOWS.md` em execuções agendadas
 filas e avaliações. Cada rodada usa a conexão MCP existente, o acesso efetivo e
 os contratos do serviço. A versão do plugin não identifica o build do Loki.
 
+Ao fechar a rodada ou uma execução com falha técnica persistente/bloqueio
+inesperado, carregue [registrar-problema-loki](../../registrar-problema-loki/SKILL.md).
+Com autorização vigente de suporte no mesmo escopo, registre automaticamente
+o relato sanitizado e inclua UUID/recibo no resumo da rodada; não delegue a
+redação ao humano. Pendência prevista não é erro automático. Agregue sintomas
+da mesma ocorrência e preserve UUID/conteúdo nas retomadas; falha do suporte
+não gera novo relato recursivo. Sem autorização, prepare e aguarde a escrita.
+
 O objetivo é reproduzir o trabalho real da equipe em todas as finalidades do DP.
 Cadastro, histórico, parâmetros, regras e fontes consumidos devem ser registrados
 nos contratos nativos do Loki; arquivos externos orientam a leitura e não formam

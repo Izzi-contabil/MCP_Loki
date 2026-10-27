@@ -69,7 +69,7 @@ plugin local não instala outro plugin na conta ChatGPT.
 Quem já tinha1.0.2 deve conferir1.1.0 ou superior e as duas skills após upgrade.
 Reabrir a conversa para usar o pacote completo. Não reinstalar MCP/OAuth.
 
-Na versão1.1.6, `$registrar-problema-loki` orienta relatos sanitizados, backlog
+Na versão1.1.7, `$registrar-problema-loki` orienta relatos sanitizados, backlog
 Slack e propostas de correção, com autorização de suporte.
 Confira a skill instalada e a ação `registrar_problema` no catálogo da conexão
 existente. Se faltar a ação, atualize as ferramentas pelo aplicativo e confira
@@ -87,3 +87,8 @@ Na versão1.1.5, `$investigar-regras-dp` integra a operação de fórmulas,
 parâmetros e históricos incompletos. Bootstrap e operar-loki também encaminham
 para essa skill. Confira versão instalada e carregue uma conversa nova;
 publicação/instalação não comprovam execução da rotina de outro operador.
+
+Na1.1.7, ao concluir execução com falha inesperada, a IA carrega a skill de
+suporte e registra quando já houver autorização no escopo. Pendência prevista
+não é defeito automático; falha de suporte não gera recursão. O leitor retorna
+support_handoff, sem enviar dados. [Escopo e limites](SUPPORT_COLLABORATION_20261027.md).
