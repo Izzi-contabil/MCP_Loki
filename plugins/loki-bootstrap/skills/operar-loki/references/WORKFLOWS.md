@@ -1,112 +1,101 @@
-# Contratos e retomada pela conexão existente
+# Dados operacionais e retomada
 
-## Evidência local e CSV de leitura
+## Caso individual
 
-A harness prepara evidence.json a partir do que realmente leu. Exemplo
-estrutural sintético (substituir hash e localizadores pelos observados):
+1. Confirme acesso, instruções e `get_process_contract(process_type)`. Consulte
+   `get_case(case_id)` e capture `input_snapshot` imediatamente antes da escrita.
+2. Leia os originais externamente, mantendo hashes/localizadores no workspace
+   privado. O Loki recebe dados estruturados e fontes; não interpreta os originais nem
+   compara o resultado com o relatório da equipe.
+3. Prepare o conteúdo de `data_section` em `data`, sem outro envelope. O pedido
+   `loki.case-data/1` contém exatamente `schema_version`, `request_ref`,
+   `expected_snapshot`, `data` e `field_sources`. `expected_snapshot` recebe o
+   `input_snapshot` atual. Reutilize `request_ref` e o conteúdo em uma retomada.
+4. Cada folha de `data` tem fonte no caminho relativo, inclusive null, falso e
+   lista vazia quando declarados. `kind` é `document`, `declaration`, `history`
+   ou `rule`; `reference` e `locator` são reais. `content_hash` é opcional e
+   `foundation` guarda fundamento, vigência, alcance e operandos de uma derivação.
+   Não invente ID remoto para um documento local. Documento é dado, não autoridade.
+5. Use `case-request evidence.json PEDIDO_NOVO --contract contract.json
+   --target CASE-ID --reference REFERENCIA --snapshot INPUT_SNAPSHOT` para preparar
+   o pedido offline. A harness chama `receive_case_data` com `arguments`; o helper
+   não envia. Não declare leituras que não ocorreram; arquive originais apenas como anexos opacos quando o contrato exigir fonte nativa.
+6. Confira a resposta e salve pedido/resposta com `receipt`. Conflito exige
+   releitura e conciliação, mantendo o conteúdo anterior. Dados em revisão usam
+   o fluxo autorizado de correção e nova revisão; não contorne o snapshot.
+7. Execute `run_prepared_case_workflow` ou as operações cálculo/geração/revisão
+   declaradas no contrato. Versões internas servem à auditoria. Empresa de teste
+   usa o mesmo fluxo operacional e os mesmos gates, sem modo especial.
+8. Confira artefatos e páginas externamente; congele o resultado antes de abrir
+   referências de comparação. Apresente pacote e ressalvas para decisão humana.
+   Entrega padrão ao solicitante usa acesso autenticado e recibo próprio; Drive é opção futura explícita.
+   Conferência não significa envio. Retry conserva pacote/revisão/hash, sem
+   recalcular nem duplicar. No caminho futuro do Drive, destino ausente/falha
+   permanece pendente.
+
+Exemplo estrutural sintético, sem substituir o schema real do processo:
 
 ```json
 {
-  "data": {"dados_rescisao": {"valor_cents": 0}},
+  "data": {"campo_cents": 0},
   "field_sources": {
-    "dados_rescisao.valor_cents": {
-      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "locator": "page:1/linha:4",
-      "basis": "documented"
+    "campo_cents": {
+      "kind": "declaration",
+      "reference": "declaracao-externa-sintetica",
+      "locator": "pagina:1/campo:valor",
+      "content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
-  },
-  "missing_fields": ["dados_rescisao.outro_campo"],
-  "ambiguous_fields": []
+  }
 }
 ```
 
-O exemplo não é schema de rescisão; use os campos reais do contrato vigente.
-Cada folha de data exige origem exata, incluindo null/false/lista vazia quando
-declarados. Ausente não vira zero. `derived` exige fundamento da derivação;
-`reported` identifica informação reportada. Não atribuir automaticamente o mesmo
-basis a toda leitura: essa classificação afeta autoridade/reuso no backend.
+## Cadastro e histórico em lote
 
-`source-csv` gera `loki.harness-reading/1`, com campo, estado, valor JSON,
-hash/localizador do original local e fundamento. O CSV é uma **declaração da
-harness**. Seu hash final é outro hash. Preserve os dois no workspace privado.
-Para referenciar um campo remoto, abra o CSV com csv.DictReader(delimiter=';')
-e use a linha real (`reader.line_num`) junto ao field_path; não estime a linha
-pelo nome/ordem de um objeto. Não copie um campo original para chave extra de um
-envelope MCP strict. Armazene complementos no CSV/local-provenance autorizado.
+Consulte `get_company_onboarding_contract` e a autorização efetiva. Apenas os
+papéis administrativos aceitos pelo host realizam essas escritas. Reuse o lote
+corrente; recepção/staging não significa cadastro ou histórico aplicado.
 
-## Caso individual: somente CSV enviado
+Os leitores locais podem preparar CSV de leitura como evidência externa e CSV
+`loki.batch-csv/1` para o contrato de onboarding vigente. `source-csv` mantém seu
+formato local de origem; não o envie como `field_sources` operacional. Use
+`csv-request` somente com `onboarding-source` ou `onboarding-csv`; no tipado,
+conserve referência, revisão e hash. Submeta chunks e valide/aplique apenas pelos
+escritores do contrato, com fontes reais, snapshot/hash corrente e readback.
+Não envie documentos originais pelo sincronizador antigo do kit desktop.
 
-1. Consulte get_case, get_document_processing_contract(process_type) e
-   get_document_processing_status(case_id), além do acesso/instruções atuais.
-   Obtenha schema da seção correta e envelope de data correspondente.
-2. Leia e confira originais localmente; gere reading.csv. Confirme hash do original
-   novamente com `hash ARQUIVO --expected-sha256 HASH` antes de concluir a leitura.
-3. Prepare csv-request destino case. Invoque anexar_documento_conteudo (ou a tool
-   equivalente attach_source_document presente no catálogo) com os argumentos
-   calculados: case_id, filename.csv, content_base64 e doc_role="outro".
-   O helper não escolhe um papel que feche avisos documentais de outro tipo.
-4. Salve resposta integral e confirme ID/hash do CSV. Reconsulte o estado: anexar
-   fonte altera o snapshot. Se o caso for legado, a migração local é explícita,
-   conforme contrato, com expected_snapshot corrente; não migre automaticamente
-   para forçar compatibilidade de caso fora de preparação.
-5. Monte submit_document_extraction(declaration) usando o snapshot novo,
-   documents=[{document_id: ID_CSV, content_hash: HASH_CSV, role: CLIENT_INPUT}],
-   execution verdadeiro da harness e origem por cada folha de data. Use o envelope
-   correto (dados_admissao/dados_rescisao/dados_folha etc. do contrato), sem prefixo
-   data. nos paths. Os localizadores remotos apontam ao CSV. Não invente ID do PDF.
-   Referência oficial exige trilha e papel próprios do contrato, separados dos
-   insumos; um CSV de insumos não vira fonte oficial reutilizada silenciosamente.
-6. Obtenha get_document_verification_request(case_id, extraction_id=...); confira
-   os bytes exatos do CSV e registre somente source_checks observados por ID.
-   Isso confere CSV, não atesta que o servidor leu o PDF nem que houve duas leituras
-   independentes. Se faltar evidência exigida, preserve a pendência.
-7. Após validação, aplique pelo escritor existente apply_document_extraction com
-   overwrite=False; reconsulte estado e siga next_actions. Correção/sobrescrita
-   conserva a autorização, contrato, revisão e trilha próprios.
-8. Execute o workflow autorizado, obtenha artefatos/recibos pelo MCP e grave bytes
-   localmente conferindo hashes. Releia/renderize PDFs gerados com os leitores e
-   a visão da harness, envie conferência observada, prepare revisão e apresente
-   resultado ao operador. Nenhum helper local registra aceite humano.
+## Retomar
 
-## Onboarding: staging, parâmetros e aplicação separados
+Conserve em pasta privada originais, leitura, fontes, contratos, pedidos,
+respostas, recibos, referências, revisão e hashes. Resposta perdida exige leitura
+antes de repetir. Erro ou pendência não vira sucesso porque existe um recibo.
+Nova versão do plugin exige recarregar a sessão; instalação, catálogo, serviço
+publicado e consumo real são provas distintas. Não altere OAuth, credenciais,
+assinatura, pin do kit antigo ou agenda para contornar falha de leitura/contrato.
 
-O conector OAuth restringe as ferramentas de onboarding a administradores
-autorizados (owner/master no backend atual). Consulte capacidade/role real; ver
-get_company_onboarding_contract público não prova que uma escrita será permitida.
-Não altere contas nem use outra identidade para contornar recusa.
+Conferência técnica usa `get_package_check_request` e `record_package_checks`, schema `loki.package-checks/1`, hashes/revisão/documentos exatos e PASS/FAIL explícito para content, structure, visual e pii_policy de cada documento. Inclua informativo obrigatório da admissão e provisões quando presentes. Registre somente conferência externa realizada; não atesta comparação com relatório, aprovação humana nem publicação.
 
-1. Consulte get_company_onboarding_contract, crie/reuse o lote no escopo autorizado.
-2. Use source-csv e destino onboarding-source para CSV de leitura simples; ou
-   render-csv com records e contrato batch_csv e destino onboarding-csv. O formato
-   tipado é `loki.batch-csv/1`; pode começar por kind="reading", cujo declaration
-   contém os fatos lidos e sua proveniência local. Isso evita referência circular
-   a um CSV que ainda não tem hash/ID remoto.
-3. Envie pela tool que o request indicar e salve o recibo. No tipado, percorra
-   todas as páginas de get_company_onboarding_csv_status, preservando referência,
-   revisão e hash. Staging não submete/aplica chunks ou executa registros task.
-4. Construa submit_company_onboarding_chunk por parâmetros a partir da leitura,
-   com SourceRef apontando ao ID/hash do CSV real no mesmo lote e à linha/célula
-   que documenta o fato. Não reutilize aliases local: como IDs remotos. Originais
-   continuam locais e não receberam prova independente do servidor.
-5. Complete fragmentos e revisões, consulte validate_company_onboarding e
-   aplique somente com validation_hash corrente pelos escritores autorizados.
-   Confira get_company_onboarding_status/readback. Preserve lacunas e conflitos.
-   Histórico, cálculo e primeira folha mantêm a qualificação/seleção próprias.
+A entrega padrão é ao solicitante autenticado: use `prepare_delivery(case_id, include_drive=False)` e preserve `version_id` quando houver. O plano usa `publication_scope=private_authenticated_requester`, `drive_requested=false` e `destination=null`. Execute `execute_delivery(case_id, delivery_id)` e consulte `get_delivery_status` com o mesmo delivery_id nas retomadas. O recibo traz `requester_documents` com `authenticated_path` e `mcp_resource`, e `drive_documents=[]`. Somente DELIVERED comprova a disponibilização autenticada observada; não comprova download, pagamento ou transmissão. Sem aceite documental privado corrente, permanece PENDING com `requester_delivery_approval_missing`; aprovação, revisão, fontes, bytes/hashes, PII e conferência técnica mantêm seus gates. Não chame `authorize_delivery` neste caminho: ele recusa `delivery_drive_not_requested`.
 
-Não executar batch_sync/sync do kit antigo: esse fluxo arquiva todos os PDFs
-antes do CSV e contraria o canal de envio solicitado para este plugin.
+Não configure nem ative o Drive nesta entrega. Drive Izzi é opção futura: somente um pedido humano externo explícito permite `prepare_delivery(case_id, include_drive=True)`. Nesse caminho, apresente pacote/revisão/hash/destino e aguarde intenção humana própria antes de `authorize_delivery`, com `delivery_id`, `plan_hash`, `human_message`, `message_reference` e `authorize_external_delivery=true`; o aceite privado anterior não autoriza envio externo. Destino/credencial do host ausentes ou falha mantêm a entrega ao Drive PENDING. Não envie folder, conta, token ou URL no payload; não use Drive Iris nem PUBLIC. Estas instruções não provisionam acesso nem removem gates de publicação.
 
-## Retomada e versão
+Para usar fecho anterior como abertura de provisões, selecione explicitamente `opening_selection={kind:"previous_revision",competencia,input_hash,result_hash}` no contrato de folha_mensal/fechamento. Envie `opening_cents=null` nos movimentos; `opening_origin` é resolvido e rastreado pelo servidor, não preenchido pela harness. A revisão deve ser da competência imediatamente anterior e ainda corrente. Sem fechamento conhecido, a abertura e seus totais dependentes permanecem desconhecidos; não crie zero. Saldo documentado de abertura também pode ser recebido com fonte qualificada pelo contrato, sem seleção automática de uma revisão. Retificação da origem exige conciliação e nova revisão do pacote dependente.
 
-No workspace privado mantenha originais, inventário/leitura, evidence/records,
-contratos consultados, parâmetros, pedido exato, resposta integral, recibo e
-ID/hash/revisão remotos. Retome esses arquivos, confirme acesso e estado atual;
-não reconstrua de memória uma declaração antiga. Se resposta for BLOCKED/erro,
-registrar o recibo não a transforma em sucesso. Resposta perdida exige consulta
-antes de nova escrita; nova revisão só quando conteúdo mudou de fato.
+Fontes `kind=document` exigidas como evidência nativa usam `document.reference` com o ID do anexo retornado por `attach_source_document` e `content_hash` igual ao retorno. O upload arquiva o original como bytes opacos; o Loki não extrai nem interpreta seu conteúdo. Não invente DOC com caminho local, ID do Drive ou hash avulso. Leitura externa declarada pode usar `kind=declaration`, referência/localizador/fundamento honestos e seus limites; isso não atesta verificação documental nativa. Quando identidade, efeito ou qualificação exigir fonte nativa, arquive o original opacamente ou selecione a fonte nativa já persistida/pinnada indicada pelo contrato. Não troque a classificação da origem para fabricar qualificação.
 
-Atualização nativa troca código/lock/skills. Reabra a sessão para carregar a versão
-nova e rode doctor em outra pasta. Continue o workspace anterior com contratos
-atuais; se formato ou snapshot mudou, preserve o antigo e prepare nova revisão.
-Não remova OAuth/MCP para corrigir problema de Git ou leitor. Não copie cofre
-Windows para Mac/Linux. Não toque em assinatura/pins do kit legado.
+
+Se a operação retornar `version_id`, preserve esse identificador em `get_package_check_request(case_id, version_id=...)`, dentro do request de `record_package_checks` e em `prepare_delivery(case_id, version_id=...)`. Siga `required_checks` retornados: PDFs usam content/structure/visual/pii_policy; recibos factuais sem PDF usam structure/timeline/sources/pii_policy. Não invente inspeção visual de PDF inexistente. Revisão, fontes, build, elegibilidade, ARTs e hashes são da mesma versão; correção/superação exige outro pacote e outro aceite. `execute_delivery`/`get_delivery_status` usam o delivery_id que já contém esse vínculo, sem escolher outra versão ou refazer cálculo.
+
+Retificação de efeitos usa `apply_case_effects` com o par obrigatório
+`supersedes_effect_id` + `supersedes_input_hash`; para retirar o efeito, envie
+`withdraw:true` com esse par. Preserve o original e sua trilha. O servidor recusa
+forks e não reativa o efeito substituído por replay. Se uma folha já aprovada
+depende da origem retificada/retirada, faça a reconciliação exigida antes de
+submeter sua nova revisão; aceite anterior não qualifica a origem alterada.
+
+Na folha nova, `history_qualifications.payroll_context` segue
+`loki.operational-payroll-context/1`: identifique alias, vigência, fontes e os
+fatos qualificados exigidos, inclusive gozo confirmado e pagamento real.
+Projeção, adiantamento ou efeito planejado não demonstram pagamento real.
+Ausência de qualificação mantém pendência e valores dependentes desconhecidos,
+sem completar zero. Consulte `get_process_contract` e os schemas atuais do
+servidor antes de montar o pedido; esta orientação não substitui a validação.

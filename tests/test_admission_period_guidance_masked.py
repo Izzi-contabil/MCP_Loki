@@ -13,5 +13,5 @@ def test_explicit_pay_period_is_delivered_with_its_source_and_output_check() -> 
     assert "não confirma o período" in guide
     assert "categoria do vínculo" in guide
     assert "branco" in guide
-    assert "missing_fields" in guide
+    assert "pendência" in guide
     assert "overflow" in guide

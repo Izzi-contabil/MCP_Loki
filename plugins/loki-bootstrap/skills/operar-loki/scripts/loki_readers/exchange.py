@@ -34,7 +34,7 @@ ROOTS = ["declaration", "source_ids", "dependencies", "missing_fields"]
 MAX_BYTES = 32 * 1024 * 1024
 
 
-def validate_parameters(value: Any, schema: dict[str, Any]) -> Any:
+def validate_parameters(value: Any, schema: dict[str, Any], *, partial_case: bool = False) -> Any:
     pending: list[Any] = [schema]
     while pending:
         node = pending.pop()
@@ -50,13 +50,28 @@ def validate_parameters(value: Any, schema: dict[str, Any]) -> Any:
     try:
         json.dumps(value, allow_nan=False)
         Draft202012Validator.check_schema(schema)
-        if (
-            next(
-                Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value),
-                None,
-            )
-            is not None
+        for error in Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(
+            value
         ):
+            # The writer validates provided object fields, rather than requiring
+            # an absent sibling. Array elements and union alternatives still
+            # require their complete declared shape, as in the backend adapter.
+            if (
+                partial_case
+                and error.validator == "required"
+                and not any(isinstance(part, int) for part in error.absolute_path)
+                and "items" not in error.absolute_schema_path
+            ):
+                continue
+            if (
+                partial_case
+                and error.instance is None
+                and error.absolute_path
+                and not any(isinstance(part, int) for part in error.absolute_path)
+            ):
+                # Explicit null is a sourced unknown in the case writer. The
+                # parent object still rejects undeclared properties.
+                continue
             raise ReadError("parameter_schema_invalid")
     except ReadError:
         raise
@@ -241,6 +256,47 @@ def render_records(records: list[dict[str, Any]], contract: dict[str, Any]) -> b
     return content
 
 
+def case_data_request(
+    evidence: dict[str, Any],
+    contract: dict[str, Any],
+    target: str,
+    *,
+    reference: str,
+    snapshot: str,
+) -> dict[str, Any]:
+    """Prepare the current writer request offline; no attachment or interpretation."""
+    if (
+        contract.get("schema_version") != "loki.process-contract/1"
+        or not isinstance(contract.get("data_schema"), dict)
+        or not isinstance(contract.get("input_schema"), dict)
+        or not isinstance(evidence, dict)
+        or set(evidence) != {"data", "field_sources"}
+        or not isinstance(evidence["data"], dict)
+        or not evidence["data"]
+        or not isinstance(evidence["field_sources"], dict)
+        or set(_leaves(evidence["data"])) != set(evidence["field_sources"])
+        or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,200}", target)
+    ):
+        raise ReadError("case_data_contract_or_source_coverage_invalid")
+    if any(isinstance(value, float) for value in _leaves(evidence["data"]).values()):
+        raise ReadError("case_data_float_not_allowed")
+    validate_parameters(evidence["data"], contract["data_schema"], partial_case=True)
+    request = {
+        "schema_version": "loki.case-data/1",
+        "request_ref": reference,
+        "expected_snapshot": snapshot,
+        "data": evidence["data"],
+        "field_sources": evidence["field_sources"],
+    }
+    validate_parameters(request, contract["input_schema"])
+    return {
+        "schema_version": "loki.harness-request/2",
+        "state": "prepared_not_sent",
+        "tool": "receive_case_data",
+        "arguments": {"case_id": target, "request": request},
+    }
+
+
 def csv_request(
     source: Path, destination: str, target: str, *, reference: str = "", revision: int = 1
 ) -> dict[str, Any]:
@@ -271,9 +327,8 @@ def csv_request(
         "content_base64": base64.b64encode(content).decode("ascii"),
     }
     if destination == "case":
-        tool = "anexar_documento_conteudo"
-        arguments.update(case_id=target, doc_role="outro")
-    elif destination == "onboarding-source":
+        raise ReadError("case_data_required_instead_of_csv_attachment")
+    if destination == "onboarding-source":
         tool = "attach_onboarding_source"
         arguments["onboarding_id"] = target
     elif destination == "onboarding-csv":

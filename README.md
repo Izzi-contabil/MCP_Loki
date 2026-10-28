@@ -1,134 +1,46 @@
-# MCP Loki — instruções e compatibilidade
+# MCP Loki — contrato operacional 2.0.0
 
-Este repositório mantém o pacote `mcp-loki-updates`, instruções versionadas por domínio e o plugin nativo com leitores locais para Claude Code e Codex. O backend incorpora o wheel e entrega instruções pelas ferramentas MCP autorizadas. Alterar o provider exige promoção, revisão e implantação do backend; o plugin local tem distribuição Git própria.
+O pacote `mcp-loki-updates` **0.2.2** entrega instruções **2.0.2** ao backend.
+A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
+explícita, sem configuração ou ativação nesta entrega.
 
-O pacote não é um servidor MCP independente. Identidade Google/OAuth, permissões, banco, documentos, cálculos e decisões continuam no Project Loki. O conteúdo deste repositório não concede acesso nem representa aceite humano.
+O plugin nativo `loki-orientacoes@loki-equipe` **2.0.2** contém bootstrap, leitores
+externos e guias de operação. A distribuição não é um servidor independente.
+OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
-## Distribuição do kit do operador
+O Loki recebe dados estruturados, valida, calcula, gera documentos, registra e
+entrega. Leitura de originais e comparação são externas. O operador consulta
+`get_process_contract`, captura `get_case.input_snapshot` e envia `receive_case_data`
+com dados, fontes, referência idempotente e snapshot esperado. Depois segue cálculo,
+geração e revisão do contrato. Versões internas preservam auditoria; a empresa de
+teste usa o mesmo fluxo e gates da operação comum.
 
-A branch padrão deste repositório privado é **`main`**. As instalações por Git
-acompanham essa origem pelo marketplace, sem fixar a antiga branch de trabalho.
+Esta é uma mudança incompatível: ferramentas antigas de extração, comparação e
+execução especial foram retiradas. Clientes que declaram contrato/plugin1.x
+precisam migrar. Cliente sem versão permanece desconhecido; bootstrap de identidade
+não restaura ferramentas retiradas. O catálogo do aplicativo e a instalação no
+operador exigem verificação própria. Esta árvore candidata não comprova deploy.
 
-O [passo a passo de instalação e auto-update](docs/DAILY_OPERATOR_UPDATES.md) configura
-o plugin completo do Claude Code para Ana no Mac e Samuel no Windows/Linux,
-preservando o MCP e o OAuth existentes. Na versão1.1.7, `loki-orientacoes` mantém
-o nome para atualizar instalações anteriores e inclui `operar-loki`, leitores
-locais e preparação de CSV/parâmetros. A harness faz a leitura e os envios;
-originais ficam locais e o Loki recebe somente parâmetros e CSVs.
-O [roteiro para rotinas](plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md)
-acompanha o plugin. A [ativação na rotina do Claude Code](docs/ANA_ROUTINE_ACTIVATION.md)
-preserva a agenda existente e exige conferência no ambiente do operador.
-O mesmo plugin está disponível para o [Codex no Linux](docs/CODEX_LINUX_SETUP.md),
-com atualização automática pelo gerenciador nativo e a conexão MCP já existente.
-Os dois roteiros usam auto-update nativo, sem agendador externo ou novos ZIPs.
-A versão1.1.5 acrescenta [investigar-regras-dp](plugins/loki-bootstrap/skills/investigar-regras-dp/SKILL.md)
-como parte da operação ao faltar fórmula/dado ou surgir divergência recorrente.
-A skill organiza inferência por normas/ACT/CCT e holerites, testes reservados,
-registro/consumo e retomada dos consumidores. A configuração do ERP é uma fonte,
-sem ser requisito universal. Correções de dados/configuração usam os contratos
-atuais; defeito de produto segue reprodução, teste e publicação autorizados.
-A versão1.1.4 introduziu a operação real com cadastro e histórico nativos, investigação
-de regras por normas e passado, conferência entre competências e acompanhamento
-por tarefa e finalidade do DP. O índice externo de componentes permanece opcional;
-não é banco operacional nem pré-requisito de uma tarefa com fontes suficientes.
-O plugin1.1.7 atualiza [registrar-problema-loki](plugins/loki-bootstrap/skills/registrar-problema-loki/SKILL.md)
-para erros, processos, melhorias e dúvidas, com backlog Slack e propostas pelo
-MCP existente. Ao encerrar execução com falha inesperada no escopo autorizado,
-a IA registra relato sanitizado e preserva UUID/recibo. Pendência prevista não
-vira defeito; falha do suporte não gera relato recursivo. O leitor local retorna
-orientação estruturada, sem enviar nada por conta própria. A decisão de código
-continua no proprietário OAuth após diff/testes/revisão da versão exata.
-Orientação sem código tem confirmação humana própria, sem publicação fictícia
-ou aceite de DP. Com suporte novo desligado, o backend conserva o caminho
-legado Discord. A entrega inclui provider0.1.7/instruções1.3.3; veja
-[escopo e limites](docs/SUPPORT_COLLABORATION_20261027.md). Catálogo, instalação,
-serviço ativo e entrega real exigem provas próprias; publicar Git não comprova
-uso pelo executor da Ana.
-O plugin1.1.1 acrescenta o [roteiro para comparação privada com componentes
-qualificados](plugins/loki-bootstrap/skills/operar-loki/references/COMPARATIVE_TESTING.md),
-com seleção por contexto, retenções e registro dos dados efetivamente consumidos.
-Essa atualização do plugin não altera o provider0.1.4, suas instruções1.3.0,
-o backend ou as regras de cálculo.
-Os leitores usam uv e Python3.11/dependências com hashes, preparados no cache do
-usuário. Não incluem backend, conexão nova ou credenciais. O kit Windows legado
-assinado não é modificado. Ver [formatos e limites](docs/LOCAL_READERS.md).
+- [Contrato, migração e promoção](docs/MCP_UPDATES.md).
+- [Skill operacional](plugins/loki-bootstrap/skills/operar-loki/SKILL.md) e
+  [dados/fontes e retomada](plugins/loki-bootstrap/skills/operar-loki/references/WORKFLOWS.md).
+- [Instalação e atualização](docs/DAILY_OPERATOR_UPDATES.md),
+  [Codex Linux](docs/CODEX_LINUX_SETUP.md) e [ativação da rotina](docs/ANA_ROUTINE_ACTIVATION.md).
+- [Leitores externos e limites](docs/LOCAL_READERS.md).
 
-A candidata usa pacote `0.1.7` e instruções `1.3.3`, com admissão em `1.2.3`.
-O [ajuste de opção FGTS](docs/ADMISSION_FGTS_20261022.md) orienta derivação
-normativa com vínculo e admissão qualificados, preservando exceções e revisão.
-O plugin passa a `1.1.7` e o contrato em `1.0.0`.
-geral está em `1.3.0`, documentos em `1.2.0`, afastamento/aprovações a `1.1.0` e rescisão permanece em
-`1.1.0`. Os cinco novos guias de DP estão em `1.0.0`, assim como férias,
-décimo terceiro. Os [contratos e limites da candidata](docs/PENDING_DP_GUIDANCE_20261021.md)
-dependem da implementação e autorização verificadas no host atual.
-O [guia operacional](docs/OPERATIONAL_GUIDANCE_20261021.md) registra a entrega
-anterior e o [ajuste de período salarial](docs/ADMISSION_PERIOD_20261021.md)
-registra a leitura do campo e seus limites. Publicação e entrega autenticada
-exigem recibos próprios.
+Para desenvolvimento use a `.venv` própria existente, Python3.11 e o lock vigente.
+Valide testes apropriados, ruff e mypy antes de construir `uv build --wheel`.
+Um wheel tem versão imutável. Promoção usa `scripts/promote.py` com destino explícito,
+validação e proveniência honesta de HEAD/tree/dirty; não implanta nem muda OAuth.
+Não substitua bytes sob a mesma versão. Lock, wheel, consumidor e publicação exigem
+validação separada. Dados pessoais, fontes privadas e credenciais ficam fora do Git.
 
-O [complemento de mapeamento documental](docs/SOURCE_MAPPING_20261021.md)
-registra os limites para CTPS digital, categoria militar e siglas de emissor.
+Os documentos de releases anteriores em `docs/` são históricos; não definem o
+contrato operacional atual nem demonstram instalação, consumo ou aceite individual.
 
-| Versão inicial | Valor |
-|---|---|
-| Pacote Python | `0.1.0` |
-| Instruções | `1.0.0` |
-| Primeiro contrato MCP formalizado | `1.0.0` |
-| Plugin mínimo / recomendado | `0.4.0` / `0.5.0` |
-
-`0.5.0` é uma recomendação do contrato; isso não declara uma instalação observada ou um pacote ChatGPT publicado. O plugin desktop existente `0.4.0` continua compatível. Cliente sem versão declarada recebe compatibilidade desconhecida, sem ser classificado como antigo.
-
-## Uso pelo chat
-
-O [bootstrap](plugins/loki-bootstrap/SKILL.md) orienta o cliente a identificar-se por `meu_acesso` ou `get_operator_context` e consultar `loki_verificar_versao` e `loki_obter_instrucoes` antes do fluxo pertinente, quando essas ferramentas estiverem disponíveis. Ele evita copiar regras de negócio para cada cliente.
-
-As respostas das duas ferramentas antigas recebem `runtime_instructions` de forma aditiva na integração do backend. Isso oferece um caminho para um cliente `0.4.0` que já consulta identidade receber orientação atualizada, sem trocar o ZIP. O modelo pode deixar de consultar uma ferramenta; o servidor continua responsável por autorização e validação. Instruções não garantem invocação ou execução.
-
-O marketplace privado distribui as skills e os leitores para Claude Code e Codex. Isso não publica um plugin no catálogo ChatGPT nem instala algo nessa conta. Consulte [MCP_UPDATES.md](docs/MCP_UPDATES.md) para refresh manual de ferramentas e diferenças entre ChatGPT e os kits desktop.
-
-## Desenvolvimento e promoção local
-
-Requer Python 3.11+ e `uv`.
-
-```powershell
-uv sync --locked --all-extras --no-editable
-uv run --no-sync pytest
-uv run --no-sync ruff check .
-uv run --no-sync ruff format --check .
-uv run --no-sync mypy src scripts plugins/loki-bootstrap/skills/operar-loki/scripts
-uv build --wheel
-uv run --no-sync python scripts/promote.py --wheel .\dist\mcp_loki_updates-0.1.7-py3-none-any.whl --loki-path "CAMINHO_DO_CHECKOUT_LOKI"
-```
-
-No Windows com Python 3.11 e locale cp1252, um checkout em caminho acentuado pode falhar ao ler o `.pth` de uma instalação editable. `--no-editable` e `--no-sync` evitam esse caminho; depois de editar o pacote, sincronize novamente antes de validar sua cópia instalada. Os testes também exercitam o fonte e o smoke deve instalar o wheel fora do checkout.
-
-O último comando valida ZIP, identidade, bytes contra o fonte e dados com o provider confiável; copia wheel e provenance para `vendor/` do checkout explicitamente informado. Não executa código do wheel, não altera autenticação, não atualiza o lock nem faz deploy. Sem commit inicial, provenance registra `head`/`tree` nulos e `dirty=true`.
-
-No Loki, a integração deve fixar esse wheel local por `tool.uv.sources`, regenerar `uv.lock`, revisar e testar o conjunto. Isso dispensa registry. Um build novo exige versão nova; não substitua bytes diferentes sob o mesmo nome de wheel. O [guia de atualizações](docs/MCP_UPDATES.md) cobre publicação e rollback; o [registro de implementação](docs/IMPLEMENTATION.md) delimita o escopo autorizado.
-
-CI valida pacote, testes, lint, tipos e importação do wheel instalado em ambiente separado e oferece o wheel como artefato do workflow. Upload desse artefato não é implantação nem release pública.
-
-O [relatório de entrega local](docs/DELIVERY.md) registra os arquivos, validações,
-compatibilidade observada e pendências de lançamento e aceite das quatro contas.
-
-A [preparação no Coolify Trabalho](docs/COOLIFY_PREPARATION.md) registra a
-configuração aplicada no projeto Izzi, a CI publicada e o que falta antes do
-lançamento autorizado.
-
-A [homologação técnica local](docs/HOMOLOGATION.md) registra o candidato do PR
-consumidor, os testes Linux e os limites do ensaio isolado. A CI remota do backend
-ficou pendente por orientação do usuário; isso não equivale a um check aprovado.
-
-A [publicação autorizada em produção](docs/PRODUCTION_RELEASE.md), em 20/10/2026,
-registra o build implantado, o health e as instruções recebidas pela conta
-autenticada. Login no outro dispositivo e aceite das quatro instalações são
-verificações individuais.
-
-O [handoff para o servidor pessoal](docs/HANDOFF_PERSONAL_SERVER.md) reúne as
-referências publicadas, os resultados e limites dos testes e a pendência de
-catálogo observada no piloto. Use esse checkpoint para retomar o trabalho sem
-reaplicar a integração já implantada.
-
-As [notas históricas de migração ChatGPT/Codex](docs/CHATGPT_ACCOUNT_MIGRATION.md)
-foram preservadas como registro de 20/10/2026. Para a configuração vigente, usar
-os roteiros de instalação e auto-update acima.
+Compatibilidade da candidata0.2.2: fonte `loki-document-kit`0.2.0, com allowlist
+operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
+usa escritores aposentados e precisa de migração separada. Não sobrescrever
+artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
+instalação nem troca o executor da Ana. Build/promoção do kit e do backend
+continuam sujeitos aos gates de implantação.

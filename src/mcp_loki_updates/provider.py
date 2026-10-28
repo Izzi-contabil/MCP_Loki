@@ -14,8 +14,8 @@ from functools import total_ordering
 from pathlib import Path
 from typing import Any, cast
 
-PROVIDER_VERSION = "0.1.7"
-SUPPORTED_CONTRACT_MAJOR = 1
+PROVIDER_VERSION = "0.2.2"
+SUPPORTED_CONTRACT_MAJOR = 2
 DOMAINS = (
     "geral",
     "admissao",
@@ -358,9 +358,10 @@ class InstructionsProvider:
         """Report compatibility only from supplied, declared protocol versions.
 
         Omitted dimensions stay unknown unless another dimension proves an
-        incompatibility. Plugins between minimum 0.4 and recommended 0.5 are
-        assessed; newer plugins remain unknown. Plugin 0.4 is supported via the
-        host's fallback bootstrap. Contract clients must share the current major and not
+        incompatibility. Plugins between the declared minimum and recommended versions are
+        assessed; newer plugins remain unknown. Earlier major contracts require
+        an explicit migration; identity fallback does not restore retired tools.
+        Contract clients must share the current major and not
         require a future version. This does not establish installed-client identity,
         tool discovery, or schema synchronization, so refresh remains unknown.
         """

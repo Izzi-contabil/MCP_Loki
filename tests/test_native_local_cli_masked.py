@@ -38,14 +38,14 @@ def test_cli_read_then_csv_request_keeps_interpretation_in_harness(tmp_path):
         source,
         tmp_path / "pedido privado",
         "--destination",
-        "case",
+        "onboarding-source",
         "--target",
         "SYNTHETIC-1",
     )
     assert prepared.returncode == 0, prepared.stderr
     request = json.loads((tmp_path / "pedido privado/request.json").read_text())
     assert request["state"] == "prepared_not_sent"
-    assert request["tool"] == "anexar_documento_conteudo"
+    assert request["tool"] == "attach_onboarding_source"
 
 
 def test_inventory_covers_each_file_and_reports_unsupported_without_reading_symlinks(tmp_path):
@@ -70,7 +70,7 @@ def test_error_never_echoes_private_document_contents(tmp_path):
         source,
         tmp_path / "pedido",
         "--destination",
-        "case",
+        "onboarding-source",
         "--target",
         "SYNTHETIC-1",
     )
@@ -89,7 +89,7 @@ def test_failure_instructs_harness_to_classify_and_report_without_sending_or_exp
         source,
         tmp_path / "pedido",
         "--destination",
-        "case",
+        "onboarding-source",
         "--target",
         "SYNTHETIC-1",
     )

@@ -49,10 +49,10 @@ def test_additive_guides_declare_single_process_and_consultation() -> None:
     assert provider.domains() == (*LEGACY_DOMAINS, *NEW_DOMAINS)
     for process in NEW_DOMAINS:
         guide = provider.get(process)
-        assert guide["version"] == "1.0.0"
+        assert guide["version"] == "2.0.2"
         assert guide["permissions"] == {"capabilities": ["consultar"], "processes": [process]}
         assert "get_dp_capabilities" in guide["instructions"]
-        assert "get_document_processing_contract" in guide["instructions"]
+        assert "get_process_contract" in guide["instructions"]
         assert f"dados_{process}" in guide["instructions"]
 
 
@@ -87,12 +87,12 @@ def test_non_process_domain_cannot_be_used_as_process_scope(tmp_path: Path, proc
         InstructionsProvider(_snapshot_with_processes(tmp_path, [process]))
 
 
-def test_versioned_guide_delivery_preserves_operational_limits() -> None:
+def test_operational_guide_delivery_preserves_factual_and_financial_limits() -> None:
     provider = InstructionsProvider()
     for process in ("afastamento", *NEW_DOMAINS):
         text = provider.get(process)["instructions"]
-        assert "simulate_case_version" in text
-        assert "execution_modes" in text
+        assert "receive_case_data" in text
+        assert "get_process_contract" in text
     for process in ("alteracao_cadastral", "ocorrencia"):
         text = provider.get(process)["instructions"]
         assert "JSON" in text and "sem PDF" in text
@@ -100,7 +100,7 @@ def test_versioned_guide_delivery_preserves_operational_limits() -> None:
     advance = provider.get("adiantamento")["instructions"]
     for literal in ("advance-v1", "AdvancePolicy", "None", "pending", "centavos", "pagamento"):
         assert literal in advance
-    assert provider.check_version("0.4.0", "1.0.0")["compatible"] is True
+    assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
     assert provider.check_version()["compatible"] is None
 
 
@@ -108,7 +108,7 @@ def test_new_process_access_uses_existing_admin_browser_and_preserves_legacy_too
     None
 ):
     guide = InstructionsProvider().get("aprovacoes")
-    assert guide["version"] == "1.1.0"
+    assert guide["version"] == "2.0.2"
     text = guide["instructions"]
     for literal in ("preparar_autorizacao", "13 processos", "/admin", *NEW_DOMAINS):
         assert literal in text

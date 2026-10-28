@@ -26,7 +26,7 @@ retornadas e consulte `loki_verificar_versao`, informando apenas versões de
 cliente conhecidas. Obtenha as instruções geral/documentos e do domínio
 autorizado quando disponível. Consulte `get_dp_capabilities` e `list_workflows`;
 leia todos os blocos JSON, pois `structuredContent` pode conter só o primeiro
-item. Para o processo, consulte `get_document_processing_contract` e
+item. Para o processo, consulte `get_process_contract` e
 `get_client_readiness` com empresa/competência pertinentes.
 
 O cadastro estar pronto informa sua consistência, não a completude do cálculo.
@@ -80,42 +80,25 @@ autorizado de correção de produto; as partes independentes continuam. Preserve
 retenções e registre a próxima ação concreta no recibo da rodada. O avanço só
 encerra o bloqueio após execução e conferência pertinentes.
 
-## Escolha do executor
+## Execução e resultado
 
-Use `execution_modes`, `available_via`, `package_kind` e `versioned_case` do
-contrato corrente. A tabela indica os caminhos a confirmar, não habilita fluxos:
+Siga `get_process_contract` e envie a seção estruturada e fontes por
+`receive_case_data`, com referência estável e snapshot corrente. Depois execute
+`run_prepared_case_workflow` ou cálculo, geração e revisão do contrato. A empresa
+de teste usa esse mesmo fluxo; versões internas preservam auditoria.
 
-| Processo | Caminho versionado a conferir | Pacote e condição |
-|---|---|---|
-| Afastamento | `simulate_case_version` | Factual; exige cenário shadow explícito |
-| Alteração cadastral | `simulate_case_version` | Proposta factual, sem aplicação canônica |
-| Ocorrência | `simulate_case_version` | Factual, sem lançamento financeiro |
-| Aviso de férias | `simulate_case_version` | Documental, independente do cálculo completo de férias |
-| Aviso de rescisão | `simulate_case_version` | Documental, independente do cálculo completo de rescisão |
-| Adiantamento | `simulate_case_version` | Financeiro, por política vigente e fonteada |
+Afastamento, alteração cadastral e ocorrência conservam fatos e efeitos
+qualificados; não deduza pagamento, classificação ou efeito financeiro de um
+registro isolado. Avisos autônomos não exigem completar o cálculo do processo
+pai. Adiantamento exige política vigente e operandos fonteados. Parcial útil
+mantém os resultados dependentes desconhecidos e os conflitos existentes.
 
-Monte o request pelo schema do processo; não transponha campos ou marcadores de
-outro fluxo. Use referência estável para retomar a mesma tentativa. Um pacote
-factual não exige PDF; um aviso não exige valores de TRCT ou férias para avançar
-parcialmente. Adiantamento sem política/operando mantém o resultado dependente
-pendente; não há percentual padrão. Registro documental não aplica cadastro,
-não registra pagamento e não efetiva desligamento.
-
-## Conferência e resultado da rodada
-
-Nas versões, consulte `get_case_version`; baixe `receipt.json` e todos os
-artefatos por `get_case_version_artifact`. Confira o contexto completo do recibo,
-os bytes, os hashes e cada página de PDF. Use os checks e referências do
-contrato em `submit_case_version_verification`. Nos fluxos canônicos, siga a
-requisição de conferência do pacote atual. Registre PASS só para observação
-efetiva. Preserve os achados anteriores e as pendências do pacote parcial.
-
-O recibo privado da rodada identifica: executor/versão do plugin observados,
-build/instruções, processo, pedido/caso/versão, corte e fontes selecionados,
-executor escolhido, artefatos conferidos, pendências e resultado. Use apenas
-classificações aceitas pelo schema do relatório externo; detalhe a limitação no
-comentário aplicável. Não converta preparo parcial em sucesso financeiro nem
-regrave julgamentos anteriores. Não aprove, publique, pague ou transmita.
+Confira externamente recibos, bytes/hashes e páginas dos PDFs; comparação com a
+equipe também é externa. O resumo privado identifica executor/plugin observado,
+build/instruções, processo/caso, snapshot, fontes consumidas, artefatos e
+pendências. Separe recebido, calculado, gerado, revisado e entregue. Entrega ao
+solicitante usa acesso autenticado e recibo; Drive é opção futura explícita.
+Não crie outra agenda, altere a fila da Ana ou classifique conferência como entrega.
 
 ## Cobertura e acerto das tarefas
 
@@ -152,3 +135,5 @@ do mapeador. Disponibilidade no Loki não altera filtros de outro sistema.
 Uma liberação registra separadamente: release publicada, versão instalada,
 roteiro salvo e execução observada. Os três últimos exigem prova no ambiente
 do operador; o sucesso no computador do desenvolvedor não os comprova.
+
+Fontes `kind=document` exigidas como evidência nativa usam `document.reference` com o ID do anexo retornado por `attach_source_document` e `content_hash` igual ao retorno. O upload arquiva o original como bytes opacos; o Loki não extrai nem interpreta seu conteúdo. Não invente DOC com caminho local, ID do Drive ou hash avulso. Leitura externa declarada pode usar `kind=declaration`, referência/localizador/fundamento honestos e seus limites; isso não atesta verificação documental nativa. Quando identidade, efeito ou qualificação exigir fonte nativa, arquive o original opacamente ou selecione a fonte nativa já persistida/pinnada indicada pelo contrato. Não troque a classificação da origem para fabricar qualificação.
