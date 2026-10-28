@@ -1,7 +1,10 @@
 # MCP Loki — contrato operacional 2.0.0
 
-O pacote `mcp-loki-updates` **0.2.1** entrega instruções **2.0.1** ao backend.
-O plugin nativo `loki-orientacoes@loki-equipe` **2.0.1** contém bootstrap, leitores
+O pacote `mcp-loki-updates` **0.2.2** entrega instruções **2.0.2** ao backend.
+A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
+explícita, sem configuração ou ativação nesta entrega.
+
+O plugin nativo `loki-orientacoes@loki-equipe` **2.0.2** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
@@ -35,7 +38,7 @@ validação separada. Dados pessoais, fontes privadas e credenciais ficam fora d
 Os documentos de releases anteriores em `docs/` são históricos; não definem o
 contrato operacional atual nem demonstram instalação, consumo ou aceite individual.
 
-Compatibilidade da candidata0.2.1: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.2.2: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova

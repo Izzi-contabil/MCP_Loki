@@ -1,6 +1,6 @@
 # Atualizações MCP Loki — contrato 2.0.0
 
-Candidata de28/10/2026: provider/wheel0.2.1, instruções2.0.1 e plugin2.0.1.
+Candidata de28/10/2026: provider/wheel0.2.2, instruções2.0.2 e plugin2.0.2.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
 
@@ -28,7 +28,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.0.1. Contrato1.x declarado é incompatível; cliente desconhecido
+recomendado é2.0.2. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 
@@ -65,10 +65,11 @@ por consequência de construir/validar o pacote; siga a autorização vigente.
 
 ## Entrega e rollback
 
-Drive Izzi e solicitante são destinos operacionais quando habilitados no host.
-Destino, pacote/revisão/hash e recibo são necessários. Falha ou destino ausente
-permanece pendente; retry não duplica entrega nem recalcula. Geração ou conferência
-não atesta envio, aceite, pagamento ou transmissão.
+A entrega padrão é ao solicitante autenticado: use `prepare_delivery(case_id, include_drive=False)` e preserve `version_id` quando houver. O plano usa `publication_scope=private_authenticated_requester`, `drive_requested=false` e `destination=null`. Execute `execute_delivery(case_id, delivery_id)` e consulte `get_delivery_status` com o mesmo delivery_id nas retomadas. O recibo traz `requester_documents` com `authenticated_path` e `mcp_resource`, e `drive_documents=[]`. Somente DELIVERED comprova a disponibilização autenticada observada; não comprova download, pagamento ou transmissão. Sem aceite documental privado corrente, permanece PENDING com `requester_delivery_approval_missing`; aprovação, revisão, fontes, bytes/hashes, PII e conferência técnica mantêm seus gates. Não chame `authorize_delivery` neste caminho: ele recusa `delivery_drive_not_requested`.
+
+Não configure nem ative o Drive nesta entrega. Drive Izzi é opção futura: somente um pedido humano externo explícito permite `prepare_delivery(case_id, include_drive=True)`. Nesse caminho, apresente pacote/revisão/hash/destino e aguarde intenção humana própria antes de `authorize_delivery`, com `delivery_id`, `plan_hash`, `human_message`, `message_reference` e `authorize_external_delivery=true`; o aceite privado anterior não autoriza envio externo. Destino/credencial do host ausentes ou falha mantêm a entrega ao Drive PENDING. Não envie folder, conta, token ou URL no payload; não use Drive Iris nem PUBLIC. Estas instruções não provisionam acesso nem removem gates de publicação.
+
+Retry não duplica entrega nem recalcula. Geração ou conferência não atesta entrega, aceite, pagamento ou transmissão.
 
 Rollback restaura o conjunto backend+wheel+lock compatível e segue o runbook do
 consumidor, incluindo conciliação de novas escritas. Não faça downgrade de banco,
@@ -76,9 +77,9 @@ altere pin/assinatura do kit legado ou troque identidade para contornar falha.
 Os registros anteriores de publicação em `docs/` são históricos e preservados;
 não comprovam o estado servido desta candidata nem atualização das instalações.
 
-A candidata0.2.1 acrescenta os contratos de conferência técnica externa, abertura selecionada e autorização própria de entrega privada; contrato MCP permanece2.0.0. O wheel0.2.0 já construído permanece imutável.
+A candidata0.2.2 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP permanece2.0.0. Os wheels0.2.0 e0.2.1 já construídos permanecem imutáveis.
 
-Compatibilidade da candidata0.2.1: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.2.2: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova

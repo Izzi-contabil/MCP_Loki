@@ -35,8 +35,8 @@ RETIRED = (
 def test_major_two_refuses_declared_old_clients_and_preserves_unknown() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.2.1"
-    assert metadata["instructions_version"] == "2.0.1"
+    assert metadata["provider_version"] == "0.2.2"
+    assert metadata["instructions_version"] == "2.0.2"
     assert metadata["mcp_contract_version"] == "2.0.0"
     assert provider.check_version("1.1.7", "1.0.0")["compatible"] is False
     assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
@@ -93,6 +93,34 @@ def test_operational_package_checks_delivery_and_opening_have_current_guidance()
         assert "record_package_checks" in text
         assert "authorize_delivery" in text
         assert "get_delivery_status" in text
+
+
+def test_requester_delivery_is_default_and_drive_requires_future_explicit_opt_in() -> None:
+    provider = InstructionsProvider()
+    guides = [provider.get(name)["instructions"] for name in ("geral", "documentos", "aprovacoes")]
+    guides.extend(
+        path.read_text()
+        for path in (
+            PLUGIN / "skills/operar-loki/SKILL.md",
+            PLUGIN / "skills/operar-loki/references/WORKFLOWS.md",
+        )
+    )
+    for guide in guides:
+        for field in (
+            "include_drive=False",
+            "private_authenticated_requester",
+            "requester_documents",
+            "authenticated_path",
+            "mcp_resource",
+            "drive_documents=[]",
+            "requester_delivery_approval_missing",
+            "delivery_drive_not_requested",
+            "include_drive=True",
+            "authorize_external_delivery=true",
+        ):
+            assert field in guide, field
+        assert "Não configure nem ative o Drive nesta entrega" in guide
+        assert "não autoriza envio externo" in guide
 
 
 def test_native_document_provenance_uses_opaque_archive_id_and_honest_external_declarations():

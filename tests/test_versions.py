@@ -53,7 +53,7 @@ def test_invalid_client_version_is_not_treated_as_unknown(invalid: str) -> None:
 
 def test_categorized_changes_and_fallback_do_not_claim_remote_tools_are_synced() -> None:
     result = check("2.0.0", "2.0.0")
-    assert result["recommended_plugin_version"] == "2.0.1"
+    assert result["recommended_plugin_version"] == "2.0.2"
     assert set(result["changes"]) == {
         "backend",
         "instructions",
@@ -70,7 +70,7 @@ def test_categorized_changes_and_fallback_do_not_claim_remote_tools_are_synced()
     assert result["tools_refresh_note"]
 
 
-@pytest.mark.parametrize("plugin", ["2.0.2", "3.0.0", "9.0.0"])
+@pytest.mark.parametrize("plugin", ["2.0.3", "3.0.0", "9.0.0"])
 def test_future_plugin_version_remains_unassessed(plugin: str) -> None:
     result = check(plugin, "2.0.0")
     assert result["compatible"] is None

@@ -1,7 +1,7 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
 
-Contrato operacional vigente: plugin/instruções2.0.1 e provider0.2.1.
+Contrato operacional vigente: plugin/instruções2.0.2 e provider0.2.2.
 Consulte `get_process_contract` e envie `receive_case_data` com fontes, referência
 estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
 a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução

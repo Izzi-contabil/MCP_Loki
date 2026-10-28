@@ -97,8 +97,8 @@ Confira externamente recibos, bytes/hashes e páginas dos PDFs; comparação com
 equipe também é externa. O resumo privado identifica executor/plugin observado,
 build/instruções, processo/caso, snapshot, fontes consumidas, artefatos e
 pendências. Separe recebido, calculado, gerado, revisado e entregue. Entrega ao
-Drive Izzi e solicitante exige destino e recibo; não crie outra agenda, altere a
-fila da Ana ou classifique conferência como envio.
+solicitante usa acesso autenticado e recibo; Drive é opção futura explícita.
+Não crie outra agenda, altere a fila da Ana ou classifique conferência como entrega.
 
 ## Cobertura e acerto das tarefas
 

@@ -1,4 +1,4 @@
-# Loki orientações — plugin2.0.1
+# Loki orientações — plugin2.0.2
 
 O nome `loki-orientacoes@loki-equipe` permanece para atualização nativa. O contrato
 operacional2.0.0 exige dados estruturados e fontes por campo: consulte
@@ -18,7 +18,7 @@ Consulte [operar-loki](skills/operar-loki/SKILL.md),
 Use [registrar-problema-loki](skills/registrar-problema-loki/SKILL.md) conforme
 escopo/autorização de suporte, preservando UUID/recibo e sem dados de RH.
 
-A candidata acompanha provider0.2.1/instruções2.0.1. Build, publicação, instalação,
+A candidata acompanha provider0.2.2/instruções2.0.2. Build, publicação, instalação,
 carregamento, catálogo e execução precisam de evidências separadas. Não altera
 OAuth, assinatura/pin do kit antigo ou agenda. Dados e recibos ficam em workspace
 privado fora do plugin; nenhum pacote ou documento concede decisão humana.
