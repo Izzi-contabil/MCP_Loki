@@ -61,8 +61,8 @@ def test_packaged_provider_exposes_thirteen_safe_domains_and_defensive_copies() 
     assert provider.domains() == DOMAINS
     value = provider.get("admissao")
     assert value["dominio"] == "admissao"
-    assert value["version"] == "1.2.3"
-    assert value["updated_at"] == "2026-10-22"
+    assert value["version"] == "2.0.1"
+    assert value["updated_at"] == "2026-10-28"
     assert value["instructions"].strip()
     assert value["permissions"] == {"capabilities": ["consultar"], "processes": ["admissao"]}
     value["permissions"]["capabilities"].clear()
@@ -173,24 +173,13 @@ def test_rejects_invalid_snapshot_even_when_hashes_are_consistent(
 def test_metadata_is_sanitized_and_returns_domain_versions() -> None:
     provider = provider_type()()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.1.7"
-    assert metadata["mcp_contract_version"] == "1.0.0"
-    assert metadata["versions_by_domain"] == {
-        domain: "1.2.3"
-        if domain == "admissao"
-        else "1.3.0"
-        if domain == "geral"
-        else "1.2.0"
-        if domain == "documentos"
-        else "1.1.0"
-        if domain in {"afastamento", "rescisao", "aprovacoes"}
-        else "1.0.0"
-        for domain in DOMAINS
-    }
+    assert metadata["provider_version"] == "0.2.1"
+    assert metadata["mcp_contract_version"] == "2.0.0"
+    assert metadata["versions_by_domain"] == {domain: "2.0.1" for domain in DOMAINS}
     assert "root" not in metadata
     assert "instructions" not in metadata
     metadata["versions_by_domain"]["admissao"] = "999.0.0"
-    assert provider.metadata()["versions_by_domain"]["admissao"] == "1.2.3"
+    assert provider.metadata()["versions_by_domain"]["admissao"] == "2.0.1"
 
 
 def test_rejects_symlinked_data_file(snapshot: Path, tmp_path: Path) -> None:
@@ -231,20 +220,23 @@ def test_rejects_mixed_release_during_read(snapshot: Path, monkeypatch: pytest.M
 
 def test_new_contract_major_cannot_replace_supported_snapshot(snapshot: Path) -> None:
     from mcp_loki_updates import InstructionsUnavailable
+    from mcp_loki_updates.provider import SUPPORTED_CONTRACT_MAJOR
 
     provider = provider_type()(snapshot)
+    supported_contract = provider.metadata()["mcp_contract_version"]
     release_path = snapshot / "release.json"
     release = json.loads(release_path.read_text(encoding="utf-8"))
-    release["contract_version"] = "2.0.0"
+    future_contract = f"{SUPPORTED_CONTRACT_MAJOR + 1}.0.0"
+    release["contract_version"] = future_contract
     write_json(release_path, release)
     for domain in DOMAINS:
         path = snapshot / "domains" / f"{domain}.json"
         metadata = json.loads(path.read_text(encoding="utf-8"))
-        metadata["compatibility"]["mcp_contract_version"] = "2.0.0"
+        metadata["compatibility"]["mcp_contract_version"] = future_contract
         write_json(path, metadata)
         reseal(snapshot, domain)
     assert provider.reload() is False
-    assert provider.metadata()["mcp_contract_version"] == "1.0.0"
+    assert provider.metadata()["mcp_contract_version"] == supported_contract
     assert provider.health()["status"] == "degraded"
     with pytest.raises(InstructionsUnavailable):
         provider_type()(snapshot)

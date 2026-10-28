@@ -1,5 +1,12 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
+
+Contrato operacional vigente: plugin/instruções2.0.1 e provider0.2.1.
+Consulte `get_process_contract` e envie `receive_case_data` com fontes, referência
+estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
+a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
+no operador exigem comprovação própria; preserve OAuth e a agenda existente.
+
 O plugin `loki-orientacoes@loki-equipe` 1.1.5 distribui o
 [roteiro de rotina](../plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md).
 Ele complementa os leitores já distribuídos desde 1.1.0 e usa os contratos
@@ -21,7 +28,7 @@ claude plugin update loki-orientacoes@loki-equipe --scope user
 claude plugin list --json
 ```
 
-Conferir versão 1.1.5 ou superior e plugin habilitado. Se o plugin ainda não
+Conferir versão 2.0.0 ou superior e plugin habilitado. Se o plugin ainda não
 estiver instalado, seguir o [roteiro de instalação](DAILY_OPERATOR_UPDATES.md).
 Falha de acesso ao repositório privado permanece pendência; não substituir
 o OAuth do Loki por outra credencial. Manter auto-update ativo no marketplace.

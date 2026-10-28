@@ -43,8 +43,9 @@ uma investigação. Ele organiza evidências privadas, não cria campos no MCP.
    discrimine, avance nas partes independentes e descreva a incógnita exata.
 4. **Persistir e consumir.** Com evidência suficiente, autorização e schema
    expressável, prepare fatos/parâmetros pelos escritores vigentes e fontes de
-   [WORKFLOWS.md](../operar-loki/references/WORKFLOWS.md). Marque derivação quando
-   o contrato permitir; não apresente inferência como extração. Confira preview,
+   [WORKFLOWS.md](../operar-loki/references/WORKFLOWS.md). Use `get_process_contract` e `receive_case_data` para dados do caso,
+   com `kind=rule` e `foundation` na fonte quando houver derivação; não apresente
+   inferência como leitura documental. Confira preview,
    validação, escopo/vigência e revisão/hash; aplique, releia, selecione e observe
    o consumo real. Resposta perdida exige consultar estado antes de repetir.
 5. **Retomar e encerrar.** Reexecute a tarefa afetada na versão corrente e

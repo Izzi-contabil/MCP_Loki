@@ -100,7 +100,6 @@ def test_typed_csv_rejects_duplicate_keys_and_empty_batch():
 @pytest.mark.parametrize(
     "destination,tool",
     [
-        ("case", "anexar_documento_conteudo"),
         ("onboarding-source", "attach_onboarding_source"),
         ("onboarding-csv", "submit_company_onboarding_csv"),
     ],
@@ -118,8 +117,6 @@ def test_csv_request_contains_only_real_csv_bytes_and_no_credentials(tmp_path, d
     assert result["content_hash"] == hashlib.sha256(source.read_bytes()).hexdigest()
     assert result["state"] == "prepared_not_sent"
     assert "token" not in json.dumps(result)
-    if destination == "case":
-        assert result["arguments"]["doc_role"] == "outro"
 
 
 def test_pdf_cannot_be_disguised_as_csv(tmp_path):

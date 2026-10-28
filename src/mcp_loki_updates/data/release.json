@@ -1,77 +1,82 @@
 {
   "schema_version": 1,
-  "instructions_version": "1.3.3",
-  "contract_version": "1.0.0",
-  "plugin_version": "0.5.0",
-  "minimum_plugin_version": "0.4.0",
-  "updated_at": "2026-10-27",
+  "instructions_version": "2.0.1",
+  "contract_version": "2.0.0",
+  "plugin_version": "2.0.1",
+  "minimum_plugin_version": "2.0.0",
+  "updated_at": "2026-10-28",
   "domains": {
     "geral": {
-      "metadata_sha256": "83732ed476f0615c247e67e46eb258784225adad5913750459c257740bc63c21",
-      "content_sha256": "449321cd998763a6e6d93108444772c00079ffcf0645c65a3707fa334c61123f"
+      "metadata_sha256": "af1f5186ad8738fa2f15525124f91dab3ec22b55318d47b8b02fe7a872d9f420",
+      "content_sha256": "0cbfd3feb288876a9381a68b26678d10d4ba8d861973e9a9c7e665879353ce21"
     },
     "admissao": {
-      "metadata_sha256": "4913cb4be9ce962cf31e40827967a08965e7f8ef95e825562a6f8d6d7f9dd9f9",
-      "content_sha256": "aeccbae15284f1ff146ba6628646d9317b7733ddc16e1474dde618401c849fea"
+      "metadata_sha256": "89f0c7a364467f7c70cdd30f500faf1c0efc4003d7e5fe7482cd6e83493ecdba",
+      "content_sha256": "b62bc689271c43127d90a27546cad84264455bf619f26d7302e1b6e89129e37b"
     },
     "rescisao": {
-      "metadata_sha256": "ba54404ef56f4e48c2d592b4dd1425e33b63a22b54beddd177ec3618890b8f35",
-      "content_sha256": "f731a8e9daa248003896255b86940da64ed86e9d2a3860f4d5de81bd9c50af4a"
+      "metadata_sha256": "9f668c09c3a02d5e2c8262ae8210dec14e54ef46c063c21d9962aab6adb13431",
+      "content_sha256": "d29cb2c8a0b7289fb4a113412e38d94c09ce381b9c02faf8d14dc2867a8a2f6a"
     },
     "ferias": {
-      "metadata_sha256": "3159811846175b731a09bcacd8ce7efa14b0a1478cd9b9a66d0c3aac8dc09ece",
-      "content_sha256": "fd68e198662518f5ea3babaedf200143eb79542bf9a75f0a2cb407c9d6f261fd"
+      "metadata_sha256": "4b0621273c2dcda8c2c5453e49e286fa05adb0fdf76e973db14f0407cd2305dc",
+      "content_sha256": "7a834c41d4dafd19a10dff24e1410102ccfcd7599832584d943f85bdf5579122"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "d2ba89b622f8e36638d5ce6a77199805ca5ed1f75171b176d2160b74c41f2d0c",
-      "content_sha256": "5c27e97f89b351c58c73bdfa8bd83303d4ebfa02f0aa5012f5f1d246415697d4"
+      "metadata_sha256": "3e37f1b61832b8649a8d4198ade162e1ed1f4fa057e17b9a01ff2f4a2bc4b217",
+      "content_sha256": "3f3f277295f342be8f3cf06327e50b76a659ae30d077ef7c87d2cdc9be7f4929"
     },
     "afastamento": {
-      "metadata_sha256": "5a939de7380e1add33656a02bb860ed91341006b7d151d728e60c81fe89bc62a",
-      "content_sha256": "34e69bc377737f0c83e1790dcadc1754f36b04f61a8dbf7b4356d1387bb1767a"
+      "metadata_sha256": "9ac99541f51724bace627ecf1cec8603f130bee1eeb8f8ce05b8139c1dfd1006",
+      "content_sha256": "a00af3597a26199ae6dba97402768c74105e356724d1dab5e923bebad30c2cb9"
     },
     "documentos": {
-      "metadata_sha256": "1ca3c86086b994634da9caa9c2ea3874ad10e165890da3ded4e92e91504a2b89",
-      "content_sha256": "300f22fe7271051c71ddb1ab3601e7f9a1cd613105ce7a3a82ef163789007b18"
+      "metadata_sha256": "38cc11c72e3af552c5206f6248919df90d8a94512d1bfec6b23e358731696a09",
+      "content_sha256": "7582117ce69af276c9dd97d9287a9eabab0cc020a6d7cc8a4527ba5b96fe1b4f"
     },
     "aprovacoes": {
-      "metadata_sha256": "a1eb6f272432fa4605f70f051f52ca300724bc86ce2620f61f72531ca33112ee",
-      "content_sha256": "ec68970894ac7483d3234620617c11a89c401e36d4632445170aae49a77e46fa"
+      "metadata_sha256": "01b4015ecf06bf7b3c6025b608a172c8c87b7d10da7565f43fc179c1d0267baa",
+      "content_sha256": "47f7efe446dbb753cd63d72118237e53587ce94bb87ab4d466c82e90b3cd14ab"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "c21adf1f54ab2beba59c0665ccc8fae611abf2df07beb617ceeb23174706c455",
-      "content_sha256": "6b804a54ae254040b3d0a3d0005aea092b90fec7c0efd521cc7888c950f4c442"
+      "metadata_sha256": "3cdb0e0a429e0cde3d2a8f69c4b1f6e091952a7e57aafd794fca0f4bd463f7d9",
+      "content_sha256": "7374326868f276d87d5f24216063b18c51d5bf517c7de34737cd99163411a810"
     },
     "ocorrencia": {
-      "metadata_sha256": "d53742f4abcf860424a75699504a354dc9f0cafd81fd0a9dd5dde265dc6c6b7f",
-      "content_sha256": "79459938715431d5af013e2733e23e8b888a9b7fbb2233e3068d63ac151f435a"
+      "metadata_sha256": "32298f69d19c1997add96e68b524c990688432a8eba43c5b996a7e18415114cb",
+      "content_sha256": "ed4001990a57092bf11cf4f791a56d1fb6ef32f46bc8f295fe650df4bdfb3d6a"
     },
     "adiantamento": {
-      "metadata_sha256": "7eac0a1e3daa4e93b56842c94645078686b6f6e668f0e1c74b414cbb3f29e1ab",
-      "content_sha256": "cca6207912053a78c6778b5abd3b0db3bad4f500def95ccc379e44eee51abdb8"
+      "metadata_sha256": "e27635c25107c5d870533d24f4fb0d21ea0aa5449c0210a48b24121ee52bcbec",
+      "content_sha256": "c1816bd665d3593196a03a482e158740e66dca025b1a4fe81b3a35606a31dbd7"
     },
     "aviso_ferias": {
-      "metadata_sha256": "1c9f60261eb605bd017ed17de2a87ce59f4715c06f2c05f2642f93505f355b5a",
-      "content_sha256": "9c5430a4d12567861acb3233d18c9541d0197a529267f794535a1a78b20166b8"
+      "metadata_sha256": "caded1ece2b68a025be84813a7e7fa1754da9aef445531cb318a6bb67d2071c1",
+      "content_sha256": "e4bce27bbc3b096faa0ebf2e4b46eaba1a2764aa93f99b75ccb9dec2403e37d8"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "49ec8e203adfcc573640d0b1dee9ed6fb89d62b1b938b7dcba5ae3248e27cd3a",
-      "content_sha256": "d2d7ebe5a69967bfdb19c3a3236a9b1ac4babf3308b42e148cb0b1bf6bea674c"
+      "metadata_sha256": "a14d34424cee589b0dfc6086976822f49903a27c25dd1aad0c375a9910903812",
+      "content_sha256": "f001646ee6d6d3c9c17aff74ae255d402dccc20b23c2e40566ca085a3c53479c"
     }
   },
   "changes": {
-    "backend": [],
+    "backend": [
+      "Consumidor deve oferecer contrato por processo, entrada estruturada, cálculo, geração, revisão e entrega pelos gates existentes."
+    ],
     "instructions": [
-      "Orienta relato de falha inesperada autorizada, distinguindo pendência prevista e mantendo UUID, recibo e antirrecursão.",
-      "Inclui demandas de processo, melhoria e dúvida, apoio na thread e confirmação humana de orientação sem código; preserva gates de software e DP."
+      "Dados e fontes diretos; conferência técnica externa por pacote, abertura anterior explícita e entrega privada com intenção humana própria.",
+      "Retificação/retirada de efeitos preserva origem e exige reconciliação; qualificação payroll_context fonteada distingue gozo confirmado e pagamento real."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
       "loki_verificar_versao"
     ],
-    "breaking_contract": [],
+    "breaking_contract": [
+      "Contrato2.0.0 retira ferramentas de extração e execução especial; migrar para get_process_contract e receive_case_data. Cliente1.x declarado é incompatível."
+    ],
     "plugin": [
-      "Plugin nativo1.1.7 com instruções de fechamento de execução e orientação estruturada em falhas do leitor offline; sem transporte alternativo."
+      "Plugin2.0.1 orienta checks técnicos e entrega privada pelos contratos correntes; leitores continuam externos e offline.",
+      "Compatibilidade declarada com loki-document-kit0.2.0; kit0.1.0 requer migração separada, sem presumir instalação no executor."
     ]
   }
 }

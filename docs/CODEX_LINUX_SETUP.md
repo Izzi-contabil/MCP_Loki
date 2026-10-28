@@ -1,5 +1,12 @@
 # Codex — plugin Loki com atualização nativa
 
+
+Contrato operacional vigente: plugin/instruções2.0.1 e provider0.2.1.
+Consulte `get_process_contract` e envie `receive_case_data` com fontes, referência
+estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
+a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
+no operador exigem comprovação própria; preserve OAuth e a agenda existente.
+
 O plugin `loki-orientacoes@loki-equipe` usa o MCP e o OAuth já conectados.
 Este roteiro substitui o timer das 07h e deixa a atualização com o próprio
 Codex. A versão1.1.0 inclui leitores locais, a skill `operar-loki` e preparação
@@ -43,7 +50,7 @@ o diagnóstico local e depois leia os documentos indicados. A harness localiza
 o script na skill instalada e o executa por uv com Python3.11 e lock; o lock
 acompanha as atualizações Git.
 
-Somente parâmetros e CSVs seguem para o Loki pela conexão já autenticada.
+Dados estruturados e fontes seguem para o Loki pela conexão já autenticada.
 Originais, imagens e estado ficam em workspace privado fora do cache do plugin.
 Python/dependências são preparados pelo uv sem importar cofre Windows ou copiar
 tokens. Ver [formatos e diagnóstico](LOCAL_READERS.md).
@@ -66,7 +73,7 @@ Quem seguiu o roteiro anterior deve [remover a agenda externa](REMOVE_EXTERNAL_S
 O ChatGPT continua usando a conexão MCP existente no aplicativo; instalar o
 plugin local não instala outro plugin na conta ChatGPT.
 
-Quem já tinha1.0.2 deve conferir1.1.0 ou superior e as duas skills após upgrade.
+Quem já tinha1.0.2 deve conferir2.0.1 ou superior e as duas skills após upgrade.
 Reabrir a conversa para usar o pacote completo. Não reinstalar MCP/OAuth.
 
 Na versão1.1.7, `$registrar-problema-loki` orienta relatos sanitizados, backlog

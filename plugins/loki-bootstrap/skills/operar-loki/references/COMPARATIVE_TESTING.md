@@ -78,10 +78,9 @@ recalculado, e uma observação não vira lançamento executável pelo reuso.
 ## Executar e registrar o consumo
 
 Prepare somente o processo e os componentes cujos requisitos estejam atendidos
-no contrato vigente. Consulte `versioned_case` quando disponível e fixe caso,
-base, fontes e referência idempotente. Dados já persistidos não exigem recadastro.
-Para fonte nova, siga WORKFLOWS.md: só parâmetros/CSVs seguem ao Loki; originais
-permanecem locais. Não remova lacunas para obter sucesso da chamada.
+no contrato vigente. Consulte `get_process_contract` e fixe caso,
+base, fontes e referência idempotente para `receive_case_data`. Dados já persistidos não exigem recadastro.
+Para fonte nova, siga WORKFLOWS.md: dados estruturados e fontes seguem ao Loki; originais são interpretados externamente e arquivados opacamente quando o contrato exigir fonte nativa. Não remova lacunas para obter sucesso da chamada.
 
 Quando faltar requisito, conserve o valor dependente ausente e registre a
 pendência exata; prossiga no pacote parcial se o contrato permitir. Hipótese
@@ -118,3 +117,5 @@ não comprova uma execução futura na máquina de outro operador.
 O plugin não cria agenda nem altera fila/sistema externo. Use as integrações já
 autorizadas. Comparação e preparação privada não aprovam documentos, aplicam
 mudanças cadastrais, pagam ou transmitem. Conserve os gates humanos do host.
+
+Fontes `kind=document` exigidas como evidência nativa usam `document.reference` com o ID do anexo retornado por `attach_source_document` e `content_hash` igual ao retorno. O upload arquiva o original como bytes opacos; o Loki não extrai nem interpreta seu conteúdo. Não invente DOC com caminho local, ID do Drive ou hash avulso. Leitura externa declarada pode usar `kind=declaration`, referência/localizador/fundamento honestos e seus limites; isso não atesta verificação documental nativa. Quando identidade, efeito ou qualificação exigir fonte nativa, arquive o original opacamente ou selecione a fonte nativa já persistida/pinnada indicada pelo contrato. Não troque a classificação da origem para fabricar qualificação.

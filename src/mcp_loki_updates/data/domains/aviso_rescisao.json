@@ -1,11 +1,11 @@
 {
   "dominio": "aviso_rescisao",
-  "version": "1.0.0",
-  "updated_at": "2026-10-21",
+  "version": "2.0.1",
+  "updated_at": "2026-10-28",
   "compatibility": {
-    "mcp_contract_version": "1.0.0",
-    "minimum_plugin_version": "0.4.0",
-    "recommended_plugin_version": "0.5.0"
+    "mcp_contract_version": "2.0.0",
+    "minimum_plugin_version": "2.0.0",
+    "recommended_plugin_version": "2.0.1"
   },
   "permissions": {
     "capabilities": [

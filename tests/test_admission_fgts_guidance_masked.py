@@ -27,8 +27,8 @@ def test_provider_delivers_fgts_derivation_with_qualified_inputs_and_primary_sou
         "REGRA_EVETRAB_VALIDA_OPCAO_FGTS",
         "vigência",
         "field_sources",
-        "basis=derived",
-        "derivation",
+        "kind=rule",
+        "foundation",
         "operandos",
         "hash",
         "localizador",
@@ -62,7 +62,7 @@ def test_delivered_fgts_guidance_preserves_facts_review_snapshot_and_human_gates
     text = fgts_guidance()
     for safeguard in (
         "não sobrescreva",
-        "não marque como `documented`",
+        "não marque como documento lido",
         "relatório da equipe",
         "case_type",
         "presença de uma data",
@@ -75,7 +75,7 @@ def test_delivered_fgts_guidance_preserves_facts_review_snapshot_and_human_gates
     ):
         assert safeguard in text
     provider = InstructionsProvider()
-    assert provider.check_version("0.4.0", "1.0.0")["compatible"] is True
+    assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
     assert provider.get("admissao")["permissions"] == {
         "capabilities": ["consultar"],
         "processes": ["admissao"],

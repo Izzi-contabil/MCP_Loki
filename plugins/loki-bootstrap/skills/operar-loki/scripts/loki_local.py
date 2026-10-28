@@ -20,6 +20,7 @@ from uuid import uuid4
 sys.dont_write_bytecode = True
 
 from loki_readers.exchange import (  # noqa: E402
+    case_data_request,
     csv_request,
     render_records,
     save_receipt,
@@ -54,7 +55,14 @@ def main() -> int:
     digest = commands.add_parser("hash", help="Verify source bytes before preparing a request")
     digest.add_argument("source", type=Path)
     digest.add_argument("--expected-sha256")
-    for name in ("inventory", "source-csv", "render-csv", "csv-request", "parameters"):
+    for name in (
+        "inventory",
+        "source-csv",
+        "render-csv",
+        "csv-request",
+        "case-request",
+        "parameters",
+    ):
         command = commands.add_parser(name)
         command.add_argument("source", type=Path)
         command.add_argument("output", type=Path)
@@ -66,12 +74,17 @@ def main() -> int:
         if name == "csv-request":
             command.add_argument(
                 "--destination",
-                choices=("case", "onboarding-source", "onboarding-csv"),
+                choices=("onboarding-source", "onboarding-csv"),
                 required=True,
             )
             command.add_argument("--target", required=True)
             command.add_argument("--reference", default="")
             command.add_argument("--revision", type=int, default=1)
+        if name == "case-request":
+            command.add_argument("--contract", type=Path, required=True)
+            command.add_argument("--target", required=True)
+            command.add_argument("--reference", required=True)
+            command.add_argument("--snapshot", required=True)
     diagnostic = commands.add_parser("doctor")
     diagnostic.add_argument("output", type=Path)
     receipt = commands.add_parser("receipt")
@@ -142,6 +155,17 @@ def main() -> int:
                     }
                 )
             )
+        elif args.command == "case-request":
+            request = case_data_request(
+                load(args.source),
+                load(args.contract),
+                args.target,
+                reference=args.reference,
+                snapshot=args.snapshot,
+            )
+            output = private_directory(args.output)
+            write_json(output / "request.json", request)
+            print(json.dumps({"request": str(output / "request.json"), "status": request["state"]}))
         elif args.command == "csv-request":
             request = csv_request(
                 args.source,

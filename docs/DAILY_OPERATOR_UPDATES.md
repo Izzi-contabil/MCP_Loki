@@ -1,11 +1,18 @@
 # Ana e Samuel — instalar uma vez e receber atualizações pelo Claude
 
+
+Contrato operacional vigente: plugin/instruções2.0.1 e provider0.2.1.
+Consulte `get_process_contract` e envie `receive_case_data` com fontes, referência
+estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
+a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
+no operador exigem comprovação própria; preserve OAuth e a agenda existente.
+
 **Ana:** Claude Code no Mac. **Samuel:** Claude Code no Windows e no Linux;
 repetir a configuração em cada máquina. O plugin usa o MCP e o OAuth que vocês
 já têm. A atualização fica por conta do próprio Claude Code.
 
 **A partir da versão1.1.0, o mesmo plugin inclui os leitores locais.** A harness
-lê/confere os documentos e envia somente parâmetros e CSVs pela conexão existente.
+lê/confere os documentos e envia dados estruturados e fontes pela conexão existente.
 Originais e imagens ficam no computador. O nome `loki-orientacoes` foi mantido
 para atualizar instalações anteriores sem reinstalar ou refazer OAuth.
 
@@ -117,7 +124,7 @@ Para iniciar o fluxo completo, executar na conversa:
 
 Pedir: **“Confira os leitores com o diagnóstico local, mantendo minha conexão
 OAuth. Depois leia os documentos que eu indicar e envie ao Loki somente os
-parâmetros e CSVs pela conexão existente.”** A harness resolve o caminho do
+dados e fontes pela conexão existente.”** A harness resolve o caminho do
 script instalado, executa o diagnóstico e conduz os comandos. O operador
 permanece na conversa; não precisa invocar os leitores manualmente.
 
@@ -137,7 +144,7 @@ claude plugin list --json
 Depois, usar `/reload-plugins` ou iniciar nova conversa. Conferir o acesso
 GitHub se houver erro de autenticação; não remover o MCP para resolver Git.
 
-Quem já tinha1.0.2 usa esses mesmos comandos e confere1.1.5 ou superior em
+Quem já tinha1.0.2 usa esses mesmos comandos e confere2.0.1 ou superior em
 `claude plugin list --json`. Não desinstalar a conexão antiga para atualizar.
 
 Para a rotina existente no Claude Code, use a

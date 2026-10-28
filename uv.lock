@@ -196,7 +196,7 @@ wheels = [
 
 [[package]]
 name = "mcp-loki-updates"
-version = "0.1.7"
+version = "0.2.1"
 source = { editable = "." }
 
 [package.dev-dependencies]

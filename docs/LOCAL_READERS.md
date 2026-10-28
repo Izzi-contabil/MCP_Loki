@@ -1,4 +1,4 @@
-# Leitores locais — plugin1.1.0
+# Leitores externos — plugin2.0.1
 
 O plugin nativo mantém o nome `loki-orientacoes@loki-equipe` e inclui duas skills:
 `loki-bootstrap` e `operar-loki`. As instalações1.0.2 recebem código, skill e lock
@@ -56,17 +56,18 @@ autenticado. Os leitores só preparam arquivos: não acessam cofres, tokens,
 configuração dos clientes, rede, SDK MCP ou APIs de LLM. A primeira execução uv
 pode baixar Python/dependências do canal fixado; isso é distinto de ler documentos.
 
-Os envios são **somente parâmetros e CSVs**, por chamadas MCP da harness.
-Originais, ZIPs e imagens não sobem ao Loki. `source-csv` produz uma declaração
-da leitura com hash/localizador do original local. `csv-request` calcula base64
-do CSV real e gera pedido ainda não enviado. A resposta é salva integralmente;
-`receipt` registra pedido/resposta, sem inferir sucesso/aprovação de um BLOCKED.
+Para um caso, a harness prepara dados estruturados e fontes no contrato
+`loki.case-data/1`, usando `get_process_contract` e `get_case.input_snapshot`.
+`case-request` valida/prepara o pedido offline para `receive_case_data`; o helper
+não envia. Leitura e comparação são externas. Quando o contrato exigir fonte nativa,
+`attach_source_document` arquiva bytes opacos e retorna ID/hash; `document.reference`
+usará esse ID, sem interpretação do arquivo pelo servidor.
+`receipt` preserva pedido e resposta, sem transformar BLOCKED em sucesso.
 
-O ID/hash remoto é o CSV efetivamente recebido. Não atribuir a ele o hash/ID do
-PDF local nem rotulá-lo como ASO/TRCT para remover pendências. O servidor atesta
-integridade do CSV; não prova leitura independente do original. Staging tipado
-de onboarding não aplica cadastro automaticamente. Permissões administrativas,
-snapshots, decisões humanas e demais gates continuam sendo os do backend.
+`source-csv` pode produzir evidência externa de leitura. `csv-request` só prepara
+CSVs de onboarding nos contratos específicos autorizados; staging não aplica
+cadastro nem transforma a leitura em conferência independente do servidor.
+Permissões, snapshots, decisões e demais gates continuam no backend.
 
 A [skill operacional](../plugins/loki-bootstrap/skills/operar-loki/SKILL.md) e
 seu [fluxo de contratos/retomada](../plugins/loki-bootstrap/skills/operar-loki/references/WORKFLOWS.md)
