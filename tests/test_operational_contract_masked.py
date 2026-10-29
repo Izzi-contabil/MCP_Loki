@@ -54,7 +54,7 @@ def test_current_kit_compatibility_has_no_installation_claim() -> None:
 def test_effect_corrections_and_payroll_history_keep_explicit_source_qualification() -> None:
     provider = InstructionsProvider()
     general = provider.get("geral")["instructions"]
-    workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text()
+    workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text(encoding="utf-8")
     for guide in (general, workflows):
         for field in (
             "apply_case_effects",
@@ -87,8 +87,8 @@ def test_operational_package_checks_delivery_and_opening_have_current_guidance()
     assert "opening_selection" in general
     assert "opening_cents=null" in general
     assert "opening_origin" in general
-    operator = (PLUGIN / "skills/operar-loki/SKILL.md").read_text()
-    workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text()
+    operator = (PLUGIN / "skills/operar-loki/SKILL.md").read_text(encoding="utf-8")
+    workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text(encoding="utf-8")
     for text in (operator, workflows):
         assert "record_package_checks" in text
         assert "authorize_delivery" in text
@@ -99,7 +99,7 @@ def test_requester_delivery_is_default_and_drive_requires_future_explicit_opt_in
     provider = InstructionsProvider()
     guides = [provider.get(name)["instructions"] for name in ("geral", "documentos", "aprovacoes")]
     guides.extend(
-        path.read_text()
+        path.read_text(encoding="utf-8")
         for path in (
             PLUGIN / "skills/operar-loki/SKILL.md",
             PLUGIN / "skills/operar-loki/references/WORKFLOWS.md",
@@ -130,7 +130,7 @@ def test_provenance_keeps_registered_sources_without_uploading_originals():
         assert "Originais permanecem na harness" in guide, domain
         assert "document.reference" in guide, domain
         assert "kind=declaration" in guide, domain
-    workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text()
+    workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text(encoding="utf-8")
     assert "document.reference" in workflows
     assert "fonte já registrada" in workflows
     assert "caminho local" in workflows.casefold()
@@ -152,7 +152,7 @@ def test_runtime_domains_and_operator_references_route_direct_structured_input()
     for path in live:
         text = path.read_text(encoding="utf-8")
         assert not any(retired in text for retired in RETIRED), str(path)
-    workflow = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text()
+    workflow = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text(encoding="utf-8")
     for field in (
         "loki.case-data/1",
         "request_ref",
@@ -466,7 +466,7 @@ def test_shipped_cli_prepares_current_case_writer_without_network(
         timeout=30,
     )
     assert result.returncode == 0, result.stderr
-    payload = json.loads((output / "request.json").read_text())
+    payload = json.loads((output / "request.json").read_text(encoding="utf-8"))
     assert payload["tool"] == "receive_case_data"
     assert payload["arguments"]["request"]["data"] == evidence()["data"]
     assert ("field_sources" in payload["arguments"]["request"]) is include_sources
