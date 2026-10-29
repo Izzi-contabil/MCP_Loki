@@ -1,7 +1,6 @@
-# Leitores externos — plugin2.0.1
+# Leitores externos — plugin2.1.0
 
-O plugin nativo mantém o nome `loki-orientacoes@loki-equipe` e inclui duas skills:
-`loki-bootstrap` e `operar-loki`. As instalações1.0.2 recebem código, skill e lock
+O plugin nativo mantém o nome `loki-orientacoes@loki-equipe` e inclui bootstrap, operação, investigação de regras e suporte. As instalações1.0.2 recebem código, skill e lock
 pelo mesmo auto-update Git. Não é necessário outro ZIP ou conexão MCP.
 
 ## Sistemas e dependências
@@ -59,15 +58,25 @@ pode baixar Python/dependências do canal fixado; isso é distinto de ler docume
 Para um caso, a harness prepara dados estruturados e fontes no contrato
 `loki.case-data/1`, usando `get_process_contract` e `get_case.input_snapshot`.
 `case-request` valida/prepara o pedido offline para `receive_case_data`; o helper
-não envia. Leitura e comparação são externas. Quando o contrato exigir fonte nativa,
-`attach_source_document` arquiva bytes opacos e retorna ID/hash; `document.reference`
-usará esse ID, sem interpretação do arquivo pelo servidor.
+não envia. Leitura, preparação e comparação são externas. Originais permanecem
+na harness; ao Loki seguem parâmetros e, opcionalmente, proveniência estruturada pelo
+HTTPS. Se o contrato exigir original novo, registre lacuna contratual, sem
+fabricar DOC ou reclassificar documento como declaração. Fonte já registrada
+pode ser selecionada pelo contrato autorizado.
 `receipt` preserva pedido e resposta, sem transformar BLOCKED em sucesso.
 
 `source-csv` pode produzir evidência externa de leitura. `csv-request` só prepara
 CSVs de onboarding nos contratos específicos autorizados; staging não aplica
 cadastro nem transforma a leitura em conferência independente do servidor.
 Permissões, snapshots, decisões e demais gates continuam no backend.
+
+Para operações em lote, `render-operational-csv` e `operational-batch-request`
+preparam o schema de `get_operational_batch_contract()` para
+`execute_operational_batch`: CSV UTF-8 tipado em `csv_content`, até100linhas/8MiB,
+JSON estrito por linha, allowlist corrente e dependências anteriores. Sem upload,
+SDK ou transporte no leitor. A harness chama o conector e consulta
+`get_operational_batch(batch_id)`; lote é sequencial/não atômico e STARTED ambíguo
+exige conciliação. Preparação offline não comprova execução nem efeito aplicado.
 
 A [skill operacional](../plugins/loki-bootstrap/skills/operar-loki/SKILL.md) e
 seu [fluxo de contratos/retomada](../plugins/loki-bootstrap/skills/operar-loki/references/WORKFLOWS.md)
@@ -89,3 +98,6 @@ e ensaio individual continuam sendo a evidência desse aceite.
 Referências: [dependências de skills no Codex](https://learn.chatgpt.com/docs/build-skills),
 [layout do plugin Claude](https://code.claude.com/docs/en/plugins-reference),
 [instalação oficial uv](https://docs.astral.sh/uv/getting-started/installation/).
+
+
+`field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.

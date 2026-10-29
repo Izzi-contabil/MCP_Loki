@@ -100,7 +100,6 @@ def test_typed_csv_rejects_duplicate_keys_and_empty_batch():
 @pytest.mark.parametrize(
     "destination,tool",
     [
-        ("onboarding-source", "attach_onboarding_source"),
         ("onboarding-csv", "submit_company_onboarding_csv"),
     ],
 )

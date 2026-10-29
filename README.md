@@ -1,21 +1,22 @@
-# MCP Loki — contrato operacional 2.0.0
+# MCP Loki — contrato operacional 2.1.0
 
-O pacote `mcp-loki-updates` **0.2.2** entrega instruções **2.0.2** ao backend.
+O pacote `mcp-loki-updates` **0.3.0** entrega instruções **2.1.0** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.0.2** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.1.0** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
 O Loki recebe dados estruturados, valida, calcula, gera documentos, registra e
 entrega. Leitura de originais e comparação são externas. O operador consulta
 `get_process_contract`, captura `get_case.input_snapshot` e envia `receive_case_data`
-com dados, fontes, referência idempotente e snapshot esperado. Depois segue cálculo,
+com dados, fontes opcionais, referência idempotente e snapshot esperado. Depois segue cálculo,
 geração e revisão do contrato. Versões internas preservam auditoria; a empresa de
 teste usa o mesmo fluxo e gates da operação comum.
 
-Esta é uma mudança incompatível: ferramentas antigas de extração, comparação e
+A extensão2.1.0 é aditiva ao contrato2.0.0 e conserva o mínimo de plugin2.0.0.
+A migração anterior de1.x foi incompatível: ferramentas antigas de extração, comparação e
 execução especial foram retiradas. Clientes que declaram contrato/plugin1.x
 precisam migrar. Cliente sem versão permanece desconhecido; bootstrap de identidade
 não restaura ferramentas retiradas. O catálogo do aplicativo e a instalação no
@@ -38,9 +39,25 @@ validação separada. Dados pessoais, fontes privadas e credenciais ficam fora d
 Os documentos de releases anteriores em `docs/` são históricos; não definem o
 contrato operacional atual nem demonstram instalação, consumo ou aceite individual.
 
-Compatibilidade da candidata0.2.2: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.3.0: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
-instalação nem troca o executor da Ana. Build/promoção do kit e do backend
-continuam sujeitos aos gates de implantação.
+instalação nem troca o executor da Ana. A compatibilidade básica do kit0.2.0 limita-se às operações2.0 que ele declara;
+não comprova suporte aos novos escritores2.1. Build/promoção de consumidor e
+backend continuam sujeitos aos gates de implantação.
+
+
+Esta candidata orienta100%HTTPS em `https://loki.tominho.com/mcp`, com identidade
+própria por pessoa/executor. A harness lê, extrai, interpreta e prepara; envia
+parâmetros JSON/CSV tipado; proveniência detalhada é opcional. Originais permanecem na harness.
+O resultado contém documentos quando gerados ou recibo persistido/relido para
+atos sem documento, sem PDF artificial. Caso único, lote operacional e ajustes
+da empresa exigem os contratos realmente oferecidos pelo catálogo HTTPS.
+Exigência de novo anexo nativo, endpoint ausente ou identidade do executor não
+provisionada é lacuna explícita; não use transporte alternativo nem reclassifique
+fonte. Veja [WORKFLOWS.md](plugins/loki-bootstrap/skills/operar-loki/references/WORKFLOWS.md)
+para estados, retorno e retomada; esta árvore não comprova publicação ou adoção.
+
+
+`field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.

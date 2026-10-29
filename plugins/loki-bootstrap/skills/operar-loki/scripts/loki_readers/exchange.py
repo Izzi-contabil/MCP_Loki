@@ -32,6 +32,8 @@ COLUMNS = [
 ]
 ROOTS = ["declaration", "source_ids", "dependencies", "missing_fields"]
 MAX_BYTES = 32 * 1024 * 1024
+BATCH_COLUMNS = ["schema_version", "record_ref", "operation", "arguments", "depends_on"]
+BATCH_MAX_BYTES = 8 * 1024 * 1024
 
 
 def validate_parameters(value: Any, schema: dict[str, Any], *, partial_case: bool = False) -> Any:
@@ -270,14 +272,17 @@ def case_data_request(
         or not isinstance(contract.get("data_schema"), dict)
         or not isinstance(contract.get("input_schema"), dict)
         or not isinstance(evidence, dict)
-        or set(evidence) != {"data", "field_sources"}
+        or set(evidence) not in ({"data"}, {"data", "field_sources"})
         or not isinstance(evidence["data"], dict)
         or not evidence["data"]
-        or not isinstance(evidence["field_sources"], dict)
-        or set(_leaves(evidence["data"])) != set(evidence["field_sources"])
         or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,200}", target)
     ):
-        raise ReadError("case_data_contract_or_source_coverage_invalid")
+        raise ReadError("case_data_contract_invalid")
+    if "field_sources" in evidence and (
+        not isinstance(evidence["field_sources"], dict)
+        or not set(evidence["field_sources"]) <= set(_leaves(evidence["data"]))
+    ):
+        raise ReadError("case_data_source_path_invalid")
     if any(isinstance(value, float) for value in _leaves(evidence["data"]).values()):
         raise ReadError("case_data_float_not_allowed")
     validate_parameters(evidence["data"], contract["data_schema"], partial_case=True)
@@ -286,8 +291,9 @@ def case_data_request(
         "request_ref": reference,
         "expected_snapshot": snapshot,
         "data": evidence["data"],
-        "field_sources": evidence["field_sources"],
     }
+    if "field_sources" in evidence:
+        request["field_sources"] = evidence["field_sources"]
     validate_parameters(request, contract["input_schema"])
     return {
         "schema_version": "loki.harness-request/2",
@@ -329,9 +335,8 @@ def csv_request(
     if destination == "case":
         raise ReadError("case_data_required_instead_of_csv_attachment")
     if destination == "onboarding-source":
-        tool = "attach_onboarding_source"
-        arguments["onboarding_id"] = target
-    elif destination == "onboarding-csv":
+        raise ReadError("typed_parameters_required_instead_of_source_attachment")
+    if destination == "onboarding-csv":
         if (
             header != COLUMNS
             or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,199}", reference)
@@ -352,6 +357,168 @@ def csv_request(
         "arguments": arguments,
         "content_hash": digest,
         "source_kind": "harness_declared_csv_not_original_document",
+    }
+
+
+def _batch_contract(contract: dict[str, Any]) -> tuple[int, int, int, set[str]]:
+    limits = contract.get("limits", {})
+    operations = contract.get("allowed_operations")
+    field_limit = limits.get("max_field_chars", 131072) if isinstance(limits, dict) else None
+    if (
+        contract.get("schema_version") != "loki.operational-batch-contract/1"
+        or contract.get("command_schema_version") != "loki.operational-command/1"
+        or contract.get("csv_columns") != BATCH_COLUMNS
+        or contract.get("delimiter") != ";"
+        or not isinstance(contract.get("request_schema"), dict)
+        or not isinstance(limits, dict)
+        or type(limits.get("max_bytes")) is not int
+        or not 1 <= limits["max_bytes"] <= BATCH_MAX_BYTES
+        or type(limits.get("max_rows")) is not int
+        or not 1 <= limits["max_rows"] <= 100
+        or type(field_limit) is not int
+        or not 1 <= field_limit <= BATCH_MAX_BYTES
+        or not isinstance(operations, list)
+        or not operations
+        or any(not isinstance(value, str) or not value for value in operations)
+    ):
+        raise ReadError("operational_batch_contract_invalid")
+    return limits["max_bytes"], limits["max_rows"], field_limit, set(operations)
+
+
+def _batch_references(value: Any, dependencies: list[str], depth: int = 0) -> None:
+    if depth > 32:
+        raise ReadError("operational_batch_depth_limit")
+    if isinstance(value, dict):
+        if "$ref" in value:
+            reference = value["$ref"]
+            if (
+                set(value) != {"$ref"}
+                or not isinstance(reference, str)
+                or len(reference.split(".")) < 2
+                or any(not part for part in reference.split("."))
+                or reference.split(".")[0] not in dependencies
+            ):
+                raise ReadError("operational_batch_reference_invalid")
+        else:
+            for child in value.values():
+                _batch_references(child, dependencies, depth + 1)
+    elif isinstance(value, list):
+        for child in value:
+            _batch_references(child, dependencies, depth + 1)
+
+
+def _batch_records(records: Any, contract: dict[str, Any]) -> list[dict[str, Any]]:
+    _, max_rows, field_limit, operations = _batch_contract(contract)
+    if not isinstance(records, list) or not 1 <= len(records) <= max_rows:
+        raise ReadError("operational_batch_rows_invalid")
+    normalized: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for record in records:
+        if not isinstance(record, dict) or set(record) - set(BATCH_COLUMNS):
+            raise ReadError("operational_batch_record_invalid")
+        item = {"schema_version": "loki.operational-command/1", "depends_on": [], **record}
+        reference, dependencies = item.get("record_ref"), item["depends_on"]
+        if (
+            item["schema_version"] != "loki.operational-command/1"
+            or not isinstance(reference, str)
+            or re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]{0,63}", reference) is None
+            or reference in seen
+            or not isinstance(item.get("operation"), str)
+            or item.get("operation") not in operations
+            or not isinstance(item.get("arguments"), dict)
+            or not isinstance(dependencies, list)
+            or any(not isinstance(value, str) or value not in seen for value in dependencies)
+            or len(dependencies) != len(set(dependencies))
+        ):
+            raise ReadError("operational_batch_record_or_dependency_invalid")
+        _batch_references(item["arguments"], dependencies)
+        try:
+            json.dumps(item, allow_nan=False)
+            cells = [
+                item["schema_version"],
+                reference,
+                item["operation"],
+                json.dumps(item["arguments"], ensure_ascii=False, allow_nan=False),
+                json.dumps(dependencies, ensure_ascii=False, allow_nan=False),
+            ]
+            if any(len(cell) > field_limit for cell in cells):
+                raise ReadError("operational_batch_field_limit")
+        except (ValueError, TypeError, RecursionError):
+            raise ReadError("operational_batch_json_invalid") from None
+        normalized.append(item)
+        seen.add(reference)
+    return normalized
+
+
+def render_operational_csv(records: Any, contract: dict[str, Any]) -> bytes:
+    """Serialize the served batch format without executing any operation."""
+    maximum, _, _, _ = _batch_contract(contract)
+    output = io.StringIO(newline="")
+    writer = csv.writer(output, delimiter=";", lineterminator="\n")
+    writer.writerow(BATCH_COLUMNS)
+    for record in _batch_records(records, contract):
+        writer.writerow(
+            [
+                record["schema_version"],
+                record["record_ref"],
+                record["operation"],
+                json.dumps(record["arguments"], ensure_ascii=False, allow_nan=False),
+                json.dumps(record["depends_on"], ensure_ascii=False, allow_nan=False),
+            ]
+        )
+    content = output.getvalue().encode("utf-8")
+    if len(content) > maximum:
+        raise ReadError("operational_batch_size_limit")
+    return content
+
+
+def operational_batch_request(
+    source: Path, contract: dict[str, Any], *, reference: str
+) -> dict[str, Any]:
+    """Validate CSV parameters and prepare the HTTPS call for the harness."""
+    maximum, max_rows, maximum_field, _ = _batch_contract(contract)
+    if source.suffix.lower() != ".csv":
+        raise ReadError("operational_batch_csv_required")
+    content = checked_bytes(source, maximum)
+    field_limit = csv.field_size_limit()
+    try:
+        text = content.decode("utf-8-sig")
+        if "\x00" in text:
+            raise ReadError("operational_batch_csv_invalid")
+        csv.field_size_limit(maximum_field)
+        reader = csv.reader(io.StringIO(text, newline=""), delimiter=";", strict=True)
+        if next(reader) != BATCH_COLUMNS:
+            raise ReadError("operational_batch_columns_invalid")
+        records: list[dict[str, Any]] = []
+        for row in reader:
+            if len(row) != len(BATCH_COLUMNS) or len(records) >= max_rows:
+                raise ReadError("operational_batch_rows_invalid")
+            records.append(
+                dict(
+                    zip(
+                        BATCH_COLUMNS,
+                        [*row[:3], strict_json(row[3]), strict_json(row[4])],
+                        strict=True,
+                    )
+                )
+            )
+        _batch_records(records, contract)
+    except (UnicodeError, csv.Error, StopIteration, ValueError, ReadError):
+        raise ReadError("operational_batch_csv_invalid") from None
+    finally:
+        csv.field_size_limit(field_limit)
+    request = {
+        "schema_version": "loki.operational-batch/1",
+        "request_ref": reference,
+        "csv_content": text,
+    }
+    validate_parameters(request, contract["request_schema"])
+    return {
+        "schema_version": "loki.harness-request/2",
+        "state": "prepared_not_sent",
+        "tool": "execute_operational_batch",
+        "arguments": {"request": request},
+        "content_hash": hashlib.sha256(text.encode("utf-8")).hexdigest(),
     }
 
 

@@ -20,6 +20,13 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "promote.py"
 
 
+def test_ci_installed_wheel_smoke_checks_the_current_package_version() -> None:
+    from mcp_loki_updates import __version__
+
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert f"assert __version__ == '{__version__}'" in workflow
+
+
 def release_module() -> Any:
     assert SCRIPT.is_file(), "release promotion script must exist"
     spec = importlib.util.spec_from_file_location("release_promote", SCRIPT)
@@ -38,9 +45,9 @@ def wheel_masked(tmp_path: Path, extra: dict[str, bytes] | None = None) -> Path:
         for path in source.rglob("*")
         if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc"
     }
-    info = "mcp_loki_updates-0.2.2.dist-info/"
+    info = "mcp_loki_updates-0.3.0.dist-info/"
     members[info + "METADATA"] = (
-        b"Metadata-Version: 2.3\nName: mcp-loki-updates\nVersion: 0.2.2\nRequires-Python: >=3.11\n"
+        b"Metadata-Version: 2.3\nName: mcp-loki-updates\nVersion: 0.3.0\nRequires-Python: >=3.11\n"
     )
     members[info + "WHEEL"] = b"Wheel-Version: 1.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n"
     members.update(extra or {})
@@ -52,7 +59,7 @@ def wheel_masked(tmp_path: Path, extra: dict[str, bytes] | None = None) -> Path:
             writer.writerow((name, "sha256=" + digest, len(data)))
         writer.writerow((info + "RECORD", "", ""))
         members[info + "RECORD"] = record.getvalue().encode()
-    wheel = tmp_path / "mcp_loki_updates-0.2.2-py3-none-any.whl"
+    wheel = tmp_path / "mcp_loki_updates-0.3.0-py3-none-any.whl"
     with zipfile.ZipFile(wheel, "w", zipfile.ZIP_DEFLATED) as archive:
         for name, data in members.items():
             archive.writestr(name, data)
@@ -142,7 +149,7 @@ def test_cli_requires_explicit_destination_and_existing_wheel() -> None:
     [
         (
             "METADATA",
-            b"Metadata-Version: 2.3\nName: other-package\nVersion: 0.2.2\n",
+            b"Metadata-Version: 2.3\nName: other-package\nVersion: 0.3.0\n",
             "wheel_identity_invalid",
         ),
         (
@@ -156,7 +163,7 @@ def test_refuses_incorrect_distribution_identity(
     tmp_path: Path, member: str, contents: bytes, reason: str
 ) -> None:
     module = release_module()
-    wheel = wheel_masked(tmp_path, {"mcp_loki_updates-0.2.2.dist-info/" + member: contents})
+    wheel = wheel_masked(tmp_path, {"mcp_loki_updates-0.3.0.dist-info/" + member: contents})
     with pytest.raises(module.ReleaseRefused, match=reason):
         module.promote(wheel, loki_masked(tmp_path))
 
@@ -178,7 +185,7 @@ def test_provider_validates_data_even_when_wheel_matches_source(
 
 def test_refuses_record_with_unlisted_or_forged_content(tmp_path: Path) -> None:
     module = release_module()
-    wheel = wheel_masked(tmp_path, {"mcp_loki_updates-0.2.2.dist-info/RECORD": b"../other,,\n"})
+    wheel = wheel_masked(tmp_path, {"mcp_loki_updates-0.3.0.dist-info/RECORD": b"../other,,\n"})
     with pytest.raises(module.ReleaseRefused, match="wheel_record_invalid"):
         module.promote(wheel, loki_masked(tmp_path))
 
@@ -196,8 +203,8 @@ def test_refuses_unreviewed_dependency_or_python_contract(
     tmp_path: Path, requirements: bytes
 ) -> None:
     module = release_module()
-    metadata = b"Metadata-Version: 2.3\nName: mcp-loki-updates\nVersion: 0.2.2\n" + requirements
-    wheel = wheel_masked(tmp_path, {"mcp_loki_updates-0.2.2.dist-info/METADATA": metadata})
+    metadata = b"Metadata-Version: 2.3\nName: mcp-loki-updates\nVersion: 0.3.0\n" + requirements
+    wheel = wheel_masked(tmp_path, {"mcp_loki_updates-0.3.0.dist-info/METADATA": metadata})
     with pytest.raises(module.ReleaseRefused, match="wheel_dependency_contract_invalid"):
         module.promote(wheel, loki_masked(tmp_path))
 

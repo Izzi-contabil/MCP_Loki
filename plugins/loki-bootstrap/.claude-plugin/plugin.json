@@ -1,5 +1,5 @@
 {
   "name": "loki-orientacoes",
-  "version": "2.0.2",
-  "description": "Opera o Loki com dados estruturados e fontes; leitura e comparação externas pela harness."
+  "version": "2.1.0",
+  "description": "Opera o Loki por HTTPS com parâmetros e proveniência; originais e preparação ficam na harness."
 }

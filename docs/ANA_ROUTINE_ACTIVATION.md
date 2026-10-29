@@ -1,13 +1,14 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
 
-Contrato operacional vigente: plugin/instruções2.0.2 e provider0.2.2.
-Consulte `get_process_contract` e envie `receive_case_data` com fontes, referência
+Contrato candidato2.1.0: plugin/instruções2.1.0 e provider0.3.0.
+Consulte `get_process_contract` e envie `receive_case_data` com fontes opcionais, referência
 estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
 a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
-no operador exigem comprovação própria; preserve OAuth e a agenda existente.
+no operador exigem comprovação própria; preserve a agenda existente. Esta árvore
+não comprova publicação, autenticação do executor ou execução observada100%HTTPS.
 
-O plugin `loki-orientacoes@loki-equipe` 1.1.5 distribui o
+O plugin `loki-orientacoes@loki-equipe` 2.1.0 distribui o
 [roteiro de rotina](../plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md).
 Ele complementa os leitores já distribuídos desde 1.1.0 e usa os contratos
 servidos pelo Loki. Não instala um servidor MCP, cria agendador ou altera OAuth.
@@ -28,7 +29,8 @@ claude plugin update loki-orientacoes@loki-equipe --scope user
 claude plugin list --json
 ```
 
-Conferir versão 2.0.0 ou superior e plugin habilitado. Se o plugin ainda não
+Conferir versão 2.1.0 ou superior avaliada e plugin habilitado. Mínimo de
+compatibilidade declarado2.0.0 não comprova adoção deste roteiro. Se o plugin ainda não
 estiver instalado, seguir o [roteiro de instalação](DAILY_OPERATOR_UPDATES.md).
 Falha de acesso ao repositório privado permanece pendência; não substituir
 o OAuth do Loki por outra credencial. Manter auto-update ativo no marketplace.
@@ -50,7 +52,10 @@ existente, cruze normas/ACT/CCT e holerites, teste controles reservados, registr
 parâmetros qualificados e comprove consumo/reexecução. Não exija export do ERP
 quando outras fontes forem suficientes. Encaminhe defeito do motor com reprodução
 sintética pelo fluxo autorizado, mantendo o mesmo ID. Acompanhe todas as
-finalidades do DP. Preserve a agenda, as referências e as credenciais existentes. Não crie outra rotina. Se houver mais de uma candidata,
+finalidades do DP pelo conector100%HTTPS, com identidade própria do executor e
+capacidade/escopo próprios. Prepare os originais na harness e envie somente
+parâmetros JSON/CSV tipado com proveniência detalhada opcional. Preserve a agenda e as referências;
+não copie credencial humana nem restaure SSH/stdio. Não crie outra rotina. Se houver mais de uma candidata,
 identifique a rotina correta antes de alterar. Mostre o diff sem segredos e
 registre a configuração realmente salva. Não execute a fila neste passo.
 ```
@@ -80,7 +85,8 @@ Registre privadamente as quatro etapas, com data e evidências próprias:
 | Publicação | Commit/PR do plugin disponível no canal Git |
 | Instalação | Versão e estado retornados pelo Claude Code no executor real |
 | Roteiro | Diff e referência da configuração efetivamente salva |
-| Execução | Identidade, build, contratos, caso/versão, fontes, artefatos e pendências da rodada |
+| Catálogo | Contratos e escritores realmente descobertos pelo HTTPS no executor |
+| Execução | Identidade própria, build, contratos, caso/versão, fontes, documentos ou recibo persistido/relido e pendências da rodada |
 
 O diagnóstico dos leitores usa somente dados sintéticos e pode ser executado
 antes da fila. Não testa a autenticação nem substitui a conferência do MCP.
@@ -98,4 +104,25 @@ Skill instalada e conexão MCP funcional não demonstram que a rotina usa esse
 caminho. Se o executor real ainda chamar um kit legado/SSH ou outro prompt, sua
 substituição exige configuração autorizada no ambiente responsável e validação
 coordenada. Não editar sistema externo, agenda ou credenciais com base neste
-roteiro. Preserve o fluxo existente até o consumidor correto ser validado.
+roteiro. Não inicie operação pelo caminho antigo; registre a dependência de
+coordenação e valide o consumidor100%HTTPS antes da adoção. Lacuna de
+autenticação deve ser resolvida no próprio HTTPS, com identidade própria; este
+plugin não provisiona acesso nem implementa transporte.
+
+
+## Aceite de adoção100%HTTPS
+
+O aceite exige execução observada do caso único, lote CSV, registro sem documento
+e ajuste empresarial pelo mesmo conector. Compare JSON e lote sobre dados
+sintéticos equivalentes, preserve resultado por item, inclusive inválido, e
+retome resposta perdida sem duplicar. Para atos sem documento, confira o recibo
+persistido e releia o registro; não crie PDF para provar a operação. Para empresa,
+confira CNPJ, revisão esperada, vigência, fontes e releitura do objeto.
+
+Congele entrada/resultado e hashes antes de abrir o gabarito. Instalação, catálogo,
+roteiro salvo, ensaio manual, execução observada e próximo ciclo agendado são
+provas distintas. Preserve a rotina da Ana às02h e a consulta externa às05h de
+America/Sao_Paulo; este roteiro não altera horários nem comprova98% de assertividade.
+
+
+`field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.

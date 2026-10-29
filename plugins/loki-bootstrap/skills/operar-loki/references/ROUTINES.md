@@ -4,6 +4,12 @@ Este roteiro complementa `operar-loki` e `WORKFLOWS.md` em execuções agendadas
 filas e avaliações. Cada rodada usa a conexão MCP existente, o acesso efetivo e
 os contratos do serviço. A versão do plugin não identifica o build do Loki.
 
+Toda operação da rodada passa pelo conector100%HTTPS. A pessoa e o executor
+desassistido têm identidade própria, capacidades e escopo próprios no conector.
+Uma sessão humana autenticada não provisiona a automação. Registre recusa de
+autenticação como pendência HTTPS; não use SSH/stdio, Docker ou banco direto.
+Este plugin orienta a harness e não implementa SDK, tokens ou transporte.
+
 Ao fechar a rodada ou uma execução com falha técnica persistente/bloqueio
 inesperado, carregue [registrar-problema-loki](../../registrar-problema-loki/SKILL.md).
 Com autorização vigente de suporte no mesmo escopo, registre automaticamente
@@ -55,12 +61,21 @@ Sem esse índice, continue pelo cadastro, histórico e fontes autorizadas existe
 
 Separe pedido do cliente, histórico interno e referência produzida pela equipe.
 Congele a saída antes da comparação. Não complete entradas com o gabarito.
+Congele também hashes da entrada, resultado e pacote antes de abrir a referência
+da equipe. Se ela já tiver sido consultada, registre execução não cega; não
+reclassifique a rodada como cega depois de ocultar esse acesso.
 Ausência de folha histórica é diferente de dado ausente no pedido do cliente.
 Fatos reportados, registros de pagamento e códigos impressos não definem
 automaticamente fórmula, incidência, direção financeira ou política empresarial.
 
 Leia os originais pelos leitores instalados e pela visão da harness, mantendo
 hashes/localizadores. Envie somente parâmetros e CSVs conforme `WORKFLOWS.md`.
+No caso único envie JSON direto; no lote CSV use somente o contrato operacional
+oferecido, com referência estável por lote/item e resultado de cada item. Staging
+não comprova execução. Documento gerado retorna pelos gates de entrega privada;
+registro sem documento retorna recibo persistido e relido, sem PDF artificial.
+Para ajuste empresarial, confira empresa, revisão, vigência, fontes e releitura
+do objeto. Contrato ausente permanece lacuna; não improvise escritor.
 TXT, XLS e PDF podem conter referências históricas; conteúdo, empresa, episódio
 e período definem o papel. Arquivo obtido não é operando qualificado. Data de
 registro de reajuste retroativo não é automaticamente o dia de efeito material.
@@ -82,7 +97,7 @@ encerra o bloqueio após execução e conferência pertinentes.
 
 ## Execução e resultado
 
-Siga `get_process_contract` e envie a seção estruturada e fontes por
+Siga `get_process_contract` e envie a seção estruturada e fontes opcionais por
 `receive_case_data`, com referência estável e snapshot corrente. Depois execute
 `run_prepared_case_workflow` ou cálculo, geração e revisão do contrato. A empresa
 de teste usa esse mesmo fluxo; versões internas preservam auditoria.
@@ -136,4 +151,10 @@ Uma liberação registra separadamente: release publicada, versão instalada,
 roteiro salvo e execução observada. Os três últimos exigem prova no ambiente
 do operador; o sucesso no computador do desenvolvedor não os comprova.
 
-Fontes `kind=document` exigidas como evidência nativa usam `document.reference` com o ID do anexo retornado por `attach_source_document` e `content_hash` igual ao retorno. O upload arquiva o original como bytes opacos; o Loki não extrai nem interpreta seu conteúdo. Não invente DOC com caminho local, ID do Drive ou hash avulso. Leitura externa declarada pode usar `kind=declaration`, referência/localizador/fundamento honestos e seus limites; isso não atesta verificação documental nativa. Quando identidade, efeito ou qualificação exigir fonte nativa, arquive o original opacamente ou selecione a fonte nativa já persistida/pinnada indicada pelo contrato. Não troque a classificação da origem para fabricar qualificação.
+Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+
+Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
+
+Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
+
+`field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.

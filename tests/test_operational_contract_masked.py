@@ -35,9 +35,9 @@ RETIRED = (
 def test_major_two_refuses_declared_old_clients_and_preserves_unknown() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.2.2"
-    assert metadata["instructions_version"] == "2.0.2"
-    assert metadata["mcp_contract_version"] == "2.0.0"
+    assert metadata["provider_version"] == "0.3.0"
+    assert metadata["instructions_version"] == "2.1.0"
+    assert metadata["mcp_contract_version"] == "2.1.0"
     assert provider.check_version("1.1.7", "1.0.0")["compatible"] is False
     assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
     assert provider.check_version()["compatible"] is None
@@ -123,17 +123,17 @@ def test_requester_delivery_is_default_and_drive_requires_future_explicit_opt_in
         assert "não autoriza envio externo" in guide
 
 
-def test_native_document_provenance_uses_opaque_archive_id_and_honest_external_declarations():
+def test_provenance_keeps_registered_sources_without_uploading_originals():
     provider = InstructionsProvider()
     for domain in provider.domains():
         guide = provider.get(domain)["instructions"]
-        assert "attach_source_document" in guide, domain
+        assert "Originais permanecem na harness" in guide, domain
         assert "document.reference" in guide, domain
         assert "kind=declaration" in guide, domain
     workflows = (PLUGIN / "skills/operar-loki/references/WORKFLOWS.md").read_text()
     assert "document.reference" in workflows
-    assert "ID do anexo" in workflows
-    assert "caminho local" in workflows
+    assert "fonte já registrada" in workflows
+    assert "caminho local" in workflows.casefold()
 
 
 def test_runtime_domains_and_operator_references_route_direct_structured_input() -> None:
@@ -181,7 +181,17 @@ def contract() -> dict:
                     "additionalProperties": {
                         "type": "object",
                         "properties": {
-                            "kind": {"enum": ["document", "declaration", "history", "rule"]},
+                            "kind": {
+                                "enum": [
+                                    "document",
+                                    "harness",
+                                    "declaration",
+                                    "inference",
+                                    "context",
+                                    "history",
+                                    "rule",
+                                ]
+                            },
                             "reference": {"type": "string", "minLength": 1},
                             "locator": {"type": "string", "minLength": 1},
                         },
@@ -195,7 +205,6 @@ def contract() -> dict:
                 "request_ref",
                 "expected_snapshot",
                 "data",
-                "field_sources",
             ],
             "additionalProperties": False,
         },
@@ -341,17 +350,13 @@ def test_offline_case_request_accepts_partial_fields_without_weakening_provided_
             prepare(evidence, schema, "case-masked", reference="masked-partial", snapshot="a" * 64)
 
 
-@pytest.mark.parametrize(
-    "fault", ["missing_source", "old_source", "old_envelope", "wrong_contract"]
-)
-def test_offline_request_rejects_missing_provenance_and_retired_shapes(fault: str) -> None:
+@pytest.mark.parametrize("fault", ["old_source", "old_envelope", "wrong_contract"])
+def test_offline_request_rejects_malformed_supplied_sources_and_retired_shapes(fault: str) -> None:
     from loki_readers.private import ReadError
 
     data = evidence()
     schema = contract()
-    if fault == "missing_source":
-        del data["field_sources"]["flags[0]"]
-    elif fault == "old_source":
+    if fault == "old_source":
         data["field_sources"]["zero"] = {"basis": "documented", "source_sha256": "a" * 64}
     elif fault == "old_envelope":
         data["documents"] = []
@@ -359,6 +364,60 @@ def test_offline_request_rejects_missing_provenance_and_retired_shapes(fault: st
         schema["schema_version"] = "retired/1"
     with pytest.raises(ReadError, match="case_data|parameter_schema"):
         prepare(data, schema, "case-masked", reference="request-1", snapshot="a" * 64)
+
+
+@pytest.mark.parametrize(
+    "sources",
+    [
+        None,
+        {},
+        {"zero": {"kind": "declaration", "reference": "pedido-informal", "locator": "mensagem"}},
+    ],
+)
+def test_informal_case_request_needs_no_formal_evidence_or_full_source_coverage(sources) -> None:
+    data = {
+        "zero": 0,
+        "deficiencia": "Não",
+        "horario": "00:00",
+        "missing": None,
+        "flags": [False],
+    }
+    evidence = {"data": data}
+    if sources is not None:
+        evidence["field_sources"] = sources
+    result = prepare(evidence, contract(), "case-masked", reference="informal-1", snapshot="a" * 64)
+    request = result["arguments"]["request"]
+    assert request["data"] == data
+    assert ("field_sources" in request) is (sources is not None)
+    if sources is not None:
+        assert request["field_sources"] == sources
+    assert "content_base64" not in str(result)
+    assert "EXTSRC" not in str(result)
+
+
+def test_supplied_source_for_unknown_field_is_still_rejected() -> None:
+    from loki_readers.private import ReadError
+
+    data = evidence()
+    data["field_sources"]["unknown"] = {
+        "kind": "declaration",
+        "reference": "pedido",
+        "locator": "msg",
+    }
+    with pytest.raises(ReadError, match="case_data"):
+        prepare(data, contract(), "case-masked", reference="request-1", snapshot="a" * 64)
+
+
+@pytest.mark.parametrize("kind", ["inference", "context"])
+def test_optional_context_source_keeps_kind_without_inventing_hash_or_foundation(kind) -> None:
+    data = {
+        "data": {"zero": 0},
+        "field_sources": {
+            "zero": {"kind": kind, "reference": "pedido-informal", "locator": "mensagem"}
+        },
+    }
+    result = prepare(data, contract(), "case-masked", reference="context-1", snapshot="a" * 64)
+    assert result["arguments"]["request"]["field_sources"] == data["field_sources"]
 
 
 def test_old_case_csv_destination_is_refused(tmp_path: Path) -> None:
@@ -371,12 +430,18 @@ def test_old_case_csv_destination_is_refused(tmp_path: Path) -> None:
         csv_request(path, "case", "case-masked")
 
 
-def test_shipped_cli_prepares_current_case_writer_without_network(tmp_path: Path) -> None:
+@pytest.mark.parametrize("include_sources", [False, True])
+def test_shipped_cli_prepares_current_case_writer_without_network(
+    tmp_path: Path, include_sources: bool
+) -> None:
     import json
     import subprocess
 
     source = tmp_path / "evidence_masked.json"
-    source.write_text(json.dumps(evidence()))
+    data = evidence()
+    if not include_sources:
+        del data["field_sources"]
+    source.write_text(json.dumps(data))
     schema = tmp_path / "contract_masked.json"
     schema.write_text(json.dumps(contract()))
     output = tmp_path / "pedido privado"
@@ -404,4 +469,5 @@ def test_shipped_cli_prepares_current_case_writer_without_network(tmp_path: Path
     payload = json.loads((output / "request.json").read_text())
     assert payload["tool"] == "receive_case_data"
     assert payload["arguments"]["request"]["data"] == evidence()["data"]
+    assert ("field_sources" in payload["arguments"]["request"]) is include_sources
     assert payload["state"] == "prepared_not_sent"
