@@ -22,6 +22,8 @@ sys.dont_write_bytecode = True
 from loki_readers.exchange import (  # noqa: E402
     case_data_request,
     csv_request,
+    operational_batch_request,
+    render_operational_csv,
     render_records,
     save_receipt,
     source_csv,
@@ -61,13 +63,17 @@ def main() -> int:
         "render-csv",
         "csv-request",
         "case-request",
+        "render-operational-csv",
+        "operational-batch-request",
         "parameters",
     ):
         command = commands.add_parser(name)
         command.add_argument("source", type=Path)
         command.add_argument("output", type=Path)
-        if name == "render-csv":
+        if name in {"render-csv", "render-operational-csv", "operational-batch-request"}:
             command.add_argument("--contract", type=Path, required=True)
+        if name == "operational-batch-request":
+            command.add_argument("--reference", required=True)
         if name == "parameters":
             command.add_argument("--schema", type=Path, required=True)
             command.add_argument("--schema-pointer", default="")
@@ -136,20 +142,25 @@ def main() -> int:
             )
         elif args.command == "receipt":
             print(json.dumps(save_receipt(args.request, args.response, args.output)))
-        elif args.command in {"render-csv", "source-csv"}:
+        elif args.command in {"render-csv", "source-csv", "render-operational-csv"}:
             data = load(args.source)
             if args.command == "render-csv":
                 contract = load(args.contract)
                 content = render_records(data, contract.get("batch_csv", contract))
+            elif args.command == "render-operational-csv":
+                content = render_operational_csv(data, load(args.contract))
             else:
                 content = source_csv(data)
             output = private_directory(args.output)
-            write_bytes(output / "reading.csv", content)
+            csv_name = (
+                "parameters.csv" if args.command == "render-operational-csv" else "reading.csv"
+            )
+            write_bytes(output / csv_name, content)
             write_json(output / "local-provenance.json", data)
             print(
                 json.dumps(
                     {
-                        "csv": str(output / "reading.csv"),
+                        "csv": str(output / csv_name),
                         "content_hash": hashlib.sha256(content).hexdigest(),
                         "status": "prepared_not_sent",
                     }
@@ -166,14 +177,19 @@ def main() -> int:
             output = private_directory(args.output)
             write_json(output / "request.json", request)
             print(json.dumps({"request": str(output / "request.json"), "status": request["state"]}))
-        elif args.command == "csv-request":
-            request = csv_request(
-                args.source,
-                args.destination,
-                args.target,
-                reference=args.reference,
-                revision=args.revision,
-            )
+        elif args.command in {"csv-request", "operational-batch-request"}:
+            if args.command == "operational-batch-request":
+                request = operational_batch_request(
+                    args.source, load(args.contract), reference=args.reference
+                )
+            else:
+                request = csv_request(
+                    args.source,
+                    args.destination,
+                    args.target,
+                    reference=args.reference,
+                    revision=args.revision,
+                )
             output = private_directory(args.output)
             write_json(output / "request.json", request)
             print(

@@ -27,7 +27,7 @@ def test_entrypoint_selftest_runs_all_portable_engines_without_oauth(tmp_path):
     assert (tmp_path / "diagnostico privado/pdf/manifest.json").exists()
 
 
-def test_cli_read_then_csv_request_keeps_interpretation_in_harness(tmp_path):
+def test_cli_read_does_not_turn_generic_source_csv_into_remote_attachment(tmp_path):
     source = tmp_path / "leitura mascarada.csv"
     source.write_text("campo;valor\nzero;0\n", encoding="utf-8")
     read = run("read", source, tmp_path / "leitura local")
@@ -42,10 +42,9 @@ def test_cli_read_then_csv_request_keeps_interpretation_in_harness(tmp_path):
         "--target",
         "SYNTHETIC-1",
     )
-    assert prepared.returncode == 0, prepared.stderr
-    request = json.loads((tmp_path / "pedido privado/request.json").read_text())
-    assert request["state"] == "prepared_not_sent"
-    assert request["tool"] == "attach_onboarding_source"
+    assert prepared.returncode == 1
+    assert "typed_parameters_required_instead_of_source_attachment" in prepared.stderr
+    assert not (tmp_path / "pedido privado/request.json").exists()
 
 
 def test_inventory_covers_each_file_and_reports_unsupported_without_reading_symlinks(tmp_path):

@@ -1,8 +1,8 @@
 # Codex — plugin Loki com atualização nativa
 
 
-Contrato operacional vigente: plugin/instruções2.0.2 e provider0.2.2.
-Consulte `get_process_contract` e envie `receive_case_data` com fontes, referência
+Contrato candidato2.1.0: plugin/instruções2.1.0 e provider0.3.0.
+Consulte `get_process_contract` e envie `receive_case_data` com fontes opcionais, referência
 estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
 a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
 no operador exigem comprovação própria; preserve OAuth e a agenda existente.
@@ -73,7 +73,7 @@ Quem seguiu o roteiro anterior deve [remover a agenda externa](REMOVE_EXTERNAL_S
 O ChatGPT continua usando a conexão MCP existente no aplicativo; instalar o
 plugin local não instala outro plugin na conta ChatGPT.
 
-Quem já tinha1.0.2 deve conferir2.0.2 ou superior e as duas skills após upgrade.
+Quem já tinha1.0.2 deve conferir2.1.0 ou superior avaliada e as duas skills após upgrade.
 Reabrir a conversa para usar o pacote completo. Não reinstalar MCP/OAuth.
 
 Na versão1.1.7, `$registrar-problema-loki` orienta relatos sanitizados, backlog
@@ -99,3 +99,13 @@ Na1.1.7, ao concluir execução com falha inesperada, a IA carrega a skill de
 suporte e registra quando já houver autorização no escopo. Pendência prevista
 não é defeito automático; falha de suporte não gera recursão. O leitor retorna
 support_handoff, sem enviar dados. [Escopo e limites](SUPPORT_COLLABORATION_20261027.md).
+
+
+A operação usa100%HTTPS em `https://loki.tominho.com/mcp`, com originais e
+preparação na harness, parâmetros JSON/CSV tipado e retorno por documentos ou
+recibo persistido quando não houver documento. Atualização Git não comprova
+publicação, identidade própria da automação ou execução observada; siga
+[ativação coordenada](ANA_ROUTINE_ACTIVATION.md), preservando a agenda existente.
+
+
+`field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
