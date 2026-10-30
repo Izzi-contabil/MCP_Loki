@@ -1,11 +1,11 @@
 {
   "dominio": "decimo_terceiro",
-  "version": "2.1.0",
-  "updated_at": "2026-10-29",
+  "version": "2.2.0",
+  "updated_at": "2026-10-30",
   "compatibility": {
-    "mcp_contract_version": "2.1.0",
+    "mcp_contract_version": "2.2.0",
     "minimum_plugin_version": "2.0.0",
-    "recommended_plugin_version": "2.1.0"
+    "recommended_plugin_version": "2.2.0"
   },
   "permissions": {
     "capabilities": [

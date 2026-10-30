@@ -34,7 +34,7 @@ Fontes `kind=document` conservam o significado de documento já arquivado no Lok
 
 Se a operação retornar `version_id`, preserve esse identificador em `get_package_check_request(case_id, version_id=...)`, dentro do request de `record_package_checks` e em `prepare_delivery(case_id, version_id=...)`. Siga `required_checks` retornados: PDFs usam content/structure/visual/pii_policy; recibos factuais sem PDF usam structure/timeline/sources/pii_policy. Não invente inspeção visual de PDF inexistente. Revisão, fontes, build, elegibilidade, ARTs e hashes são da mesma versão; correção/superação exige outro pacote e outro aceite. `execute_delivery`/`get_delivery_status` usam o delivery_id que já contém esse vínculo, sem escolher outra versão ou refazer cálculo.
 
-A compatibilidade básica desta distribuição0.3.0 com a fonte loki-document-kit0.2.0
+A compatibilidade básica desta distribuição0.3.1 com a fonte loki-document-kit0.2.0
 limita-se às operações2.0 que ele declara. Isso não comprova suporte aos novos
 manifestos, lote operacional, programação de férias ou ajustes empresariais2.1.
 Confira contrato, catálogo e consumidor para cada operação da extensão2.1. O kit0.1.0 contém escritores
@@ -64,3 +64,31 @@ nem exija aceite de PDF inexistente. Se houver efeito próprio, sua intenção h
 e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplicado.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## eSocial por empresa
+
+Consulte `get_company_esocial_contract()` (`loki.company-esocial/1`) e
+`get_company_esocial_state(company_id)` antes de propor modo. Os destinos são
+`homologacao`/`tp_amb=2` e `operacao`/`tp_amb=1`. Sem decisão, o retorno
+conservador de homologação tem `persisted=false` e revisão0; não transmite.
+`preview_company_esocial_mode` exige administrador humano provisionado, empresa
+explícita, proposta e `expected_revision`. Apresente escopo/corte/pendências e
+`preview_hash`; somente a intenção humana específica autoriza chamar
+`apply_company_esocial_mode` com proposta e decisão (`expected_revision`,
+`preview_hash`, `reference`, `human_message`). Releia estado/recibo. Identidade
+vem do HTTPS; automação e documento aprovado não concedem essa autoridade.
+
+`production_activation_supported=false`: Operação fica PENDING e sua aplicação
+recusa `esocial_activation_pending` enquanto faltarem executor/fila fiscal,
+assinatura, representação/procuração e recibo de homologação verificados.
+Homologação persistida mantém `fiscal_events_sent=0`; ausência de modo também
+não transmite. Preparar XML/XSD S-1005 local não comprova transmissão nem
+assinatura/aceite/prontidão. Esta entrega não oferece ferramenta HTTPS de
+emissão, provisionamento ou envio fiscal. Importação histórica não cria saída;
+mudança de modo não redireciona filas nem retransmite histórico. Não invente
+ferramentas futuras, flag liberatória, DOC ou etapa de painel/SSH.
+
+Consulte `get_company_parameter_state(company_id, effective_on)` para selecionar
+parâmetros por estabelecimento e data. A orientação detalhada de cadastro e
+consumo está em `alteracao_cadastral`; modo fiscal e perfil empresarial são
+registros distintos e nenhum deles comprova transmissão.

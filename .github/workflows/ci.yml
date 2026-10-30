@@ -34,7 +34,7 @@ jobs:
           uv venv .wheel-smoke --python 3.11
           uv pip install --python .wheel-smoke/bin/python --no-deps dist/*.whl
           cd "$(mktemp -d)"
-          "${{ github.workspace }}/.wheel-smoke/bin/python" -I -c "from mcp_loki_updates import InstructionsProvider, __version__; p=InstructionsProvider(); assert __version__ == '0.3.0'; assert len(p.domains()) == 13; assert p.health()['status'] == 'ok'; assert p.get('geral')"
+          "${{ github.workspace }}/.wheel-smoke/bin/python" -I -c "from mcp_loki_updates import InstructionsProvider, __version__; p=InstructionsProvider(); assert __version__ == '0.3.1'; assert len(p.domains()) == 13; assert p.health()['status'] == 'ok'; assert p.get('geral')"
       - uses: actions/upload-artifact@v4
         with:
           name: mcp-loki-updates-wheel
@@ -54,6 +54,6 @@ jobs:
           python-version: "3.11"
       - run: uv sync --locked --all-extras --no-editable
       - name: Portable readers and harness-only requests
-        run: uv run --no-sync pytest tests/test_local_readers_masked.py tests/test_harness_exchange_masked.py tests/test_native_local_cli_masked.py tests/test_bootstrap_package_masked.py tests/test_operational_contract_masked.py tests/test_operational_batch_cli_masked.py
+        run: uv run --no-sync pytest tests/test_local_readers_masked.py tests/test_harness_exchange_masked.py tests/test_native_local_cli_masked.py tests/test_bootstrap_package_masked.py tests/test_operational_contract_masked.py tests/test_operational_batch_cli_masked.py tests/test_esocial_guidance_masked.py
       - name: Locked shipped entrypoint
         run: uv run --no-project --locked --python 3.11 --script plugins/loki-bootstrap/skills/operar-loki/scripts/loki_local.py doctor "${{ runner.temp }}/loki-native-doctor"

@@ -1,4 +1,4 @@
-# Leitores externos — plugin2.1.0
+# Leitores externos — plugin2.2.0
 
 O plugin nativo mantém o nome `loki-orientacoes@loki-equipe` e inclui bootstrap, operação, investigação de regras e suporte. As instalações1.0.2 recebem código, skill e lock
 pelo mesmo auto-update Git. Não é necessário outro ZIP ou conexão MCP.
@@ -101,3 +101,27 @@ Referências: [dependências de skills no Codex](https://learn.chatgpt.com/docs/
 
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Extensão eSocial2.2.0
+
+Provider0.3.1, contrato/instruções/plugin2.2.0 preservam o mínimo2.0.0 e a
+compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
+A allowlist e as permissões dos domínios permanecem: consulte `geral` e
+`alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
+Veja o roteiro nativo [ESOCIAL.md](../plugins/loki-bootstrap/skills/operar-loki/references/ESOCIAL.md). A configuração de homologação
+pode persistir por intenção de administrador humano; não transmite. Operação
+permanece PENDING/recusada sem fila/executor fiscal, assinatura, representação
+e recibo de homologação verificados. S-1005 local não comprova transmissão.
+Perfis por estabelecimento/data usam os escritores empresariais com CAS,
+origem opcional e releitura; seleção não comprova consumo financeiro.
+
+Esta distribuição não provisiona acesso fiscal, não emite eventos pelo catálogo
+HTTPS e não instala o plugin no operador. Wheels anteriores, inclusive0.3.0,
+permanecem imutáveis; promoção/publicação exigem revisão e gates do consumidor.
+
+O helper `loki_local.py --version` informa a edição local declarada do plugin.
+Para perfis empresariais, `parameters perfil.json SAIDA_NOVA --schema contrato-esocial.json
+--schema-pointer /company_parameters_schema` usa o schema retornado por
+`get_company_esocial_contract`; `validated_not_sent` não comprova autorização,
+CAS, semântica do perfil, envio ou prontidão fiscal. Script e lock permanecem
+juntos; dependências dos leitores não mudaram nesta extensão.
