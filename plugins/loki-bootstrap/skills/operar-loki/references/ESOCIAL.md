@@ -58,7 +58,7 @@ ferramentas de envio, fila ou coleta de recibos e não recorra ao painel/SQL/SSH
 
 Gerar ou validar S-1005 local pela biblioteca de XML/XSD não comprova transmissão,
 assinatura válida, autorização de representação, aceite fiscal ou prontidão do
-executor. Não há ferramenta HTTPS de emissão/transmissão S-1005 nesta entrega.
+executor. A preparação persistida abaixo não oferece emissão/transmissão S-1005.
 Importar histórico não cria eventos de saída; mudar modo não redireciona filas
 anteriores nem retransmite histórico. Aprovação documental não autoriza eventos
 fiscais, fechamento, reabertura, retificação ou exclusão.
@@ -68,7 +68,7 @@ fiscais, fechamento, reabertura, retificação ou exclusão.
 Consulte `get_company_parameter_state(company_id, effective_on)` com UUID exato
 e data efetiva; não use o CNPJ da matriz para preencher filial. A resposta
 `loki.company-parameters-state/1` seleciona `company_parameters` pelo
-`establishment_cnpj` exato e intervalo fechado `valid_from`/`valid_until`.
+`establishment_cnpj` exato e vigência `valid_from` com `valid_until` opcional.
 Não há seleção automática de perfil anterior fora da vigência, default normativo
 nem herança de outra empresa/filial. Perfil ausente ou lacuna de vigência mantém
 `PENDING`; não complete zero. Um perfil selecionado pode conservar valores nulos
@@ -131,3 +131,37 @@ Loki. Não há solicitação artificial de PDF para confirmar esse cadastro.
 Mantenha script/lock da distribuição juntos; não altere dependências ou pins do
 kit legado. Código construído, plugin instalado, skill carregada, catálogo
 descoberto e execução observada precisam de evidências próprias.
+
+
+## Preparação fiscal persistida
+
+Consulte `get_company_esocial_candidate_contract()` (`loki.company-esocial-candidate/1`).
+`prepare_company_esocial_candidate` registra somente S-1005 por pedido explícito
+com empresa/estabelecimento, inclusão ou alteração, vigência fiscal, perfil/pin,
+revisão do modo e ambiente exatos. Siga o schema retornado; não deduza a operação
+ou os antecedentes pelo cadastro local. O servidor fixa ID e XML sem assinatura;
+`PREPARED_UNSIGNED` não é envio pronto. Consulte `get_company_esocial_candidate`
+para recuperar o mesmo candidato e preservar seus bytes/hash, referência e revisão.
+`cancel_company_esocial_candidate` usa CAS e motivo, preservando o histórico.
+
+`transmission_ready=false`: esta etapa não oferece assinatura, envio, claim nem
+provisionamento de autoridade fiscal. Importação histórica não cria candidatos;
+mudança do modo não redireciona os anteriores. Não use a autoridade do worker de
+suporte ou `operar_casos` como autorização fiscal. Assinatura, representação e
+recibo oficial de homologação continuam pendentes; não ative Operação.
+
+Em parâmetros empresariais, `valid_until` pode ser omitido ou null para
+fim não informado; não invente data final. Preserve `valid_from`, CNPJ, fontes
+opcionais e pendências, inclusive FAP ausente. Isso não confirma continuidade
+normativa, encargo ou ausência de alterações. Sobreposições continuam recusadas.
+
+Um relatório de movimentações pode qualificar CPF, matrícula, admissão e recibos
+para conciliar o episódio com XMLs já disponíveis. Verifique os originais e as
+retificações; o relatório não fornece o conteúdo completo do contrato ou da folha.
+Use o XML para seus valores e preserve a proveniência de cada fato. Não peça
+novamente S-2200 para provar a mesma identidade já conciliada por fontes suficientes.
+
+
+Referências diferentes podem preparar drafts distintos. O contrato declara
+`allowed_multiple_preparations=true` e `execution_deduplication_verified=false`;
+idempotência do pedido não é deduplicação fiscal para uma futura execução.

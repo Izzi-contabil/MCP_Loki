@@ -1,4 +1,4 @@
-# Leitores externos — plugin2.2.0
+# Leitores externos — plugin2.3.0
 
 O plugin nativo mantém o nome `loki-orientacoes@loki-equipe` e inclui bootstrap, operação, investigação de regras e suporte. As instalações1.0.2 recebem código, skill e lock
 pelo mesmo auto-update Git. Não é necessário outro ZIP ou conexão MCP.
@@ -102,9 +102,9 @@ Referências: [dependências de skills no Codex](https://learn.chatgpt.com/docs/
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
-## Extensão eSocial2.2.0
+## Extensão eSocial2.3.0
 
-Provider0.3.1, contrato/instruções/plugin2.2.0 preservam o mínimo2.0.0 e a
+Provider0.4.0, contrato/instruções/plugin2.3.0 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.

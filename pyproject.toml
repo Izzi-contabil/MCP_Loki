@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mcp-loki-updates"
-version = "0.3.1"
+version = "0.4.0"
 description = "Instruções declarativas e compatibilidade de contrato para o Loki MCP"
 requires-python = ">=3.11"
 dependencies = []

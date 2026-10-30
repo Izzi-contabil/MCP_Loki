@@ -195,7 +195,7 @@ formato local de origem; não o envie como `field_sources` operacional. Use
 conserve referência, revisão e hash. Submeta chunks e valide/aplique apenas pelos
 escritores do contrato, com fontes reais, snapshot/hash corrente e readback.
 Não envie documentos originais pelo sincronizador antigo do kit desktop.
-O helper2.2.0 reconhece o destino legado `onboarding-source` e recusa novas
+O helper2.3.0 reconhece o destino legado `onboarding-source` e recusa novas
 preparações com `typed_parameters_required_instead_of_source_attachment`.
 Migre a preparação para parâmetros tipados pelo contrato; leituras, pedidos e
 checkpoints históricos permanecem privados e preservados. Não sobrescreva o kit
