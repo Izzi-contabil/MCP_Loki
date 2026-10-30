@@ -1,10 +1,10 @@
-# Atualizações MCP Loki — contrato 2.2.0
+# Atualizações MCP Loki — contrato 2.3.0
 
-Candidata de30/10/2026: provider/wheel0.3.1, instruções2.2.0 e plugin2.2.0.
+Candidata de30/10/2026: provider/wheel0.4.0, instruções2.3.0 e plugin2.3.0.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
 
-## Extensão2.2.0 e migração anterior de1.x
+## Extensão2.3.0 e migração anterior de1.x
 
 O Loki recebe dados, valida, calcula, gera documentos, registra e entrega.
 Leitura documental e comparação são externas. As ferramentas antigas de extração
@@ -28,7 +28,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.2.0. Contrato2.2.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
+recomendado é2.3.0. Contrato2.3.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 
@@ -77,9 +77,9 @@ altere pin/assinatura do kit legado ou troque identidade para contornar falha.
 Os registros anteriores de publicação em `docs/` são históricos e preservados;
 não comprovam o estado servido desta candidata nem atualização das instalações.
 
-A candidata0.3.1 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.2.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
+A candidata0.4.0 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.3.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
 
-Compatibilidade da candidata0.3.1: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.4.0: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
@@ -102,9 +102,9 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
-## Extensão eSocial2.2.0
+## Extensão eSocial2.3.0
 
-Provider0.3.1, contrato/instruções/plugin2.2.0 preservam o mínimo2.0.0 e a
+Provider0.4.0, contrato/instruções/plugin2.3.0 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.

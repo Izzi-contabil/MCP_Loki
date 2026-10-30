@@ -1,68 +1,70 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.2.0",
-  "contract_version": "2.2.0",
-  "plugin_version": "2.2.0",
+  "instructions_version": "2.3.0",
+  "contract_version": "2.3.0",
+  "plugin_version": "2.3.0",
   "minimum_plugin_version": "2.0.0",
   "updated_at": "2026-10-30",
   "domains": {
     "geral": {
-      "metadata_sha256": "94037752475a78554db8c58fb96c80d7247c0aa018c9c037372ba5753c7cc982",
-      "content_sha256": "becfcea21958879cb94022dd1bf7b764b8297bf3999d169308599bf1efd0fa04"
+      "metadata_sha256": "ea8ba265325b72a4ff049c5b0945bcd0c888db72f5842632b0c17fabdc1b6b2b",
+      "content_sha256": "2d3392602ba111bd11b70ee9ac34332a9c560655e7210732ee78f2a2fa4d448b"
     },
     "admissao": {
-      "metadata_sha256": "ef22434273b5717d77274fe320b0e6c8d23d076600c880c69e7f4db524acd139",
+      "metadata_sha256": "367fd1c7a03d0558f9475d1a4e51f998e39b21a77de6aeaabb0810d8f12a69f0",
       "content_sha256": "322226421c803a840704092174542535bbf1c3b98faa6b59df96209e02889213"
     },
     "rescisao": {
-      "metadata_sha256": "6bb462de0c3250fad8f5e83a9cb1e8ed59069cda5c336b3cf4a331ce1a8cdb32",
+      "metadata_sha256": "88ba08779d9fb31a88703713f6f319f793cd1cc3081e365b72d274aa302c1a66",
       "content_sha256": "2c4991b932f013ddee07edb50cef71a05e52bba03c7a772847bae6ba35a42fa3"
     },
     "ferias": {
-      "metadata_sha256": "1db6d5947434ef4a7b2ff7f0e712694ca96bb1415cc4764fcb42bd76135dfd19",
+      "metadata_sha256": "861218cb73c4ced2d50b3dd55f666349b7b997dfad406efaccf1e659c8651b81",
       "content_sha256": "a282ae8ea6280a5472832152da9289d49c8859d7ae789727b3584b78c552ef0b"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "b1c9f8f898734e785765b972eca5b20ba2d8716ea9b11e361e401d571794f0ac",
+      "metadata_sha256": "7aa019fd1eb7ae8718f98855fcca0069454d68981f04f0476d4a0065b36e6e71",
       "content_sha256": "028b3c4ab9e0ec11e815b3e2ebf45675fc18fe909ee826dd7addff3f8acd5414"
     },
     "afastamento": {
-      "metadata_sha256": "dbfeafaee0a015a79a005688ab3c18a58a195c15b2351c792e5a5078b773edd5",
+      "metadata_sha256": "d18a6b4a14eb57887bd89f5afdc92ab3beb79b6cc8efec768e3ed2ad08ad2a3c",
       "content_sha256": "db03204440b14500a2d4f5c57af0c2bb7a0d48ea2faa363f6c7e02c13584d514"
     },
     "documentos": {
-      "metadata_sha256": "304573ab53c0be5990d1a714c141a21d5b913c50ec51a14f2ef40d5ed21551cc",
+      "metadata_sha256": "36725376dd367c38db26d01f699b73d21f73e2cd8dd2cc8d4ccb13bdaf291bab",
       "content_sha256": "bfcbc8031ae9c6af49f5aab3737aff02e4837d9f7a66999a79d79506d337e76c"
     },
     "aprovacoes": {
-      "metadata_sha256": "d793a246db8a602057acdf3485a2f28aa0e3556352ca7cec7d0e381304d13f18",
+      "metadata_sha256": "6c92f5bd0019bc2a727b7372f09681b6d9a571e987170e76e1d74ddb631b9ccf",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "d8ac17165dee089b57d3aba8e1c9fdfad16e2b0b89bb7eba36f48d10137e2df5",
-      "content_sha256": "e52498898a9e4b1a7c010235ad9104ddb84becba035de6a1547b5dcf1228e8d4"
+      "metadata_sha256": "1157a667fda635ab3a6830fc533321157349da8a70b4cf0ac6d8c16552948a8b",
+      "content_sha256": "47bb0104c9254941f091b7ba3d7c8f80c78c0b2dcf7bf6af5f05d4d871148206"
     },
     "ocorrencia": {
-      "metadata_sha256": "ba2f256b9830b0fe5bc051bf432576a8616301d4c7368eb1070131edb4863654",
+      "metadata_sha256": "5b465e2fca42006b604376c0e5a9b6b8429ba7f0df05d316a7f24564be0de3cc",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "8284fb4473f9a128d8cc5b1f97f880ac3374ed07e0cd2b64b9fcf4757a2926f0",
+      "metadata_sha256": "2d4a423c1b4d573f676eaad77cf6482ebc84b56c0635028f75319b6926fdb4f0",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "e374babf12318b58659172356f9adc9b539f690d1a22d2d4681090764e9aef20",
+      "metadata_sha256": "42f8c4fd44267182e77ef18543464253f301a3066de78b02ddc9efa1e32b0f1f",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "5ade9cfbe5d1e72d0a1f64f8f364d199b0e766efbe19ce0bb089288fca102917",
+      "metadata_sha256": "5ca505c8bfa172faaf44ecaaa482a26c24ff172135ad32a6da0b574596400ac8",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
   "changes": {
     "backend": [
       "Contrato empresarial eSocial loki.company-esocial/1: get_company_esocial_contract/state, preview/apply_company_esocial_mode e get_company_parameter_state pelo HTTPS; modo fiscal não transmite.",
-      "Perfis company_parameters temporais por estabelecimento usam validate_client_config/apply_client_config com CAS; prontidão de produção permanece ausente e ativação é recusada."
+      "Perfis company_parameters temporais por estabelecimento usam validate_client_config/apply_client_config com CAS; prontidão de produção permanece ausente e ativação é recusada.",
+      "Perfis empresariais aceitam fim de vigência não informado; seleção, sobreposição e consumo mensal preservam parâmetros desconhecidos.",
+      "Preparação persistida S-1005 pelo HTTPS, com ID/XML sem assinatura, pins, revisão e ambiente fixados; consulta e cancelamento auditado, sem envio ou nova autoridade fiscal."
     ],
     "instructions": [
       "Extensão aditiva2.2: intenção fiscal de administrador humano, prévia/hash/revisão e readback; assinatura, representação, fila e recibo verificados continuam pendentes.",
@@ -71,7 +73,8 @@
       "Toda operação pelo HTTPS com identidade própria; leitura, extração, preparação, originais e comparação permanecem na harness.",
       "Retorno distingue documento gerado, recibo factual e efeito aplicado; atos sem documento não exigem PDF artificial.",
       "Admissão distingue CTPS Digital identificada pelo CPF de carteira física; preserva datas, Não, meia-noite, filiação e finalidades dos dependentes.",
-      "Entrega autenticada ao solicitante conserva gates; Drive Izzi permanece futuro explícito sem configuração ou ativação."
+      "Entrega autenticada ao solicitante conserva gates; Drive Izzi permanece futuro explícito sem configuração ou ativação.",
+      "Extensão2.3 orienta PREPARED_UNSIGNED sem transmissão e conciliação de relatórios com XMLs, mantendo os limites de cada fonte."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -81,7 +84,7 @@
       "Contrato2.0.0 retira ferramentas de extração e execução especial; migrar para get_process_contract e receive_case_data. Cliente1.x declarado é incompatível."
     ],
     "plugin": [
-      "Plugin2.2.0 conserva marketplace/allowlist e orienta modo fiscal e parâmetros via geral/alteracao_cadastral e roteiro ESOCIAL.md, sem novo transporte nem ferramentas futuras.",
+      "Plugin2.3.0 conserva transporte/OAuth e orienta preparação fiscal persistida sem envio; instalação e descoberta exigem conferência separada.",
       "Helper local --version declara somente sua edição; parameters valida schema empresarial externamente sem preencher desconhecidos, enviar ou substituir gates do backend.",
       "Publicação, instalação, catálogo, roteiro e execução real pelo executor da Ana exigem provas separadas; preservar kit e agenda."
     ]

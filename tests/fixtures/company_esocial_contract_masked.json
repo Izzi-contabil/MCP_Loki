@@ -181,9 +181,17 @@
         "type": "string"
       },
       "valid_until": {
-        "format": "date",
-        "title": "Valid Until",
-        "type": "string"
+        "anyOf": [
+          {
+            "format": "date",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Valid Until"
       },
       "cnae_preponderante": {
         "anyOf": [
@@ -287,8 +295,7 @@
     "required": [
       "id",
       "establishment_cnpj",
-      "valid_from",
-      "valid_until"
+      "valid_from"
     ],
     "title": "CompanyParameters",
     "type": "object"
@@ -309,8 +316,203 @@
     "get_company_esocial_state",
     "preview_company_esocial_mode",
     "apply_company_esocial_mode",
-    "get_company_parameter_state"
+    "get_company_parameter_state",
+    "get_company_esocial_candidate_contract",
+    "prepare_company_esocial_candidate",
+    "get_company_esocial_candidate",
+    "cancel_company_esocial_candidate"
   ],
+  "candidate_preparation": {
+    "schema_version": "loki.company-esocial-candidate/1",
+    "proposal_schema": {
+      "$defs": {
+        "CompanyParameterConfigPin": {
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "minimum": 1,
+              "title": "Version",
+              "type": "integer"
+            },
+            "doc_hash": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Doc Hash",
+              "type": "string"
+            },
+            "slice_hash": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Slice Hash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "version",
+            "doc_hash",
+            "slice_hash"
+          ],
+          "title": "CompanyParameterConfigPin",
+          "type": "object"
+        },
+        "CompanyParameterReference": {
+          "additionalProperties": false,
+          "properties": {
+            "profile_id": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+              "title": "Profile Id",
+              "type": "string"
+            },
+            "profile_hash": {
+              "pattern": "^[a-f0-9]{64}$",
+              "title": "Profile Hash",
+              "type": "string"
+            },
+            "client_config": {
+              "$ref": "#/$defs/CompanyParameterConfigPin"
+            }
+          },
+          "required": [
+            "profile_id",
+            "profile_hash",
+            "client_config"
+          ],
+          "title": "CompanyParameterReference",
+          "type": "object"
+        },
+        "ExternalEnvironment": {
+          "enum": [
+            1,
+            2
+          ],
+          "title": "ExternalEnvironment",
+          "type": "integer"
+        },
+        "TableOperation": {
+          "enum": [
+            "inclusao",
+            "alteracao"
+          ],
+          "title": "TableOperation",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "request_ref": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+          "title": "Request Ref",
+          "type": "string"
+        },
+        "establishment_cnpj": {
+          "title": "Establishment Cnpj",
+          "type": "string"
+        },
+        "expected_mode_revision": {
+          "minimum": 1,
+          "title": "Expected Mode Revision",
+          "type": "integer"
+        },
+        "environment": {
+          "$ref": "#/$defs/ExternalEnvironment"
+        },
+        "operation": {
+          "$ref": "#/$defs/TableOperation"
+        },
+        "validity_start": {
+          "title": "Validity Start",
+          "type": "string"
+        },
+        "validity_end": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Validity End"
+        },
+        "profile_pin": {
+          "$ref": "#/$defs/CompanyParameterReference"
+        }
+      },
+      "required": [
+        "request_ref",
+        "establishment_cnpj",
+        "expected_mode_revision",
+        "environment",
+        "operation",
+        "validity_start",
+        "profile_pin"
+      ],
+      "title": "CandidatePreparation",
+      "type": "object"
+    },
+    "cancellation_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "request_ref": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+          "title": "Request Ref",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 1,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "reason": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_ref",
+        "expected_revision",
+        "reason"
+      ],
+      "title": "CandidateCancellation",
+      "type": "object"
+    },
+    "operations": [
+      "get_company_esocial_candidate_contract",
+      "prepare_company_esocial_candidate",
+      "get_company_esocial_candidate",
+      "cancel_company_esocial_candidate"
+    ],
+    "supported_event_types": [
+      "S-1005"
+    ],
+    "states": [
+      "PREPARED_UNSIGNED",
+      "CANCELLED"
+    ],
+    "unsigned_only": true,
+    "preparation_only": true,
+    "signing_supported": false,
+    "sending_supported": false,
+    "allowed_multiple_preparations": true,
+    "execution_deduplication_verified": false,
+    "production_activation_supported": false,
+    "history_import_creates_outbound_events": false,
+    "host_generates_event_id": true,
+    "full_event_xsd_validation_requires_signature": true,
+    "original_antecedents_or_inclusion_are_not_inferred": true,
+    "fiscal_authorization_verified": false,
+    "transmission_ready": false,
+    "pending": [
+      "unsigned_event_not_signed",
+      "full_event_xsd_validation_pending_signature",
+      "fiscal_authorization_not_implemented",
+      "fiscal_dispatcher_not_configured",
+      "signing_provider_not_configured",
+      "company_representation_not_verified",
+      "homologation_receipt_not_verified"
+    ]
+  },
   "limits": [
     "mode_configuration_is_not_transmission",
     "document_approval_does_not_authorize_fiscal_events",
