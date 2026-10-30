@@ -10,7 +10,7 @@ pastas, extração ou envio de dados, leia também
 `skills/operar-loki/SKILL.md` na raiz deste plugin e conduza o fluxo pela harness.
 Se este arquivo estiver em `skills/loki-bootstrap/`, a outra skill fica em
 `../operar-loki/SKILL.md`. Preserve a conexão MCP e o OAuth já configurados.
-A harness interpreta originais externamente; ao Loki seguem dados estruturados e fontes, com anexo opaco quando o contrato exigir arquivo nativo. CSV usa apenas os contratos próprios de cadastro/histórico quando autorizados.
+A harness interpreta originais externamente; ao Loki seguem parâmetros estruturados e fontes opcionais. CSV usa os contratos operacionais ou de cadastro/histórico oferecidos pelo HTTPS e autorizados; exigência de novo anexo nativo é lacuna contratual explícita.
 
 Em rotina agendada, execução de fila ou avaliação de replicações, leia também
 `skills/operar-loki/references/ROUTINES.md` na raiz do plugin
@@ -66,3 +66,5 @@ nem exija aceite de PDF inexistente. Se houver efeito próprio, sua intenção h
 e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplicado.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+Para modo fiscal e parâmetros por estabelecimento, leia o roteiro eSocial antes da escrita. A partir do bootstrap na raiz do plugin, use [este caminho](skills/operar-loki/references/ESOCIAL.md); a partir de `skills/loki-bootstrap/SKILL.md`, use [o caminho relativo da skill aninhada](../operar-loki/references/ESOCIAL.md). Consulte `geral` e `alteracao_cadastral`; a allowlist de domínios permanece a mesma. O contrato `get_company_esocial_contract` distingue configuração persistida de prontidão e envio; modo ausente não transmite, aprovação documental não autoriza evento fiscal e produção permanece recusada sem executor, assinatura, representação e recibo de homologação verificados.

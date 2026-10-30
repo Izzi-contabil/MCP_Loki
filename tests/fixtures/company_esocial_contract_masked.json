@@ -1,0 +1,319 @@
+{
+  "version": "loki.company-esocial/1",
+  "proposal_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "mode": {
+        "enum": [
+          "homologacao",
+          "operacao"
+        ],
+        "title": "Mode",
+        "type": "string"
+      },
+      "event_types": {
+        "default": [],
+        "items": {
+          "enum": [
+            "S-1000",
+            "S-1005",
+            "S-1010",
+            "S-1020",
+            "S-2200",
+            "S-2205",
+            "S-2206",
+            "S-2230",
+            "S-2300",
+            "S-2306",
+            "S-1200",
+            "S-1210",
+            "S-2299",
+            "S-2399",
+            "S-1298",
+            "S-1299",
+            "S-3000"
+          ],
+          "type": "string"
+        },
+        "maxItems": 50,
+        "title": "Event Types",
+        "type": "array"
+      },
+      "cutover_on": {
+        "anyOf": [
+          {
+            "format": "date",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cutover On"
+      }
+    },
+    "required": [
+      "mode"
+    ],
+    "title": "ModeProposal",
+    "type": "object"
+  },
+  "decision_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "expected_revision": {
+        "minimum": 0,
+        "title": "Expected Revision",
+        "type": "integer"
+      },
+      "preview_hash": {
+        "pattern": "^[a-f0-9]{64}$",
+        "title": "Preview Hash",
+        "type": "string"
+      },
+      "reference": {
+        "maxLength": 200,
+        "minLength": 1,
+        "title": "Reference",
+        "type": "string"
+      },
+      "human_message": {
+        "maxLength": 20000,
+        "minLength": 1,
+        "title": "Human Message",
+        "type": "string"
+      }
+    },
+    "required": [
+      "expected_revision",
+      "preview_hash",
+      "reference",
+      "human_message"
+    ],
+    "title": "ModeDecision",
+    "type": "object"
+  },
+  "company_parameters_schema": {
+    "$defs": {
+      "CompanyConfigSource": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "default": "declaration",
+            "enum": [
+              "declaration",
+              "external_reference",
+              "rule",
+              "inference",
+              "context"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "reference": {
+            "default": "current_request",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Reference",
+            "type": "string"
+          },
+          "locator": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Locator"
+          },
+          "content_hash": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Content Hash"
+          },
+          "foundation": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Foundation"
+          }
+        },
+        "title": "CompanyConfigSource",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+        "title": "Id",
+        "type": "string"
+      },
+      "establishment_cnpj": {
+        "title": "Establishment Cnpj",
+        "type": "string"
+      },
+      "valid_from": {
+        "format": "date",
+        "title": "Valid From",
+        "type": "string"
+      },
+      "valid_until": {
+        "format": "date",
+        "title": "Valid Until",
+        "type": "string"
+      },
+      "cnae_preponderante": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9]{7}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cnae Preponderante"
+      },
+      "rat_bps": {
+        "anyOf": [
+          {
+            "maximum": 10000,
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Rat Bps"
+      },
+      "fap_10000": {
+        "anyOf": [
+          {
+            "maximum": 20000,
+            "minimum": 5000,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Fap 10000"
+      },
+      "classificacao_tributaria": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9]{2}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Classificacao Tributaria"
+      },
+      "fpas": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9]{3}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Fpas"
+      },
+      "codigo_terceiros": {
+        "anyOf": [
+          {
+            "pattern": "^[0-9]{4}$",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Codigo Terceiros"
+      },
+      "basis": {
+        "default": "informado",
+        "enum": [
+          "informado",
+          "inferido",
+          "confirmado"
+        ],
+        "title": "Basis",
+        "type": "string"
+      },
+      "field_sources": {
+        "additionalProperties": {
+          "$ref": "#/$defs/CompanyConfigSource"
+        },
+        "maxProperties": 20,
+        "title": "Field Sources",
+        "type": "object"
+      }
+    },
+    "required": [
+      "id",
+      "establishment_cnpj",
+      "valid_from",
+      "valid_until"
+    ],
+    "title": "CompanyParameters",
+    "type": "object"
+  },
+  "company_parameter_write_tools": [
+    "validate_client_config",
+    "apply_client_config"
+  ],
+  "mode_destinations": {
+    "homologacao": 2,
+    "operacao": 1
+  },
+  "production_activation_supported": false,
+  "history_import_creates_outbound_events": false,
+  "existing_queue_retargeted_on_mode_change": false,
+  "input_authority": "human_intent_declared_by_harness",
+  "operations": [
+    "get_company_esocial_state",
+    "preview_company_esocial_mode",
+    "apply_company_esocial_mode",
+    "get_company_parameter_state"
+  ],
+  "limits": [
+    "mode_configuration_is_not_transmission",
+    "document_approval_does_not_authorize_fiscal_events",
+    "signing_and_dispatcher_provisioning_not_implemented"
+  ]
+}

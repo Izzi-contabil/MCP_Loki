@@ -1,14 +1,14 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
 
-Contrato candidato2.1.0: plugin/instruções2.1.0 e provider0.3.0.
+Contrato candidato2.2.0: plugin/instruções2.2.0 e provider0.3.1.
 Consulte `get_process_contract` e envie `receive_case_data` com fontes opcionais, referência
 estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
 a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
 no operador exigem comprovação própria; preserve a agenda existente. Esta árvore
 não comprova publicação, autenticação do executor ou execução observada100%HTTPS.
 
-O plugin `loki-orientacoes@loki-equipe` 2.1.0 distribui o
+O plugin `loki-orientacoes@loki-equipe` 2.2.0 distribui o
 [roteiro de rotina](../plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md).
 Ele complementa os leitores já distribuídos desde 1.1.0 e usa os contratos
 servidos pelo Loki. Não instala um servidor MCP, cria agendador ou altera OAuth.
@@ -29,7 +29,7 @@ claude plugin update loki-orientacoes@loki-equipe --scope user
 claude plugin list --json
 ```
 
-Conferir versão 2.1.0 ou superior avaliada e plugin habilitado. Mínimo de
+Conferir versão 2.2.0 ou superior avaliada e plugin habilitado. Mínimo de
 compatibilidade declarado2.0.0 não comprova adoção deste roteiro. Se o plugin ainda não
 estiver instalado, seguir o [roteiro de instalação](DAILY_OPERATOR_UPDATES.md).
 Falha de acesso ao repositório privado permanece pendência; não substituir
@@ -126,3 +126,20 @@ America/Sao_Paulo; este roteiro não altera horários nem comprova98% de asserti
 
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Extensão eSocial2.2.0
+
+Provider0.3.1, contrato/instruções/plugin2.2.0 preservam o mínimo2.0.0 e a
+compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
+A allowlist e as permissões dos domínios permanecem: consulte `geral` e
+`alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
+Veja o roteiro nativo [ESOCIAL.md](../plugins/loki-bootstrap/skills/operar-loki/references/ESOCIAL.md). A configuração de homologação
+pode persistir por intenção de administrador humano; não transmite. Operação
+permanece PENDING/recusada sem fila/executor fiscal, assinatura, representação
+e recibo de homologação verificados. S-1005 local não comprova transmissão.
+Perfis por estabelecimento/data usam os escritores empresariais com CAS,
+origem opcional e releitura; seleção não comprova consumo financeiro.
+
+Esta distribuição não provisiona acesso fiscal, não emite eventos pelo catálogo
+HTTPS e não instala o plugin no operador. Wheels anteriores, inclusive0.3.0,
+permanecem imutáveis; promoção/publicação exigem revisão e gates do consumidor.

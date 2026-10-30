@@ -1,10 +1,10 @@
-# MCP Loki — contrato operacional 2.1.0
+# MCP Loki — contrato operacional 2.2.0
 
-O pacote `mcp-loki-updates` **0.3.0** entrega instruções **2.1.0** ao backend.
+O pacote `mcp-loki-updates` **0.3.1** entrega instruções **2.2.0** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.1.0** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.2.0** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
@@ -15,7 +15,7 @@ com dados, fontes opcionais, referência idempotente e snapshot esperado. Depois
 geração e revisão do contrato. Versões internas preservam auditoria; a empresa de
 teste usa o mesmo fluxo e gates da operação comum.
 
-A extensão2.1.0 é aditiva ao contrato2.0.0 e conserva o mínimo de plugin2.0.0.
+A extensão2.2.0 é aditiva ao contrato2.0.0 e conserva o mínimo de plugin2.0.0.
 A migração anterior de1.x foi incompatível: ferramentas antigas de extração, comparação e
 execução especial foram retiradas. Clientes que declaram contrato/plugin1.x
 precisam migrar. Cliente sem versão permanece desconhecido; bootstrap de identidade
@@ -39,7 +39,7 @@ validação separada. Dados pessoais, fontes privadas e credenciais ficam fora d
 Os documentos de releases anteriores em `docs/` são históricos; não definem o
 contrato operacional atual nem demonstram instalação, consumo ou aceite individual.
 
-Compatibilidade da candidata0.3.0: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.3.1: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
@@ -61,3 +61,20 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Extensão eSocial2.2.0
+
+Provider0.3.1, contrato/instruções/plugin2.2.0 preservam o mínimo2.0.0 e a
+compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
+A allowlist e as permissões dos domínios permanecem: consulte `geral` e
+`alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
+Veja o roteiro nativo [ESOCIAL.md](plugins/loki-bootstrap/skills/operar-loki/references/ESOCIAL.md). A configuração de homologação
+pode persistir por intenção de administrador humano; não transmite. Operação
+permanece PENDING/recusada sem fila/executor fiscal, assinatura, representação
+e recibo de homologação verificados. S-1005 local não comprova transmissão.
+Perfis por estabelecimento/data usam os escritores empresariais com CAS,
+origem opcional e releitura; seleção não comprova consumo financeiro.
+
+Esta distribuição não provisiona acesso fiscal, não emite eventos pelo catálogo
+HTTPS e não instala o plugin no operador. Wheels anteriores, inclusive0.3.0,
+permanecem imutáveis; promoção/publicação exigem revisão e gates do consumidor.

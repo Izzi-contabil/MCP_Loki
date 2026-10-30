@@ -1,7 +1,7 @@
-# Loki orientações — plugin2.1.0
+# Loki orientações — plugin2.2.0
 
 O nome `loki-orientacoes@loki-equipe` permanece para atualização nativa. O contrato
-operacional2.1.0 exige dados estruturados e fontes opcionais: consulte
+operacional2.2.0 exige dados estruturados e fontes opcionais: consulte
 `get_process_contract`, capture `get_case.input_snapshot` e use `receive_case_data`.
 Depois execute cálculo, geração e revisão. Versões internas preservam auditoria.
 A empresa de teste usa o mesmo fluxo e gates, sem modo especial.
@@ -18,7 +18,7 @@ Consulte [operar-loki](skills/operar-loki/SKILL.md),
 Use [registrar-problema-loki](skills/registrar-problema-loki/SKILL.md) conforme
 escopo/autorização de suporte, preservando UUID/recibo e sem dados de RH.
 
-A candidata acompanha provider0.3.0/instruções2.1.0. Build, publicação, instalação,
+A candidata acompanha provider0.3.1/instruções2.2.0. Build, publicação, instalação,
 carregamento, catálogo e execução precisam de evidências separadas. Não altera
 OAuth, assinatura/pin do kit antigo ou agenda. Dados e recibos ficam em workspace
 privado fora do plugin; nenhum pacote ou documento concede decisão humana.
@@ -42,3 +42,20 @@ fonte. Veja [WORKFLOWS.md](skills/operar-loki/references/WORKFLOWS.md)
 para estados, retorno e retomada; esta árvore não comprova publicação ou adoção.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Extensão eSocial2.2.0
+
+Provider0.3.1, contrato/instruções/plugin2.2.0 preservam o mínimo2.0.0 e a
+compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
+A allowlist e as permissões dos domínios permanecem: consulte `geral` e
+`alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
+Veja o roteiro nativo [ESOCIAL.md](skills/operar-loki/references/ESOCIAL.md). A configuração de homologação
+pode persistir por intenção de administrador humano; não transmite. Operação
+permanece PENDING/recusada sem fila/executor fiscal, assinatura, representação
+e recibo de homologação verificados. S-1005 local não comprova transmissão.
+Perfis por estabelecimento/data usam os escritores empresariais com CAS,
+origem opcional e releitura; seleção não comprova consumo financeiro.
+
+Esta distribuição não provisiona acesso fiscal, não emite eventos pelo catálogo
+HTTPS e não instala o plugin no operador. Wheels anteriores, inclusive0.3.0,
+permanecem imutáveis; promoção/publicação exigem revisão e gates do consumidor.

@@ -195,7 +195,7 @@ formato local de origem; não o envie como `field_sources` operacional. Use
 conserve referência, revisão e hash. Submeta chunks e valide/aplique apenas pelos
 escritores do contrato, com fontes reais, snapshot/hash corrente e readback.
 Não envie documentos originais pelo sincronizador antigo do kit desktop.
-O helper2.1.0 reconhece o destino legado `onboarding-source` e recusa novas
+O helper2.2.0 reconhece o destino legado `onboarding-source` e recusa novas
 preparações com `typed_parameters_required_instead_of_source_attachment`.
 Migre a preparação para parâmetros tipados pelo contrato; leituras, pedidos e
 checkpoints históricos permanecem privados e preservados. Não sobrescreva o kit
@@ -243,3 +243,7 @@ sem completar zero. Consulte `get_process_contract` e os schemas atuais do
 servidor antes de montar o pedido; esta orientação não substitui a validação.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## eSocial e parâmetros empresariais
+
+Leia [ESOCIAL.md](ESOCIAL.md) para `get_company_esocial_contract`, `get_company_esocial_state`, `preview_company_esocial_mode`, `apply_company_esocial_mode` e `get_company_parameter_state`. A configuração de homologação pode ser persistida por administrador humano, mas não ativa fila, assinatura ou transmissão. O modo Operação continua PENDING/recusado enquanto a prontidão fiscal estiver ausente. Perfis `company_parameters` usam `validate_client_config`/`apply_client_config`, CAS e releitura por estabelecimento/data. A origem informal é aceita sem fonte formal universal; preservar informado/inferido/confirmado não comprova cálculo nem envio.

@@ -16,6 +16,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+PLUGIN_VERSION = "2.2.0"
+
 # The native plugin cache is immutable working code, not an output directory.
 sys.dont_write_bytecode = True
 
@@ -47,6 +49,7 @@ def load(path: Path) -> Any:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--version", action="version", version=f"loki-orientacoes {PLUGIN_VERSION}")
     commands = parser.add_subparsers(dest="command", required=True)
     read = commands.add_parser("read", help="Prepare local text/tables/images for the harness")
     read.add_argument("source", type=Path)

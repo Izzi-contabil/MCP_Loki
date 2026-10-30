@@ -25,3 +25,53 @@ O cadastro empresarial usa os escritores existentes: consulte `get_client_config
 `proveniencia` é opcional nos dois escritores. Quando utilizada, segue `loki.company-config-provenance/1` com `field_sources` por caminho alterado e `kind=declaration|inference|context|external_reference|rule`; referência, localizador, `content_hash` e `foundation` são opcionais, sem documento ou hash inventados. Fontes parciais recebem declaração do ator nos demais campos. Sem origem detalhada, o próprio request autorizado é declaração. O recibo/resumo retorna `receipt_hash`, `actor_id`, `input_hash`, `fields` e `assurance`, sem expor texto livre; preserve-o e confira os valores pelo readback autorizado. A resposta e a releitura preservam `field_basis` por caminho; inference/context usam `inferred`, sem promover informação recebida ou inferida a confirmed automaticamente.
 
 Campo reservado ou gate que realmente exige evidência usa `confirmacao` específica. Primeiro valide com `expected_hash` do mesmo CAS e `reserved_paths`/`evidence_gate_paths` exatos; mostre a prévia ao humano e aplique com o mesmo objeto e `human_message` efetiva. Só pessoa provisionada com configurar_cliente e autoridade administrativa vigente realiza esse ato. A automação não recebe essa autoridade por usar lote ou empresa de teste. Não use confirmação genérica, outro CNPJ ou nova referência para contornar conflito; pendência específica não exige fonte formal universal.
+
+## eSocial por empresa
+
+Consulte `get_company_esocial_contract()` (`loki.company-esocial/1`) e
+`get_company_esocial_state(company_id)` antes de propor modo. Os destinos são
+`homologacao`/`tp_amb=2` e `operacao`/`tp_amb=1`. Sem decisão, o retorno
+conservador de homologação tem `persisted=false` e revisão0; não transmite.
+`preview_company_esocial_mode` exige administrador humano provisionado, empresa
+explícita, proposta e `expected_revision`. Apresente escopo/corte/pendências e
+`preview_hash`; somente a intenção humana específica autoriza chamar
+`apply_company_esocial_mode` com proposta e decisão (`expected_revision`,
+`preview_hash`, `reference`, `human_message`). Releia estado/recibo. Identidade
+vem do HTTPS; automação e documento aprovado não concedem essa autoridade.
+
+`production_activation_supported=false`: Operação fica PENDING e sua aplicação
+recusa `esocial_activation_pending` enquanto faltarem executor/fila fiscal,
+assinatura, representação/procuração e recibo de homologação verificados.
+Homologação persistida mantém `fiscal_events_sent=0`; ausência de modo também
+não transmite. Preparar XML/XSD S-1005 local não comprova transmissão nem
+assinatura/aceite/prontidão. Esta entrega não oferece ferramenta HTTPS de
+emissão, provisionamento ou envio fiscal. Importação histórica não cria saída;
+mudança de modo não redireciona filas nem retransmite histórico. Não invente
+ferramentas futuras, flag liberatória, DOC ou etapa de painel/SSH.
+
+Consulte `get_company_parameter_state(company_id, effective_on)` para selecionar
+parâmetros por estabelecimento e data. A orientação detalhada de cadastro e
+consumo está em `alteracao_cadastral`; modo fiscal e perfil empresarial são
+registros distintos e nenhum deles comprova transmissão.
+
+Perfis `company_parameters` declaram `id`, `establishment_cnpj`, `valid_from` e
+`valid_until`, com intervalo fechado sem sobreposição; `cnae_preponderante`,
+`rat_bps` (100/200/300), `fap_10000` (escala10000), `classificacao_tributaria`,
+`fpas` e `codigo_terceiros` são opcionais. Preserve códigos como texto e taxas
+como inteiros; desconhecido permanece ausente/nulo, não complete zero. Selecione
+o CNPJ exato e a data efetiva, sem herança de matriz/filial ou vigência expirada.
+`basis=informado|inferido|confirmado` preserva qualificação declarada e
+`field_sources` é opcional, parcial, sem documento/hash universal. Origem é
+declaração autenticada da harness, não confirmação independente dos originais.
+
+Escreva a coleção atômica pelo caminho
+`empresas[CODIGO_DOMINIO].company_parameters` de `validate_client_config` e
+`apply_client_config`, preservando perfis anteriores, `expected_hash` do CAS,
+confirmações específicas e demais campos. Não invente código Domínio. Releia
+cadastro/histórico e `get_company_parameter_state`; preserve `profile_id`,
+`profile_hash` e pin `client_config` (`version`, `doc_hash`, `slice_hash`).
+Perfil SELECTED pode conter pendências: `financial_readiness_verified=false`
+e `transmission_verified=false` deixam explícito que declaração, persistência
+e seleção não comprovam consumo financeiro nem transmissão. Use somente a
+referência corrente quando o contrato consumidor a aceitar e confira seu resultado;
+não afirme cobertura de processos sem prova própria.
