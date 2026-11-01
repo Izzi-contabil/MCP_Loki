@@ -104,7 +104,7 @@ Referências: [dependências de skills no Codex](https://learn.chatgpt.com/docs/
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.0, contrato/instruções/plugin2.3.0 preservam o mínimo2.0.0 e a
+Provider0.4.1, contrato2.3.0 e instruções/plugin2.3.1 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -125,3 +125,37 @@ Para perfis empresariais, `parameters perfil.json SAIDA_NOVA --schema contrato-e
 `get_company_esocial_contract`; `validated_not_sent` não comprova autorização,
 CAS, semântica do perfil, envio ou prontidão fiscal. Script e lock permanecem
 juntos; dependências dos leitores não mudaram nesta extensão.
+
+## Ler recursos binários retornados pelo MCP
+
+`get_case_document(case_id, doc_id)` pode retornar os bytes no bloco
+`content[type=resource].resource.blob` (base64), além dos metadados em
+`structuredContent`. Preserve a resposta MCP completa em JSON privado; metadata
+isolada não é download e uma URL não substitui o recurso embutido. Confira caso,
+documento, URI exata `loki://cases/CASE-ID/documents/DOC-ID`, SHA256 e tamanho
+contra o pacote/versão ou dossiê esperado, antes da leitura.
+
+Pelo entrypoint local, execute offline:
+
+```text
+mcp-resource resposta-mcp.json SAIDA_PRIVADA_NOVA --expected-uri loki://cases/CASE-ID/documents/DOC-ID --expected-sha256 SHA256 --expected-size TAMANHO_EM_BYTES
+read SAIDA_PRIVADA_NOVA/document.pdf LEITURA_PRIVADA_NOVA --expected-sha256 SHA256
+```
+
+O helper exige expectativas explícitas, decodifica base64 estrito, confere hash,
+tamanho e metadados de caso/documento/MIME quando presentes e salva nome local
+fixo e manifesto0700/0600 (ACL restrita no Windows). Não deriva caminhos do nome
+remoto, não busca URLs, não usa rede/SDK/OAuth e não sobrescreve destino existente.
+Erro, bytes ausentes, URI divergente e seleção ambígua não produzem artefato
+válido; falha de gravação remove a saída nova. O limite de bytes é32MiB, com
+respostaJSON de até64MiB. Outros MIME usam a extensão registrada no manifesto;
+formato desconhecido conserva `.bin` e pendência de interpretação.
+
+`saved_not_reviewed` comprova apenas bytes locais verificados. Depois use `read`
+e inspecione todas as páginas/imagens efetivas pela harness. Com pacote
+existente, obtenha `get_package_check_request` para a mesma `version_id` quando
+houver; confira os recursos e somente então envie `record_package_checks` com
+os mesmos hashes e `required_checks` efetivamente examinados. Não marque PASS
+por disponibilidade/download, não copie checks antigos e preserve FAIL/pendência.
+Sem pacote/documento previsto, releia o recibo factual; não invente PDF ou check
+visual. Conferência técnica não é decisão humana, entrega ou pagamento.
