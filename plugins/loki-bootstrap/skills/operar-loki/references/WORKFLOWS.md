@@ -247,3 +247,58 @@ servidor antes de montar o pedido; esta orientação não substitui a validaçã
 ## eSocial e parâmetros empresariais
 
 Leia [ESOCIAL.md](ESOCIAL.md) para `get_company_esocial_contract`, `get_company_esocial_state`, `preview_company_esocial_mode`, `apply_company_esocial_mode` e `get_company_parameter_state`. A configuração de homologação pode ser persistida por administrador humano, mas não ativa fila, assinatura ou transmissão. O modo Operação continua PENDING/recusado enquanto a prontidão fiscal estiver ausente. Perfis `company_parameters` usam `validate_client_config`/`apply_client_config`, CAS e releitura por estabelecimento/data. A origem informal é aceita sem fonte formal universal; preservar informado/inferido/confirmado não comprova cálculo nem envio.
+
+## Complemento de identidade ausente
+
+`funcionario.nome` é identidade do caso, não um campo de `dados_rescisao` ou da
+seção de cálculo. Consulte `get_process_contract` e `get_case` atuais. Somente se
+o contrato oferecer `identity_completion_schema` e a rota autorizada, prepare o
+request `loki.case-identity-completion/1` com `request_ref` estável,
+`expected_snapshot=get_case.correction_snapshot`, `input_snapshot` corrente,
+`expected_company_id`, `expected_employee_id`, `expected_admission_date` e `nome`
+observado/declarado com origem honesta. Valide offline por `parameters` usando
+`--schema contract.json --schema-pointer /identity_completion_schema`.
+
+Use `complete_case_identity(case_id, request)` quando descoberto; se o contrato
+anunciar `receive_case_data` como rota compatível para esse discriminador, envie
+exatamente o mesmo request por essa rota, sem envelope `loki.case-data/1` e sem
+misturar o nome à seção financeira. Rota ausente é lacuna de distribuição HTTPS;
+não improvise escritor. Esse complemento só preenche nome antes vazio da mesma
+empresa, pessoa e episódio. Nome já preenchido, divergência de identidade ou
+snapshots antigos conservam recusa/pendência; não substitua nome nem cadastro.
+Preserve recibo e replay idêntico, releia nome e ambos os snapshots antes de
+retomar geração. A operação não cria decisão humana nem efeito financeiro.
+
+## Ler recursos binários retornados pelo MCP
+
+`get_case_document(case_id, doc_id)` pode retornar os bytes no bloco
+`content[type=resource].resource.blob` (base64), além dos metadados em
+`structuredContent`. Preserve a resposta MCP completa em JSON privado; metadata
+isolada não é download e uma URL não substitui o recurso embutido. Confira caso,
+documento, URI exata `loki://cases/CASE-ID/documents/DOC-ID`, SHA256 e tamanho
+contra o pacote/versão ou dossiê esperado, antes da leitura.
+
+Pelo entrypoint local, execute offline:
+
+```text
+mcp-resource resposta-mcp.json SAIDA_PRIVADA_NOVA --expected-uri loki://cases/CASE-ID/documents/DOC-ID --expected-sha256 SHA256 --expected-size TAMANHO_EM_BYTES
+read SAIDA_PRIVADA_NOVA/document.pdf LEITURA_PRIVADA_NOVA --expected-sha256 SHA256
+```
+
+O helper exige expectativas explícitas, decodifica base64 estrito, confere hash,
+tamanho e metadados de caso/documento/MIME quando presentes e salva nome local
+fixo e manifesto0700/0600 (ACL restrita no Windows). Não deriva caminhos do nome
+remoto, não busca URLs, não usa rede/SDK/OAuth e não sobrescreve destino existente.
+Erro, bytes ausentes, URI divergente e seleção ambígua não produzem artefato
+válido; falha de gravação remove a saída nova. O limite de bytes é32MiB, com
+respostaJSON de até64MiB. Outros MIME usam a extensão registrada no manifesto;
+formato desconhecido conserva `.bin` e pendência de interpretação.
+
+`saved_not_reviewed` comprova apenas bytes locais verificados. Depois use `read`
+e inspecione todas as páginas/imagens efetivas pela harness. Com pacote
+existente, obtenha `get_package_check_request` para a mesma `version_id` quando
+houver; confira os recursos e somente então envie `record_package_checks` com
+os mesmos hashes e `required_checks` efetivamente examinados. Não marque PASS
+por disponibilidade/download, não copie checks antigos e preserve FAIL/pendência.
+Sem pacote/documento previsto, releia o recibo factual; não invente PDF ou check
+visual. Conferência técnica não é decisão humana, entrega ou pagamento.

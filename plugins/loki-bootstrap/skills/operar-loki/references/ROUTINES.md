@@ -49,9 +49,15 @@ Consulte também `get_company_historical_state` no corte do consumidor quando
 precisar de saldos, ocorrências e coberturas tipados. Histórico opaco não vira
 automaticamente um fato tipado, e consulta não comprova consumo pelo cálculo.
 Quando aplicável, `preview_case_input_reuse` mostra fontes, ausências e conflitos;
-aplicação usa somente o plano autorizado e o hash corrente. Fixação por
-`pin_company_employee_history` ou seleção do estado tipado segue o contrato.
-Consulta, fixação, consumo e cálculo são evidências distintas.
+aplicação usa somente o plano autorizado e o hash corrente. A automação usa o caminho tipado oferecido:
+`get_case_historical_state(case_id)` → conferir empresa/pessoa/episódio, corte,
+cobertura, qualificações e `state_hash` →
+`apply_historical_state(case_id, expected_state_hash)` → reler recibo e estado →
+conferir seleção/hash e consumo nos operandos/resultados do cálculo.
+`pin_company_employee_history` é a fixação legada e pode exigir principal humano;
+recusa não autoriza trocar a identidade da automação. Seleção tipada não confirma
+ocorrência aplicada, pagamento, completude ou paridade financeira. Consulta,
+seleção, consumo e cálculo são evidências distintas.
 
 Se o operador indicar um índice privado de componentes qualificados, siga
 também [COMPARATIVE_TESTING.md](COMPARATIVE_TESTING.md). Confira a edição,
@@ -76,10 +82,38 @@ não comprova execução. Documento gerado retorna pelos gates de entrega privad
 registro sem documento retorna recibo persistido e relido, sem PDF artificial.
 Para ajuste empresarial, confira empresa, revisão, vigência, fontes e releitura
 do objeto. Contrato ausente permanece lacuna; não improvise escritor.
+Antes do envio, confronte as observações extraídas com os parâmetros preparados:
+cada dado observado deve estar preservado, em conflito ou retido com motivo.
+Não copie emissão de CTPS Digital para expedição de carteira física nem título
+CDI para categoria militar; dado não observado continua desconhecido. False,
+zero, meia-noite e lista vazia não desaparecem. Essa conferência local não é
+exigência universal de fonte/hash nem comprova leitura que não ocorreu.
 TXT, XLS e PDF podem conter referências históricas; conteúdo, empresa, episódio
 e período definem o papel. Arquivo obtido não é operando qualificado. Data de
 registro de reajuste retroativo não é automaticamente o dia de efeito material.
 Sem esse dia, preserve a competência retroativa e a lacuna necessária ao cálculo.
+
+
+## Complemento de identidade ausente
+
+`funcionario.nome` é identidade do caso, não um campo de `dados_rescisao` ou da
+seção de cálculo. Consulte `get_process_contract` e `get_case` atuais. Somente se
+o contrato oferecer `identity_completion_schema` e a rota autorizada, prepare o
+request `loki.case-identity-completion/1` com `request_ref` estável,
+`expected_snapshot=get_case.correction_snapshot`, `input_snapshot` corrente,
+`expected_company_id`, `expected_employee_id`, `expected_admission_date` e `nome`
+observado/declarado com origem honesta. Valide offline por `parameters` usando
+`--schema contract.json --schema-pointer /identity_completion_schema`.
+
+Use `complete_case_identity(case_id, request)` quando descoberto; se o contrato
+anunciar `receive_case_data` como rota compatível para esse discriminador, envie
+exatamente o mesmo request por essa rota, sem envelope `loki.case-data/1` e sem
+misturar o nome à seção financeira. Rota ausente é lacuna de distribuição HTTPS;
+não improvise escritor. Esse complemento só preenche nome antes vazio da mesma
+empresa, pessoa e episódio. Nome já preenchido, divergência de identidade ou
+snapshots antigos conservam recusa/pendência; não substitua nome nem cadastro.
+Preserve recibo e replay idêntico, releia nome e ambos os snapshots antes de
+retomar geração. A operação não cria decisão humana nem efeito financeiro.
 
 ## Investigar e qualificar regras
 
@@ -114,6 +148,41 @@ build/instruções, processo/caso, snapshot, fontes consumidas, artefatos e
 pendências. Separe recebido, calculado, gerado, revisado e entregue. Entrega ao
 solicitante usa acesso autenticado e recibo; Drive é opção futura explícita.
 Não crie outra agenda, altere a fila da Ana ou classifique conferência como entrega.
+
+
+## Ler recursos binários retornados pelo MCP
+
+`get_case_document(case_id, doc_id)` pode retornar os bytes no bloco
+`content[type=resource].resource.blob` (base64), além dos metadados em
+`structuredContent`. Preserve a resposta MCP completa em JSON privado; metadata
+isolada não é download e uma URL não substitui o recurso embutido. Confira caso,
+documento, URI exata `loki://cases/CASE-ID/documents/DOC-ID`, SHA256 e tamanho
+contra o pacote/versão ou dossiê esperado, antes da leitura.
+
+Pelo entrypoint local, execute offline:
+
+```text
+mcp-resource resposta-mcp.json SAIDA_PRIVADA_NOVA --expected-uri loki://cases/CASE-ID/documents/DOC-ID --expected-sha256 SHA256 --expected-size TAMANHO_EM_BYTES
+read SAIDA_PRIVADA_NOVA/document.pdf LEITURA_PRIVADA_NOVA --expected-sha256 SHA256
+```
+
+O helper exige expectativas explícitas, decodifica base64 estrito, confere hash,
+tamanho e metadados de caso/documento/MIME quando presentes e salva nome local
+fixo e manifesto0700/0600 (ACL restrita no Windows). Não deriva caminhos do nome
+remoto, não busca URLs, não usa rede/SDK/OAuth e não sobrescreve destino existente.
+Erro, bytes ausentes, URI divergente e seleção ambígua não produzem artefato
+válido; falha de gravação remove a saída nova. O limite de bytes é32MiB, com
+respostaJSON de até64MiB. Outros MIME usam a extensão registrada no manifesto;
+formato desconhecido conserva `.bin` e pendência de interpretação.
+
+`saved_not_reviewed` comprova apenas bytes locais verificados. Depois use `read`
+e inspecione todas as páginas/imagens efetivas pela harness. Com pacote
+existente, obtenha `get_package_check_request` para a mesma `version_id` quando
+houver; confira os recursos e somente então envie `record_package_checks` com
+os mesmos hashes e `required_checks` efetivamente examinados. Não marque PASS
+por disponibilidade/download, não copie checks antigos e preserve FAIL/pendência.
+Sem pacote/documento previsto, releia o recibo factual; não invente PDF ou check
+visual. Conferência técnica não é decisão humana, entrega ou pagamento.
 
 ## Cobertura e acerto das tarefas
 

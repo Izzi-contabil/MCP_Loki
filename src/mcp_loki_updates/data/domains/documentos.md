@@ -35,3 +35,37 @@ nem exija aceite de PDF inexistente. Se houver efeito próprio, sua intenção h
 e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplicado.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Ler recursos binários retornados pelo MCP
+
+`get_case_document(case_id, doc_id)` pode retornar os bytes no bloco
+`content[type=resource].resource.blob` (base64), além dos metadados em
+`structuredContent`. Preserve a resposta MCP completa em JSON privado; metadata
+isolada não é download e uma URL não substitui o recurso embutido. Confira caso,
+documento, URI exata `loki://cases/CASE-ID/documents/DOC-ID`, SHA256 e tamanho
+contra o pacote/versão ou dossiê esperado, antes da leitura.
+
+Pelo entrypoint local, execute offline:
+
+```text
+mcp-resource resposta-mcp.json SAIDA_PRIVADA_NOVA --expected-uri loki://cases/CASE-ID/documents/DOC-ID --expected-sha256 SHA256 --expected-size TAMANHO_EM_BYTES
+read SAIDA_PRIVADA_NOVA/document.pdf LEITURA_PRIVADA_NOVA --expected-sha256 SHA256
+```
+
+O helper exige expectativas explícitas, decodifica base64 estrito, confere hash,
+tamanho e metadados de caso/documento/MIME quando presentes e salva nome local
+fixo e manifesto0700/0600 (ACL restrita no Windows). Não deriva caminhos do nome
+remoto, não busca URLs, não usa rede/SDK/OAuth e não sobrescreve destino existente.
+Erro, bytes ausentes, URI divergente e seleção ambígua não produzem artefato
+válido; falha de gravação remove a saída nova. O limite de bytes é32MiB, com
+respostaJSON de até64MiB. Outros MIME usam a extensão registrada no manifesto;
+formato desconhecido conserva `.bin` e pendência de interpretação.
+
+`saved_not_reviewed` comprova apenas bytes locais verificados. Depois use `read`
+e inspecione todas as páginas/imagens efetivas pela harness. Com pacote
+existente, obtenha `get_package_check_request` para a mesma `version_id` quando
+houver; confira os recursos e somente então envie `record_package_checks` com
+os mesmos hashes e `required_checks` efetivamente examinados. Não marque PASS
+por disponibilidade/download, não copie checks antigos e preserve FAIL/pendência.
+Sem pacote/documento previsto, releia o recibo factual; não invente PDF ou check
+visual. Conferência técnica não é decisão humana, entrega ou pagamento.

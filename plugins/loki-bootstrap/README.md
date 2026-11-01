@@ -1,4 +1,4 @@
-# Loki orientações — plugin2.3.0
+# Loki orientações — plugin2.3.1
 
 O nome `loki-orientacoes@loki-equipe` permanece para atualização nativa. O contrato
 operacional2.3.0 exige dados estruturados e fontes opcionais: consulte
@@ -18,7 +18,7 @@ Consulte [operar-loki](skills/operar-loki/SKILL.md),
 Use [registrar-problema-loki](skills/registrar-problema-loki/SKILL.md) conforme
 escopo/autorização de suporte, preservando UUID/recibo e sem dados de RH.
 
-A candidata acompanha provider0.4.0/instruções2.3.0. Build, publicação, instalação,
+A candidata acompanha provider0.4.1/instruções2.3.1. Build, publicação, instalação,
 carregamento, catálogo e execução precisam de evidências separadas. Não altera
 OAuth, assinatura/pin do kit antigo ou agenda. Dados e recibos ficam em workspace
 privado fora do plugin; nenhum pacote ou documento concede decisão humana.
@@ -45,7 +45,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.0, contrato/instruções/plugin2.3.0 preservam o mínimo2.0.0 e a
+Provider0.4.1, contrato2.3.0 e instruções/plugin2.3.1 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -59,3 +59,14 @@ origem opcional e releitura; seleção não comprova consumo financeiro.
 Esta distribuição não provisiona acesso fiscal, não emite eventos pelo catálogo
 HTTPS e não instala o plugin no operador. Wheels anteriores, inclusive0.3.0,
 permanecem imutáveis; promoção/publicação exigem revisão e gates do consumidor.
+
+## Correção da harness2.3.1
+
+Provider0.4.1/instruções e plugin2.3.1 mantêm contratoMCP2.3.0 e mínimo2.0.0.
+O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
+URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
+complemento somente de nome vazio pelo contrato e checks após leitura real.
+Não há novo transporte, autofill de CTPS/CDI ou fórmula universal de avos.
+Script e lock permanecem juntos; dependências não mudaram. Wheels0.4.0 e
+anteriores continuam imutáveis. Esta candidata não comprova publicação,
+instalação, carregamento ou execução real na Ana, nem muda agenda/credenciais.

@@ -1,6 +1,6 @@
 # Atualizações MCP Loki — contrato 2.3.0
 
-Candidata de30/10/2026: provider/wheel0.4.0, instruções2.3.0 e plugin2.3.0.
+Candidata de01/11/2026: provider/wheel0.4.1, instruções2.3.1 e plugin2.3.1.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
 
@@ -28,7 +28,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.3.0. Contrato2.3.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
+recomendado é2.3.1. Contrato2.3.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 
@@ -77,9 +77,9 @@ altere pin/assinatura do kit legado ou troque identidade para contornar falha.
 Os registros anteriores de publicação em `docs/` são históricos e preservados;
 não comprovam o estado servido desta candidata nem atualização das instalações.
 
-A candidata0.4.0 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.3.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
+A candidata0.4.1 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.3.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
 
-Compatibilidade da candidata0.4.0: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.4.1: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
@@ -104,7 +104,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.0, contrato/instruções/plugin2.3.0 preservam o mínimo2.0.0 e a
+Provider0.4.1, contrato2.3.0 e instruções/plugin2.3.1 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -118,3 +118,14 @@ origem opcional e releitura; seleção não comprova consumo financeiro.
 Esta distribuição não provisiona acesso fiscal, não emite eventos pelo catálogo
 HTTPS e não instala o plugin no operador. Wheels anteriores, inclusive0.3.0,
 permanecem imutáveis; promoção/publicação exigem revisão e gates do consumidor.
+
+## Correção da harness2.3.1
+
+Provider0.4.1/instruções e plugin2.3.1 mantêm contratoMCP2.3.0 e mínimo2.0.0.
+O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
+URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
+complemento somente de nome vazio pelo contrato e checks após leitura real.
+Não há novo transporte, autofill de CTPS/CDI ou fórmula universal de avos.
+Script e lock permanecem juntos; dependências não mudaram. Wheels0.4.0 e
+anteriores continuam imutáveis. Esta candidata não comprova publicação,
+instalação, carregamento ou execução real na Ana, nem muda agenda/credenciais.

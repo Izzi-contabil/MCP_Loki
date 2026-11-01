@@ -68,6 +68,10 @@ em Mac/Linux, ou pasta de usuário no Windows. O helper cria saída nova com
 0700/0600 no POSIX e ACL restrita no Windows. Não sobrescreva saída existente.
 O cache do plugin só contém código; atualização não deve apagar trabalho.
 
+Para bytes de `get_case_document`, preserve a respostaMCP completa e use
+`mcp-resource` antes de `read`; siga o roteiro de recursos e checks condicionais
+em [WORKFLOWS.md](references/WORKFLOWS.md). Metadados não substituem bytes lidos.
+
 ## Ler, interpretar e conferir
 
 - Para pasta, `inventory "ORIGINAIS" "INVENTARIO_NOVO"`. Leia o inventory.json

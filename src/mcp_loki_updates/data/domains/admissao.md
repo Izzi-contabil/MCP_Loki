@@ -103,3 +103,24 @@ Se optar por preservar proveniência detalhada de um original sem enviá-lo, con
 Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Complemento de identidade ausente
+
+`funcionario.nome` é identidade do caso, não um campo de `dados_rescisao` ou da
+seção de cálculo. Consulte `get_process_contract` e `get_case` atuais. Somente se
+o contrato oferecer `identity_completion_schema` e a rota autorizada, prepare o
+request `loki.case-identity-completion/1` com `request_ref` estável,
+`expected_snapshot=get_case.correction_snapshot`, `input_snapshot` corrente,
+`expected_company_id`, `expected_employee_id`, `expected_admission_date` e `nome`
+observado/declarado com origem honesta. Valide offline por `parameters` usando
+`--schema contract.json --schema-pointer /identity_completion_schema`.
+
+Use `complete_case_identity(case_id, request)` quando descoberto; se o contrato
+anunciar `receive_case_data` como rota compatível para esse discriminador, envie
+exatamente o mesmo request por essa rota, sem envelope `loki.case-data/1` e sem
+misturar o nome à seção financeira. Rota ausente é lacuna de distribuição HTTPS;
+não improvise escritor. Esse complemento só preenche nome antes vazio da mesma
+empresa, pessoa e episódio. Nome já preenchido, divergência de identidade ou
+snapshots antigos conservam recusa/pendência; não substitua nome nem cadastro.
+Preserve recibo e replay idêntico, releia nome e ambos os snapshots antes de
+retomar geração. A operação não cria decisão humana nem efeito financeiro.

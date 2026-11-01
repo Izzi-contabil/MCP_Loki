@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-PLUGIN_VERSION = "2.3.0"
+PLUGIN_VERSION = "2.3.1"
 
 # The native plugin cache is immutable working code, not an output directory.
 sys.dont_write_bytecode = True
@@ -40,6 +40,7 @@ from loki_readers.private import (  # noqa: E402
     write_json,
 )
 from loki_readers.readers import MAX_BYTES, read_document  # noqa: E402
+from loki_readers.resources import save_mcp_resource  # noqa: E402
 from loki_readers.workspace import doctor, inventory  # noqa: E402
 
 
@@ -57,6 +58,12 @@ def main() -> int:
     read.add_argument("--encoding", default="utf-8-sig")
     read.add_argument("--pages")
     read.add_argument("--expected-sha256")
+    resource = commands.add_parser("mcp-resource", help="Save embedded case bytes offline")
+    resource.add_argument("source", type=Path)
+    resource.add_argument("output", type=Path)
+    resource.add_argument("--expected-uri", required=True)
+    resource.add_argument("--expected-sha256", required=True)
+    resource.add_argument("--expected-size", type=int, required=True)
     digest = commands.add_parser("hash", help="Verify source bytes before preparing a request")
     digest.add_argument("source", type=Path)
     digest.add_argument("--expected-sha256")
@@ -116,6 +123,24 @@ def main() -> int:
                         "manifest": str(args.output.absolute() / "manifest.json"),
                         "sha256": result["source"]["sha256"],
                         "units": len(result["units"]),
+                        "status": result["status"],
+                    }
+                )
+            )
+        elif args.command == "mcp-resource":
+            result = save_mcp_resource(
+                args.source,
+                args.output,
+                expected_uri=args.expected_uri,
+                expected_sha256=args.expected_sha256,
+                expected_size=args.expected_size,
+            )
+            print(
+                json.dumps(
+                    {
+                        "manifest": str(args.output.absolute() / "manifest.json"),
+                        "sha256": result["sha256"],
+                        "size_bytes": result["size_bytes"],
                         "status": result["status"],
                     }
                 )
