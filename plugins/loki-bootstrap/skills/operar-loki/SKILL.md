@@ -39,6 +39,31 @@ não defeitos automáticos. Não faça relato recursivo de falha do próprio sup
 
 ## Respostas ao operador
 
+### Suporte sem ruído na conversa
+
+Ao registrar um problema, a resposta automática vale para qualquer autor e fica
+na thread da mensagem original. Primeiro faça uma pergunta curta e específica
+para refinar o entendimento, sem repetir informação já dada nem antecipar causa.
+Em problema técnico, depois da resposta do autor consulte o código somente em
+leitura antes de levantar uma possível causa, com arquivo/linha e limitações.
+Sem referência válida, informe que a causa não foi identificada; não invente.
+A triagem e a correção ficam com o proprietário humano, sem fábrica automática
+de testes, patch ou proposta a partir do relato.
+
+Se for questão de procedimento, encaminhe o refino à área DP cadastrada (Rafa)
+na mesma thread, uma única vez. Não transforme nomes ou menções do relato em
+identidade autorizada; use o contato configurado no servidor. Sem contato, não
+alegue ping nem mencione outra pessoa como substituta. Depois do encaminhamento,
+deixe a conversa com os humanos. Hipótese técnica também encerra a interação
+automática para a triagem humana; não responda a cada comentário da thread.
+
+Não publique recibos de “recebido”, “em análise”, orçamento, tentativas ou estados
+internos a cada transição, nem novas mensagens no canal para uma thread existente.
+Replay não repete perguntas ou menções. O relato completo e as evidências ficam
+no Loki/MCP. Preserve propostas/decisões anteriores: aviso de correção realmente
+publicada e confirmação da solução continuam sujeitos aos gates próprios.
+
+
 Comece pela conclusão ou situação real, seguida somente dos pontos importantes
 para a demanda e de uma próxima ação clara. Use linguagem simples, parágrafos
 curtos e até três pontos quando ajudarem. Busque até 80 palavras no resumo;
@@ -52,6 +77,21 @@ o Slack mostra um resumo; consulte a íntegra e o histórico por
 `consultar_problema(problem_id)` quando precisar dos detalhes. A concisão da
 resposta não reduz o relato estruturado enviado ao Loki nem a apresentação de
 pacote, diff, testes, revisão, riscos e ressalvas necessária à decisão humana.
+
+Pedidos abertos pelo assistente mantêm a identidade OAuth do relator. Consulte
+`consultar_problema` e apresente a pergunta corrente de `detail.support.triage`
+no mesmo chat; só após a resposta humana, transcreva-a literalmente pelo
+`support_refinement_contract` de `meu_acesso`/`get_operator_context`.
+Use `receive_case_data(case_id="@connector", request={schema_version:
+"loki.connector-command/1", operation:"answer_problem", declaration:...})`.
+A declaração `loki.support-refinement/1` exige `problem_id`, `expected_revision`,
+`expected_question_event_id` do convite, `question_presented=true`,
+`human_message` e `request_ref` idempotente. A apresentação é uma declaração
+autenticada da harness, sem atestar leitura independente nem entrega Slack.
+Não envie a declaração antes de apresentar a pergunta e receber a resposta.
+Comentários Slack de terceiros ficam como contexto: não atribua identidade
+Slack a uma conta OAuth nem os use como resposta do relator. Procedimento já
+encaminhado à Rafa e hipótese já entregue seguem para humanos.
 
 ## Começar e localizar os leitores
 

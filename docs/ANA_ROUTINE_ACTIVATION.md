@@ -1,14 +1,14 @@
 # Ativar o roteiro na rotina existente do Claude Code
 
 
-Contrato candidato2.3.0: plugin/instruções2.3.2 e provider0.4.2.
+Contrato candidato2.4.0: plugin/instruções2.4.0 e provider0.4.3.
 Consulte `get_process_contract` e envie `receive_case_data` com fontes opcionais, referência
 estável e o `input_snapshot` atual de `get_case`. Leitura e comparação são externas;
 a empresa de teste usa o mesmo fluxo e gates. Atualização, catálogo e execução
 no operador exigem comprovação própria; preserve a agenda existente. Esta árvore
 não comprova publicação, autenticação do executor ou execução observada100%HTTPS.
 
-O plugin `loki-orientacoes@loki-equipe` 2.3.2 distribui o
+O plugin `loki-orientacoes@loki-equipe` 2.4.0 distribui o
 [roteiro de rotina](../plugins/loki-bootstrap/skills/operar-loki/references/ROUTINES.md).
 Ele complementa os leitores já distribuídos desde 1.1.0 e usa os contratos
 servidos pelo Loki. Não instala um servidor MCP, cria agendador ou altera OAuth.
@@ -29,7 +29,7 @@ claude plugin update loki-orientacoes@loki-equipe --scope user
 claude plugin list --json
 ```
 
-Conferir versão 2.3.2 ou superior avaliada e plugin habilitado. Mínimo de
+Conferir versão 2.4.0 ou superior avaliada e plugin habilitado. Mínimo de
 compatibilidade declarado2.0.0 não comprova adoção deste roteiro. Se o plugin ainda não
 estiver instalado, seguir o [roteiro de instalação](DAILY_OPERATOR_UPDATES.md).
 Falha de acesso ao repositório privado permanece pendência; não substituir
@@ -129,7 +129,7 @@ America/Sao_Paulo; este roteiro não altera horários nem comprova98% de asserti
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.2, contrato2.3.0 e instruções/plugin2.3.2 preservam o mínimo2.0.0 e a
+Provider0.4.3, contrato2.4.0 e instruções/plugin2.4.0 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
