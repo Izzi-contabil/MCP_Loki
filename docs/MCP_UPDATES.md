@@ -1,6 +1,6 @@
-# Atualizações MCP Loki — contrato 2.4.0
+# Atualizações MCP Loki — contrato 2.5.0
 
-Candidata de03/11/2026: provider/wheel0.4.3, instruções2.4.0 e plugin2.4.0.
+Candidata de04/11/2026: provider/wheel0.4.4, instruções2.5.0 e plugin2.5.0.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
 
@@ -28,7 +28,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.4.0. Contrato2.4.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
+recomendado é2.5.0. Contrato2.5.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 
@@ -77,9 +77,9 @@ altere pin/assinatura do kit legado ou troque identidade para contornar falha.
 Os registros anteriores de publicação em `docs/` são históricos e preservados;
 não comprovam o estado servido desta candidata nem atualização das instalações.
 
-A candidata0.4.3 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.4.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
+A candidata0.4.4 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.5.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
 
-Compatibilidade da candidata0.4.3: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.4.4: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
@@ -104,7 +104,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.3, contrato2.4.0 e instruções/plugin2.4.0 preservam o mínimo2.0.0 e a
+Provider0.4.4, contrato2.5.0 e instruções/plugin2.5.0 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -121,7 +121,7 @@ permanecem imutáveis; promoção/publicação exigem revisão e gates do consum
 
 ## Correção da harness2.3.1 preservada
 
-Provider0.4.3/instruções e plugin2.4.0 mantêm contratoMCP2.4.0 e mínimo2.0.0.
+Provider0.4.4/instruções e plugin2.5.0 mantêm contratoMCP2.5.0 e mínimo2.0.0.
 O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
 URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
 complemento somente de nome vazio pelo contrato e checks após leitura real.
@@ -130,22 +130,33 @@ Script e lock permanecem juntos; dependências não mudaram. Wheels0.4.1 e
 anteriores continuam imutáveis. Esta candidata não comprova publicação,
 instalação, carregamento ou execução real na Ana, nem muda agenda/credenciais.
 
-## Comunicação2.4.0
+## Comunicação2.5.0
 
-Provider0.4.3/instruções e plugin2.4.0 orientam conclusão primeiro, pontos
-essenciais e próxima ação, com alvo de80palavras no resumo. Ressalvas, evidências
-e payloads completos permanecem; contrato2.4.0 e mínimo2.0.0 não mudam.
+Provider0.4.4/instruções e plugin2.5.0 orientam conclusão primeiro, pontos
+essenciais e próxima ação, com alvo de60palavras no resumo. Ressalvas, evidências
+e payloads completos permanecem; contrato2.5.0 e mínimo2.0.0 não mudam.
 O Slack apresenta avisos compactos e a íntegra segue consultável pelo MCP.
 Fonte, build, publicação, instalação no cliente e qualidade real são provas
 separadas; esta alteração não atualiza a agenda ou a instalação da Ana.
 
-## Refino e encaminhamento2.4.0
+## Refino e encaminhamento2.5.0
 
 Pergunta curta na thread antes de hipótese; questão técnica exige resposta do
 autor e consulta ao código, sem corrigir automaticamente. Procedimentos seguem
 ao contato DP cadastrado (Rafa), uma vez. Estados internos e replay não geram
 avisos repetidos. Triagem/correção e confirmações permanecem humanas e com gates.
 
-Contrato2.4.0 acrescenta o comando HTTPS tipado `answer_problem` para resposta
+Contrato2.5.0 acrescenta o comando HTTPS tipado `answer_problem` para resposta
 de refino no chat autenticado do relator, com revisão/evento correntes, declaração
 de apresentação e replay idempotente; não concede aprovação ou identidade Slack.
+
+
+## Continuação com DP2.5.0
+
+Resposta do contato DP convidado retoma somente o assunto solicitado. A memória
+por assunto e os destinos propostos são consultáveis pelo suporteHTTPS; preparação
+para Ana, configuração e desenvolvimento continuam sujeitos aos respectivos atos
+autorizados. Novo ciclo exige proprietário humano, revisão/job correntes, assuntos
+e motivo pelo contrato restart_problem_refinement. Uma pergunta/próximo passo por
+mensagem, palavras comuns e alvo60palavras; sem progresso, nova menção ou repetição.
+Esta versão não altera dados reais, sistema/agenda da Ana nem executa correções.

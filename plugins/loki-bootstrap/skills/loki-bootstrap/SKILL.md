@@ -71,4 +71,4 @@ Para modo fiscal e parâmetros por estabelecimento, leia o roteiro eSocial antes
 
 Respostas ao operador seguem o padrão de conclusão, pontos essenciais e próxima ação de `operar-loki`. Preserve o detalhe e as ressalvas necessários à decisão; concisão não limita payloads ou evidências.
 
-No suporte: pergunta de refino na thread; possível causa técnica somente após resposta e leitura do código; procedimento segue ao contato DP cadastrado (Rafa), sem avisos repetidos ou correção automática.
+No suporte: pergunta de refino na thread; possível causa técnica somente após resposta e leitura do código; procedimento segue ao contato DP cadastrado (Rafa). Sua resposta retoma só o assunto convidado; aproveite o esclarecido e entregue preparação, proposta de configuração ou triagem técnica. Uma pergunta/próximo passo claro, alvo60palavras, sem avisos repetidos ou correção automática.
