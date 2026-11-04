@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.3.1",
+  "instructions_version": "2.3.2",
   "contract_version": "2.3.0",
-  "plugin_version": "2.3.1",
+  "plugin_version": "2.3.2",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-01",
+  "updated_at": "2026-11-03",
   "domains": {
     "geral": {
-      "metadata_sha256": "c0f68fb1c20190c8a5a71c0072c56d7dc6c4b8cf5db76fbc05412dc049955aa5",
-      "content_sha256": "2d3392602ba111bd11b70ee9ac34332a9c560655e7210732ee78f2a2fa4d448b"
+      "metadata_sha256": "4a1bfd4d9cf407a344cab785e47bcbe101b9876cad637ac4d929ac8b291f606f",
+      "content_sha256": "d84b64fad7bd489fde0b365b4bb8dc51d654f59c5bc1e483599436898008ca20"
     },
     "admissao": {
-      "metadata_sha256": "4243e1a1d3c1321225c77c619a6b3e1417e9ecfcbe5199316d87767b31d4d7f7",
+      "metadata_sha256": "d97f5d71c8de8a724db79b130b8149f7f5af82d0d4184c382cb3e1fdce6e1bc6",
       "content_sha256": "edc33516fae0c86fce5fc878fab97d51ea7971a7e8ef07f867c949cc0545a203"
     },
     "rescisao": {
-      "metadata_sha256": "0be035a543c368c0c57546b7150b2f1f89132e1175d65b4377fba0c477457255",
+      "metadata_sha256": "c5972aa0a29c53e8793004c1097371c9fca714a66eeafbde08ba3aa4b5ca2ddc",
       "content_sha256": "1c696e24b81752a9fd6ecc1cf0625053b510c9c76162b8d6043ab5f27a3f3423"
     },
     "ferias": {
-      "metadata_sha256": "ad581b290f1157a8da88a0d1501eb010c3e375d6f708ac676ab96620bda1b4dc",
+      "metadata_sha256": "c311d0922fb246226650bc22f874e0b2c0dfd3ee01cb41780f2abe23f8ff4ccf",
       "content_sha256": "a282ae8ea6280a5472832152da9289d49c8859d7ae789727b3584b78c552ef0b"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "aaafbc8d4d5b19881cab1a380b2fd611c38dde1bfa124d52090df91dcc33dc95",
+      "metadata_sha256": "da6b46f71218d7b150b0004148e5a0b9b54a10164b35789d0901146b6c4a8a52",
       "content_sha256": "028b3c4ab9e0ec11e815b3e2ebf45675fc18fe909ee826dd7addff3f8acd5414"
     },
     "afastamento": {
-      "metadata_sha256": "00c03aea9149918889a9b4d6f9b427060667ff9153edac0251b078584751018e",
+      "metadata_sha256": "4446939f8ba11041d7745f15a5a8ab815b5f93160fcebc88f608e9126fce1e9b",
       "content_sha256": "db03204440b14500a2d4f5c57af0c2bb7a0d48ea2faa363f6c7e02c13584d514"
     },
     "documentos": {
-      "metadata_sha256": "0cf866db38f8ae835da989b79368856252c95f00d5866fb075fcd68c6fed74d2",
+      "metadata_sha256": "401c2abdb171f4920a51bc48d0c9e8d45bae4f3d00426255e173425310e4a4a3",
       "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
     },
     "aprovacoes": {
-      "metadata_sha256": "92d0aa16e136b0ae9f392a1fd88fff88775f2d34df320cc78ed608d0a1cefee5",
+      "metadata_sha256": "e8573e3ac50db0c3ba3e1c53f4b62b7ad917926ff33e89b51da0c0a97e9770c0",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "7a4b7f686e26cf33b190ab705c686e19fc33c9f21d76b576857398b697630294",
+      "metadata_sha256": "1a76272bf8e28be144a682ee1863fb9cfc83c347b520b3b2f94a76f1b288e31d",
       "content_sha256": "47bb0104c9254941f091b7ba3d7c8f80c78c0b2dcf7bf6af5f05d4d871148206"
     },
     "ocorrencia": {
-      "metadata_sha256": "0b6a119947eecfa9cf20cfa8b462f213c6d082ce20a8a75041a6445c8e8c9435",
+      "metadata_sha256": "ed1a2b0449bdb70274d1cbffd4863e7af6d4e135cad874f8ece170edce8d7aa1",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "d83ce0655dfb946f008b0762f5415ec2773bdff3cfdda43df5cc8eee56284dfb",
+      "metadata_sha256": "aa27713e47a680f261fab55a629390ab7a93de6d670a99f8c91944e9b140b2ac",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "98d2a2840eed5d025e6ae523abd5a4f4adb8476bdfe3442abeebe1e95a1273ac",
+      "metadata_sha256": "cdaee3b7898da26cdd5471945a6752faad2eb2fa06e45ac6d160379315d9ca8d",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "1d16272f90cab50e29bd7cafe946ad6b5c89066dd6f9c6d122e99929a97b3d9c",
+      "metadata_sha256": "1654a2bf3fcd387aecc1429b58a3c6ae8df62b0ad95a4b6f85eb15ac65342091",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -75,7 +75,8 @@
       "Admissão distingue CTPS Digital identificada pelo CPF de carteira física; preserva datas, Não, meia-noite, filiação e finalidades dos dependentes.",
       "Entrega autenticada ao solicitante conserva gates; Drive Izzi permanece futuro explícito sem configuração ou ativação.",
       "Extensão2.3 orienta PREPARED_UNSIGNED sem transmissão e conciliação de relatórios com XMLs, mantendo os limites de cada fonte.",
-      "Correção2.3.1: complemento de nome vazio somente no contrato autorizado, seleção histórica tipada pela automação e conferência efetiva antes de checks, sem autofill CTPS/CDI nem fórmula universal de avos."
+      "Correção2.3.1: complemento de nome vazio somente no contrato autorizado, seleção histórica tipada pela automação e conferência efetiva antes de checks, sem autofill CTPS/CDI nem fórmula universal de avos.",
+      "Comunicação2.3.2: conclusão primeiro, resumo com alvo80palavras, pontos essenciais e próximo passo; ressalvas, payloads completos e gates humanos preservados."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -88,7 +89,8 @@
       "Plugin2.3.0 conserva transporte/OAuth e orienta preparação fiscal persistida sem envio; instalação e descoberta exigem conferência separada.",
       "Helper local --version declara somente sua edição; parameters valida schema empresarial externamente sem preencher desconhecidos, enviar ou substituir gates do backend.",
       "Publicação, instalação, catálogo, roteiro e execução real pelo executor da Ana exigem provas separadas; preservar kit e agenda.",
-      "Plugin2.3.1: helper offline mcp-resource salva blob embutido da respostaMCP completa com URI/SHA256/tamanho explícitos, saída privada nova e manifesto; não usa rede/SDK/OAuth nem registra checks."
+      "Plugin2.3.1: helper offline mcp-resource salva blob embutido da respostaMCP completa com URI/SHA256/tamanho explícitos, saída privada nova e manifesto; não usa rede/SDK/OAuth nem registra checks.",
+      "Plugin2.3.2 alinha bootstrap, operação e suporte às respostas curtas, sem declarar instalação, adoção ou qualidade de execução não observadas."
     ]
   }
 }

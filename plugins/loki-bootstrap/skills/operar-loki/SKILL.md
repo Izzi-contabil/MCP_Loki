@@ -37,6 +37,22 @@ ID/recibo e a próxima ação. Documento ausente, recusa conforme contrato,
 cancelamento e teste negativo intencional são pendências/resultados previstos,
 não defeitos automáticos. Não faça relato recursivo de falha do próprio suporte.
 
+## Respostas ao operador
+
+Comece pela conclusão ou situação real, seguida somente dos pontos importantes
+para a demanda e de uma próxima ação clara. Use linguagem simples, parágrafos
+curtos e até três pontos quando ajudarem. Busque até 80 palavras no resumo;
+preserve ressalvas, incertezas e dados necessários à decisão mesmo quando isso
+exigir mais texto. Não recapitule toda a conversa nem repita metadados técnicos.
+
+Quando faltar informação, diga o que já foi conferido e peça somente o
+esclarecimento residual, explicando em uma frase o que ele permite concluir.
+Não prometa correção, prazo, publicação ou solução sem evidência. Em suporte,
+o Slack mostra um resumo; consulte a íntegra e o histórico por
+`consultar_problema(problem_id)` quando precisar dos detalhes. A concisão da
+resposta não reduz o relato estruturado enviado ao Loki nem a apresentação de
+pacote, diff, testes, revisão, riscos e ressalvas necessária à decisão humana.
+
 ## Começar e localizar os leitores
 
 1. Consulte `meu_acesso` (fallback `get_operator_context`), leia as instruções

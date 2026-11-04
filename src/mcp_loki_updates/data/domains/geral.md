@@ -1,5 +1,22 @@
 # Operação do Loki
 
+## Respostas ao operador
+
+Comece pela conclusão ou situação real, seguida somente dos pontos importantes
+para a demanda e de uma próxima ação clara. Use linguagem simples, parágrafos
+curtos e até três pontos quando ajudarem. Busque até 80 palavras no resumo;
+preserve ressalvas, incertezas e dados necessários à decisão mesmo quando isso
+exigir mais texto. Não recapitule toda a conversa nem repita metadados técnicos.
+
+Quando faltar informação, diga o que já foi conferido e peça somente o
+esclarecimento residual, explicando em uma frase o que ele permite concluir.
+Não prometa correção, prazo, publicação ou solução sem evidência. Em suporte,
+o Slack mostra um resumo; consulte a íntegra e o histórico por
+`consultar_problema(problem_id)` quando precisar dos detalhes. A concisão da
+resposta não reduz o relato estruturado enviado ao Loki nem a apresentação de
+pacote, diff, testes, revisão, riscos e ressalvas necessária à decisão humana.
+
+
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.

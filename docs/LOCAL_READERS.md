@@ -104,7 +104,7 @@ Referências: [dependências de skills no Codex](https://learn.chatgpt.com/docs/
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.1, contrato2.3.0 e instruções/plugin2.3.1 preservam o mínimo2.0.0 e a
+Provider0.4.2, contrato2.3.0 e instruções/plugin2.3.2 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
