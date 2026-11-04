@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.4.0",
-  "contract_version": "2.4.0",
-  "plugin_version": "2.4.0",
+  "instructions_version": "2.5.0",
+  "contract_version": "2.5.0",
+  "plugin_version": "2.5.0",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-03",
+  "updated_at": "2026-11-04",
   "domains": {
     "geral": {
-      "metadata_sha256": "db8588391345eb5ed7bd83676e8b220787635fa578785035210192c0bf3d923d",
-      "content_sha256": "6eb8eb51eb3354d014e225b794597631cbb2fffb9c9a2280a90221b3f77aa6b7"
+      "metadata_sha256": "0a634c3a27c0ff3a603af7ac90a8efe19ff763a2aa6b28fa87b409e5f95d5fc7",
+      "content_sha256": "5197064a484b6968e2d05dd7441f3ea52d0cbecbbd0d2ef171b48e04f3a2604c"
     },
     "admissao": {
-      "metadata_sha256": "dd41a4c01a08692c0ce494df3afc5c2097e95fc2907e415184bfb547428a8f32",
+      "metadata_sha256": "b55ba5b535cdd0f1a962735bc13ad4d474f73916119f0f18af848f58c8bbb4e6",
       "content_sha256": "edc33516fae0c86fce5fc878fab97d51ea7971a7e8ef07f867c949cc0545a203"
     },
     "rescisao": {
-      "metadata_sha256": "3b8cafaed824c70407c48270573c4ca38aa1c61fe2f0276096746e9ee10daf6c",
+      "metadata_sha256": "29410db691fbf2b2e182a159203e06a02df243cbe0061a76699e796063614310",
       "content_sha256": "1c696e24b81752a9fd6ecc1cf0625053b510c9c76162b8d6043ab5f27a3f3423"
     },
     "ferias": {
-      "metadata_sha256": "bd55744c83e01a065269e279c883510fcd31dd25dd86d5ecc94a09d4bf209b98",
+      "metadata_sha256": "e545fc7f2a0a0ffd597887ce1c3d02c4adb02c0dff0f7650cbe7373cb8ec1d98",
       "content_sha256": "a282ae8ea6280a5472832152da9289d49c8859d7ae789727b3584b78c552ef0b"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "8332d5c6c0acd81455fdb204ed1afd1d6ef3f90d21f0dfbd449ca90a97cd0e38",
+      "metadata_sha256": "db50963fd015579a97456a552ca9d168aeaf7eb96296a1fcafff164e7d2e312c",
       "content_sha256": "028b3c4ab9e0ec11e815b3e2ebf45675fc18fe909ee826dd7addff3f8acd5414"
     },
     "afastamento": {
-      "metadata_sha256": "e84747ca0bb44173f8fb75bfa91880bf911a565744ace0dacde4e7f8e1d79905",
+      "metadata_sha256": "69b4a2029b11227179fa6b0ec0d61b3a84aa3d509f732ded9df12757623ab25b",
       "content_sha256": "db03204440b14500a2d4f5c57af0c2bb7a0d48ea2faa363f6c7e02c13584d514"
     },
     "documentos": {
-      "metadata_sha256": "7d2c283d5a51c269819468c63089a4bb655ca13202af6d94e08613070fa6d272",
+      "metadata_sha256": "f2e08c5a51fa86e1fd28f93a84c27c6df646b0f33187508e9a3a9b185c224f36",
       "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
     },
     "aprovacoes": {
-      "metadata_sha256": "3bee09698de18603b511b957717376f34def63aa9a13b5cc7be6e056771f7d95",
+      "metadata_sha256": "35f68be9b722872fe392bbcbfc92c70e3e5a6375b7cc12957e8dface7818ba4f",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "d17a62eb055fbc6d60c824f352be43e9509ad1cc9ffd0d378dbed28be8a9e3c1",
+      "metadata_sha256": "e653aceb4827e3f293ec0255cf6f1c18e61e8ea09e2b60cc552db3d10880919b",
       "content_sha256": "47bb0104c9254941f091b7ba3d7c8f80c78c0b2dcf7bf6af5f05d4d871148206"
     },
     "ocorrencia": {
-      "metadata_sha256": "6eb4b5cfbae99692c2ebf5a914b2b014c61861ddcbe11537097813630098ed56",
+      "metadata_sha256": "2dfa5d9e8851cf4f4b95ffe3408884a7e3a59a5c5b9ca3f9f137d59fcf3d0cd7",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "b454a82e5961f3704c88c313eaea13fa7b0fcdb68489d0e00cb8628f2b8ea380",
+      "metadata_sha256": "3eeafe2f7b1baf5f3b5f8599fc2660cd1c09fd471ec7bfa1f6cdbee35d9b6aa0",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "23a543b1d1e402fcaddd336e86f72ed855c397b07c4b3e73060aede5f97771f8",
+      "metadata_sha256": "e2358b5a0ade139adfb3fd7570fba1d9bf2782b312d2ce76ca755d950e85520c",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "386743066c67224dcff40d33319871395b48ddbd6edc5cb15e32f882e1f8b569",
+      "metadata_sha256": "a1b4fed1e0cbe0f27d8668c8e98669996b91b07150170380e84719d79914bad6",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -65,7 +65,8 @@
       "Perfis company_parameters temporais por estabelecimento usam validate_client_config/apply_client_config com CAS; prontidão de produção permanece ausente e ativação é recusada.",
       "Perfis empresariais aceitam fim de vigência não informado; seleção, sobreposição e consumo mensal preservam parâmetros desconhecidos.",
       "Preparação persistida S-1005 pelo HTTPS, com ID/XML sem assinatura, pins, revisão e ambiente fixados; consulta e cancelamento auditado, sem envio ou nova autoridade fiscal.",
-      "Contrato2.4.0: answer_problem no receive_case_data @connector registra resposta literal do relator MCP e apresentação declarada da pergunta corrente; CAS e replay, sem aprovar software ou DP."
+      "Contrato2.4.0: answer_problem no receive_case_data @connector registra resposta literal do relator MCP e apresentação declarada da pergunta corrente; CAS e replay, sem aprovar software ou DP.",
+      "Contrato2.5.0 aditivo: assuntos/fontes/destinos propostos em consultar_problema.refinement; restart_problem_refinement permite novo ciclo delimitado apenas ao proprietário humano com CAS/replay e motivo literal."
     ],
     "instructions": [
       "Extensão aditiva2.2: intenção fiscal de administrador humano, prévia/hash/revisão e readback; assinatura, representação, fila e recibo verificados continuam pendentes.",
@@ -78,7 +79,8 @@
       "Extensão2.3 orienta PREPARED_UNSIGNED sem transmissão e conciliação de relatórios com XMLs, mantendo os limites de cada fonte.",
       "Correção2.3.1: complemento de nome vazio somente no contrato autorizado, seleção histórica tipada pela automação e conferência efetiva antes de checks, sem autofill CTPS/CDI nem fórmula universal de avos.",
       "Comunicação2.3.2: conclusão primeiro, resumo com alvo80palavras, pontos essenciais e próximo passo; ressalvas, payloads completos e gates humanos preservados.",
-      "Refino2.4.0: pergunta na thread ao autor; hipótese técnica após resposta e leitura do código; procedimentos ao contato DP (Rafa), sem spam ou correção automática."
+      "Refino2.4.0: pergunta na thread ao autor; hipótese técnica após resposta e leitura do código; procedimentos ao contato DP (Rafa), sem spam ou correção automática.",
+      "Refino2.5.0: resposta do contato DP convidado retoma por assunto, incluindo origemMCP; três perguntas no ciclo autor+DP, uma menção, dependências do cliente e texto simples com alvo60palavras. Nenhuma escrita factual ou correção automática."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -93,7 +95,8 @@
       "Publicação, instalação, catálogo, roteiro e execução real pelo executor da Ana exigem provas separadas; preservar kit e agenda.",
       "Plugin2.3.1: helper offline mcp-resource salva blob embutido da respostaMCP completa com URI/SHA256/tamanho explícitos, saída privada nova e manifesto; não usa rede/SDK/OAuth nem registra checks.",
       "Plugin2.3.2 alinha bootstrap, operação e suporte às respostas curtas, sem declarar instalação, adoção ou qualidade de execução não observadas.",
-      "Plugin2.4.0 alinha operação, suporte e bootstrap ao fluxo de refino e encaminhamento humano; instalação e aderência continuam exigindo observação."
+      "Plugin2.4.0 alinha operação, suporte e bootstrap ao fluxo de refino e encaminhamento humano; instalação e aderência continuam exigindo observação.",
+      "Plugin2.5.0 alinha preparação para Ana, proposta de configuração e triagem técnica; fonte atual e proposta não comprovam consumo, aplicação ou instalação no operador."
     ]
   }
 }
