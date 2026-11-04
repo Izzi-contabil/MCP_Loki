@@ -1,4 +1,4 @@
-# Leitores externos — plugin2.3.0
+# Leitores externos — plugin2.4.0
 
 O plugin nativo mantém o nome `loki-orientacoes@loki-equipe` e inclui bootstrap, operação, investigação de regras e suporte. As instalações1.0.2 recebem código, skill e lock
 pelo mesmo auto-update Git. Não é necessário outro ZIP ou conexão MCP.
@@ -104,7 +104,7 @@ Referências: [dependências de skills no Codex](https://learn.chatgpt.com/docs/
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.2, contrato2.3.0 e instruções/plugin2.3.2 preservam o mínimo2.0.0 e a
+Provider0.4.3, contrato2.4.0 e instruções/plugin2.4.0 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.

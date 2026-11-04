@@ -1,7 +1,7 @@
-# Loki orientações — plugin2.3.2
+# Loki orientações — plugin2.4.0
 
 O nome `loki-orientacoes@loki-equipe` permanece para atualização nativa. O contrato
-operacional2.3.0 exige dados estruturados e fontes opcionais: consulte
+operacional2.4.0 exige dados estruturados e fontes opcionais: consulte
 `get_process_contract`, capture `get_case.input_snapshot` e use `receive_case_data`.
 Depois execute cálculo, geração e revisão. Versões internas preservam auditoria.
 A empresa de teste usa o mesmo fluxo e gates, sem modo especial.
@@ -18,7 +18,7 @@ Consulte [operar-loki](skills/operar-loki/SKILL.md),
 Use [registrar-problema-loki](skills/registrar-problema-loki/SKILL.md) conforme
 escopo/autorização de suporte, preservando UUID/recibo e sem dados de RH.
 
-A candidata acompanha provider0.4.2/instruções2.3.2. Build, publicação, instalação,
+A candidata acompanha provider0.4.3/instruções2.4.0. Build, publicação, instalação,
 carregamento, catálogo e execução precisam de evidências separadas. Não altera
 OAuth, assinatura/pin do kit antigo ou agenda. Dados e recibos ficam em workspace
 privado fora do plugin; nenhum pacote ou documento concede decisão humana.
@@ -45,7 +45,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.2, contrato2.3.0 e instruções/plugin2.3.2 preservam o mínimo2.0.0 e a
+Provider0.4.3, contrato2.4.0 e instruções/plugin2.4.0 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -62,7 +62,7 @@ permanecem imutáveis; promoção/publicação exigem revisão e gates do consum
 
 ## Correção da harness2.3.1 preservada
 
-Provider0.4.2/instruções e plugin2.3.2 mantêm contratoMCP2.3.0 e mínimo2.0.0.
+Provider0.4.3/instruções e plugin2.4.0 mantêm contratoMCP2.4.0 e mínimo2.0.0.
 O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
 URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
 complemento somente de nome vazio pelo contrato e checks após leitura real.
@@ -71,11 +71,18 @@ Script e lock permanecem juntos; dependências não mudaram. Wheels0.4.1 e
 anteriores continuam imutáveis. Esta candidata não comprova publicação,
 instalação, carregamento ou execução real na Ana, nem muda agenda/credenciais.
 
-## Comunicação2.3.2
+## Comunicação2.4.0
 
-Provider0.4.2/instruções e plugin2.3.2 orientam conclusão primeiro, pontos
+Provider0.4.3/instruções e plugin2.4.0 orientam conclusão primeiro, pontos
 essenciais e próxima ação, com alvo de80palavras no resumo. Ressalvas, evidências
-e payloads completos permanecem; contrato2.3.0 e mínimo2.0.0 não mudam.
+e payloads completos permanecem; contrato2.4.0 e mínimo2.0.0 não mudam.
 O Slack apresenta avisos compactos e a íntegra segue consultável pelo MCP.
 Fonte, build, publicação, instalação no cliente e qualidade real são provas
 separadas; esta alteração não atualiza a agenda ou a instalação da Ana.
+
+## Refino e encaminhamento2.4.0
+
+Pergunta curta na thread antes de hipótese; questão técnica exige resposta do
+autor e consulta ao código, sem corrigir automaticamente. Procedimentos seguem
+ao contato DP cadastrado (Rafa), uma vez. Estados internos e replay não geram
+avisos repetidos. Triagem/correção e confirmações permanecem humanas e com gates.
