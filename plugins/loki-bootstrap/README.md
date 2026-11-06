@@ -1,4 +1,13 @@
-# Loki orientações — plugin2.5.0
+# Loki orientações — plugin2.5.2
+
+A edição2.5.2 acompanha provider0.4.6 e preserva contrato2.5.0/mínimo2.0.0.
+O roteiro [CAPACIDADES_DP.md](skills/operar-loki/references/CAPACIDADES_DP.md)
+orienta prontidão, histórico pelo lote existente, jobs, restart, férias, consignado,
+pensão por finalidade e adicionais. Descubra o contrato servido antes de usar
+novas rotas; a seleção PR240 é condicional. O guia mantém as limitações de
+categoria do afastamento e saldo de salário na rescisão sem prometer correção.
+Fonte, publicação, instalação, recepção pela harness e acurácia medida são provas
+separadas. Esta candidata não altera conta, credenciais, parâmetros ou agenda.
 
 O nome `loki-orientacoes@loki-equipe` permanece para atualização nativa. O contrato
 operacional2.5.0 exige dados estruturados e fontes opcionais: consulte
@@ -18,7 +27,7 @@ Consulte [operar-loki](skills/operar-loki/SKILL.md),
 Use [registrar-problema-loki](skills/registrar-problema-loki/SKILL.md) conforme
 escopo/autorização de suporte, preservando UUID/recibo e sem dados de RH.
 
-A candidata acompanha provider0.4.4/instruções2.5.0. Build, publicação, instalação,
+A candidata acompanha provider0.4.6/instruções2.5.2. Build, publicação, instalação,
 carregamento, catálogo e execução precisam de evidências separadas. Não altera
 OAuth, assinatura/pin do kit antigo ou agenda. Dados e recibos ficam em workspace
 privado fora do plugin; nenhum pacote ou documento concede decisão humana.
@@ -45,7 +54,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.4, contrato2.5.0 e instruções/plugin2.5.0 preservam o mínimo2.0.0 e a
+Provider0.4.6, contrato2.5.0 e instruções/plugin2.5.2 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -62,7 +71,7 @@ permanecem imutáveis; promoção/publicação exigem revisão e gates do consum
 
 ## Correção da harness2.3.1 preservada
 
-Provider0.4.4/instruções e plugin2.5.0 mantêm contratoMCP2.5.0 e mínimo2.0.0.
+Provider0.4.6/instruções e plugin2.5.2 mantêm contratoMCP2.5.0 e mínimo2.0.0.
 O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
 URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
 complemento somente de nome vazio pelo contrato e checks após leitura real.
@@ -73,7 +82,7 @@ instalação, carregamento ou execução real na Ana, nem muda agenda/credenciai
 
 ## Comunicação2.5.0
 
-Provider0.4.4/instruções e plugin2.5.0 orientam conclusão primeiro, pontos
+Provider0.4.6/instruções e plugin2.5.2 orientam conclusão primeiro, pontos
 essenciais e próxima ação, com alvo de60palavras no resumo. Ressalvas, evidências
 e payloads completos permanecem; contrato2.5.0 e mínimo2.0.0 não mudam.
 O Slack apresenta avisos compactos e a íntegra segue consultável pelo MCP.

@@ -1,5 +1,92 @@
 # Operação do Loki
 
+## Descobrir prontidão e medir acurácia
+
+Consulte `meu_acesso`, `get_dp_capabilities`, `list_workflows` e
+`get_process_contract` no serviço autenticado. Fonte no Git, plugin instalado,
+catálogo do aplicativo e contrato servido são observações separadas. Uma rota
+nova só pode ser usada quando anunciada pelo contrato servido; instrução local
+não comprova publicação, acesso ou instalação no executor.
+
+Para folha, consulte `get_client_readiness` com `process_type=folha_mensal`,
+`empresa_cnpj` e `competencia` exatos. `pronto` é cadastral;
+`folha_avaliada`, `pronto_folha` e `mapa_folha` mostram a avaliação mensal,
+com hash/grupo/origem. Sem contexto mensal, `pronto_folha=null` e
+`mapa_folha_nao_avaliado` conservam a lacuna. Essa leitura não mede acurácia
+nem comprova completude ou prontidão por funcionário.
+
+O contrato atual não oferece endpoint bulk específico de prontidão por pessoa.
+Quando o catálogo/contrato não oferecer esse recurso, registre a lacuna sem
+inventar nomes ou concluir que uma tabela da harness seja estado do Loki.
+Consulte população/identidade no caso, histórico e pendências por pessoa.
+Uma tabela de cobertura é diagnóstico da harness, com data e fontes explícitas.
+
+Para histórico em lote, somente quando o catálogo HTTPS oferecer
+`get_operational_batch_contract`, consulte esse contrato e confira as operações
+permitidas. Sem essa ferramenta no catálogo, registre pendência de distribuição
+e use consultas e seleções individuais anunciadas e autorizadas. Não invente
+alias, dispatcher ou rota de lote em `receive_case_data`.
+O lote existente, quando disponível, pode encadear leituras
+`get_case_historical_state` e seleções `apply_historical_state` por caso,
+com o `state_hash` retornado, identidade/episódio e corte conferidos.
+Isso continua sendo execução sequencial por item, sem endpoint bulk novo.
+Use dependências/referências de resultado somente no formato do contrato;
+releia recibos e consumo por calculador. `SUCCEEDED` da linha não comprova
+consumo financeiro; `STARTED` ambíguo exige conciliação antes de repetir.
+
+A meta de98% usa casos completos corretos / casos elegíveis, com coorte,
+finalidade, período e elegibilidade definidos antes da rodada. Falha, parcial
+e abstenção não são acerto; não exclua casos após conhecer o resultado.
+Sem referência ou completude necessárias, declare percentual não aferido.
+Registre também comparáveis, coincidências por campo, bloqueios e motivos,
+sem substituir o indicador principal. Prontidão, testes de software e seleção
+de histórico não comprovam acurácia geral. Separe defeito reproduzido,
+parâmetro/dado pendente, regra ainda não medida e diferença de recepção da harness.
+
+## Retomada, nova preparação e seleção da folha
+
+Na folha, siga `preferred_execution` e `durable_workflow` do contrato.
+Quando `available=true`, use os jobs duráveis
+`enqueue_case_workflow`/`get_case_workflow_job`, inclusive pela rota declarada
+`receive_case_data` com `loki.case-workflow-command/1`.
+Preserve `request_ref` e `job_id`; resposta perdida exige consulta do mesmo
+job, não outro cálculo. `exception_type`, `phase` e `reference` são diagnóstico
+técnico, sem provar correção dos dados ou autorizar restart.
+
+Recomeçar exige pessoa autorizada, intenção específica e
+`expected_snapshot=get_case.correction_snapshot`. Siga `preparation` do
+contrato; `loki.case-preparation-transport/1` em `receive_case_data` só é rota
+quando anunciada. `replace_process_inputs` abre nova preparação e exige novos
+dados financeiros; documentos, decisões e eventos anteriores permanecem.
+Preservar imports de admissão/rescisão exige a prévia `preview_import_preservation`
+e o plano/hash/dependências correntes em `preserve_imports`; não escolha eventos
+de memória. Aprovação ou efeito pode exigir conciliação prévia.
+
+Correção da população da folha depende de
+`preparation.population_correction` no contrato servido. Quando oferecido,
+prepare a lista final completa de `funcionario_id`+`matricula`, consulte
+`preview_payroll_population_correction` ou a rota anunciada
+`loki.payroll-population-preview/1` e apresente diferenças ao humano.
+A aplicação usa `loki.case-preparation/1`, `mode=replace_payroll_population`,
+`preview_id`, `reason`, `request_ref` e `reset_financial_inputs=true`,
+no restart autorizado ou seu transporte tipado anunciado. Não é complemento
+incremental: exige repor dados/qualificações financeiras e nova revisão.
+Prévia não aplica; seleção antiga, valores e aceite não migram por presunção.
+Sem esse bloco/rota, preserve a pendência; plugin novo não publica a PR240.
+
+Cancelamento usa `cancellation` do contrato. Quando anunciado,
+`loki.case-cancellation/1` pode seguir em `receive_case_data`, com
+`expected_snapshot=correction_snapshot` e `human_message` específico.
+Releia estado e trilha; cancelamento não exclui registros nem libera a chave
+natural para criar outro caso. Automação não recebe autoridade humana.
+
+Para publicação, smoke ou comparação de versões, não baixar o acervo nem
+rebaixar todos os documentos. Confira fatos, eventos, decisões e metadados/hashes
+pelo conector; integridade dos bytes usa provas do servidor/storage/backup.
+Baixe somente o documento necessário à demanda expressa. Metadados não são
+bytes lidos; checks de um pacote documental exigem a conferência correspondente.
+
+
 ## Respostas ao operador
 
 ### Suporte sem ruído na conversa

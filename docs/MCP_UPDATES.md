@@ -1,8 +1,39 @@
 # Atualizações MCP Loki — contrato 2.5.0
 
-Candidata de04/11/2026: provider/wheel0.4.4, instruções2.5.0 e plugin2.5.0.
+Candidata de06/11/2026: provider/wheel0.4.6, instruções2.5.2 e plugin2.5.2.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
+
+## Recuperação e saldo2.5.2 — 06/11/2026
+
+A edição0.4.6 orienta a nova preparação de afastamento somente quando anunciada
+pelo contrato e o alcance salarial de mês civil30/divisor30 qualificado no motor.
+Preserva identidade, efeitos, revisão e pendências restantes. Nenhum desses
+textos publica código ou altera conta/dados/agenda da Ana. Contrato2.5.0 e
+mínimo2.0.0 continuam; wheel0.4.5 e seu recibo original permanecem imutáveis.
+
+## Recursos de DP2.5.1 — 06/11/2026
+
+Provider/wheel0.4.5, instruções e plugin2.5.1; contrato2.5.0 e mínimo2.0.0
+preservados. Mudança de orientação, sem novo escritor ou endpoint de backend.
+O novo roteiro nativo
+[CAPACIDADES_DP.md](../plugins/loki-bootstrap/skills/operar-loki/references/CAPACIDADES_DP.md)
+e os domínios pertinentes cobrem:
+
+- Prontidão cadastral/mensal, lacuna de prontidão por funcionário, histórico pelo
+  lote sequencial existente e medição por casos completos/elegíveis.
+- Jobs duráveis e consulta após resposta perdida; restart humano, preservação de
+  imports e seleção/cancelamento tipados da PR240 somente quando o contrato servido
+  anunciar cada rota. Preview não aplica e seleção nova exige dados financeiros novos.
+- Saldo de abertura/médias de férias, correção de afastamentos, consignado,
+  pensão por finalidade e adicionais individuais/políticas explícitas de cargo.
+  A recusa de categoria e saldo de salário `regra_nao_medida` continuam como limitações.
+
+Proveniência detalhada continua opcional, com fontes/declarações preservadas.
+Sem download do acervo para smoke ou comparação de versão. O wheel0.4.4 e o
+plugin2.5.0 anteriores permanecem imutáveis. Um build local não prova promoção
+ao consumidor, deploy, instalação/uso no operador, integração Dataprev ou98%.
+Não altera transporte, identidade, conta, parâmetros reais ou agenda da Ana.
 
 ## Extensão2.3.0 e migração anterior de1.x
 
@@ -28,7 +59,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.5.0. Contrato2.5.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
+recomendado é2.5.1. Contrato2.5.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 
@@ -77,9 +108,9 @@ altere pin/assinatura do kit legado ou troque identidade para contornar falha.
 Os registros anteriores de publicação em `docs/` são históricos e preservados;
 não comprovam o estado servido desta candidata nem atualização das instalações.
 
-A candidata0.4.4 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.5.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
+A candidata0.4.5 define entrega autenticada ao solicitante como padrão e Drive como opção futura explícita; contrato MCP2.5.0 é aditivo, mínimo de plugin2.0.0. Os wheels0.2.0,0.2.1 e0.2.2 já construídos permanecem imutáveis.
 
-Compatibilidade da candidata0.4.4: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.4.5: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
@@ -104,7 +135,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.4, contrato2.5.0 e instruções/plugin2.5.0 preservam o mínimo2.0.0 e a
+Provider0.4.5, contrato2.5.0 e instruções/plugin2.5.1 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -121,7 +152,7 @@ permanecem imutáveis; promoção/publicação exigem revisão e gates do consum
 
 ## Correção da harness2.3.1 preservada
 
-Provider0.4.4/instruções e plugin2.5.0 mantêm contratoMCP2.5.0 e mínimo2.0.0.
+Provider0.4.5/instruções e plugin2.5.1 mantêm contratoMCP2.5.0 e mínimo2.0.0.
 O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
 URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
 complemento somente de nome vazio pelo contrato e checks após leitura real.
@@ -132,7 +163,7 @@ instalação, carregamento ou execução real na Ana, nem muda agenda/credenciai
 
 ## Comunicação2.5.0
 
-Provider0.4.4/instruções e plugin2.5.0 orientam conclusão primeiro, pontos
+Provider0.4.5/instruções e plugin2.5.1 orientam conclusão primeiro, pontos
 essenciais e próxima ação, com alvo de60palavras no resumo. Ressalvas, evidências
 e payloads completos permanecem; contrato2.5.0 e mínimo2.0.0 não mudam.
 O Slack apresenta avisos compactos e a íntegra segue consultável pelo MCP.

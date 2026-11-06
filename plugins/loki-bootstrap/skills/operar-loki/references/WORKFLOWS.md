@@ -74,6 +74,12 @@ Exemplo estrutural sintético, sem substituir o schema real do processo:
 
 ## Recomeçar ou descartar um caso
 
+Para jobs duráveis, preservação de imports, correção explícita da população da
+folha e cancelamento tipado, siga
+[CAPACIDADES_DP.md](CAPACIDADES_DP.md). Use somente rotas anunciadas pelo
+contrato servido; publicação da PR240 e disponibilidade na harness exigem
+conferência própria. Uma falha de geração não autoriza reinício do caso.
+
 Consulte `get_case` e capture `correction_snapshot` atual. Somente pessoa
 autorizada com decidir_chat e intenção específica pode chamar
 `restart_case(case_id, expected_snapshot, human_message)` ou
@@ -92,8 +98,11 @@ o estado efetivamente persistido.
 
 ## CSV operacional e retomada por item
 
-CSV operacional é entrada tipada de parâmetros preparados pela harness. Consulte
-`get_operational_batch_contract()` e seus escritores antes de preparar o envio. Preserve
+CSV operacional é entrada tipada de parâmetros preparados pela harness.
+Somente quando o catálogo HTTPS oferecer `get_operational_batch_contract()`,
+consulte-o e confira seus escritores antes de preparar o envio. Se ausente,
+registre lacuna de distribuição e use as operações individuais anunciadas;
+não invente rota de lote ou dispatcher. Preserve
 referência estável por lote e por item, empresa, processo, pessoa/episódio,
 snapshot/revisão, dados e proveniência. Envie apenas o schema aceito, sem
 originais, gabarito ou CSV de leitura usado como anexo genérico.

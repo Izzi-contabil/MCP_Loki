@@ -1,5 +1,29 @@
 # Afastamento
 
+## Nova preparação de afastamento
+
+Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar
+`preparation.supported=true`, a pessoa autorizada pode usar
+`replace_process_inputs` pelo transporte `loki.case-preparation-transport/1`
+em `receive_case_data`, com `correction_snapshot`, mensagem humana e referência
+idempotente. Exige `operar_casos`, `decidir_chat` e `corrigir_dados`; automação não recebe
+essas capacidades humanas. Siga o schema anunciado, sem inventar parâmetros.
+
+A nova preparação conserva caso, empresa, funcionário, CPF/CNPJ, admissão e
+referência da ocorrência; arquiva os fatos anteriores e exige nova recepção
+completa de categoria, início, períodos e retorno coerentes. Releia o recibo,
+os fatos recebidos e a nova revisão. Não reenvie o payload antigo sem conferir
+suas âncoras e os parâmetros corretos. Histórico e decisões permanecem.
+
+Aprovação ou efeito aplicado impedem essa recuperação até a conciliação própria;
+não use restart para reescrever um episódio efetivo. O corretor genérico
+`submit_operator_correction` mantém
+a recusa `correcao nao pode alterar identidade ou escopo do caso` para
+`leave.categoria`. Essa recusa não impede a nova preparação quando o contrato
+a oferecer. Sem o suporte anunciado, conserve a pendência do caminho e sua
+reprodução; o plugin não publica a capacidade nem altera a conta do operador.
+
+
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.
