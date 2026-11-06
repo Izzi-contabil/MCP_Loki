@@ -1,8 +1,16 @@
 # Atualizações MCP Loki — contrato 2.5.0
 
-Candidata de06/11/2026: provider/wheel0.4.5, instruções2.5.1 e plugin2.5.1.
+Candidata de06/11/2026: provider/wheel0.4.6, instruções2.5.2 e plugin2.5.2.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
+
+## Recuperação e saldo2.5.2 — 06/11/2026
+
+A edição0.4.6 orienta a nova preparação de afastamento somente quando anunciada
+pelo contrato e o alcance salarial de mês civil30/divisor30 qualificado no motor.
+Preserva identidade, efeitos, revisão e pendências restantes. Nenhum desses
+textos publica código ou altera conta/dados/agenda da Ana. Contrato2.5.0 e
+mínimo2.0.0 continuam; wheel0.4.5 e seu recibo original permanecem imutáveis.
 
 ## Recursos de DP2.5.1 — 06/11/2026
 

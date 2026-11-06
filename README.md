@@ -1,19 +1,20 @@
 # MCP Loki — contrato operacional 2.5.0
 
-O pacote `mcp-loki-updates` **0.4.5** entrega instruções **2.5.1** ao backend.
+O pacote `mcp-loki-updates` **0.4.6** entrega instruções **2.5.2** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.5.1** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.5.2** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
-A edição2.5.1 acrescenta o roteiro de
+A edição2.5.2 acrescenta o roteiro de
 [recursos de DP](plugins/loki-bootstrap/skills/operar-loki/references/CAPACIDADES_DP.md):
 descoberta da prontidão mensal, histórico pelo lote existente, jobs duráveis,
 nova preparação e parâmetros recentes. A seleção da folha da PR240 só se aplica
-quando o contrato servido oferecer a rota. Não há endpoint bulk novo nem correção
-da recusa de categoria de afastamento ou do saldo de salário na rescisão.
+quando o contrato servido oferecer a rota. A edição orienta a nova preparação
+de afastamento e o alcance salarial qualificado de mês civil30/divisor30 quando
+o backend os oferecer; o pacote de instruções não publica essas capacidades.
 Contrato2.5.0 e mínimo2.0.0 permanecem. Acurácia exige coorte e medição reais;
 esta candidata local não atualiza conta, instalação ou agenda da Ana.
 
@@ -48,7 +49,7 @@ validação separada. Dados pessoais, fontes privadas e credenciais ficam fora d
 Os documentos de releases anteriores em `docs/` são históricos; não definem o
 contrato operacional atual nem demonstram instalação, consumo ou aceite individual.
 
-Compatibilidade da candidata0.4.5: fonte `loki-document-kit`0.2.0, com allowlist
+Compatibilidade da candidata0.4.6: fonte `loki-document-kit`0.2.0, com allowlist
 operacional explícita e comandos para dados+fontes/conferência técnica. O kit0.1.0
 usa escritores aposentados e precisa de migração separada. Não sobrescrever
 artefatos, locks, pins ou assinaturas antigos. Esta candidata não comprova
@@ -73,7 +74,7 @@ para estados, retorno e retomada; esta árvore não comprova publicação ou ado
 
 ## Extensão eSocial2.3.0
 
-Provider0.4.5, contrato2.5.0 e instruções/plugin2.5.1 preservam o mínimo2.0.0 e a
+Provider0.4.6, contrato2.5.0 e instruções/plugin2.5.2 preservam o mínimo2.0.0 e a
 compatibilidade declarada de2.0/2.1; cliente desconhecido continua desconhecido.
 A allowlist e as permissões dos domínios permanecem: consulte `geral` e
 `alteracao_cadastral` para as cinco ferramentas HTTPS de modo fiscal e parâmetros.
@@ -90,7 +91,7 @@ permanecem imutáveis; promoção/publicação exigem revisão e gates do consum
 
 ## Correção da harness2.3.1 preservada
 
-Provider0.4.5/instruções e plugin2.5.1 mantêm contratoMCP2.5.0 e mínimo2.0.0.
+Provider0.4.6/instruções e plugin2.5.2 mantêm contratoMCP2.5.0 e mínimo2.0.0.
 O helper offline `mcp-resource` salva bytes embutidos da resposta completa com
 URI/SHA256/tamanho explícitos; os roteiros orientam seleção histórica tipada,
 complemento somente de nome vazio pelo contrato e checks após leitura real.
@@ -101,7 +102,7 @@ instalação, carregamento ou execução real na Ana, nem muda agenda/credenciai
 
 ## Comunicação2.5.0
 
-Provider0.4.5/instruções e plugin2.5.1 orientam conclusão primeiro, pontos
+Provider0.4.6/instruções e plugin2.5.2 orientam conclusão primeiro, pontos
 essenciais e próxima ação, com alvo de60palavras no resumo. Ressalvas, evidências
 e payloads completos permanecem; contrato2.5.0 e mínimo2.0.0 não mudam.
 O Slack apresenta avisos compactos e a íntegra segue consultável pelo MCP.

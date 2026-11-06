@@ -103,10 +103,17 @@ este guia não oferece fórmula universal de avos.
 
 ## Saldo de salário na rescisão
 
-Admissão e desligamento no mesmo mês podem manter a derivação
-`saldo_admissao_no_mes` com `regra_nao_medida`. Esse achado é de saldo de salário,
-não de saldo de abertura de férias. Preserve datas, operandos e a reprodução
-para investigação de código; atualização de instruções não corrige o calculador.
-Não altere datas nem preencha zero para coincidir com o relatório de referência.
-As parcelas independentes continuam conforme o contrato, sem declarar a
-rescisão inteira correta a partir de um resultado parcial.
+Quando o calculador servido oferecer o alcance qualificado, admissão e
+rescisão no mesmo mês civil de 30 dias, com divisor 30 e sem afastamento
+sobreposto, usam o intervalo contratual inclusivo das datas
+reais de admissão e desligamento. É uma inferência técnica documentada das
+fontes aplicáveis e da semântica temporal, não medição histórica nem regra
+universal de calendário. A harness informa fatos; os dias e centavos são derivados
+pelo motor, sem entrada livre para coincidir com a referência.
+
+`regra_nao_medida:saldo_admissao_no_mes` pode continuar pendente fora desse alcance; fevereiro,
+dia31, divisores e afastamentos seguem suas guardas próprias. Atualização de
+instruções não corrige o calculador publicado nem certifica o caso completo.
+Confira versão do motor, dias, memória e bases; não reutilize memorial parcial
+antigo ou aceite anterior como resultado da regra nova. Parcelas independentes
+permanecem disponíveis conforme o contrato, sem preencher ausência com zero.

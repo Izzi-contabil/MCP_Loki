@@ -111,20 +111,28 @@ Releia resultado e proveniência para demonstrar consumo real; seleção e
 contrato disponível são provas distintas. Não mova datas ou saldos para
 forçar aceitação de uma origem incompatível.
 
-## Correção de afastamento
+## Nova preparação de afastamento
 
-Antes de corrigir, releia caso, versão, efeito e `correction_snapshot`.
-`submit_operator_correction` mantém seu schema, capacidade `corrigir_dados`,
-intenção humana e revisão esperada; não use uma escrita comum para sobrescrever.
-Corrigir fatos antes do efeito e conciliar um efeito já aplicado são atos distintos.
-Retorno efetivo, responsabilidade por período, categoria e diagnóstico não se
-deduzem apenas das datas de um atestado.
+Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar
+`preparation.supported=true`, a pessoa autorizada pode usar
+`replace_process_inputs` pelo transporte `loki.case-preparation-transport/1`
+em `receive_case_data`, com `correction_snapshot`, mensagem humana e referência
+idempotente. Exige `operar_casos`, `decidir_chat` e `corrigir_dados`; automação não recebe
+essas capacidades humanas. Siga o schema anunciado, sem inventar parâmetros.
 
-No consumidor que recusar `leave.categoria` com
-`correcao nao pode alterar identidade ou escopo do caso`, registre defeito/lacuna do caminho de
-correção. O guia não corrige essa recusa: não troque identidade, não recadastre
-em outro processo nem peça reconfirmação de categoria já informada.
-Mantenha as partes independentes e encaminhe a reprodução para manutenção.
+A nova preparação conserva caso, empresa, funcionário, CPF/CNPJ, admissão e
+referência da ocorrência; arquiva os fatos anteriores e exige nova recepção
+completa de categoria, início, períodos e retorno coerentes. Releia o recibo,
+os fatos recebidos e a nova revisão. Não reenvie o payload antigo sem conferir
+suas âncoras e os parâmetros corretos. Histórico e decisões permanecem.
+
+Aprovação ou efeito aplicado impedem essa recuperação até a conciliação própria;
+não use restart para reescrever um episódio efetivo. O corretor genérico
+`submit_operator_correction` mantém
+a recusa `correcao nao pode alterar identidade ou escopo do caso` para
+`leave.categoria`. Essa recusa não impede a nova preparação quando o contrato
+a oferecer. Sem o suporte anunciado, conserve a pendência do caminho e sua
+reprodução; o plugin não publica a capacidade nem altera a conta do operador.
 
 ## Consignado: contrato, competência e rescisão
 
@@ -185,10 +193,17 @@ Fonte informal atribuída pode ser aceita; confira consumo na memória por pesso
 
 ## Saldo de salário na rescisão
 
-Admissão e desligamento no mesmo mês podem manter a derivação
-`saldo_admissao_no_mes` com `regra_nao_medida`. Esse achado é de saldo de salário,
-não de saldo de abertura de férias. Preserve datas, operandos e a reprodução
-para investigação de código; atualização de instruções não corrige o calculador.
-Não altere datas nem preencha zero para coincidir com o relatório de referência.
-As parcelas independentes continuam conforme o contrato, sem declarar a
-rescisão inteira correta a partir de um resultado parcial.
+Quando o calculador servido oferecer o alcance qualificado, admissão e
+rescisão no mesmo mês civil de 30 dias, com divisor 30 e sem afastamento
+sobreposto, usam o intervalo contratual inclusivo das datas
+reais de admissão e desligamento. É uma inferência técnica documentada das
+fontes aplicáveis e da semântica temporal, não medição histórica nem regra
+universal de calendário. A harness informa fatos; os dias e centavos são derivados
+pelo motor, sem entrada livre para coincidir com a referência.
+
+`regra_nao_medida:saldo_admissao_no_mes` pode continuar pendente fora desse alcance; fevereiro,
+dia31, divisores e afastamentos seguem suas guardas próprias. Atualização de
+instruções não corrige o calculador publicado nem certifica o caso completo.
+Confira versão do motor, dias, memória e bases; não reutilize memorial parcial
+antigo ou aceite anterior como resultado da regra nova. Parcelas independentes
+permanecem disponíveis conforme o contrato, sem preencher ausência com zero.

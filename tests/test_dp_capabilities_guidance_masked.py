@@ -91,3 +91,30 @@ def test_reference_keeps_missing_contract_and_known_refusals_visible() -> None:
         "não baixar o acervo",
     ):
         assert required in guide, required
+
+
+def test_leave_preparation_is_discoverable_without_relaxing_the_generic_corrector() -> None:
+    provider = InstructionsProvider()
+    guides = [
+        provider.get("afastamento")["instructions"],
+        (OPERATOR / "references/CAPACIDADES_DP.md").read_text(encoding="utf-8"),
+    ]
+    for guide in guides:
+        assert "preparation.supported=true" in guide
+        assert "replace_process_inputs" in guide
+        assert "loki.case-preparation-transport/1" in guide
+        assert "corrigir_dados" in guide
+        assert "efeito aplicado" in guide
+
+
+def test_same_month_salary_guidance_keeps_the_qualified_calendar_scope() -> None:
+    provider = InstructionsProvider()
+    guides = [
+        provider.get("rescisao")["instructions"],
+        (OPERATOR / "references/CAPACIDADES_DP.md").read_text(encoding="utf-8"),
+    ]
+    for guide in guides:
+        assert "mês civil de 30 dias" in guide
+        assert "divisor 30" in guide
+        assert "inferência técnica" in guide
+        assert "saldo_admissao_no_mes" in guide
