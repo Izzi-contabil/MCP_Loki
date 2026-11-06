@@ -13,8 +13,8 @@ PLUGIN = ROOT / "plugins/loki-bootstrap"
 def test_additive_https_release_preserves_old_and_unknown_clients() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.4"
-    assert metadata["instructions_version"] == "2.5.0"
+    assert metadata["provider_version"] == "0.4.5"
+    assert metadata["instructions_version"] == "2.5.1"
     assert metadata["mcp_contract_version"] == "2.5.0"
     assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
     assert provider.check_version("2.3.0", "2.3.0")["compatible"] is True

@@ -1,5 +1,63 @@
 # Alteração cadastral
 
+## Consignado: contrato, competência e rescisão
+
+Consulte `get_company_onboarding_contract` e os parâmetros efetivamente
+oferecidos. `credito_trabalhador_contratos` registra revisões de contrato,
+número como string, instituição, vigência, parcela em centavos e
+`rubrica_loki` explícita. Encerramento/cancelamento é outra revisão;
+não altere revisões antigas nem presuma rubrica por código numérico global.
+
+Na folha, `credito_trabalhador_competencia` identifica os contratos/versões
+confirmados no mês e as qualificações exigidas pelo schema. Declaração atribuída
+pode ser aceita, sem documento/hash universal. Cronograma não comprova desconto
+pago ou repasse; confira memória, limites, operandos e pendências.
+
+Na rescisão, `credito_trabalhador_rescisao` é snapshot próprio da consulta,
+com data do desligamento/consulta, identidade, completude, contratos, saldos e
+garantias informados. Parcela mensal não vira saldo devedor.
+Consulta automática Dataprev exige acesso corporativo e contrato técnico próprio;
+importação estruturada disponível não comprova integração automática ativa.
+Sem dados/qualificação específicos, preserve o resultado dependente pendente.
+
+## Pensão por finalidade
+
+Analise o ofício/decisão na harness antes de preparar
+`pensao_alimenticia_regra`, pelo contrato de onboarding/parâmetros autorizado.
+Originais permanecem na harness; a regra extraída conserva referência, vigência
+e autoria, sem anexação ou hash por campo universal.
+Quando oferecido, `loki.pension-rule/2` define aplicações explícitas para
+`folha_mensal`, `ferias`, `decimo_terceiro` e `rescisao`, com situação,
+rubrica, percentual, base, deduções, tratamento do IRRF e critério temporal.
+Não estenda regra mensal a outra finalidade nem conclua “não beneficiário”
+a partir de ausência. Política desconhecida retém parcelas dependentes.
+
+No décimo terceiro, confira `apuracao` (`parcela` ou
+`acumulada_com_compensacao`), `etapas` e retenção anterior efetivamente qualificada;
+retenção omitida não é zero. Nas férias e na folha, confira a proveniência
+da retenção já calculada para evitar consumo duplicado. Persistência do parâmetro
+não demonstra consumo: releia a seleção e a memória do cálculo correspondente.
+
+## Adicionais por pessoa e cargo
+
+Consulte o contrato de parâmetros e o cadastro empresarial vigente.
+`insalubridade_regra` e `periculosidade_regra` são escolhas individuais
+explícitas, com `recebe`, vigência, rubrica e operandos do schema; ausência não
+é `recebe=false`. Regra individual qualificada prevalece sobre política por cargo.
+
+`additional_policies` só atribui por cargo quando houver política explícita
+com CNPJ, estabelecimento, cargos, período e população de admissões.
+`inherit_future_hires` exige escolha e corte de admissão explícitos;
+o nome do cargo isolado não cria direito. Sobreposição, cargo/unidade desconhecidos
+e vigência parcial conservam pendência/necessidade de segmentação.
+
+Elegibilidade difere de valoração: base, percentual, divisor, quantidade e
+incidências dependem do mapa/regra qualificados; não invente fórmula universal.
+Aplique cadastro somente por `validate_client_config`/`apply_client_config`
+autorizados, com CAS e releitura. Parâmetros individuais seguem onboarding próprio.
+Fonte informal atribuída pode ser aceita; confira consumo na memória por pessoa.
+
+
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.

@@ -10,6 +10,12 @@ Consulte os contratos e o catálogo efetivamente servidos; uma versão de plugin
 não comprova que um novo escritor esteja publicado. Siga
 [WORKFLOWS.md](references/WORKFLOWS.md) para retorno e retomada por item.
 
+Antes de diagnosticar prontidão, retomar casos ou preparar folha, férias,
+afastamento, consignado, pensão e adicionais, leia
+[CAPACIDADES_DP.md](references/CAPACIDADES_DP.md). O roteiro distingue contrato
+servido, lacuna de catálogo, parâmetros da operação e acurácia medida; recursos
+novos permanecem condicionados ao contrato efetivamente disponível.
+
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que
 rode uma sequência de scripts. Não crie outra conexão, não abra login e não leia
@@ -231,8 +237,10 @@ nem concede acesso por si. Não envie envelopes antigos como dados do caso.
 O destino legado `onboarding-source` é recusado para novas preparações; migre
 para parâmetros tipados, preservando leituras e checkpoints privados existentes.
 
-Para lote operacional, consulte `get_operational_batch_contract()` e siga
-[WORKFLOWS.md](references/WORKFLOWS.md). `render-operational-csv` e
+Para lote operacional, quando `get_operational_batch_contract()` estiver no
+catálogo HTTPS, consulte-o e siga [WORKFLOWS.md](references/WORKFLOWS.md).
+Se ausente, registre lacuna de distribuição e use as operações individuais
+realmente disponíveis; não invente alias de lote. `render-operational-csv` e
 `operational-batch-request` preparam CSV e pedido offline para
 `execute_operational_batch`; a harness envia pelo HTTPS e relê por
 `get_operational_batch(batch_id)`. Resultado de cada linha governa o efeito;

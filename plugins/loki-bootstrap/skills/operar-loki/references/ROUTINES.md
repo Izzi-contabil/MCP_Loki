@@ -27,6 +27,12 @@ da organização, nunca uma conta pessoal indicada em referência histórica.
 
 ## Descoberta antes da fila
 
+Leia [CAPACIDADES_DP.md](CAPACIDADES_DP.md) para prontidão mensal e por pessoa,
+seleção histórica pelo lote existente, jobs duráveis, nova preparação e os
+parâmetros recentes de DP. Contrato no fonte não comprova serviço publicado;
+a recusa de categoria de afastamento e o saldo de salário ainda não medido
+continuam visíveis.
+
 Consulte `meu_acesso` (fallback: `get_operator_context`), leia as instruções
 retornadas e consulte `loki_verificar_versao`, informando apenas versões de
 cliente conhecidas. Obtenha as instruções geral/documentos e do domínio

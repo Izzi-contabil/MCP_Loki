@@ -1,5 +1,21 @@
 # Afastamento
 
+## Correção de afastamento
+
+Antes de corrigir, releia caso, versão, efeito e `correction_snapshot`.
+`submit_operator_correction` mantém seu schema, capacidade `corrigir_dados`,
+intenção humana e revisão esperada; não use uma escrita comum para sobrescrever.
+Corrigir fatos antes do efeito e conciliar um efeito já aplicado são atos distintos.
+Retorno efetivo, responsabilidade por período, categoria e diagnóstico não se
+deduzem apenas das datas de um atestado.
+
+No consumidor que recusar `leave.categoria` com
+`correcao nao pode alterar identidade ou escopo do caso`, registre defeito/lacuna do caminho de
+correção. O guia não corrige essa recusa: não troque identidade, não recadastre
+em outro processo nem peça reconfirmação de categoria já informada.
+Mantenha as partes independentes e encaminhe a reprodução para manutenção.
+
+
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.

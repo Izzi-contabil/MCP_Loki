@@ -1,5 +1,44 @@
 # Rescisão
 
+## Consignado: contrato, competência e rescisão
+
+Consulte `get_company_onboarding_contract` e os parâmetros efetivamente
+oferecidos. `credito_trabalhador_contratos` registra revisões de contrato,
+número como string, instituição, vigência, parcela em centavos e
+`rubrica_loki` explícita. Encerramento/cancelamento é outra revisão;
+não altere revisões antigas nem presuma rubrica por código numérico global.
+
+Na folha, `credito_trabalhador_competencia` identifica os contratos/versões
+confirmados no mês e as qualificações exigidas pelo schema. Declaração atribuída
+pode ser aceita, sem documento/hash universal. Cronograma não comprova desconto
+pago ou repasse; confira memória, limites, operandos e pendências.
+
+Na rescisão, `credito_trabalhador_rescisao` é snapshot próprio da consulta,
+com data do desligamento/consulta, identidade, completude, contratos, saldos e
+garantias informados. Parcela mensal não vira saldo devedor.
+Consulta automática Dataprev exige acesso corporativo e contrato técnico próprio;
+importação estruturada disponível não comprova integração automática ativa.
+Sem dados/qualificação específicos, preserve o resultado dependente pendente.
+
+## Pensão por finalidade
+
+Analise o ofício/decisão na harness antes de preparar
+`pensao_alimenticia_regra`, pelo contrato de onboarding/parâmetros autorizado.
+Originais permanecem na harness; a regra extraída conserva referência, vigência
+e autoria, sem anexação ou hash por campo universal.
+Quando oferecido, `loki.pension-rule/2` define aplicações explícitas para
+`folha_mensal`, `ferias`, `decimo_terceiro` e `rescisao`, com situação,
+rubrica, percentual, base, deduções, tratamento do IRRF e critério temporal.
+Não estenda regra mensal a outra finalidade nem conclua “não beneficiário”
+a partir de ausência. Política desconhecida retém parcelas dependentes.
+
+No décimo terceiro, confira `apuracao` (`parcela` ou
+`acumulada_com_compensacao`), `etapas` e retenção anterior efetivamente qualificada;
+retenção omitida não é zero. Nas férias e na folha, confira a proveniência
+da retenção já calculada para evitar consumo duplicado. Persistência do parâmetro
+não demonstra consumo: releia a seleção e a memória do cálculo correspondente.
+
+
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.
@@ -61,3 +100,13 @@ para contornar a recusa. Seleção não comprova pagamento ou ocorrência aplica
 Não use meses tocados como avos devidos nem copie avos do TRCT comparado para
 completar a entrada. Dados ausentes mantêm parcelas dependentes pendentes;
 este guia não oferece fórmula universal de avos.
+
+## Saldo de salário na rescisão
+
+Admissão e desligamento no mesmo mês podem manter a derivação
+`saldo_admissao_no_mes` com `regra_nao_medida`. Esse achado é de saldo de salário,
+não de saldo de abertura de férias. Preserve datas, operandos e a reprodução
+para investigação de código; atualização de instruções não corrige o calculador.
+Não altere datas nem preencha zero para coincidir com o relatório de referência.
+As parcelas independentes continuam conforme o contrato, sem declarar a
+rescisão inteira correta a partir de um resultado parcial.

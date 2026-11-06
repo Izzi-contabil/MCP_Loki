@@ -1,5 +1,45 @@
 # Férias
 
+## Histórico, saldo de abertura e médias de férias
+
+Consulte `get_case_historical_state` no episódio e corte do caso e selecione
+por `apply_historical_state` somente após conferir identidade, cobertura e
+`state_hash`. `saldo_source` admite a referência histórica tipada anunciada
+pelo schema, com `fact_ref` e `fact_hash`; não substitua por ID ou saldo inventado.
+Confira período aquisitivo, corte da abertura anterior ao gozo,
+`fragments_complete`, dias consumidos, abono e movimentos entre abertura e gozo.
+Histórico selecionado não comprova saldo qualificado nem pagamento.
+
+As alternativas `medias`, `componentes_medias`, `medias_importadas` e
+`medias_nao_aplicaveis_source` são exclusivas conforme o schema.
+Média final importada usa seleção explícita por finalidade, período de uso,
+fato e hash; não é média recalculada de qualquer folha disponível.
+Não troque ausência de histórico por zero ou “não se aplica”.
+Siga o schema atual para programação, calendário, incidências e fontes próprias.
+
+Releia resultado e proveniência para demonstrar consumo real; seleção e
+contrato disponível são provas distintas. Não mova datas ou saldos para
+forçar aceitação de uma origem incompatível.
+
+## Pensão por finalidade
+
+Analise o ofício/decisão na harness antes de preparar
+`pensao_alimenticia_regra`, pelo contrato de onboarding/parâmetros autorizado.
+Originais permanecem na harness; a regra extraída conserva referência, vigência
+e autoria, sem anexação ou hash por campo universal.
+Quando oferecido, `loki.pension-rule/2` define aplicações explícitas para
+`folha_mensal`, `ferias`, `decimo_terceiro` e `rescisao`, com situação,
+rubrica, percentual, base, deduções, tratamento do IRRF e critério temporal.
+Não estenda regra mensal a outra finalidade nem conclua “não beneficiário”
+a partir de ausência. Política desconhecida retém parcelas dependentes.
+
+No décimo terceiro, confira `apuracao` (`parcela` ou
+`acumulada_com_compensacao`), `etapas` e retenção anterior efetivamente qualificada;
+retenção omitida não é zero. Nas férias e na folha, confira a proveniência
+da retenção já calculada para evitar consumo duplicado. Persistência do parâmetro
+não demonstra consumo: releia a seleção e a memória do cálculo correspondente.
+
+
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.
