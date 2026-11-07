@@ -1,5 +1,21 @@
 # Atualizações MCP Loki — contrato 2.5.0
 
+## Candidata 0.4.8 / instruções e plugin 2.5.4 — 07/11/2026
+
+Perguntas ao DP sobre rubricas exigem nome legível+código exato de fonte real no
+mesmo namespace e alcance, preservando zeros à esquerda da fonte. A orientação
+idêntica em geral/operar/registrar/investigar manda consultar fontes autorizadas
+antes da pergunta residual, preservar conflito/ausência e liberar partes
+independentes. Não exige DOC/EXTSRC/hash universal; veda rótulo inventado e pedido
+de identificação já fornecida. Resposta do DP conserva atribuição e alcance, sem
+conferir autoridade humana ou aplicar dados/incidências automaticamente.
+
+Contrato 2.5.0 e mínimo 2.0.0 permanecem; não há mudança de interface. Os testes
+conferem integridade, compatibilidade e coerência de distribuição; não comprovam
+que um modelo seguiu a orientação. Wheel 0.4.7 continua imutável. Build, promoção,
+serviço publicado, instalação do plugin e uso na Ana exigem provas distintas;
+esta fonte não altera instalação, rotina, identidade, agenda ou pins legados.
+
 ## Candidata 0.4.7 / instruções 2.5.3 — 07/11/2026
 
 A entrega aditiva orienta diagnóstico pelo escritor, consulta financeira exata,
