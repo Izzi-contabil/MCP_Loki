@@ -1,12 +1,16 @@
 # MCP Loki — contrato operacional 2.5.0
 
-O pacote `mcp-loki-updates` **0.4.7** entrega instruções **2.5.3** ao backend.
+O pacote `mcp-loki-updates` **0.4.8** entrega instruções **2.5.4** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.5.3** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.5.4** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
+
+A edição2.5.4 orienta perguntas ao DP com nome+código reais e escopo da fonte,
+preservando zeros, conflitos e partes independentes. As três skills pertinentes
+e o domínio geral entregam o mesmo contrato; isso não comprova uso pelo modelo.
 
 A edição2.5.2 acrescenta o roteiro de
 [recursos de DP](plugins/loki-bootstrap/skills/operar-loki/references/CAPACIDADES_DP.md):

@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.5.3",
+  "instructions_version": "2.5.4",
   "contract_version": "2.5.0",
-  "plugin_version": "2.5.3",
+  "plugin_version": "2.5.4",
   "minimum_plugin_version": "2.0.0",
   "updated_at": "2026-11-07",
   "domains": {
     "geral": {
-      "metadata_sha256": "3cd822e2eb0bb0f1b2bf1b84b221d6e8bd05befcaf4505ec317f865bf05d5f59",
-      "content_sha256": "a6d428e978e5d4d2039909003515baf7440f0470fdc7a70772412d4dd028b149"
+      "metadata_sha256": "52267f7db93961033acf61cbf2df2a041404ee9ff2bf6fc71866890f0d6a75d8",
+      "content_sha256": "0093622cf25a58d1a4225f3db2ab3ae1c1305128dfe15fbba54b95b27a693c01"
     },
     "admissao": {
-      "metadata_sha256": "b1b01dfc5304f3569fcf09f2a3a18279544792f4846cb5b65433578a05a9e8dd",
+      "metadata_sha256": "d18215103e29f02ea9ef66db533441526c34b1279369bbfd30529be36d80a30d",
       "content_sha256": "edc33516fae0c86fce5fc878fab97d51ea7971a7e8ef07f867c949cc0545a203"
     },
     "rescisao": {
-      "metadata_sha256": "ef8e06092868dcd12d1d693026279b75bce3d91159bdf9e1d749f6262a9b9e9b",
+      "metadata_sha256": "e3619c227506f0c984feb97d641987f165b8acd8c4c1bd6d065510d23b12daa9",
       "content_sha256": "7e695892b442070ba87a665fd1cb6736abd2d50168e0318da6d369d2dc731196"
     },
     "ferias": {
-      "metadata_sha256": "605d8bbbf26d0cfde9f0baefee0dbd1890e3995c2dea25ace2d0b08b6e88f51e",
+      "metadata_sha256": "a0e0415245659138821552d59923112223499bc7824b1e2412de12c08bb7ddab",
       "content_sha256": "6458d6b2cb7d38b391d18b09e80458258e3b30ed6284663217f10ac1c9e339d4"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "bc87a62453b6ec14a2b23fc81f2961bc7ac4b76da5053893294004b0e1094a74",
+      "metadata_sha256": "5a127dc433488809750d882eb15066d408e8ffa8c2547f48c03150fdf6932494",
       "content_sha256": "f570d2756e352fa1c338db112a9200a86a37476f556020034f32988658f461e9"
     },
     "afastamento": {
-      "metadata_sha256": "709c14e46cf6d80e72d1c597477d0c5fe343c88c11fef13244713510e16c2e21",
+      "metadata_sha256": "4292bd7c95ac630e874042c7028c87af4a77b45a50dd7dbae9683f68b873d683",
       "content_sha256": "b8c4c071b26c6d5405141bb7b14be5c85b7d2a82b7917a49f43dd75ae5ad8410"
     },
     "documentos": {
-      "metadata_sha256": "997df85f31c8121a6de27a7df374a7056504867fc2331cad536c4620f3243632",
+      "metadata_sha256": "af66983b36c835bcd7cc093f154d99695141e38cc9f7eb92191326c8feba78cb",
       "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
     },
     "aprovacoes": {
-      "metadata_sha256": "45883eda46d205a0d5226032dbd21af437cba4e8ba596122dfafdf55726e7b30",
+      "metadata_sha256": "5894f9c62525797267036ebe2d0ca2fd46a0a36b98a6d5458405b438a0350815",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "ce6218d1b76cf0c0039c9229c7140ff72ade2dff58dc9b4ad176f565136de498",
+      "metadata_sha256": "1272267074cf6725cee8553a55c23a8b20a517d145716624a2e7930f0bf5c742",
       "content_sha256": "1826680bdefb5066bb3aa634c50e3eaa4052cc64f1fef202c6c49b7ececd5169"
     },
     "ocorrencia": {
-      "metadata_sha256": "123c2e0be648c9e675f7fb5b18991fbef41936a59978fa2438aeb02bd8917579",
+      "metadata_sha256": "d3d21d0a8979f57e4c160deda049934777f38b05c3cae7c3c6a3c9bf1990e959",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "536e954ed008b2393d78c30a9108d4db28009b802e8f5394a1ae99caacc7ece3",
+      "metadata_sha256": "01ea330c57d93b65d3d0bcfc6dd9eca66b83eaf616f4ae85d5130a0398748ab0",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "79bbe64c65c9bd3d431cf6caed0ce53e0bc2455f627e896fff5fa66295b0e919",
+      "metadata_sha256": "fef4d31e05551252d1622c379b04bdc5e1247b6960108ed1d8b3bad788c564c4",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "c04d1c8e18a253524e32c171a044b988b3babe133ccabf720abc7f366e7855ff",
+      "metadata_sha256": "9b47d810b99e3f3a86c30739985f009801fed2f9c6ea0f9405134c26a8825e0f",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -83,7 +83,8 @@
       "Refino2.5.0: resposta do contato DP convidado retoma por assunto, incluindo origemMCP; três perguntas no ciclo autor+DP, uma menção, dependências do cliente e texto simples com alvo60palavras. Nenhuma escrita factual ou correção automática.",
       "Orientação2.5.1: descoberta da prontidão mensal e limites por pessoa; lote sequencial existente, jobs duráveis, restart/preservação e seleção PR240 condicionada ao contrato servido; férias, consignado, pensão por finalidade e adicionais. Recusa de categoria de afastamento e saldo de salário na rescisão regra_nao_medida continuam como limitações, sem promessa de correção ou acurácia.",
       "Recuperação2.5.2: preparação de afastamento somente com suporte anunciado, âncoras e decisão humana; saldo salarial no mês civil30/divisor30 no alcance qualificado do motor, sem generalizar as demais pendências.",
-      "Instruções2.5.3 orientam recusas pelo escritor exato, memória rescisória persistida, faltas mensais do13º e proveniência estruturada de férias sem documento/hash universal. Seleção, cobertura, integridade e aceite permanecem distintos."
+      "Instruções2.5.3 orientam recusas pelo escritor exato, memória rescisória persistida, faltas mensais do13º e proveniência estruturada de férias sem documento/hash universal. Seleção, cobertura, integridade e aceite permanecem distintos.",
+      "Instruções2.5.4: perguntas ao DP apresentam nome+código reais no mesmo namespace e alcance, preservando zeros da fonte; consulta focal, conflito/ausência limitados ao dependente, reuso sem nova pergunta e fonte atribuída sem autoridade automática. Sem DOC/hash universal."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -102,7 +103,8 @@
       "Plugin2.5.0 alinha preparação para Ana, proposta de configuração e triagem técnica; fonte atual e proposta não comprovam consumo, aplicação ou instalação no operador.",
       "Plugin2.5.1 acrescenta roteiro CAPACIDADES_DP e separa fonte, contrato servido, versão instalada, consumo e medição; não cria endpoint bulk, não altera agenda/conta da Ana nem publica backend.",
       "Plugin2.5.2 orienta o consumo das correções da primeira onda; instalação, publicação e execução pelo operador continuam exigindo provas próprias. Wheel0.4.5 preservado.",
-      "Plugin2.5.3 declara orientação aditiva; novos contratos dependem de publicação/descoberta no backend e consumo observado. Wheel0.4.6 preservado."
+      "Plugin2.5.3 declara orientação aditiva; novos contratos dependem de publicação/descoberta no backend e consumo observado. Wheel0.4.6 preservado.",
+      "Plugin2.5.4 distribui a mesma orientação de rubricas em operar-loki, registrar-problema-loki e investigar-regras-dp; texto não comprova instalação ou consumo, e wheel0.4.7 permanece imutável."
     ]
   }
 }

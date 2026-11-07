@@ -94,6 +94,37 @@ Atualizar plugin/servidor não prova catálogo atualizado ou instalação no cli
 refresh/reconexão depende do aplicativo e precisa de conferência. SSH/stdio
 conserva seu catálogo. Não leia cofres, solicite token/webhook local ou crie transporte.
 
+## Identificar rubricas nas perguntas ao DP
+
+Antes de pedir validação de regra, base, incidência, classificação ou tratamento,
+apresente cada rubrica como **nome legível da fonte (código exato da fonte)**.
+Nome+código devem corresponder no mesmo namespace; rubrica ERP, verba TRCT e
+alvo Loki não são equivalentes. Use contexto, catálogo, configuração ou histórico
+atuais e autorizados, inclusive declaração humana real já disponível; preserve
+referência e alcance consultáveis. Não exija DOC, EXTSRC ou hash por campo
+universalmente.
+
+Inclua empresa/grupo, processo e competência/vigência quando necessários para
+desambiguar; vínculo individual somente quando a pergunta depender dele. Código
+igual em outra empresa ou vigência não fornece nome global. Preserve o código de
+exibição e os zeros à esquerda existentes na fonte; não acrescente zeros por
+adivinhação nem altere a normalização interna de cálculo ou deduplicação.
+
+Reutilize identificação e respostas já disponíveis. Se faltar nome, houver
+conflito ou fonte retirada, faça consulta focal autorizada e conserve a pendência;
+só a validação da regra dependente aguarda identificação. Não invente nome de
+slug, exemplo de schema, semelhança numérica ou outro escopo. Continue nas partes
+independentes; pergunte somente identificação ou alcance residual ainda não
+respondido, dentro do ciclo vigente, sem nova menção ou repetição automática.
+
+Uma dúvida útil por vez, com contexto mínimo. Não retire nomes nem ressalvas
+indispensáveis para caber no limite de palavras; se o conjunto não couber,
+encaminhe ao humano com o conteúdo completo, sem abrir novo ciclo automático.
+Resposta do DP é fonte atribuída no alcance expresso; não vira parecer normativo,
+autoridade humana da automação, mudança de dados/incidências, publicação ou
+aceite operacional automático. Fala de terceiro e orientação prévia de IA não
+ganham autoridade humana.
+
 ## Respostas ao operador
 
 ### Suporte sem ruído na conversa

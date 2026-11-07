@@ -90,6 +90,37 @@ Fontes `kind=document` conservam o significado de documento já arquivado no Lok
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
 
+## Identificar rubricas nas perguntas ao DP
+
+Antes de pedir validação de regra, base, incidência, classificação ou tratamento,
+apresente cada rubrica como **nome legível da fonte (código exato da fonte)**.
+Nome+código devem corresponder no mesmo namespace; rubrica ERP, verba TRCT e
+alvo Loki não são equivalentes. Use contexto, catálogo, configuração ou histórico
+atuais e autorizados, inclusive declaração humana real já disponível; preserve
+referência e alcance consultáveis. Não exija DOC, EXTSRC ou hash por campo
+universalmente.
+
+Inclua empresa/grupo, processo e competência/vigência quando necessários para
+desambiguar; vínculo individual somente quando a pergunta depender dele. Código
+igual em outra empresa ou vigência não fornece nome global. Preserve o código de
+exibição e os zeros à esquerda existentes na fonte; não acrescente zeros por
+adivinhação nem altere a normalização interna de cálculo ou deduplicação.
+
+Reutilize identificação e respostas já disponíveis. Se faltar nome, houver
+conflito ou fonte retirada, faça consulta focal autorizada e conserve a pendência;
+só a validação da regra dependente aguarda identificação. Não invente nome de
+slug, exemplo de schema, semelhança numérica ou outro escopo. Continue nas partes
+independentes; pergunte somente identificação ou alcance residual ainda não
+respondido, dentro do ciclo vigente, sem nova menção ou repetição automática.
+
+Uma dúvida útil por vez, com contexto mínimo. Não retire nomes nem ressalvas
+indispensáveis para caber no limite de palavras; se o conjunto não couber,
+encaminhe ao humano com o conteúdo completo, sem abrir novo ciclo automático.
+Resposta do DP é fonte atribuída no alcance expresso; não vira parecer normativo,
+autoridade humana da automação, mudança de dados/incidências, publicação ou
+aceite operacional automático. Fala de terceiro e orientação prévia de IA não
+ganham autoridade humana.
+
 ## Aproveitar o esclarecimento do DP
 
 Separe a resposta por assunto e reutilize o histórico antes de perguntar.
