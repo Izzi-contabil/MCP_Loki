@@ -1,5 +1,24 @@
 # Operação do Loki
 
+## Conferir o resultado e localizar recusas
+
+Se o inventário de onboarding oferecer `projection=discovery`, use essa leitura
+para localizar lotes, referências e recibos e depois consulte as declarações
+específicas. Descoberta por metadados não atesta integridade, prontidão, fatos
+ou aplicação; não substitui a inspeção completa quando ela for necessária.
+
+Use o schema servido do escritor que recebeu o pedido. Campo, tipo, relação,
+conflito e falta de cobertura são causas diferentes; preserve o código, os
+campos seguros, o recibo e a referência de requisição. Uma recusa anterior à
+criação do caso não exige criar um caso fictício. O diagnóstico do cadastro
+empresarial não substitui o diagnóstico de onboarding ou de versões.
+
+`get_case_dossier` mostra os RUNs e as memórias disponíveis. Quando o catálogo
+oferecer `get_case_calculation`, use caso e cálculo rescisório exatos para ler
+valores, seleção, versão e integridade sem recalcular. Ausência histórica de
+causa ou memória permanece explícita. Sucesso técnico, cadastro recebido ou
+leitura íntegra não comprovam paridade, pagamento ou aceite de DP.
+
 ## Descobrir prontidão e medir acurácia
 
 Consulte `meu_acesso`, `get_dp_capabilities`, `list_workflows` e

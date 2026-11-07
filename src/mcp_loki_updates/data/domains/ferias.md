@@ -1,5 +1,20 @@
 # Férias
 
+## Parâmetros, fontes e prova da execução
+
+Consulte o schema atual de programação, calendário, incidência, saldo e médias.
+Quando oferecido pelo consumidor, use a declaração, contexto ou inferência
+atribuídos à operação sem fabricar DOC, manifesto ou hash de original. Preserve
+referência, localizador, fundamento e demais metadados realmente fornecidos.
+Fonte documental e manifesto harness conservam suas verificações de associação
+e integridade; pins históricos continuam sujeitos a identidade, corte e cobertura.
+
+Uma prova tipada de declaração pode ter um digest próprio: isso não demonstra
+leitura de arquivo nem equivale ao hash do original. Confira a prova e o consumo
+na memória do cálculo e na projeção mensal, sem converter desconhecido em zero.
+Use `get_case_dossier` para distinguir memória calculada e RUN recusado; uma
+causa antiga não persistida não pode ser inferida da pendência atual.
+
 ## Histórico, saldo de abertura e médias de férias
 
 Consulte `get_case_historical_state` no episódio e corte do caso e selecione

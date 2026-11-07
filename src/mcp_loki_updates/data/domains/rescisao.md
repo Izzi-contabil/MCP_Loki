@@ -1,5 +1,27 @@
 # Rescisão
 
+## Faltas mensais e elegibilidade do 13º
+
+Consulte `get_process_contract` antes de preparar `faltas_decimo_terceiro`.
+Quando o schema oferecer `loki.thirteenth-absences/1`, informe janela, corte,
+competências, completude e ocorrências com a natureza e os dias realmente
+conhecidos. Uma declaração atribuída ao pedido pode bastar; fontes por campo
+são opcionais. Ausência de competência ou cobertura não significa zero faltas.
+Preserve faltas justificadas, partição patronal/INSS e conflitos entre fontes;
+não some novamente a mesma ocorrência do pedido e do histórico.
+
+Confira `elegibilidade_decimo_terceiro` no resultado, quando persistida, e
+confronte avos informados e derivados. Não altere o inteiro para vencer uma
+recusa. Dados que já determinam a elegibilidade podem sustentar a parcela sem
+redigitação; uma competência indeterminada retém somente os dependentes.
+O 13º sobre aviso tem escopo próprio. Memórias e políticas de centavos devem
+ser conferidas por cálculo e versão, sem aplicar retroativamente o cadastro.
+
+Pensão/IR interdependentes só usam o regime explicitamente oferecido no schema,
+qualificado por ato, base, dedutibilidade, percentual, processo e vigência.
+Não use um regime pós-impostos como aproximação; incerteza do ato ou do imposto
+permanece limitada aos resultados dependentes e não vira autorização de pagamento.
+
 ## Consignado: contrato, competência e rescisão
 
 Consulte `get_company_onboarding_contract` e os parâmetros efetivamente
