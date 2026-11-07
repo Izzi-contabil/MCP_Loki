@@ -1,6 +1,15 @@
 # Atualizações MCP Loki — contrato 2.5.0
 
-Candidata de06/11/2026: provider/wheel0.4.6, instruções2.5.2 e plugin2.5.2.
+## Candidata 0.4.7 / instruções 2.5.3 — 07/11/2026
+
+A entrega aditiva orienta diagnóstico pelo escritor, consulta financeira exata,
+faltas mensais do 13º e fontes de férias identificadas sem DOC/hash universal.
+Contrato 2.5.0 e mínimo 2.0.0 permanecem. Wheel, catálogo servido, instalação e
+consumo exigem conferências distintas; esta fonte não comprova publicação.
+O wheel 0.4.6 e os registros anteriores permanecem imutáveis.
+
+
+Candidata de06/11/2026: provider/wheel 0.4.6, instruções2.5.2 e plugin2.5.2.
 Texto versionado não atualiza serviço implantado nem a instalação do operador.
 O backend incorpora o wheel; o plugin tem distribuição Git própria.
 
