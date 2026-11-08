@@ -1,4 +1,21 @@
-# Atualizações MCP Loki — contrato 2.5.0
+# Atualizações MCP Loki — contrato 2.6.0
+
+## Candidata0.4.9 / contrato, instruções e plugin2.6.0 —08/11/2026
+
+Extensão aditiva para conciliar declaração adicionalONB com fato conservado,
+com prévia, CAS e recibo separado de applied; reprocessar respostaDP corrente
+após agent_schema no mesmo ciclo; e consultar causas mensais persistidas pelo
+dossiê sem recálculo. A representação opt-in de afastamento rescisório separa
+episódio integral de faixa por pagador, mantendo campos/hashes legados quando
+novos campos estão ausentes. As ferramentas e transportes só são usados quando
+anunciados nos contratos do backend.
+
+Mínimo de plugin2.0.0 preservado; clientes2.0–2.5 continuam compatíveis conforme
+versões declaradas, e instalação/desconhecimento do catálogo permanecem
+desconhecidos até observação. Nenhum aceite factual/documental, concessão de
+benefício, pagamento ou transmissão é inferido. A publicação exige validação e
+revisão do consumidor, wheel/proveniência/lock novos e prova HTTP+worker.
+
 
 ## Candidata 0.4.8 / instruções e plugin 2.5.4 — 07/11/2026
 

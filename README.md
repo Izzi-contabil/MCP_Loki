@@ -1,5 +1,7 @@
 # MCP Loki — contrato operacional 2.5.0
 
+Candidata **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
+
 O pacote `mcp-loki-updates` **0.4.8** entrega instruções **2.5.4** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.

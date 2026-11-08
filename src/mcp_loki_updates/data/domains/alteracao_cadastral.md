@@ -1,5 +1,19 @@
 # Alteração cadastral
 
+## Declaração adicional no onboarding
+
+Use `get_company_onboarding_contract.additional_declaration_reconciliation`
+quando publicado. `get_company_employee_effect_state` lê fatos/eventos e
+compensações; `preview_company_onboarding_reconciliation` apresenta os seletores,
+diferenças e snapshots. Após ato específico da pessoa habilitada,
+`reconcile_company_onboarding` registra `reconciled_to_existing_fact`.
+O recibo não comprova equivalência factual: preserva separadamente declarações,
+fundamentos e efeito canônico. Não troca basis, não cria rescisão e não atualiza
+fatos, eventos, pins ou casos. `reconciled_count` não é `applied_count`.
+`CHAT_DECISIONS_ENABLED`, capacidades humanas, escopo, CAS e replay permanecem;
+automação não ganha autoridade. Transporte alternativo somente no
+`compatibility_transport` servido, com os mesmos gates do escritor.
+
 ## Consignado: contrato, competência e rescisão
 
 Consulte `get_company_onboarding_contract` e os parâmetros efetivamente

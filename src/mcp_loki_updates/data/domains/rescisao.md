@@ -1,5 +1,21 @@
 # Rescisão
 
+## Episódio de afastamento e faixa de responsabilidade
+
+No schema servido, `representacao=episodio_integral` conserva a interpretação
+legada do episódio, incluindo a partição inicial do empregador quando aplicável.
+`representacao=faixa_pagador` é opt-in para intervalo já dividido por responsável;
+não desconta novamente os primeiros15dias da faixa declarada como INSS.
+Essa indicação não presume concessão, espécie, continuidade clínica ou vínculo
+entre intervalos vizinhos. Coleção mista, sobreposição ou responsabilidade
+conflitante precisam ser conciliadas pelos dados reais e pelo contrato.
+
+`retorno_episodio` informa o retorno efetivo quando a faixa não encerra o episódio.
+Não deduza esse fato do último dia do pagador. Sem retorno necessário conhecido,
+somente o efeito dependente permanece pendente. Ausência dos campos novos
+preserva o formato e a interpretação legados; entrada, versão, seleção e memória
+do cálculo precisam comprovar consumo antes de afirmar destrave financeiro.
+
 ## Faltas mensais e elegibilidade do 13º
 
 Consulte `get_process_contract` antes de preparar `faltas_decimo_terceiro`.
