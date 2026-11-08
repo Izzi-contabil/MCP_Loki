@@ -1,4 +1,21 @@
-# Atualizações MCP Loki — contrato 2.5.0
+# Atualizações MCP Loki — contrato 2.6.0
+
+## Candidata0.4.9 / contrato, instruções e plugin2.6.0 —08/11/2026
+
+Extensão aditiva para conciliar declaração adicionalONB com fato conservado,
+com prévia, CAS e recibo separado de applied; reprocessar respostaDP corrente
+após agent_schema no mesmo ciclo; e consultar causas mensais persistidas pelo
+dossiê sem recálculo. A representação opt-in de afastamento rescisório separa
+episódio integral de faixa por pagador, mantendo campos/hashes legados quando
+novos campos estão ausentes. As ferramentas e transportes só são usados quando
+anunciados nos contratos do backend.
+
+Mínimo de plugin2.0.0 preservado; clientes2.0–2.5 continuam compatíveis conforme
+versões declaradas, e instalação/desconhecimento do catálogo permanecem
+desconhecidos até observação. Nenhum aceite factual/documental, concessão de
+benefício, pagamento ou transmissão é inferido. A publicação exige validação e
+revisão do consumidor, wheel/proveniência/lock novos e prova HTTP+worker.
+
 
 ## Candidata 0.4.8 / instruções e plugin 2.5.4 — 07/11/2026
 
@@ -84,7 +101,8 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.5.1. Contrato2.5.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
+Na candidata atual, o recomendado é2.6.0 e o contrato2.6.0 é aditivo;
+cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 

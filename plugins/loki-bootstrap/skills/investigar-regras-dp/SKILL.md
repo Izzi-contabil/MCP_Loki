@@ -132,3 +132,18 @@ como proposta de configuração e possível falha como triagem técnica, sem exe
 alterações. No Slack, uma pergunta útil ou próximo passo claro, palavras comuns
 e alvo60palavras; análise completa fica no Loki. Observe o limite conjunto de
 três perguntas e o contato/ciclo realmente convidado no suporte nativo.
+
+## Representação e respostas já disponíveis
+
+Antes de investigar novamente uma regra, confira a resposta já persistida do
+contato convidado e o estado da análise seguinte. Falha `agent_schema` não
+transforma informação respondida em pergunta nova; o reprocessamento tem
+contrato e autoridade próprios em `meu_acesso`.
+
+No consumidor rescisório que oferecer `representacao`, distinga
+`episodio_integral` de `faixa_pagador`. Intervalo já separado por responsável
+não sofre outra retirada dos primeiros15dias. Essa representação não prova
+concessão, espécie ou continuidade clínica. `retorno_episodio` é fato efetivo
+separado do fim da faixa; sua ausência limita apenas o efeito dependente
+conforme o contrato. Não adaptar automaticamente fontes históricas de outro
+formato nem promover inferência contextual a confirmação.

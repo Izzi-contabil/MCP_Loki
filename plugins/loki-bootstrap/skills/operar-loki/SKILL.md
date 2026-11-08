@@ -323,3 +323,19 @@ e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplic
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
 Para modo eSocial e perfis temporais por estabelecimento, leia [ESOCIAL.md](references/ESOCIAL.md). A mudança de modo usa prévia, revisão e intenção de administrador humano; o cadastro usa CAS pelos escritores empresariais. Ambos são registros separados de geração local, assinatura, fila, envio e recibo fiscal. Produção permanece recusada sem prontidão. O helper `--version` informa somente a versão local declarada, sem comprovar servidor ou adoção.
+
+## Diagnósticos mensais e conciliação aditiva
+
+Quando o dossiê servido oferecer `calculations[].diagnostics`, use o cálculo
+exato e sua cobertura persistida para identificar causas por pessoa sem
+recalcular. `loki.payroll-diagnostics/1` distingue parciais e não calculados;
+detalhe não reconhecido fica indisponível. Não use recusa antiga como causa
+atual nem cobertura como aceite financeiro.
+
+No onboarding, siga `additional_declaration_reconciliation` do contrato
+servido: leitor de efeitos, prévia e ato humano de conciliação registram
+`reconciled_to_existing_fact` separado de aplicação. Fontes/basis/fatos/eventos
+e pins são preservados; o recibo não certifica equivalência factual. Use
+somente o `compatibility_transport` efetivamente anunciado quando a ferramenta
+nova não estiver descoberta. Pessoa, capacidades, CHAT_DECISIONS_ENABLED,
+CAS e decisão sobre o objeto concreto permanecem.

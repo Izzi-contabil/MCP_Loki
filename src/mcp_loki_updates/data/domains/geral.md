@@ -1,5 +1,46 @@
 # Operação do Loki
 
+## Reaproveitar respostas e causas persistidas
+
+Uma resposta do contato DP convidado já registrada não deve ser solicitada outra
+vez. Se a análise posterior terminar em `agent_schema`, consulte o histórico e
+`support_reprocess_contract` de `meu_acesso`. Quando anunciado, o proprietário
+pessoa pode usar `reprocessar_respostas_problema`, declaração
+`loki.support-reprocess/1`, ou seu transporte em `receive_case_data`,
+`case_id="@connector"`, `operation="reprocess_problem_answers"`.
+Use `expected_revision`, `expected_last_job`, `expected_source_build`, UUID
+`request_id` e mensagem/motivo humanos literais do ato autorizado. O contrato
+confere a resposta corrente vinculada ao convite, incluindo edição/exclusão.
+Esse ato não reinicia o ciclo de perguntas, não prepara patch e não aprova DP.
+Sem contrato/autoridade ou com contexto alterado, preserve a pendência; não use
+retomada de controle original ou novo convite para contornar a recusa.
+
+`get_case_dossier` pode oferecer `calculations[].diagnostics` para folha mensal,
+schema `loki.payroll-diagnostics/1`. A leitura verifica o hash e a cobertura do
+resultado persistido e não recalcula: mostra causas reconhecidas por pessoa,
+separando completos, parciais e não calculados. Detalhe desconhecido fica
+indisponível, sem reconstrução pela configuração atual. Confirme cálculo, corte
+e pacote exatos antes de tratar um relato antigo como causa atual. Cobertura e
+integridade não comprovam paridade nem aceite financeiro.
+
+## Conciliar declaração adicional com fato conservado
+
+Consulte `get_company_onboarding_contract.additional_declaration_reconciliation`.
+Quando servido, `get_company_employee_effect_state` distingue fato, evento ativo,
+compensação e efeito ausente. Prepare os seletores exatos por
+`preview_company_onboarding_reconciliation`, compare declarações/fontes/efeitos
+e apresente a prévia à pessoa habilitada antes de `reconcile_company_onboarding`.
+Siga `compatibility_transport` somente quando anunciado pelo mesmo contrato;
+o transporte conserva o escritor, autorização e CAS das ferramentas nativas.
+
+O recibo `reconciled_to_existing_fact` não comprova equivalência factual e não
+promove fundamento nem muda fato/evento/pin/caso. `reconciled_count` é separado
+de `applied_count`; pendências legadas permanecem identificáveis. Pessoa,
+escopo, capacidades, `CHAT_DECISIONS_ENABLED`, prévia e snapshots correntes,
+mensagem humana e replay mantêm seus gates. Automação não recebe esse ato.
+Evento ausente ou compensado não é restaurado pela conciliação. Recusa de
+conteúdo divergente no apply ordinário continua válida.
+
 ## Conferir o resultado e localizar recusas
 
 Se o inventário de onboarding oferecer `projection=discovery`, use essa leitura

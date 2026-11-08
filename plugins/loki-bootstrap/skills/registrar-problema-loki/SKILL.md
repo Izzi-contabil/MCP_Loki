@@ -265,3 +265,17 @@ Se optar por preservar proveniência detalhada de um original sem enviá-lo, con
 Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Reprocessar resposta já recebida após falha de schema
+
+Se a resposta do contato convidado está gravada e a análise terminou em
+`agent_schema`, não peça que ele responda novamente. Consulte
+`meu_acesso.support_reprocess_contract` e o relato corrente. Somente quando
+oferecido, uma pessoa proprietária ativa pode declarar o reprocessamento pelo
+contrato `loki.support-reprocess/1`, com revisão/job/build esperados, UUID
+idempotente e mensagem/motivo humanos literais. O transporte anunciado é
+`receive_case_data`, `@connector`, `reprocess_problem_answers`; usa o mesmo
+escritor. A resposta corrente, vínculo ao convite, edição/exclusão e replay
+são reconferidos. O ato não reinicia o ciclo, não envia nova pergunta e não
+autoriza código ou efeitos deDP. Não atribua uma hipótese de prompt à causa
+real sem evidência da saída recusada.

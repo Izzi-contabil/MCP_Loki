@@ -1,5 +1,21 @@
 # Afastamento
 
+## Responsabilidade já dividida no consumidor rescisório
+
+Confira o schema de `get_process_contract("rescisao")` antes de preparar seus
+afastamentos. `representacao=episodio_integral` conserva o episódio e a partição
+legada; `representacao=faixa_pagador` identifica intervalo já separado por
+responsável e evita uma segunda retirada dos primeiros15dias.
+O opt-in não presume concessão, espécie, mesma doença ou continuidade de faixas
+adjacentes. Não transforme `HistoricalLeave.payment_periods` automaticamente
+em episódio clínico nem altere datas para fechar avos.
+
+Use `retorno_episodio` somente para retorno efetivo informado no alcance do
+contrato. Fim da faixa de um pagador não comprova retorno ao trabalho. Se o
+retorno necessário ao reinício de férias não for conhecido, conserve essa
+dependência; não retenha automaticamente os componentes independentes.
+O fato documental e o consumo por rescisão/13º/férias têm finalidades distintas.
+
 ## Nova preparação de afastamento
 
 Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar
