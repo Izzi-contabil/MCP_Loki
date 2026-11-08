@@ -101,7 +101,8 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-recomendado é2.5.1. Contrato2.5.0 é aditivo; cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
+Na candidata atual, o recomendado é2.6.0 e o contrato2.6.0 é aditivo;
+cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
 
