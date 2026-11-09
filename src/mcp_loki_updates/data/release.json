@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.6.0",
-  "contract_version": "2.6.0",
-  "plugin_version": "2.6.0",
+  "instructions_version": "2.6.1",
+  "contract_version": "2.6.1",
+  "plugin_version": "2.6.1",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-08",
+  "updated_at": "2026-11-09",
   "domains": {
     "geral": {
-      "metadata_sha256": "4ba1baf0be831fb25f2b276e7752f76e023237f40cbb1e127a054466cd40fa97",
-      "content_sha256": "0dfe28e8b39e9eed9c922efe96542cdf17d250e78ac39acf8535dc65b5a3d618"
+      "metadata_sha256": "e5a05fd7c55c59560ddff5fc1494acdb67785249d7594ce818d6072372755acb",
+      "content_sha256": "5185651bd38a7a7e13c227a6cf15e19d0a9a7fc08d8e2c05055fb93cd6e65f52"
     },
     "admissao": {
-      "metadata_sha256": "1b6203e97b863cdeec785bb6e218e108912973594a0735dbf70a18bc0e01e7ea",
+      "metadata_sha256": "07128db640b65eabab93a929ef0076fcf7233ff76fd9bfb61062dff18856670d",
       "content_sha256": "edc33516fae0c86fce5fc878fab97d51ea7971a7e8ef07f867c949cc0545a203"
     },
     "rescisao": {
-      "metadata_sha256": "d872e1196fa598c3178a0862e4470990d23a655926399378bf0316376ce3c3fc",
+      "metadata_sha256": "5fa6a9566083fb620eea591ce7c8f3bac7b97606e63a179fb7ab554f193932ef",
       "content_sha256": "18d3928dfd967563d1b30e2ddd7f680c8cb15a62ad96acf8984a83695b58a027"
     },
     "ferias": {
-      "metadata_sha256": "6c173ddda9ff289d657a7554e283df1130f1854731f2e4f5243b902dfa0a6b55",
+      "metadata_sha256": "2617b2bdd6638fb6df92bfbbba6a562ddf91e81911085cdc69c78e21de4d25b0",
       "content_sha256": "6458d6b2cb7d38b391d18b09e80458258e3b30ed6284663217f10ac1c9e339d4"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "279ee1b6eee74672792837eba77652db869935a37328804d9db4f58236111a2e",
+      "metadata_sha256": "0f262d479cd029ea4bdc2ae7bc9ca96c3c4b6fafbf9b5ff348d6b6c3c0c74fbf",
       "content_sha256": "f570d2756e352fa1c338db112a9200a86a37476f556020034f32988658f461e9"
     },
     "afastamento": {
-      "metadata_sha256": "bf17a668d7a4b5a29b5fc7cfaef5599689436ba316b2c4357e8e24b247daaec9",
+      "metadata_sha256": "33e1726fd5a307a863e84c8f81434fd25cf73dcb77bd230f7cfe84c30f31f38c",
       "content_sha256": "102b732589bef86ef251da2ca709ea8a46cc427f812fbf99a66fcdc833dbb5ec"
     },
     "documentos": {
-      "metadata_sha256": "e2dbdbc6320cdd3288447d1109ecf73ee2bdae4a9a5f88856021624835076cb4",
+      "metadata_sha256": "1b67b166ee6f35c9ba4019ecfbe889eee8cdff5cb1964703f435d99372a94325",
       "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
     },
     "aprovacoes": {
-      "metadata_sha256": "84a1c0d5a243eaa4225caeccbad5e972bffbab2ce5bf122dc855213df9acfe1c",
+      "metadata_sha256": "d97965d3ed5f920fa488320c795d59c2001aa2f3a4537182ed93a150f3b3b8ca",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "b1c7a99d1105dc99e44fafc8e3790caea19b273143ce0184773f0d7f4b8633c8",
+      "metadata_sha256": "9a3ad83d697fa4d0776e87987be82baae185ec80559224b32dfd4cff7edb9fb3",
       "content_sha256": "c99188b2af36a78570f4fd23193d7379b01a6edef4c8317cf4593346bbd8b3d2"
     },
     "ocorrencia": {
-      "metadata_sha256": "aa2ed81349a605c4500b61d5b60e7c333aa50f5f0b884a51db3b5ba9e01334d0",
+      "metadata_sha256": "511fcc647b760c8256a5ad66f4d550e73fecccde3238addfe6078d4dbbbbcf99",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "01bb7886fafc6d712c1cd3cdb9d7c418c78dfded312531c57365de166fdd185c",
+      "metadata_sha256": "031cb9aee4d564164e13bf95874b14bc8def16cdfe55c84fa0ccc62a07b6e12e",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "137c4d6e73926b4bd8685d4385eaf3672512ae23ac6f0165f5927e5907243602",
+      "metadata_sha256": "3078d092b1ab02253a75c2d12d33fa4dd5f196c366d043a91ca3f437a891ce9c",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "346253952357f2422743ea7cd8c9ade16e9743a8a98385df2a64eed955da347e",
+      "metadata_sha256": "b98d3e36f5a73263ad2ee8833fbe6c93a6b58b868c032df5c88d38e585b9e19d",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -67,7 +67,8 @@
       "Preparação persistida S-1005 pelo HTTPS, com ID/XML sem assinatura, pins, revisão e ambiente fixados; consulta e cancelamento auditado, sem envio ou nova autoridade fiscal.",
       "Contrato2.4.0: answer_problem no receive_case_data @connector registra resposta literal do relator MCP e apresentação declarada da pergunta corrente; CAS e replay, sem aprovar software ou DP.",
       "Contrato2.5.0 aditivo: assuntos/fontes/destinos propostos em consultar_problema.refinement; restart_problem_refinement permite novo ciclo delimitado apenas ao proprietário humano com CAS/replay e motivo literal.",
-      "Contrato2.6.0 aditivo: conciliaçãoONB com recibo separado e CAS, reprocessamento de respostaDP corrente após agent_schema e leitura histórica das causas mensais; efeitos de negócio preservam seus atos humanos."
+      "Contrato2.6.0 aditivo: conciliaçãoONB com recibo separado e CAS, reprocessamento de respostaDP corrente após agent_schema e leitura histórica das causas mensais; efeitos de negócio preservam seus atos humanos.",
+      "Contrato2.6.1 aditivo: reprocessamento autenticado de resposta corrente intake/procedure também após preparation_internal_failure; preserva limites, memória, convite, fonte e CAS, sem reiniciar ciclo ou preparar código."
     ],
     "instructions": [
       "Extensão aditiva2.2: intenção fiscal de administrador humano, prévia/hash/revisão e readback; assinatura, representação, fila e recibo verificados continuam pendentes.",
@@ -86,7 +87,8 @@
       "Recuperação2.5.2: preparação de afastamento somente com suporte anunciado, âncoras e decisão humana; saldo salarial no mês civil30/divisor30 no alcance qualificado do motor, sem generalizar as demais pendências.",
       "Instruções2.5.3 orientam recusas pelo escritor exato, memória rescisória persistida, faltas mensais do13º e proveniência estruturada de férias sem documento/hash universal. Seleção, cobertura, integridade e aceite permanecem distintos.",
       "Instruções2.5.4: perguntas ao DP apresentam nome+código reais no mesmo namespace e alcance, preservando zeros da fonte; consulta focal, conflito/ausência limitados ao dependente, reuso sem nova pergunta e fonte atribuída sem autoridade automática. Sem DOC/hash universal.",
-      "Instruções2.6.0: não repetir respostasDP; consultar diagnósticos persistidos e distinguir episódio integral/faixa por pagador sem presumir concessão; nova configuração só após contratos publicados."
+      "Instruções2.6.0: não repetir respostasDP; consultar diagnósticos persistidos e distinguir episódio integral/faixa por pagador sem presumir concessão; nova configuração só após contratos publicados.",
+      "Instruções2.6.1: aproveitar respostaDP já registrada após falha técnica do artefato derivado; diagnóstico mensal continua histórico e campos desconhecidos permanecem indisponíveis, sem recalcular ou corrigir dados."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -107,7 +109,8 @@
       "Plugin2.5.2 orienta o consumo das correções da primeira onda; instalação, publicação e execução pelo operador continuam exigindo provas próprias. Wheel0.4.5 preservado.",
       "Plugin2.5.3 declara orientação aditiva; novos contratos dependem de publicação/descoberta no backend e consumo observado. Wheel0.4.6 preservado.",
       "Plugin2.5.4 distribui a mesma orientação de rubricas em operar-loki, registrar-problema-loki e investigar-regras-dp; texto não comprova instalação ou consumo, e wheel0.4.7 permanece imutável.",
-      "Plugin2.6.0 acompanha contratos aditivos; wheel0.4.9 é imutável e distribuição não comprova instalação, publicação, consumo financeiro ou aceite."
+      "Plugin2.6.0 acompanha contratos aditivos; wheel0.4.9 é imutável e distribuição não comprova instalação, publicação, consumo financeiro ou aceite.",
+      "Plugin2.6.1 acompanha a retomada estrita; wheel0.4.10 novo, wheel0.4.9 imutável; publicação e uso exigem evidências separadas."
     ]
   }
 }

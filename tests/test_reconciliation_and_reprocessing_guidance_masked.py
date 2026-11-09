@@ -7,9 +7,9 @@ from mcp_loki_updates import InstructionsProvider
 
 def test_new_contract_keeps_existing_clients_and_unknown_installations() -> None:
     provider = InstructionsProvider()
-    assert provider.metadata()["provider_version"] == "0.4.9"
-    assert provider.metadata()["mcp_contract_version"] == "2.6.0"
-    for version in ("2.0.0", "2.3.0", "2.5.0", "2.6.0"):
+    assert provider.metadata()["provider_version"] == "0.4.10"
+    assert provider.metadata()["mcp_contract_version"] == "2.6.1"
+    for version in ("2.0.0", "2.3.0", "2.5.0", "2.6.0", "2.6.1"):
         assert provider.check_version(version, version)["compatible"] is True
     assert provider.check_version()["compatible"] is None
 
@@ -41,6 +41,20 @@ def test_support_reprocessing_reuses_a_current_reply_and_does_not_restart_questi
         "não reinicia o ciclo",
         "resposta corrente",
         "expected_last_job",
+    ):
+        assert term in guide, term
+
+
+def test_internal_failure_reprocessing_is_limited_to_the_current_procedure_reply() -> None:
+    guide = InstructionsProvider().get("geral")["instructions"]
+    for term in (
+        "preparation_internal_failure",
+        "intake/procedure",
+        "proprietário",
+        "resposta corrente",
+        "não reinicia o ciclo",
+        "não zera limites",
+        "não prepara patch",
     ):
         assert term in guide, term
 

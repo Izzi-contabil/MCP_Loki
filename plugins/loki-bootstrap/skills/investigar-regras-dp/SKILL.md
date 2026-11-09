@@ -140,6 +140,10 @@ contato convidado e o estado da análise seguinte. Falha `agent_schema` não
 transforma informação respondida em pergunta nova; o reprocessamento tem
 contrato e autoridade próprios em `meu_acesso`.
 
+Se o contrato corrente também admitir `preparation_internal_failure` em
+intake/procedure, aproveite a mesma resposta corrente pelos gates anunciados;
+não reinicie ciclo, zere limites ou use erro genérico para preparar código.
+
 No consumidor rescisório que oferecer `representacao`, distinga
 `episodio_integral` de `faixa_pagador`. Intervalo já separado por responsável
 não sofre outra retirada dos primeiros15dias. Essa representação não prova

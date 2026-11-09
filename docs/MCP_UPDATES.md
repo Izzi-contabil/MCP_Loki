@@ -1,4 +1,18 @@
-# Atualizações MCP Loki — contrato 2.6.0
+# Atualizações MCP Loki — contrato 2.6.1
+
+## Candidata0.4.10 / contrato, instruções e plugin2.6.1 —09/11/2026
+
+A retomada autenticada de resposta corrente intake/procedure também admite
+`preparation_internal_failure` quando anunciada pelo contrato do backend.
+Proprietário ativo, revisão/job/build exatos, convite e fonte correntes, memória,
+limites e replay permanecem obrigatórios. Não reinicia ciclo, não repete a
+pergunta ao DP e não abre preparação de código por uma falha genérica.
+
+Artefato auxiliar sanitizado e resposta operacional literal têm finalidades
+diferentes; publicação, resultado dos jobs e atos de negócio exigem suas próprias
+provas. O diagnóstico mensal conserva o corte histórico e detalhes desconhecidos
+indisponíveis, sem cálculo ou correção automática. Wheel0.4.9 e evidências
+anteriores permanecem imutáveis; mínimo2.0.0 e clientes anteriores preservados.
 
 ## Candidata0.4.9 / contrato, instruções e plugin2.6.0 —08/11/2026
 
@@ -101,7 +115,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-Na candidata atual, o recomendado é2.6.0 e o contrato2.6.0 é aditivo;
+Na candidata atual, o recomendado é2.6.1 e o contrato2.6.1 é aditivo;
 cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.
