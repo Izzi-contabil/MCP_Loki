@@ -72,3 +72,26 @@ Se optar por preservar proveniência detalhada de um original sem enviá-lo, con
 Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Substituição de insumos e pins de férias
+
+Quando `get_process_contract("ferias")` anunciar `preparation.supported=true`,
+use a preparação `replace_process_inputs` no restart existente ou pelo transporte
+`loki.case-preparation-transport/1` anunciado em `receive_case_data`. A pessoa
+precisa das capacidades do contrato, inclusive `corrigir_dados`; o replay também
+revalida a autorização. Transcreva a intenção específica e use o
+`correction_snapshot` corrente. Aprovação ou efeito aplicado exigem a conciliação
+própria antes do reinício.
+
+Pessoa, empresa, vínculo, competência, aquisitivo e gozo conhecidos permanecem
+âncoras. Depois da fronteira, releia `get_case.input_snapshot` e envie a seção
+`dados_ferias` completa com nova referência: alternativas de médias, pins de saldo
+e datas/flags precisam ser reapresentados conforme o schema. A seleção nova
+continua sujeita a vigência, identidade, cobertura e integridade. O corretor
+pontual conserva seu alcance; documentos e decisões anteriores permanecem.
+
+`related_vacation_parameters_invalid` pede `get_case` do contexto relacionado
+para diagnóstico, sem inventar flags ou ignorar histórico parcial. A orientação
+não autoriza corrigir fatos ou reaplicar casos automaticamente. Segunda ocorrência
+em outra competência usa o caminho existente; suporte na mesma competência não
+é inferido desta substituição. Publicação e reteste real exigem provas próprias.

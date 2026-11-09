@@ -1,4 +1,18 @@
-# Atualizações MCP Loki — contrato 2.6.1
+# Atualizações MCP Loki — contrato 2.6.2
+
+## Candidata0.4.11 / contrato, instruções e plugin2.6.2 —09/11/2026
+
+Extensão aditiva orienta a preparação de férias pelo transporte existente, com
+autorização de correção, âncoras preservadas e nova recepção completa. Expõe o
+alcance contextual do saldo rescisório v42 e a política opcional de FGTS mensal
+no mapa selecionado, com memória por empregado no consumidor folha-v29.
+
+A representação de faixa por pagador do afastamento já existe: não aplicar nova
+carência de15dias nem inferir essa representação de um caso sem declaração.
+Mínimo2.0.0 e compatibilidade anterior preservados. Wheel anterior permanece
+imutável; nova fonte, wheel/proveniência, integração e serviço publicado exigem
+provas próprias. Não ativa configuração, corrige fatos, aprova documentos ou
+transmite. Instalação do operador e adoção não são inferidas da publicação.
 
 ## Candidata0.4.10 / contrato, instruções e plugin2.6.1 —09/11/2026
 

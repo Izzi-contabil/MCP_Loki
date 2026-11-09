@@ -149,6 +149,14 @@ fontes aplicáveis e da semântica temporal, não medição histórica nem regra
 universal de calendário. A harness informa fatos; os dias e centavos são derivados
 pelo motor, sem entrada livre para coincidir com a referência.
 
+O consumidor `rescisao-v42` estende o alcance ao mesmo mês civil de 31 dias,
+com divisor 30, desligamento até o dia 30 e sem afastamento sobreposto. A versão
+nova é selecionada somente nesse predicado. Mês30 e contratos anteriores
+permanecem no alcance próprio; fevereiro, desligamento no dia31 e outros
+divisores não são habilitados por essa extensão. Releia dias, seleção e memória;
+`regra_nao_medida:saldo_admissao_no_mes` continua um diagnóstico possível fora
+do alcance qualificado. Não adapte a data ou o divisor para coincidir com o comparador.
+
 `regra_nao_medida:saldo_admissao_no_mes` pode continuar pendente fora desse alcance; fevereiro,
 dia31, divisores e afastamentos seguem suas guardas próprias. Atualização de
 instruções não corrige o calculador publicado nem certifica o caso completo.
