@@ -3,7 +3,8 @@
 ## Reaproveitar respostas e causas persistidas
 
 Uma resposta do contato DP convidado já registrada não deve ser solicitada outra
-vez. Se a análise posterior terminar em `agent_schema`, consulte o histórico e
+vez. Se a análise posterior de intake/procedure terminar em `agent_schema` ou
+`preparation_internal_failure`, consulte o histórico e
 `support_reprocess_contract` de `meu_acesso`. Quando anunciado, o proprietário
 pessoa pode usar `reprocessar_respostas_problema`, declaração
 `loki.support-reprocess/1`, ou seu transporte em `receive_case_data`,
@@ -11,7 +12,9 @@ pessoa pode usar `reprocessar_respostas_problema`, declaração
 Use `expected_revision`, `expected_last_job`, `expected_source_build`, UUID
 `request_id` e mensagem/motivo humanos literais do ato autorizado. O contrato
 confere a resposta corrente vinculada ao convite, incluindo edição/exclusão.
-Esse ato não reinicia o ciclo de perguntas, não prepara patch e não aprova DP.
+Esse ato não reinicia o ciclo de perguntas, não zera limites, não prepara patch
+e não aprova DP. A falha interna só é elegível nesse fluxo de resposta corrente
+de procedimento; não autoriza retomar preparação de código por erro genérico.
 Sem contrato/autoridade ou com contexto alterado, preserve a pendência; não use
 retomada de controle original ou novo convite para contornar a recusa.
 
