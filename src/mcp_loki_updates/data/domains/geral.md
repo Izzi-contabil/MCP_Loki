@@ -392,3 +392,19 @@ novamente S-2200 para provar a mesma identidade já conciliada por fontes sufici
 Referências diferentes podem preparar drafts distintos. O contrato declara
 `allowed_multiple_preparations=true` e `execution_deduplication_verified=false`;
 idempotência do pedido não é deduplicação fiscal para uma futura execução.
+
+## Política contextual do FGTS mensal
+
+Quando o consumidor oferecer `folha-v29`, o mapa selecionado pode declarar
+`fgts_mensal` com `policy_version=loki.fgts-mensal/1`, método, fonte e
+`escopo=trabalhador_competencia_mensal_8pct`. Confira empresa, competência e
+vigência do mapa efetivamente selecionado. Política ausente conserva o cálculo
+legado; política ausente não comprova configuração ou validação do critério.
+A memória `calculo_fgts` por empregado distingue método, fonte, pin, base,
+valor da fórmula e valor final; uma base pendente não vira zero.
+
+Confronte a memória com persistência, materialização, documentos e soma dos
+encargos individuais. Apuração sobre base agrupada e FGTS rescisório têm
+contratos próprios. Disponibilidade da política não autoriza alterar configuração
+real, corrigir valores, aprovar casos ou transmitir. Uma diferença relatada de
+centavo só é conferida com os operandos e a referência daquele cálculo.

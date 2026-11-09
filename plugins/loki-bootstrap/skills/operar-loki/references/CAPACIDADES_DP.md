@@ -201,9 +201,58 @@ fontes aplicáveis e da semântica temporal, não medição histórica nem regra
 universal de calendário. A harness informa fatos; os dias e centavos são derivados
 pelo motor, sem entrada livre para coincidir com a referência.
 
+O consumidor `rescisao-v42` estende o alcance ao mesmo mês civil de 31 dias,
+com divisor 30, desligamento até o dia 30 e sem afastamento sobreposto. A versão
+nova é selecionada somente nesse predicado. Mês30 e contratos anteriores
+permanecem no alcance próprio; fevereiro, desligamento no dia31 e outros
+divisores não são habilitados por essa extensão. Releia dias, seleção e memória;
+`regra_nao_medida:saldo_admissao_no_mes` continua um diagnóstico possível fora
+do alcance qualificado. Não adapte a data ou o divisor para coincidir com o comparador.
+
 `regra_nao_medida:saldo_admissao_no_mes` pode continuar pendente fora desse alcance; fevereiro,
 dia31, divisores e afastamentos seguem suas guardas próprias. Atualização de
 instruções não corrige o calculador publicado nem certifica o caso completo.
 Confira versão do motor, dias, memória e bases; não reutilize memorial parcial
 antigo ou aceite anterior como resultado da regra nova. Parcelas independentes
 permanecem disponíveis conforme o contrato, sem preencher ausência com zero.
+
+## Substituição de insumos e pins de férias
+
+Quando `get_process_contract("ferias")` anunciar `preparation.supported=true`,
+use a preparação `replace_process_inputs` no restart existente ou pelo transporte
+`loki.case-preparation-transport/1` anunciado em `receive_case_data`. A pessoa
+precisa das capacidades do contrato, inclusive `corrigir_dados`; o replay também
+revalida a autorização. Transcreva a intenção específica e use o
+`correction_snapshot` corrente. Aprovação ou efeito aplicado exigem a conciliação
+própria antes do reinício.
+
+Pessoa, empresa, vínculo, competência, aquisitivo e gozo conhecidos permanecem
+âncoras. Depois da fronteira, releia `get_case.input_snapshot` e envie a seção
+`dados_ferias` completa com nova referência: alternativas de médias, pins de saldo
+e datas/flags precisam ser reapresentados conforme o schema. A seleção nova
+continua sujeita a vigência, identidade, cobertura e integridade. O corretor
+pontual conserva seu alcance; documentos e decisões anteriores permanecem.
+
+`related_vacation_parameters_invalid` pede `get_case` do contexto relacionado
+para diagnóstico, sem inventar flags ou ignorar histórico parcial. A orientação
+não autoriza corrigir fatos ou reaplicar casos automaticamente. Segunda ocorrência
+em outra competência usa o caminho existente; suporte na mesma competência não
+é inferido desta substituição. Publicação e reteste real exigem provas próprias.
+
+
+
+## Política contextual do FGTS mensal
+
+Quando o consumidor oferecer `folha-v29`, o mapa selecionado pode declarar
+`fgts_mensal` com `policy_version=loki.fgts-mensal/1`, método, fonte e
+`escopo=trabalhador_competencia_mensal_8pct`. Confira empresa, competência e
+vigência do mapa efetivamente selecionado. Política ausente conserva o cálculo
+legado; política ausente não comprova configuração ou validação do critério.
+A memória `calculo_fgts` por empregado distingue método, fonte, pin, base,
+valor da fórmula e valor final; uma base pendente não vira zero.
+
+Confronte a memória com persistência, materialização, documentos e soma dos
+encargos individuais. Apuração sobre base agrupada e FGTS rescisório têm
+contratos próprios. Disponibilidade da política não autoriza alterar configuração
+real, corrigir valores, aprovar casos ou transmitir. Uma diferença relatada de
+centavo só é conferida com os operandos e a referência daquele cálculo.
