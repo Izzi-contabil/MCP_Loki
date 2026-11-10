@@ -136,6 +136,11 @@ reprodução; o plugin não publica a capacidade nem altera a conta do operador.
 
 ## Consignado: contrato, competência e rescisão
 
+Para a consulta automática mensal, siga
+[DATAPREV_MENSAL.md](DATAPREV_MENSAL.md), somente quando o contrato servido
+anunciar `loki.dataprev-monthly/1`. Consulta completa exige aplicação separada;
+retomada usa a referência durável original antes de repetir comandos.
+
 Consulte `get_company_onboarding_contract` e os parâmetros efetivamente
 oferecidos. `credito_trabalhador_contratos` registra revisões de contrato,
 número como string, instituição, vigência, parcela em centavos e

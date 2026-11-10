@@ -1,4 +1,23 @@
-# Atualizações MCP Loki — contrato 2.6.2
+# Atualizações MCP Loki — contrato 2.6.3
+
+## Candidata0.4.12 / contrato, instruções e plugin2.6.3 —10/11/2026
+
+A orientação mensal Dataprev usa `loki.dataprev-monthly/1` somente quando
+anunciado por `get_process_contract("folha_mensal")`, pelo `receive_case_data`
+existente. Reserva, releitura durável e aplicação separada com CAS preservam
+ator, caso, população e episódio; fontes existentes não são sobrepostas.
+O [guia público](../plugins/loki-bootstrap/skills/operar-loki/references/DATAPREV_MENSAL.md)
+é distribuído também no domínio geral do wheel. Exemplos são sintéticos.
+
+Consulta incompleta/falha não promove parciais ou confirma zero. Manifesto e
+hashes não atestam snapshot transacional oficial. Perfil mTLS, representação
+e concessões válidos dependem de provisionamento externo; consulta não é
+pagamento, repasse ou aceiteDP. Importação tipada continua disponível.
+
+Mínimo2.0.0 preservado. Wheel0.4.11 permanece imutável; fonte e wheel0.4.12
+locais não comprovam promoção, backend publicado, instalação na Ana, acesso
+ativado ou homologação real. Nenhuma ferramenta, credencial ou autoridade nova
+é concedida por esta distribuição.
 
 ## Candidata0.4.11 / contrato, instruções e plugin2.6.2 —09/11/2026
 
