@@ -1,0 +1,283 @@
+{
+  "source_commit": "7dc7fd093651fdf52daad8fbd280dbb5b216cb14",
+  "source_sha256": "9cbc389096f0f3723b0025eb6bda9a4716ae41486d6b3b4ae1849657b5e533fe",
+  "request_schema": {
+    "$defs": {
+      "Apply": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "loki.dataprev-monthly/1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "request_ref": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+            "title": "Request Ref",
+            "type": "string"
+          },
+          "operation": {
+            "const": "apply",
+            "title": "Operation",
+            "type": "string"
+          },
+          "input_snapshot": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Snapshot",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "request_ref",
+          "operation",
+          "input_snapshot"
+        ],
+        "title": "Apply",
+        "type": "object"
+      },
+      "Enqueue": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "loki.dataprev-monthly/1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "request_ref": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+            "title": "Request Ref",
+            "type": "string"
+          },
+          "operation": {
+            "const": "enqueue",
+            "title": "Operation",
+            "type": "string"
+          },
+          "employee_id": {
+            "format": "uuid",
+            "title": "Employee Id",
+            "type": "string"
+          },
+          "input_snapshot": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Snapshot",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "request_ref",
+          "operation",
+          "employee_id",
+          "input_snapshot"
+        ],
+        "title": "Enqueue",
+        "type": "object"
+      },
+      "Get": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "loki.dataprev-monthly/1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "request_ref": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+            "title": "Request Ref",
+            "type": "string"
+          },
+          "operation": {
+            "const": "get",
+            "title": "Operation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "request_ref",
+          "operation"
+        ],
+        "title": "Get",
+        "type": "object"
+      }
+    },
+    "discriminator": {
+      "mapping": {
+        "apply": "#/$defs/Apply",
+        "enqueue": "#/$defs/Enqueue",
+        "get": "#/$defs/Get"
+      },
+      "propertyName": "operation"
+    },
+    "oneOf": [
+      {
+        "$ref": "#/$defs/Enqueue"
+      },
+      {
+        "$ref": "#/$defs/Apply"
+      },
+      {
+        "$ref": "#/$defs/Get"
+      }
+    ]
+  },
+  "discovery": {
+    "dataprev_monthly": {
+      "schema_version": "loki.dataprev-monthly/1",
+      "tool": "receive_case_data",
+      "request_schema": {
+        "$defs": {
+          "Apply": {
+            "additionalProperties": false,
+            "properties": {
+              "schema_version": {
+                "const": "loki.dataprev-monthly/1",
+                "title": "Schema Version",
+                "type": "string"
+              },
+              "request_ref": {
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+                "title": "Request Ref",
+                "type": "string"
+              },
+              "operation": {
+                "const": "apply",
+                "title": "Operation",
+                "type": "string"
+              },
+              "input_snapshot": {
+                "pattern": "^[a-f0-9]{64}$",
+                "title": "Input Snapshot",
+                "type": "string"
+              }
+            },
+            "required": [
+              "schema_version",
+              "request_ref",
+              "operation",
+              "input_snapshot"
+            ],
+            "title": "Apply",
+            "type": "object"
+          },
+          "Enqueue": {
+            "additionalProperties": false,
+            "properties": {
+              "schema_version": {
+                "const": "loki.dataprev-monthly/1",
+                "title": "Schema Version",
+                "type": "string"
+              },
+              "request_ref": {
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+                "title": "Request Ref",
+                "type": "string"
+              },
+              "operation": {
+                "const": "enqueue",
+                "title": "Operation",
+                "type": "string"
+              },
+              "employee_id": {
+                "format": "uuid",
+                "title": "Employee Id",
+                "type": "string"
+              },
+              "input_snapshot": {
+                "pattern": "^[a-f0-9]{64}$",
+                "title": "Input Snapshot",
+                "type": "string"
+              }
+            },
+            "required": [
+              "schema_version",
+              "request_ref",
+              "operation",
+              "employee_id",
+              "input_snapshot"
+            ],
+            "title": "Enqueue",
+            "type": "object"
+          },
+          "Get": {
+            "additionalProperties": false,
+            "properties": {
+              "schema_version": {
+                "const": "loki.dataprev-monthly/1",
+                "title": "Schema Version",
+                "type": "string"
+              },
+              "request_ref": {
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$",
+                "title": "Request Ref",
+                "type": "string"
+              },
+              "operation": {
+                "const": "get",
+                "title": "Operation",
+                "type": "string"
+              }
+            },
+            "required": [
+              "schema_version",
+              "request_ref",
+              "operation"
+            ],
+            "title": "Get",
+            "type": "object"
+          }
+        },
+        "discriminator": {
+          "mapping": {
+            "apply": "#/$defs/Apply",
+            "enqueue": "#/$defs/Enqueue",
+            "get": "#/$defs/Get"
+          },
+          "propertyName": "operation"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/Enqueue"
+          },
+          {
+            "$ref": "#/$defs/Apply"
+          },
+          {
+            "$ref": "#/$defs/Get"
+          }
+        ]
+      },
+      "process": "folha_mensal",
+      "requires": [
+        "scoped_case_worker",
+        "current_company_mtls_profile",
+        "current_payroll_population"
+      ],
+      "applies_automatically": false,
+      "transactional_provider_snapshot": false
+    },
+    "compatibility_transport": {
+      "tool": "receive_case_data",
+      "discriminator": "request.schema_version",
+      "routes": {
+        "loki.dataprev-monthly/1": "dataprev_monthly",
+        "loki.payroll-items/1": "complement_payroll_items",
+        "loki.payroll-salary-qualification/1": "qualify_payroll_salary",
+        "loki.case-cancellation/1": "cancel_case",
+        "loki.payroll-population-preview/1": "preview_payroll_population_correction"
+      },
+      "request_schema_fields": {
+        "loki.dataprev-monthly/1": "dataprev_monthly.request_schema",
+        "loki.payroll-items/1": "payroll_items_schema",
+        "loki.payroll-salary-qualification/1": "payroll_salary_qualification_schema",
+        "loki.case-cancellation/1": "cancellation.schema",
+        "loki.payroll-population-preview/1": "preparation.population_correction.preview_schema"
+      },
+      "request_unchanged": true,
+      "catalog_refresh_required": false,
+      "generic_dispatch_supported": false
+    }
+  }
+}

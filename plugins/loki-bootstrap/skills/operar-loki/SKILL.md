@@ -15,6 +15,8 @@ afastamento, consignado, pensão e adicionais, leia
 [CAPACIDADES_DP.md](references/CAPACIDADES_DP.md). O roteiro distingue contrato
 servido, lacuna de catálogo, parâmetros da operação e acurácia medida; recursos
 novos permanecem condicionados ao contrato efetivamente disponível.
+Para consulta mensal Dataprev, leia
+[DATAPREV_MENSAL.md](references/DATAPREV_MENSAL.md) antes de reservar ou aplicar.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que
