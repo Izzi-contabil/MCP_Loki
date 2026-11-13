@@ -19,7 +19,8 @@ Para consulta mensal Dataprev, leia
 [DATAPREV_MENSAL.md](references/DATAPREV_MENSAL.md) antes de reservar ou aplicar.
 Em admissão travada por Beneficiários da ficha, nome diferente só em
 caixa/espaços ou recusa de reinício/conciliação, leia “Destravar admissão” em
-[WORKFLOWS.md](references/WORKFLOWS.md) e siga somente o `next_action` servido.
+[WORKFLOWS.md](references/WORKFLOWS.md) e siga somente o `next_action` servido;
+sem ele, inclusive em cancelamento recusado por efeitos, pare e relate.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

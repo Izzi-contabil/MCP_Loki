@@ -1,5 +1,13 @@
 # MCP Loki — contrato operacional 2.6.3
-Candidata **provider0.4.13 / instruções e plugin2.6.4**,13/11/2026; contrato2.6.3
+Candidata **provider0.4.14 / instruções e plugin2.6.5**,13/11/2026; contrato2.6.3
+inalterado: correções do destrave de admissão após revisão — `next_action` do
+recibo de retificação de nome, alcance só caixa/espaços/NFC, import documental
+bloqueado por efeitos pendentes, dependente fora do acesso da conta e
+cancelamento recusado por efeitos sem `next_action`. Vale quando a resposta
+servida apresentar os campos; wheel preparado não comprova publicação do
+backend, instalação ou uso.
+
+Edição anterior **provider0.4.13 / instruções e plugin2.6.4**,13/11/2026; contrato2.6.3
 inalterado: destrave de admissão — Beneficiários da ficha em várias linhas sem
 truncar, retificação de nome diferente só em caixa/espaços e motivo das recusas
 de reinício/conciliação. Vale quando a resposta servida apresentar os campos;
@@ -20,11 +28,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.13** entrega instruções **2.6.4** ao backend.
+O pacote `mcp-loki-updates` **0.4.14** entrega instruções **2.6.5** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.6.4** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.6.5** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 

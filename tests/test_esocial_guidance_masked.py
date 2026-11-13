@@ -26,11 +26,11 @@ CONTRACT = ROOT / "tests/fixtures/company_esocial_contract_masked.json"
 def test_esocial_release_is_additive_and_keeps_old_clients_and_authority() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.13"
-    assert metadata["instructions_version"] == "2.6.4"
+    assert metadata["provider_version"] == "0.4.14"
+    assert metadata["instructions_version"] == "2.6.5"
     assert metadata["mcp_contract_version"] == "2.6.3"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    assert metadata["recommended_plugin_version"] == "2.6.4"
+    assert metadata["recommended_plugin_version"] == "2.6.5"
     for version in ("2.0.0", "2.1.0", "2.3.0"):
         assert provider.check_version(version, version)["compatible"] is True
     assert provider.check_version()["compatible"] is None

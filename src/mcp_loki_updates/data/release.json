@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.6.4",
+  "instructions_version": "2.6.5",
   "contract_version": "2.6.3",
-  "plugin_version": "2.6.4",
+  "plugin_version": "2.6.5",
   "minimum_plugin_version": "2.0.0",
   "updated_at": "2026-11-13",
   "domains": {
     "geral": {
-      "metadata_sha256": "7251d5d2eb1fea8edf5a6c9b0af17039ef4880960e493db938407a282cb718ea",
-      "content_sha256": "fcb430b49c3de71d13d8774dfd349f38074755892e8bb3722a67bffc3bd00000"
+      "metadata_sha256": "5080131059b11bf0799eb0d056ea93a58d384d78331fa7f802ce548fb78d3559",
+      "content_sha256": "45cff41d38b36ea2c4164f8387e3678f891520291a1420e20d3c6222f3dcd559"
     },
     "admissao": {
-      "metadata_sha256": "b65c163dc78e429524d0bd65a57c8382ffc5849a7d70719672bf1b9b79c03e57",
-      "content_sha256": "0a03f6348cfb4808954c5a2fe047a905cd18a9bcccac91c60dbfa738ff2898ac"
+      "metadata_sha256": "1de6a98edb8fff2b342b0ce6489ebcf194ce69cd86fd4d3e6adc1aba0ece7f3b",
+      "content_sha256": "e7d60a2d8ed3d56d99e68eb1823b2b18f3a00606efbb4819fffb89b02940b0f3"
     },
     "rescisao": {
-      "metadata_sha256": "34a7f1bd09be87a615a9b6be268ab8fca4342b40fc6e58791041c1ca10a80224",
+      "metadata_sha256": "4567b9c84800623146757d00b8828cabdab45ed362ffe37b33d377b40af3f0e5",
       "content_sha256": "ddb8377b9fb2a32c8c545dfd463048ed4559b7b9cd233af0f37b5df78ca058ef"
     },
     "ferias": {
-      "metadata_sha256": "3f4ace20c714fe6ae07e349cac81bbbe90ca1f8353d7b27cf1bf16c8db45c429",
+      "metadata_sha256": "ade9da660d62034fdbbed2df5268881655c32f5cfdbe06e78d7f707cb68c7914",
       "content_sha256": "f9d9a02191dba42c85ca921345f25c099f7df3382ca01c0dd2e055a369912c41"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "c514c96204a4aaa5985f2cd90f6cbbd955e3d59d99ae8b37ebce4a437d4d5db7",
+      "metadata_sha256": "55eaf6c203a572458c35362091f6a4d9e0e27795aaee4bf9d9c87ce81a7f6f4c",
       "content_sha256": "f570d2756e352fa1c338db112a9200a86a37476f556020034f32988658f461e9"
     },
     "afastamento": {
-      "metadata_sha256": "5acfe660b3f2f2f072d6879a91b757f96c5b3ff64eb368af40cab7b23ec25a35",
+      "metadata_sha256": "ca5000956d4ebe51d1c3b1e9eb2bb3954a8216b298c38f54cf1b24f22627d15a",
       "content_sha256": "102b732589bef86ef251da2ca709ea8a46cc427f812fbf99a66fcdc833dbb5ec"
     },
     "documentos": {
-      "metadata_sha256": "6528228d26bf20ae60a33d8a4ea455857a64a679d48dc242f29f627b5abf24aa",
+      "metadata_sha256": "1cb60584a80982db0b132c8b355e9c4bb9bd59e80c1a4b7974b224db361fdbb8",
       "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
     },
     "aprovacoes": {
-      "metadata_sha256": "53ac852f052214211976dbbe524e8a9d74cde04d7df504e9266cfa3c43e0830d",
+      "metadata_sha256": "3e6ecbf82e129c0ccca3aec039d2b26ed845e765f07e183dd4d5015ace5e9589",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "9c30d7aa27e43a632fbd28bf04664a4d3d95a40e3e812a275bbf85ad0eb61b1c",
+      "metadata_sha256": "470bb8b5dbe75c70254614d5035700d7e3965ec911c1ec30a7ac04e19dd1a48e",
       "content_sha256": "c99188b2af36a78570f4fd23193d7379b01a6edef4c8317cf4593346bbd8b3d2"
     },
     "ocorrencia": {
-      "metadata_sha256": "1485ad2a0d62f8d330018fb14b0fb8f1a0881c7d2e547719bc9bfac9e69f7980",
+      "metadata_sha256": "f955ea1f8be7bd24c44e3774a3e00acaa6ca771c804721ddc2c6fe23f22f41b4",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "d39cf97a0e078125a87d6371105e219318934d2594fe26003fe458bcf450996c",
+      "metadata_sha256": "d62c5feacbcaa8fb196e654dbd59cb56e3a32e29c083362fe69c5b5ce99848c1",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "5862651caad5556564ead38a630544f5c9bc4aaa181a7c31bfba4f880e9f6e28",
+      "metadata_sha256": "c6d9744dbaebee3d81389edfaaa2562ac44024b5a96ec4d0f30115d03ee61090",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "bdc19cdf2a560cbf52b3e632762edc1a8090e81cb348aae5808e97219468fdb4",
+      "metadata_sha256": "c0501ad38b4f721f2893f8ae3a82318c8c0cc53354195450e685a06691fd092d",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -90,7 +90,8 @@
       "Instruções2.6.0: não repetir respostasDP; consultar diagnósticos persistidos e distinguir episódio integral/faixa por pagador sem presumir concessão; nova configuração só após contratos publicados.",
       "Instruções2.6.1: aproveitar respostaDP já registrada após falha técnica do artefato derivado; diagnóstico mensal continua histórico e campos desconhecidos permanecem indisponíveis, sem recalcular ou corrigir dados.",
       "Dataprev mensal: descoberta de loki.dataprev-monthly/1 por receive_case_data; reserva, releitura durável e aplicação ausente com CAS, sem promover consulta parcial ou presumir ativação.",
-      "Instruções2.6.4: admissão — Beneficiários da ficha em até8linhas sem truncar, retificação de nome diferente só em caixa/espaços com cadastro inalterado e motivo das recusas de reinício/conciliação com next_action; valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado; nenhuma proteção removida."
+      "Instruções2.6.4: admissão — Beneficiários da ficha em até8linhas sem truncar, retificação de nome diferente só em caixa/espaços com cadastro inalterado e motivo das recusas de reinício/conciliação com next_action; valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado; nenhuma proteção removida.",
+      "Instruções2.6.5: correções do destrave de admissão — recibo da retificação de nome segue o next_action recebido (run_prepared_case_workflow ou restart_case); alcance só caixa/espaços/NFC; import_preservation_blocked_by_pending_effects sem caminho; dependente fora do acesso só com case_id e access; cancel_case recusado por efeitos nunca traz next_action; error_type OverflowDeBeneficiarios no diagnóstico. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -114,7 +115,8 @@
       "Plugin2.6.0 acompanha contratos aditivos; wheel0.4.9 é imutável e distribuição não comprova instalação, publicação, consumo financeiro ou aceite.",
       "Plugin2.6.1 acompanha a retomada estrita; wheel0.4.10 novo, wheel0.4.9 imutável; publicação e uso exigem evidências separadas.",
       "Plugin2.6.3 acrescenta guia público Dataprev mensal com exemplos sintéticos; wheel0.4.12 preparado não comprova backend publicado, instalação ou homologação real. Wheel0.4.11 permanece imutável.",
-      "Plugin2.6.4 resume o destrave de admissão em WORKFLOWS/CAPACIDADES_DP e o relato de bloqueio sem caminho; wheel0.4.13 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.12 permanece imutável."
+      "Plugin2.6.4 resume o destrave de admissão em WORKFLOWS/CAPACIDADES_DP e o relato de bloqueio sem caminho; wheel0.4.13 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.12 permanece imutável.",
+      "Plugin2.6.5 espelha as correções do destrave de admissão em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.14 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.13 permanece imutável."
     ]
   }
 }
