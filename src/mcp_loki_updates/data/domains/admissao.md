@@ -136,7 +136,9 @@ serviço ainda não os oferece: preserve a recusa recebida, sem presumir o recur
 No modelo `ficha_registro/6`, o campo Beneficiários quebra em até 8 linhas,
 somente em espaços, quando não cabe em uma. Acima de 8 linhas, ou com uma
 palavra sozinha mais larga que a célula, a geração continua recusada com o
-campo “Beneficiários” identificado; nada é truncado. Não abrevie, não remova
+campo “Beneficiários” identificado; nada é truncado. O diagnóstico de execução
+do dossiê mostra `error_type: "OverflowDeBeneficiarios"`; a mensagem com o
+motivo fica na trilha de execução. Não abrevie, não remova
 nem invente beneficiário para a geração passar: conserve o fato e registre o
 impedimento. Ficha gerada em modelo anterior fica marcada como desatualizada e
 pede nova geração, conferência e revisão.
@@ -162,15 +164,21 @@ Sintomas: `receive_case_data` recusa com `case_write_constraints` em
    `intent: "rectify_case_name_from_registry"`, `expected_snapshot` e
    `expected_registry_snapshot`, `expected_names`, `expected_identity` e
    `preview_id` da prévia corrente, com `human_message` e `reason`.
-4. Confira o recibo: `status: "RECTIFIED"`, `basis: "case_only_equivalence"`,
-   `registry_updated: false` e `next_action: "run_prepared_case_workflow"`.
+4. Confira o recibo: `status: "RECTIFIED"`, `basis: "case_only_equivalence"`
+   e `registry_updated: false`, e siga o `next_action` recebido:
+   `run_prepared_case_workflow`, ou `restart_case` quando o caso foi processado
+   por versão anterior do processamento documental (não `structured-v1`).
    O cadastro não muda; o caso exige novo pacote e nova revisão.
 
-Vale só para caixa e espaços. Acento ou grafia diferente continuam
-`nominal_correction_requires_registry_correction`: o cadastro é corrigido pelo
-onboarding com correção nominal, e a prévia então responde
-`basis: "registry_correction"`, caminho anterior inalterado. Prévia obtida antes
-da atualização do serviço precisa ser refeita (`nominal_correction_preview_changed`).
+Vale somente para diferença de maiúsculas/minúsculas, espaços e forma Unicode
+(NFC). Acento, grafia ou equivalência de “case folding” (ex.: `ß` × `ss`)
+continuam `nominal_correction_requires_registry_correction`: o cadastro é
+corrigido pelo onboarding com correção nominal, e a prévia então responde
+`basis: "registry_correction"`, caminho anterior inalterado. A mesma recusa
+vale quando o nome no cadastro tem espaços sobrando nas bordas ou duplos:
+corrija o cadastro primeiro. Prévia obtida antes da atualização do serviço
+precisa ser refeita (`nominal_correction_preview_changed`) nos dois fundamentos,
+`case_only_equivalence` e `registry_correction`.
 Nomes já literalmente iguais respondem `nominal_correction_has_no_changes`: não
 há o que retificar. Prévia sem `basis` indica serviço ainda sem este caminho.
 
@@ -179,14 +187,22 @@ há o que retificar. Prévia sem `basis` indica serviço ainda sem este caminho.
 Nenhuma proteção mudou; a resposta passa a dizer o motivo. `restart_case` e
 `cancel_case` recusados por efeitos mantêm
 `restart_requires_effect_reconciliation` ou `case_lifecycle_action_refused` e
-trazem `blocking_refs`, `blocking_ref_count` e `next_action`, descritos em
+trazem `blocking_refs` e `blocking_ref_count`; `next_action` vem somente em
+`restart_case`. Detalhes e limites do cancelamento estão em
 “Retomada, nova preparação e seleção da folha” do domínio `geral`.
 
 Em `preview_admission_reconciliation`, cada blocker
 `unsupported_admission_event` traz `target_ref`, `origin`, `event_type`,
 `resolution` e `next_action`:
 
-- `import_preservation`: siga `next_action: "preview_import_preservation"`.
+- `import_preservation`, com `next_action: "preview_import_preservation"`: só
+  para origem `import_documental`, quando os imports documentais são o único
+  impedimento próprio do caso; siga.
+- `import_preservation_blocked_by_pending_effects`, com `next_action: null`:
+  import documental em caso que também tem aprovação pendente, evento legado,
+  outro evento não suportado ou efeito ativo. Não há caminho pelo acesso da
+  operadora: pare e relate. Em especial, import documental com aprovação
+  pendente não tem saída self-service hoje.
 - `factual_confirmation_not_compensable`: fato de admissão confirmado, que não
   se compensa por conveniência documental; `next_action: null`.
 - `operational_effect_contract` e `no_supported_compensation`: siga somente o
@@ -196,7 +212,10 @@ Cada `unsupported_protected_dependency` traz `case_id`, `case_type`, `state`,
 `competencia` e `counted_as`, com `same_employee` e/ou
 `company_monthly_payroll`: hoje qualquer folha mensal da empresa em revisão,
 aprovada ou publicada conta como dependente. Valor fora do vocabulário aparece
-como `"unknown"`; não o interprete.
+como `"unknown"`; não o interprete. Esses campos vêm apenas para dependente de
+processo que a conta pode consultar; para os demais vêm só `case_id` e
+`access: "not_authorized_for_process"`. Por isso o `preview_id` de uma prévia
+bloqueada depende de quem consulta: não reutilize prévia obtida por outra conta.
 
 Siga o `next_action`. Quando for `null` ou houver dependente protegido, pare,
 guarde a resposta e relate pelo fluxo de problema (skill

@@ -1,5 +1,25 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.14 / instruções e plugin2.6.5 —13/11/2026
+
+Correção de orientação após revisão independente, sem ferramenta ou argumento
+novo: contrato2.6.3 e mínimo2.0.0 permanecem. No domínio `admissao`: o recibo
+de `rectify_case_name` segue o `next_action` recebido
+(`run_prepared_case_workflow` ou `restart_case`); a retificação vale só para
+caixa, espaços e forma Unicode NFC; `unsupported_admission_event` de import
+documental distingue `import_preservation` de
+`import_preservation_blocked_by_pending_effects` (`next_action: null`);
+dependente protegido fora do acesso da conta vem só com `case_id` e `access`;
+o diagnóstico da ficha mostra `error_type: "OverflowDeBeneficiarios"`. No
+domínio `geral` e nos roteiros do plugin: `next_action` vem somente em
+`restart_case`; `cancel_case` recusado por efeitos nunca o traz e não tem
+caminho pelo acesso da operadora. Nenhuma proteção é removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.13 permanece
+imutável; fonte e wheel0.4.14 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.13 / instruções e plugin2.6.4 —13/11/2026
 
 Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e

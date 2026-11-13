@@ -71,13 +71,20 @@ por efeitos conserva `restart_requires_effect_reconciliation` ou
 `case_lifecycle_action_refused` e traz `blocking_refs` (`ref` e `kind` entre
 `vinculo_event`, `documentary_approval`, `chat_review` e `operational_effect`;
 eventos também `origin` e `event_type`), `blocking_ref_count` (lista limitada
-a 50) e `next_action`: `preview_import_preservation` quando todos os refs são
-imports documentais; `preview_admission_reconciliation` nos demais casos de
-admissão; ausente nos outros processos. Nenhuma proteção mudou. Siga somente
-o `next_action` recebido; sem ele, pare, guarde a resposta e relate pelo fluxo
-de problema com `case_id` e refs, sem dado pessoal. Não contorne, não cancele
-nem recrie o caso. Blockers da prévia de conciliação, Beneficiários da ficha
-e nome diferente só em caixa/espaços estão no domínio `admissao`.
+a 50). `next_action` vem somente em `restart_case`:
+`preview_import_preservation` quando todos os refs são imports documentais, só
+em admissão e rescisão; `preview_admission_reconciliation` nos demais casos de
+admissão; ausente nos outros processos. As duas prévias habilitam nova
+preparação (reinício), não cancelamento: `cancel_case` recusado por efeitos
+nunca traz `next_action` e não tem caminho pelo acesso da operadora. Nele,
+`blocking_refs` e `blocking_ref_count` só vêm quando o estado permitiria
+cancelar sem os efeitos (`aberto`, `em_preparacao`, `aguardando_revisao`,
+`rejeitado`); fora deles `case_lifecycle_action_refused` vem sem esses campos
+e a recusa é de estado. Nenhuma proteção mudou. Siga somente o `next_action`
+recebido; sem ele, pare, guarde a resposta e relate pelo fluxo de problema com
+`case_id` e refs, sem dado pessoal. Não contorne, não cancele nem recrie o
+caso. Blockers da prévia de conciliação, Beneficiários da ficha e nome
+diferente só em caixa/espaços estão no domínio `admissao`.
 
 Correção da população da folha depende de
 `preparation.population_correction` no contrato servido. Quando oferecido,
