@@ -124,3 +124,82 @@ empresa, pessoa e episódio. Nome já preenchido, divergência de identidade ou
 snapshots antigos conservam recusa/pendência; não substitua nome nem cadastro.
 Preserve recibo e replay idêntico, releia nome e ambos os snapshots antes de
 retomar geração. A operação não cria decisão humana nem efeito financeiro.
+
+## Destravar a admissão: ficha, nome e recusas
+
+Os comportamentos abaixo valem somente quando a resposta servida os apresentar;
+esta orientação não comprova publicação do backend. Sem os campos descritos, o
+serviço ainda não os oferece: preserve a recusa recebida, sem presumir o recurso.
+
+### Beneficiários na Ficha de Registro
+
+No modelo `ficha_registro/6`, o campo Beneficiários quebra em até 8 linhas,
+somente em espaços, quando não cabe em uma. Acima de 8 linhas, ou com uma
+palavra sozinha mais larga que a célula, a geração continua recusada com o
+campo “Beneficiários” identificado; nada é truncado. Não abrevie, não remova
+nem invente beneficiário para a geração passar: conserve o fato e registre o
+impedimento. Ficha gerada em modelo anterior fica marcada como desatualizada e
+pede nova geração, conferência e revisão.
+
+`empregado.beneficiarios` já gravado não é trocado por `receive_case_data`, nem
+por lista vazia. Corrigir a lista exige nova preparação autorizada:
+`restart_case` com `preparation.mode=replace_process_inputs` e reenvio completo
+dos dados, conforme `preparation` do contrato.
+
+### Nome diferente só em maiúsculas/minúsculas ou espaços
+
+Sintomas: `receive_case_data` recusa com `case_write_constraints` em
+`empregado.nome_completo`, ou `run_prepared_case_workflow` responde
+`identity_changed`, quando o nome do cadastro/identidade e
+`dados_admissao.empregado.nome_completo` diferem apenas em caixa ou espaços.
+
+1. Chame `preview_case_name_rectification(case_id)`. Prossiga somente com
+   `status: "READY"`, `basis: "case_only_equivalence"` e
+   `registry_correction: null`; `corrected_name` é o literal do cadastro.
+2. Apresente `names` e `corrected_name` e obtenha confirmação humana específica.
+3. Envie `rectify_case_name(case_id, request)` no schema
+   `loki.case-name-rectification/1`, o mesmo pedido de sempre: `request_ref`,
+   `intent: "rectify_case_name_from_registry"`, `expected_snapshot` e
+   `expected_registry_snapshot`, `expected_names`, `expected_identity` e
+   `preview_id` da prévia corrente, com `human_message` e `reason`.
+4. Confira o recibo: `status: "RECTIFIED"`, `basis: "case_only_equivalence"`,
+   `registry_updated: false` e `next_action: "run_prepared_case_workflow"`.
+   O cadastro não muda; o caso exige novo pacote e nova revisão.
+
+Vale só para caixa e espaços. Acento ou grafia diferente continuam
+`nominal_correction_requires_registry_correction`: o cadastro é corrigido pelo
+onboarding com correção nominal, e a prévia então responde
+`basis: "registry_correction"`, caminho anterior inalterado. Prévia obtida antes
+da atualização do serviço precisa ser refeita (`nominal_correction_preview_changed`).
+Nomes já literalmente iguais respondem `nominal_correction_has_no_changes`: não
+há o que retificar. Prévia sem `basis` indica serviço ainda sem este caminho.
+
+### Recusas de reinício e de conciliação
+
+Nenhuma proteção mudou; a resposta passa a dizer o motivo. `restart_case` e
+`cancel_case` recusados por efeitos mantêm
+`restart_requires_effect_reconciliation` ou `case_lifecycle_action_refused` e
+trazem `blocking_refs`, `blocking_ref_count` e `next_action`, descritos em
+“Retomada, nova preparação e seleção da folha” do domínio `geral`.
+
+Em `preview_admission_reconciliation`, cada blocker
+`unsupported_admission_event` traz `target_ref`, `origin`, `event_type`,
+`resolution` e `next_action`:
+
+- `import_preservation`: siga `next_action: "preview_import_preservation"`.
+- `factual_confirmation_not_compensable`: fato de admissão confirmado, que não
+  se compensa por conveniência documental; `next_action: null`.
+- `operational_effect_contract` e `no_supported_compensation`: siga somente o
+  `next_action` recebido; `null` não tem caminho operacional.
+
+Cada `unsupported_protected_dependency` traz `case_id`, `case_type`, `state`,
+`competencia` e `counted_as`, com `same_employee` e/ou
+`company_monthly_payroll`: hoje qualquer folha mensal da empresa em revisão,
+aprovada ou publicada conta como dependente. Valor fora do vocabulário aparece
+como `"unknown"`; não o interprete.
+
+Siga o `next_action`. Quando for `null` ou houver dependente protegido, pare,
+guarde a resposta e relate pelo fluxo de problema (skill
+`registrar-problema-loki`, `registrar_problema`) com o `case_id` e os blockers,
+sem dado pessoal. O bloqueio é real: não tente contornar, não cancele nem
+recrie o caso e não altere outro caso para liberar este.

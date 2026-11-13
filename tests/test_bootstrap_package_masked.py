@@ -17,7 +17,7 @@ def test_marketplace_has_complete_offline_plugin_and_stable_bootstrap() -> None:
     manifest = json.loads((plugin / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
     assert set(manifest) == {"name", "version", "description"}
     assert manifest["name"] == "loki-orientacoes"
-    assert manifest["version"] == "2.6.3"
+    assert manifest["version"] == "2.6.4"
     assert (plugin / "skills/loki-bootstrap/SKILL.md").read_bytes() == (
         plugin / "SKILL.md"
     ).read_bytes()

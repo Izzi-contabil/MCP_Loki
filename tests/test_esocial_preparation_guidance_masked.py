@@ -24,8 +24,8 @@ CANDIDATE_TOOLS = (
 def test_preparation_release_preserves_core_compatibility_and_unknown_discovery() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.12"
-    assert metadata["instructions_version"] == "2.6.3"
+    assert metadata["provider_version"] == "0.4.13"
+    assert metadata["instructions_version"] == "2.6.4"
     assert metadata["mcp_contract_version"] == "2.6.3"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in ("2.0.0", "2.1.0", "2.2.0", "2.3.0"):

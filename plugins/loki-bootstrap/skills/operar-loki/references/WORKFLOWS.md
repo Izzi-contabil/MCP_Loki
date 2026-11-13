@@ -278,6 +278,31 @@ snapshots antigos conservam recusa/pendência; não substitua nome nem cadastro.
 Preserve recibo e replay idêntico, releia nome e ambos os snapshots antes de
 retomar geração. A operação não cria decisão humana nem efeito financeiro.
 
+## Destravar admissão: ficha, nome e recusas
+
+Valem somente quando a resposta servida os apresentar; consulte o domínio
+`admissao` em `loki_obter_instrucoes` para o roteiro completo.
+
+- Ficha `ficha_registro/6`: Beneficiários quebra em até 8 linhas, só em
+  espaços. Acima disso, ou palavra mais larga que a célula, a geração recusa
+  com o campo identificado e nada é truncado: não abrevie nem invente; registre
+  o impedimento. Ficha de modelo anterior pede nova geração.
+  `empregado.beneficiarios` gravado só muda por nova preparação
+  (`restart_case`, `preparation.mode=replace_process_inputs`) e reenvio completo.
+- Nome diferente só em caixa/espaços (`case_write_constraints` em
+  `empregado.nome_completo` ou `identity_changed`):
+  `preview_case_name_rectification` com `status: "READY"`,
+  `basis: "case_only_equivalence"` e `registry_correction: null` → confirmação
+  humana → `rectify_case_name` com a prévia corrente → recibo `RECTIFIED`,
+  `registry_updated: false`, `next_action: "run_prepared_case_workflow"`, novo
+  pacote e revisão. Acento ou grafia exigem correção de cadastro pelo
+  onboarding (`nominal_correction_requires_registry_correction`).
+- Recusa de `restart_case`/`cancel_case` ou blocker de
+  `preview_admission_reconciliation`: siga somente o `next_action` recebido.
+  Com `next_action: null` ou dependente protegido, pare, guarde a resposta e
+  use [registrar-problema-loki](../../registrar-problema-loki/SKILL.md) com
+  `case_id` e blockers, sem dado pessoal. Não contorne, cancele ou recrie.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco
