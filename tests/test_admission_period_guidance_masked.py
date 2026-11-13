@@ -15,3 +15,33 @@ def test_explicit_pay_period_is_delivered_with_its_source_and_output_check() -> 
     assert "branco" in guide
     assert "pendência" in guide
     assert "overflow" in guide
+
+
+def test_admission_unblocking_guidance_is_delivered_conditionally() -> None:
+    provider = InstructionsProvider()
+    guide = provider.get("admissao")["instructions"]
+    for required in (
+        "somente quando a resposta servida os apresentar",
+        "ficha_registro/6",
+        "nada é truncado",
+        "replace_process_inputs",
+        "preview_case_name_rectification",
+        "case_only_equivalence",
+        "registry_updated: false",
+        "nominal_correction_requires_registry_correction",
+        "unsupported_admission_event",
+        "factual_confirmation_not_compensable",
+        "unsupported_protected_dependency",
+        "company_monthly_payroll",
+        "não cancele nem",
+    ):
+        assert required in guide, required
+    general = provider.get("geral")["instructions"]
+    for required in (
+        "blocking_refs",
+        "blocking_ref_count",
+        "next_action",
+        "Nenhuma proteção mudou",
+    ):
+        assert required in general, required
+    assert provider.metadata()["mcp_contract_version"] == "2.6.3"

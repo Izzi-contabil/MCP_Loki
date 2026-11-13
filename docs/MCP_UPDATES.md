@@ -1,5 +1,21 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.13 / instruções e plugin2.6.4 —13/11/2026
+
+Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
+mínimo2.0.0 permanecem. O domínio `admissao` orienta o campo Beneficiários da
+Ficha de Registro no modelo `ficha_registro/6` (até 8 linhas, sem truncar), a
+retificação de nome diferente só em caixa/espaços por
+`preview_case_name_rectification`/`rectify_case_name` com cadastro inalterado,
+e a leitura dos blockers de `preview_admission_reconciliation`. O domínio
+`geral` e os roteiros do plugin descrevem `blocking_refs`/`next_action` nas
+recusas de `restart_case`/`cancel_case`. Nenhuma proteção é removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.12 permanece
+imutável; fonte e wheel0.4.13 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.12 / contrato, instruções e plugin2.6.3 —10/11/2026
 
 A orientação mensal Dataprev usa `loki.dataprev-monthly/1` somente quando

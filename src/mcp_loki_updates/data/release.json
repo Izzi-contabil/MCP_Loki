@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.6.3",
+  "instructions_version": "2.6.4",
   "contract_version": "2.6.3",
-  "plugin_version": "2.6.3",
+  "plugin_version": "2.6.4",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-10",
+  "updated_at": "2026-11-13",
   "domains": {
     "geral": {
-      "metadata_sha256": "d07c273ccfe21e5bb63f7217a44f4aeba22062c6d6804a67d2158c7a31cc2787",
-      "content_sha256": "d03818104893ff1b0c7bf38a005678991f266ccbcfde3ef6de4f4c8a9732152c"
+      "metadata_sha256": "7251d5d2eb1fea8edf5a6c9b0af17039ef4880960e493db938407a282cb718ea",
+      "content_sha256": "fcb430b49c3de71d13d8774dfd349f38074755892e8bb3722a67bffc3bd00000"
     },
     "admissao": {
-      "metadata_sha256": "f9125368a369aeeef386fbf1b28df365f0a5b9a81aef7954ec8ea16fb44730c3",
-      "content_sha256": "edc33516fae0c86fce5fc878fab97d51ea7971a7e8ef07f867c949cc0545a203"
+      "metadata_sha256": "b65c163dc78e429524d0bd65a57c8382ffc5849a7d70719672bf1b9b79c03e57",
+      "content_sha256": "0a03f6348cfb4808954c5a2fe047a905cd18a9bcccac91c60dbfa738ff2898ac"
     },
     "rescisao": {
-      "metadata_sha256": "23378e6b60ed528b76c1bcd3cd6cdba7c92525e2620b003e89d45ef4e2c1c6b5",
+      "metadata_sha256": "34a7f1bd09be87a615a9b6be268ab8fca4342b40fc6e58791041c1ca10a80224",
       "content_sha256": "ddb8377b9fb2a32c8c545dfd463048ed4559b7b9cd233af0f37b5df78ca058ef"
     },
     "ferias": {
-      "metadata_sha256": "f259247573894145a071a14a8775332dd6cf4fe979a7f4edb6a81a7590d416c2",
+      "metadata_sha256": "3f4ace20c714fe6ae07e349cac81bbbe90ca1f8353d7b27cf1bf16c8db45c429",
       "content_sha256": "f9d9a02191dba42c85ca921345f25c099f7df3382ca01c0dd2e055a369912c41"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "7353382647b3461d4fd58503ce9085f6c6a673ce893545c02bed4f8c624d7162",
+      "metadata_sha256": "c514c96204a4aaa5985f2cd90f6cbbd955e3d59d99ae8b37ebce4a437d4d5db7",
       "content_sha256": "f570d2756e352fa1c338db112a9200a86a37476f556020034f32988658f461e9"
     },
     "afastamento": {
-      "metadata_sha256": "333dae9651b4931d1ac1c9fe9739d766622be5afef48cac2c7c89438cd17f28f",
+      "metadata_sha256": "5acfe660b3f2f2f072d6879a91b757f96c5b3ff64eb368af40cab7b23ec25a35",
       "content_sha256": "102b732589bef86ef251da2ca709ea8a46cc427f812fbf99a66fcdc833dbb5ec"
     },
     "documentos": {
-      "metadata_sha256": "7d5c350a0ee686deaaa5611ceaeb7e0dda9673db46148a4799ebd1395d5dc8a2",
+      "metadata_sha256": "6528228d26bf20ae60a33d8a4ea455857a64a679d48dc242f29f627b5abf24aa",
       "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
     },
     "aprovacoes": {
-      "metadata_sha256": "eb041187ea3270bf5e60870d0e77d2ed91b0289d301203e343dbd9241857361b",
+      "metadata_sha256": "53ac852f052214211976dbbe524e8a9d74cde04d7df504e9266cfa3c43e0830d",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "b781d879cbc2e3bbf0db48418b61477ccb245f2ebb6ea07bb1f57b108b199797",
+      "metadata_sha256": "9c30d7aa27e43a632fbd28bf04664a4d3d95a40e3e812a275bbf85ad0eb61b1c",
       "content_sha256": "c99188b2af36a78570f4fd23193d7379b01a6edef4c8317cf4593346bbd8b3d2"
     },
     "ocorrencia": {
-      "metadata_sha256": "b88b8d3bbbd9f5103bb17032d78ec764c0611ffba2e8a7922c0c52166455e34e",
+      "metadata_sha256": "1485ad2a0d62f8d330018fb14b0fb8f1a0881c7d2e547719bc9bfac9e69f7980",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "a96c08df13d508c045fa396fb6f18146eac50acc372be27aae770db4386ef8a2",
+      "metadata_sha256": "d39cf97a0e078125a87d6371105e219318934d2594fe26003fe458bcf450996c",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "1fc72e52e9d667e9f809d72fb445e147e7908c903fb01cfbfe02a27e6ae07bfb",
+      "metadata_sha256": "5862651caad5556564ead38a630544f5c9bc4aaa181a7c31bfba4f880e9f6e28",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "58ad76b2c4137871351cddbe0e963fb8f1717c9074f43adf86406d9b0a0fe4b4",
+      "metadata_sha256": "bdc19cdf2a560cbf52b3e632762edc1a8090e81cb348aae5808e97219468fdb4",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -89,7 +89,8 @@
       "Instruções2.5.4: perguntas ao DP apresentam nome+código reais no mesmo namespace e alcance, preservando zeros da fonte; consulta focal, conflito/ausência limitados ao dependente, reuso sem nova pergunta e fonte atribuída sem autoridade automática. Sem DOC/hash universal.",
       "Instruções2.6.0: não repetir respostasDP; consultar diagnósticos persistidos e distinguir episódio integral/faixa por pagador sem presumir concessão; nova configuração só após contratos publicados.",
       "Instruções2.6.1: aproveitar respostaDP já registrada após falha técnica do artefato derivado; diagnóstico mensal continua histórico e campos desconhecidos permanecem indisponíveis, sem recalcular ou corrigir dados.",
-      "Dataprev mensal: descoberta de loki.dataprev-monthly/1 por receive_case_data; reserva, releitura durável e aplicação ausente com CAS, sem promover consulta parcial ou presumir ativação."
+      "Dataprev mensal: descoberta de loki.dataprev-monthly/1 por receive_case_data; reserva, releitura durável e aplicação ausente com CAS, sem promover consulta parcial ou presumir ativação.",
+      "Instruções2.6.4: admissão — Beneficiários da ficha em até8linhas sem truncar, retificação de nome diferente só em caixa/espaços com cadastro inalterado e motivo das recusas de reinício/conciliação com next_action; valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado; nenhuma proteção removida."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -112,7 +113,8 @@
       "Plugin2.5.4 distribui a mesma orientação de rubricas em operar-loki, registrar-problema-loki e investigar-regras-dp; texto não comprova instalação ou consumo, e wheel0.4.7 permanece imutável.",
       "Plugin2.6.0 acompanha contratos aditivos; wheel0.4.9 é imutável e distribuição não comprova instalação, publicação, consumo financeiro ou aceite.",
       "Plugin2.6.1 acompanha a retomada estrita; wheel0.4.10 novo, wheel0.4.9 imutável; publicação e uso exigem evidências separadas.",
-      "Plugin2.6.3 acrescenta guia público Dataprev mensal com exemplos sintéticos; wheel0.4.12 preparado não comprova backend publicado, instalação ou homologação real. Wheel0.4.11 permanece imutável."
+      "Plugin2.6.3 acrescenta guia público Dataprev mensal com exemplos sintéticos; wheel0.4.12 preparado não comprova backend publicado, instalação ou homologação real. Wheel0.4.11 permanece imutável.",
+      "Plugin2.6.4 resume o destrave de admissão em WORKFLOWS/CAPACIDADES_DP e o relato de bloqueio sem caminho; wheel0.4.13 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.12 permanece imutável."
     ]
   }
 }

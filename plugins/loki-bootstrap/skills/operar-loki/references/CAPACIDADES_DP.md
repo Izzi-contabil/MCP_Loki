@@ -66,6 +66,19 @@ Preservar imports de admissão/rescisão exige a prévia `preview_import_preserv
 e o plano/hash/dependências correntes em `preserve_imports`; não escolha eventos
 de memória. Aprovação ou efeito pode exigir conciliação prévia.
 
+Quando o serviço informar o motivo, a recusa de `restart_case`/`cancel_case`
+por efeitos conserva `restart_requires_effect_reconciliation` ou
+`case_lifecycle_action_refused` e traz `blocking_refs` (`ref` e `kind` entre
+`vinculo_event`, `documentary_approval`, `chat_review` e `operational_effect`;
+eventos também `origin` e `event_type`), `blocking_ref_count` (lista limitada
+a 50) e `next_action`: `preview_import_preservation` quando todos os refs são
+imports documentais; `preview_admission_reconciliation` nos demais casos de
+admissão; ausente nos outros processos. Nenhuma proteção mudou. Siga somente
+o `next_action` recebido; sem ele, pare, guarde a resposta e relate pelo fluxo
+de problema com `case_id` e refs, sem dado pessoal. Não contorne, não cancele
+nem recrie o caso. Blockers da prévia de conciliação, Beneficiários da ficha
+e nome diferente só em caixa/espaços estão no domínio `admissao`.
+
 Correção da população da folha depende de
 `preparation.population_correction` no contrato servido. Quando oferecido,
 prepare a lista final completa de `funcionario_id`+`matricula`, consulte
