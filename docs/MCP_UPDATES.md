@@ -1,5 +1,30 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.15 / instruções e plugin2.6.6 —14/11/2026
+
+Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
+mínimo2.0.0 permanecem. Domínios `geral`, `admissao` e `rescisao`: na
+preservação de imports, folha mensal protegida classificada `equivalent` com
+`employee_excluded_from_current_calculation` deixa de bloquear; `"unknown"`
+continua em `import_preservation_protected_dependency`;
+`import_preservation_consumer_changed` pede refazer a prévia e
+`reconciliation_dependencies_busy`, tentar depois. `geral`: prévia de população
+da folha aceita item só `{"matricula"}`, salvo matrícula que passou a outra
+pessoa (`payroll_population_rebound_requires_identifier`); chaves de `field_sources` são
+caminhos-folha (`field_source_coverage`); recusa de simulação traz `subreason`;
+reinício em `aberto`/`em_preparacao` sem `preparation` recusa com
+`restart_requires_preparation_for_state` (modo de
+`get_process_contract.preparation.modes`). `rescisao`: motivos fechados dos
+afastamentos. `ferias`: `related_case_ids` e `related_reason` em
+`related_vacation_parameters_invalid`. Plugin espelha em WORKFLOWS,
+CAPACIDADES_DP, operar-loki e registrar-problema-loki. Nenhuma proteção é
+removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.14 permanece
+imutável; fonte e wheel0.4.15 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.14 / instruções e plugin2.6.5 —13/11/2026
 
 Correção de orientação após revisão independente, sem ferramenta ou argumento

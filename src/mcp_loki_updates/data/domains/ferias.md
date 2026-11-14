@@ -91,7 +91,11 @@ continua sujeita a vigência, identidade, cobertura e integridade. O corretor
 pontual conserva seu alcance; documentos e decisões anteriores permanecem.
 
 `related_vacation_parameters_invalid` pede `get_case` do contexto relacionado
-para diagnóstico, sem inventar flags ou ignorar histórico parcial. A orientação
+para diagnóstico, sem inventar flags ou ignorar histórico parcial. Quando a
+resposta apresentar, `related_case_ids` aponta o caso de férias irmão do mesmo
+funcionário e `related_reason` diz `incomplete` ou `invalid`: complete ou
+corrija esse caso pelo caminho dele; se for duplicado, cancele-o somente com
+decisão humana explícita. A orientação
 não autoriza corrigir fatos ou reaplicar casos automaticamente. Segunda ocorrência
 em outra competência usa o caminho existente; suporte na mesma competência não
 é inferido desta substituição. Publicação e reteste real exigem provas próprias.

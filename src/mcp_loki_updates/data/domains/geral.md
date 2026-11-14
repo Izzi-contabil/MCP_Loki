@@ -63,6 +63,20 @@ valores, seleção, versão e integridade sem recalcular. Ausência histórica d
 causa ou memória permanece explícita. Sucesso técnico, cadastro recebido ou
 leitura íntegra não comprovam paridade, pagamento ou aceite de DP.
 
+## Simulação de hipótese
+
+Quando o contrato servido oferecer simulação, ele declara `hypothesis_payload`
+(payload completo da hipótese, não diferença), `field_sources_schema`
+(`VersionFieldSource`), cobertura de todas as folhas e o localizador
+`$.payload.<caminho>`. A recusa `case_simulation_refused` com
+`simulation_request_invalid` traz `subreason`: `simulation_spec_invalid`,
+`simulation_payload_invalid`, `simulation_payload_incomplete`,
+`simulation_process_unsupported`, `field_source_coverage` ou
+`field_source_invalid`. Corrija só o ponto indicado e reenvie o payload
+completo. `simulation_process_unsupported` não tem caminho: não troque de
+processo nem converta a hipótese em caso real. Simulação não substitui caso,
+revisão ou aceite.
+
 ## Descobrir prontidão e medir acurácia
 
 Consulte `meu_acesso`, `get_dp_capabilities`, `list_workflows` e
@@ -125,6 +139,19 @@ Preservar imports de admissão/rescisão exige a prévia `preview_import_preserv
 e o plano/hash/dependências correntes em `preserve_imports`; não escolha eventos
 de memória. Aprovação ou efeito pode exigir conciliação prévia.
 
+Quando a prévia apresentar `consumer_impact.protected_consumers[]`, folha
+mensal protegida (`aguardando_revisao`, `aprovado` ou `publicado`) deixa de
+bloquear só com `classification: "equivalent"` e
+`reason: "employee_excluded_from_current_calculation"`: cálculo vigente
+ancorado, funcionário fora da população e pacote gerado desse cálculo. O
+contrato de preparação declara `protected_consumer_equivalence_proofs` quando
+aceita essa prova. `"unknown"` continua bloqueando com
+`import_preservation_protected_dependency`; não interprete nem force. No
+restart, `import_preservation_consumer_changed` indica consumidor alterado
+depois da prévia: refaça `preview_import_preservation` e use o plano novo.
+`reconciliation_dependencies_busy` em leitura indica dependências ocupadas:
+tente depois, sem forçar nem repetir em laço.
+
 Quando o serviço informar o motivo, a recusa de `restart_case`/`cancel_case`
 por efeitos conserva `restart_requires_effect_reconciliation` ou
 `case_lifecycle_action_refused` e traz `blocking_refs` (`ref` e `kind` entre
@@ -145,11 +172,27 @@ recebido; sem ele, pare, guarde a resposta e relate pelo fluxo de problema com
 caso. Blockers da prévia de conciliação, Beneficiários da ficha e nome
 diferente só em caixa/espaços estão no domínio `admissao`.
 
+`restart_case` em caso `aberto` ou `em_preparacao` sem `preparation` recusa com
+`restart_requires_preparation_for_state` e `next_action: "get_process_contract"`:
+leia o contrato e envie `preparation` com
+`schema_version: "loki.case-preparation/1"`, `request_ref` e, em `mode`, um dos
+modos de `get_process_contract.preparation.modes`. Efeitos persistidos ainda
+podem exigir conciliação própria. Nos demais
+estados a recusa é `restart_requires_adjustable_state`: não há reinício por
+esse caminho; não cancele nem recrie o caso para contorná-la.
+
 Correção da população da folha depende de
 `preparation.population_correction` no contrato servido. Quando oferecido,
 prepare a lista final completa de `funcionario_id`+`matricula`, consulte
 `preview_payroll_population_correction` ou a rota anunciada
 `loki.payroll-population-preview/1` e apresente diferenças ao humano.
+Na prévia, um item pode trazer só `{"matricula"}`; a resposta devolve o
+`funcionario_id` em `population`. Se a matrícula passou a apontar para outra
+pessoa, o item só com `{"matricula"}` é recusado com
+`payroll_population_rebound_requires_identifier` até o `funcionario_id` novo
+vir no item; confirme antes com o humano que é outra pessoa. A aplicação
+continua exigindo `{funcionario_id, matricula}` copiados da prévia e o
+`preview_id`.
 A aplicação usa `loki.case-preparation/1`, `mode=replace_payroll_population`,
 `preview_id`, `reason`, `request_ref` e `reset_financial_inputs=true`,
 no restart autorizado ou seu transporte tipado anunciado. Não é complemento
@@ -335,6 +378,12 @@ nem exija aceite de PDF inexistente. Se houver efeito próprio, sua intenção h
 e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplicado.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+Quando o contrato apresentar `provenance.field_source_keys`, cada chave de
+`field_sources` é um caminho-folha de `data` (`leaf_paths(data)`): `.` separa
+objeto, `[n]` indica posição em lista e não há prefixo com o nome da seção
+(ex.: `periodos[0].inicio`). Chave que não é caminho-folha recusa com reason
+`field_source_coverage`: corrija a chave, não o dado.
 
 Pedidos abertos pelo assistente mantêm a identidade OAuth do relator. Consulte
 `consultar_problema` e apresente a pergunta corrente de `detail.support.triage`

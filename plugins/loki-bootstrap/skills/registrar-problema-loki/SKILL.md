@@ -31,7 +31,11 @@ Recusa de reinício/conciliação de admissão com `next_action: null` (inclusiv
 `cancel_case` recusado por efeitos, que nunca traz `next_action`, não têm
 caminho operacional: registre-a como bloqueio,
 conforme a autorização vigente, com `case_id`, códigos e refs dos blockers,
-sem dado pessoal; não cancele nem recrie o caso.
+sem dado pessoal; não cancele nem recrie o caso. O mesmo vale para
+`import_preservation_protected_dependency` com consumidor `"unknown"`,
+`simulation_process_unsupported` e `restart_requires_adjustable_state`.
+`reconciliation_dependencies_busy` e `import_preservation_consumer_changed`
+não são defeito: tente depois ou refaça a prévia antes de relatar.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

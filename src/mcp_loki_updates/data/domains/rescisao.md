@@ -16,6 +16,21 @@ somente o efeito dependente permanece pendente. Ausência dos campos novos
 preserva o formato e a interpretação legados; entrada, versão, seleção e memória
 do cálculo precisam comprovar consumo antes de afirmar destrave financeiro.
 
+Quando o serviço informar o motivo, a recusa da coleção de afastamentos traz
+`reason` fechado: `afastamento_representacao_mista` (`faixa_pagador` é
+tudo-ou-nada na coleção), `afastamento_concessao_incompativel`,
+`afastamento_pagadores_sobrepostos`, `afastamento_concessoes_sobrepostas`,
+`faixa_previdenciaria_exige_beneficio` ou
+`beneficio_previdenciario_exige_pagador_inss`. Corrija a coleção pelos dados
+reais; não troque a representação nem invente benefício, concessão ou pagador
+para vencer a recusa. Sem o dado, preserve a pendência do efeito dependente.
+
+Preservação de imports da rescisão segue `preview_import_preservation`: folha
+mensal protegida classificada `equivalent` com
+`employee_excluded_from_current_calculation` deixa de bloquear; `"unknown"`
+continua em `import_preservation_protected_dependency`. Detalhes em
+“Retomada, nova preparação e seleção da folha” do domínio `geral`.
+
 ## Faltas mensais e elegibilidade do 13º
 
 Consulte `get_process_contract` antes de preparar `faltas_decimo_terceiro`.

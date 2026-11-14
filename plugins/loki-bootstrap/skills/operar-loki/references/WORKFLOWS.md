@@ -316,6 +316,50 @@ Valem somente quando a resposta servida os apresentar; consulte o domínio
   use [registrar-problema-loki](../../registrar-problema-loki/SKILL.md) com
   `case_id` e blockers, sem dado pessoal. Não contorne, cancele ou recrie.
 
+## Recusas e prévias com motivo fechado
+
+Valem somente quando a resposta servida os apresentar; o roteiro completo está
+nos domínios `geral`, `admissao`, `rescisao` e `ferias`.
+
+- `preview_import_preservation` (admissão/rescisão): folha mensal protegida
+  com `classification: "equivalent"` e
+  `reason: "employee_excluded_from_current_calculation"` deixa de bloquear;
+  `"unknown"` continua em `import_preservation_protected_dependency`. No
+  restart, `import_preservation_consumer_changed` pede refazer a prévia;
+  `reconciliation_dependencies_busy` pede tentar depois, sem forçar.
+- Folha: `preview_payroll_population_correction` aceita item só
+  `{"matricula"}` e devolve `funcionario_id` em `population`; matrícula que
+  passou a outra pessoa recusa com
+  `payroll_population_rebound_requires_identifier` até o `funcionario_id` novo
+  vir no item (confirme com o humano que é outra pessoa);
+  `replace_payroll_population` exige `{funcionario_id, matricula}` copiados da
+  prévia e o `preview_id`.
+- Rescisão, afastamentos: `afastamento_representacao_mista` (`faixa_pagador`
+  é tudo-ou-nada), `afastamento_concessao_incompativel`,
+  `afastamento_pagadores_sobrepostos`, `afastamento_concessoes_sobrepostas`,
+  `faixa_previdenciaria_exige_beneficio`,
+  `beneficio_previdenciario_exige_pagador_inss`: corrija pelos dados reais,
+  sem inventar benefício, concessão ou pagador.
+- `field_sources`: chave é caminho-folha de `data` (`.` objeto, `[n]` lista,
+  sem nome da seção, ex.: `periodos[0].inicio`); senão `field_source_coverage`.
+- Simulação: `case_simulation_refused`/`simulation_request_invalid` traz
+  `subreason`; reenvie `hypothesis_payload` completo com fontes
+  `VersionFieldSource` em `$.payload.<caminho>`. `simulation_process_unsupported`
+  não tem caminho.
+- `restart_case` em `aberto`/`em_preparacao` sem `preparation`:
+  `restart_requires_preparation_for_state` → `get_process_contract` e
+  `preparation` (`loki.case-preparation/1`, `request_ref` e um dos modos de
+  `get_process_contract.preparation.modes`); efeitos persistidos ainda podem
+  exigir conciliação própria. Outros estados:
+  `restart_requires_adjustable_state`.
+- Férias: `related_vacation_parameters_invalid` traz `related_case_ids` (caso
+  irmão do mesmo funcionário) e `related_reason` `incomplete`/`invalid`:
+  complete ou corrija; duplicado só se cancela com decisão humana.
+
+Sem caminho servido, pare, guarde a resposta e use
+[registrar-problema-loki](../../registrar-problema-loki/SKILL.md), sem dado
+pessoal. Não contorne, cancele ou recrie.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

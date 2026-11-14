@@ -65,6 +65,14 @@ dados financeiros; documentos, decisões e eventos anteriores permanecem.
 Preservar imports de admissão/rescisão exige a prévia `preview_import_preservation`
 e o plano/hash/dependências correntes em `preserve_imports`; não escolha eventos
 de memória. Aprovação ou efeito pode exigir conciliação prévia.
+Folha mensal protegida (`aguardando_revisao`, `aprovado`, `publicado`) deixa de
+bloquear a preservação só com `consumer_impact.protected_consumers[]` em
+`classification: "equivalent"` e
+`reason: "employee_excluded_from_current_calculation"` (contrato declara
+`protected_consumer_equivalence_proofs`). `"unknown"` continua bloqueando com
+`import_preservation_protected_dependency`. No restart,
+`import_preservation_consumer_changed` pede refazer a prévia;
+`reconciliation_dependencies_busy` pede tentar depois, sem forçar.
 
 Quando o serviço informar o motivo, a recusa de `restart_case`/`cancel_case`
 por efeitos conserva `restart_requires_effect_reconciliation` ou
@@ -86,11 +94,25 @@ recebido; sem ele, pare, guarde a resposta e relate pelo fluxo de problema com
 caso. Blockers da prévia de conciliação, Beneficiários da ficha e nome
 diferente só em caixa/espaços estão no domínio `admissao`.
 
+`restart_case` em `aberto`/`em_preparacao` sem `preparation` recusa com
+`restart_requires_preparation_for_state` (`next_action: "get_process_contract"`):
+envie `preparation` com `schema_version: "loki.case-preparation/1"`,
+`request_ref` e, em `mode`, um dos modos de
+`get_process_contract.preparation.modes`; efeitos persistidos ainda podem
+exigir conciliação própria. Nos demais estados, `restart_requires_adjustable_state` não tem
+reinício por esse caminho.
+
 Correção da população da folha depende de
 `preparation.population_correction` no contrato servido. Quando oferecido,
 prepare a lista final completa de `funcionario_id`+`matricula`, consulte
 `preview_payroll_population_correction` ou a rota anunciada
 `loki.payroll-population-preview/1` e apresente diferenças ao humano.
+A prévia aceita item só `{"matricula"}` e devolve `funcionario_id` em
+`population`. Matrícula que passou a apontar para outra pessoa recusa o item
+só com `{"matricula"}` (`payroll_population_rebound_requires_identifier`) até o
+`funcionario_id` novo vir no item; confirme antes com o humano que é outra
+pessoa. A aplicação exige `{funcionario_id, matricula}` copiados da prévia e o
+`preview_id`.
 A aplicação usa `loki.case-preparation/1`, `mode=replace_payroll_population`,
 `preview_id`, `reason`, `request_ref` e `reset_financial_inputs=true`,
 no restart autorizado ou seu transporte tipado anunciado. Não é complemento
