@@ -1,5 +1,13 @@
 # MCP Loki — contrato operacional 2.6.3
-Candidata **provider0.4.15 / instruções e plugin2.6.6**,14/11/2026; contrato2.6.3
+Candidata **provider0.4.16 / instruções e plugin2.6.7**,14/11/2026; contrato2.6.3
+inalterado: preservação de imports pelo cálculo de onde saiu o pacote da folha,
+saldo da rescisão em mês comercial, conexão fechada com `/healthz` normal,
+segunda ocorrência de férias, lote de políticas de mapa com arredondamento e
+`case_write_constraints` com `field`/`reason`. Vale quando a resposta servida
+apresentar os campos; wheel preparado não comprova publicação do backend,
+instalação ou uso.
+
+Edição anterior **provider0.4.15 / instruções e plugin2.6.6**,14/11/2026; contrato2.6.3
 inalterado: recusas e prévias com motivo fechado — consumidor equivalente na
 preservação de imports, prévia de população só por matrícula, afastamentos da
 rescisão, chaves de `field_sources`, `subreason` da simulação, reinício sem
@@ -35,11 +43,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.15** entrega instruções **2.6.6** ao backend.
+O pacote `mcp-loki-updates` **0.4.16** entrega instruções **2.6.7** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.6.6** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.6.7** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 

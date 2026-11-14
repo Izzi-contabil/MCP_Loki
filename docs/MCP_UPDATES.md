@@ -1,5 +1,28 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.16 / instruções e plugin2.6.7 —14/11/2026
+
+Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
+mínimo2.0.0 permanecem. Domínios `geral`, `admissao` e `rescisao`: folha
+protegida `equivalent` passa a ser provada pelo cálculo de onde saiu o pacote
+dela (em revisão/aprovado), sem recompor a folha viva; corrige o texto2.6.6
+que falava em cálculo vigente. `unknown` continua bloqueando,
+`reconciliation_dependencies_busy` indica gravação em andamento na empresa e
+pacote envelhecido segue barrado com `calculo_desatualizado`. `rescisao`: saldo
+em mês comercial (`trinta_fixo`, `rescisao-v43`/`rescisao-v44`) calcula
+fevereiro e dia31; cenários ainda `regra_nao_medida` aguardam a DP. `geral`:
+conexão fechada com `/healthz` normal; lote
+`loki.company-payroll-map-policy-patch/1` com `fgts_mensal` e
+`arredondamento_monetario`; `case_write_constraints` com `field` e `reason`
+fechados. `ferias`: segunda ocorrência em outra competência e `created: false`.
+Plugin espelha em WORKFLOWS, CAPACIDADES_DP, operar-loki e
+registrar-problema-loki. Nenhuma proteção é removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.15 permanece
+imutável; fonte e wheel0.4.16 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.15 / instruções e plugin2.6.6 —14/11/2026
 
 Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e

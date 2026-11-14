@@ -24,6 +24,10 @@ sem ele, inclusive em cancelamento recusado por efeitos, pare e relate.
 Recusas com motivo fechado (preservação de imports, população da folha,
 afastamentos da rescisão, `field_sources`, simulação, reinício e férias
 relacionadas) estão em “Recusas e prévias com motivo fechado” no mesmo roteiro.
+Recusa `case_write_constraints` com `field`/`reason`, conexão fechada com
+`/healthz` normal, saldo de rescisão em mês comercial, segunda ocorrência de
+férias e lote de políticas de mapa (FGTS mensal e arredondamento) estão em
+“Recusas de gravação, conector, saldo comercial e lote de mapas”.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

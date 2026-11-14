@@ -36,6 +36,12 @@ sem dado pessoal; não cancele nem recrie o caso. O mesmo vale para
 `simulation_process_unsupported` e `restart_requires_adjustable_state`.
 `reconciliation_dependencies_busy` e `import_preservation_consumer_changed`
 não são defeito: tente depois ou refaça a prévia antes de relatar.
+`case_write_constraints` com `reason` igual ao próprio código (motivo não
+classificado) é registrado como problema; com `reason` fechado, corrija o
+campo indicado antes. "Connection closed"/timeout com `/healthz` normal pode
+ser falha antes do Loki: espere, abra conversa nova ou faça Refresh do
+conector e avise pelo Caixa; não repita gravações sem `request_ref` nem abra
+relatos em laço.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a
