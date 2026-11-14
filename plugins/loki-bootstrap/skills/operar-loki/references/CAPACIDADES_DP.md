@@ -180,6 +180,18 @@ a recusa `correcao nao pode alterar identidade ou escopo do caso` para
 a oferecer. Sem o suporte anunciado, conserve a pendência do caminho e sua
 reprodução; o plugin não publica a capacidade nem altera a conta do operador.
 
+Quando a resposta servida apresentar, a recusa de dados de afastamento traz em
+`errors` o campo exato (ex.: `leave.retorno`) e um código de regra:
+`afastamento_inicio_antes_da_admissao`,
+`afastamento_inicio_diverge_do_primeiro_periodo`,
+`afastamento_periodos_descontinuos`, `afastamento_fonte_de_retorno_sem_data`,
+`afastamento_retorno_fora_da_vespera` (retorno = dia seguinte ao fim do último
+período) ou `afastamento_periodo_invertido`. Corrija só o campo apontado,
+conferindo com o original, e reenvie com novo `request_ref` e o snapshot atual.
+Reenviar o mesmo dado sem corrigir, com ou sem `field_sources`, vai ser recusado
+de novo. Se o documento realmente traz essas datas, não force o valor: registre
+a dúvida com a DP antes de reenviar.
+
 ## Consignado: contrato, competência e rescisão
 
 Para a consulta automática mensal, siga
@@ -301,6 +313,21 @@ envie sempre `competencia` igual ao mês de início do gozo. No `create_case`,
 `created: false` significa que o caso devolvido é o existente, não o novo: não
 continue nele. Duas frações na mesma competência ainda não têm suporte. Nunca
 cancele o primeiro caso para abrir o segundo.
+
+Quando a resposta servida apresentar, a recusa de dados de férias traz em
+`errors` o campo exato (ex.: `dados_ferias.data_aviso`) e um código de regra:
+`ferias_aquisitivo_29_fevereiro_exige_qualificacao`,
+`ferias_aquisitivo_incompleto`, `ferias_gozo_duracao_invalida`,
+`ferias_gozo_antes_do_fim_do_aquisitivo`, `ferias_gozo_fora_do_concessivo`,
+`ferias_aviso_fora_do_prazo`, `ferias_pagamento_fora_do_prazo`,
+`ferias_abono_pedido_incoerente`, `ferias_pedido_abono_fora_do_prazo`,
+`ferias_inicio_antes_de_repouso_ou_feriado`,
+`ferias_medias_alternativas_exclusivas`, `ferias_media_repetida` ou
+`ferias_media_competencias_invalidas`. Corrija só o campo apontado, conferindo
+com o original, e reenvie com novo `request_ref` e o snapshot atual. Reenviar o
+mesmo dado sem corrigir, com ou sem `field_sources`, vai ser recusado de novo.
+Se o documento realmente traz essas datas, não force o valor: registre a dúvida
+com a DP antes de reenviar.
 
 
 

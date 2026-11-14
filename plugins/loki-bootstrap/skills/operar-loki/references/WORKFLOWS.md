@@ -397,6 +397,32 @@ nos domínios `geral`, `rescisao` e `ferias`.
   prévia `VALIDO` → aplicar com `motivo`; uma única versão. O método é decisão
   humana/DP. Pode exigir Refresh do conector.
 
+## Recusas de férias e afastamento com campo e código de regra
+
+Valem somente quando a resposta servida os apresentar; o roteiro completo está
+nos domínios `ferias` e `afastamento`. Quando o Loki recusar dados de férias
+ou de afastamento, olhe a lista `errors`: cada item traz o campo exato (por exemplo
+`dados_ferias.data_aviso` ou `leave.retorno`) e um código que diz qual regra não fechou. Corrija só o
+campo apontado, conferindo com o documento original, e reenvie com um novo
+`request_ref` e o snapshot atual do caso. Reenviar o mesmo dado sem corrigir,
+com ou sem `field_sources`, vai ser recusado de novo. Se o documento realmente
+traz essas datas, não force o valor: registre a dúvida com a DP antes de
+reenviar.
+
+- Férias: `ferias_aquisitivo_29_fevereiro_exige_qualificacao`,
+  `ferias_aquisitivo_incompleto`, `ferias_gozo_duracao_invalida`,
+  `ferias_gozo_antes_do_fim_do_aquisitivo`, `ferias_gozo_fora_do_concessivo`,
+  `ferias_aviso_fora_do_prazo`, `ferias_pagamento_fora_do_prazo`,
+  `ferias_abono_pedido_incoerente`, `ferias_pedido_abono_fora_do_prazo`,
+  `ferias_inicio_antes_de_repouso_ou_feriado`,
+  `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida`,
+  `ferias_media_competencias_invalidas`.
+- Afastamento: `afastamento_inicio_antes_da_admissao`,
+  `afastamento_inicio_diverge_do_primeiro_periodo`,
+  `afastamento_periodos_descontinuos`, `afastamento_fonte_de_retorno_sem_data`,
+  `afastamento_retorno_fora_da_vespera` (retorno = dia seguinte ao fim do
+  último período), `afastamento_periodo_invertido`.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

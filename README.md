@@ -1,5 +1,12 @@
 # MCP Loki — contrato operacional 2.6.3
-Candidata **provider0.4.16 / instruções e plugin2.6.7**,14/11/2026; contrato2.6.3
+Candidata **provider0.4.17 / instruções e plugin2.6.8**,14/11/2026; contrato2.6.3
+inalterado: recusas de dados de férias e de afastamento trazem em `errors` o
+campo exato e um código de regra (`ferias_...`, `afastamento_...`); a harness
+corrige só o campo apontado e reenvia com novo `request_ref`. Vale quando a
+resposta servida apresentar os campos; wheel preparado não comprova publicação
+do backend, instalação ou uso.
+
+Edição anterior **provider0.4.16 / instruções e plugin2.6.7**,14/11/2026; contrato2.6.3
 inalterado: preservação de imports pelo cálculo de onde saiu o pacote da folha,
 saldo da rescisão em mês comercial, conexão fechada com `/healthz` normal,
 segunda ocorrência de férias, lote de políticas de mapa com arredondamento e
@@ -43,11 +50,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.16** entrega instruções **2.6.7** ao backend.
+O pacote `mcp-loki-updates` **0.4.17** entrega instruções **2.6.8** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.6.7** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.6.8** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 

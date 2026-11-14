@@ -68,6 +68,12 @@ identificável. Corrija só o campo indicado; não reenvie o modelo inteiro às
 cegas. `reason` igual a `case_write_constraints` é motivo não classificado:
 registre como problema (skill `registrar-problema-loki`), sem dado pessoal.
 
+Recusas de dados de férias e de afastamento, quando a resposta servida
+apresentar, trazem em `errors` o campo exato (ex.: `dados_ferias.data_aviso`,
+`leave.retorno`) e um código de regra (`ferias_...`, `afastamento_...`).
+Corrija só o campo apontado e reenvie com novo `request_ref` e snapshot atual;
+a lista de códigos está nos domínios `ferias` e `afastamento`.
+
 ## Conector: conexão fechada ou tempo esgotado
 
 "Connection closed" ou timeout com `/healthz` normal pode ser falha antes do

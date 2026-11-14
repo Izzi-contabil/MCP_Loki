@@ -42,6 +42,11 @@ campo indicado antes. "Connection closed"/timeout com `/healthz` normal pode
 ser falha antes do Loki: espere, abra conversa nova ou faça Refresh do
 conector e avise pelo Caixa; não repita gravações sem `request_ref` nem abra
 relatos em laço.
+Recusa de férias ou de afastamento com campo exato e código de regra
+(`ferias_...`, `afastamento_...`) não é defeito do Loki: corrija o campo
+apontado conferindo com o original; se o documento realmente traz essas datas,
+registre a dúvida com a DP, não como problema. Reenviar o mesmo dado sem
+corrigir vai ser recusado de novo.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

@@ -1,11 +1,11 @@
 {
   "dominio": "afastamento",
-  "version": "2.6.7",
+  "version": "2.6.8",
   "updated_at": "2026-11-14",
   "compatibility": {
     "mcp_contract_version": "2.6.3",
     "minimum_plugin_version": "2.0.0",
-    "recommended_plugin_version": "2.6.7"
+    "recommended_plugin_version": "2.6.8"
   },
   "permissions": {
     "capabilities": [

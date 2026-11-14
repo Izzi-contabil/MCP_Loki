@@ -104,3 +104,36 @@ envie sempre `competencia` igual ao mês de início do gozo. No `create_case`,
 `created: false` significa que o caso devolvido é o existente, não o novo: não
 continue nele. Duas frações na mesma competência ainda não têm suporte. Nunca
 cancele o primeiro caso para abrir o segundo.
+
+## Recusa com campo e código de regra
+
+O campo e o código valem somente quando a resposta servida os apresentar.
+Quando o Loki recusar dados de férias, olhe a lista `errors`: cada item traz o
+campo exato (por exemplo `dados_ferias.data_aviso`) e um código que diz qual
+regra não fechou. Corrija só o campo apontado, conferindo com o documento
+original, e reenvie com um novo `request_ref` e o snapshot atual do caso.
+Reenviar o mesmo dado sem corrigir, com ou sem `field_sources`, vai ser
+recusado de novo. Se o documento realmente traz essas datas, não force o valor:
+registre a dúvida com a DP antes de reenviar.
+
+Códigos de férias:
+
+- `ferias_aquisitivo_29_fevereiro_exige_qualificacao`: aquisitivo em 29 de
+  fevereiro precisa da qualificação do aniversário.
+- `ferias_aquisitivo_incompleto`: o aquisitivo não fecha um ano completo.
+- `ferias_gozo_duracao_invalida`: o gozo precisa de início antes do fim e de
+  cinco a trinta dias.
+- `ferias_gozo_antes_do_fim_do_aquisitivo`: o gozo começa antes de o
+  aquisitivo terminar.
+- `ferias_gozo_fora_do_concessivo`: gozo fora do concessivo exige o tratamento
+  de dobra.
+- `ferias_aviso_fora_do_prazo` e `ferias_pagamento_fora_do_prazo`: aviso ou
+  adiantamento fora dos prazos.
+- `ferias_abono_pedido_incoerente`: dias de abono e data do pedido de abono
+  precisam vir juntos (ou nenhum dos dois).
+- `ferias_pedido_abono_fora_do_prazo`: pedido de abono depois do prazo.
+- `ferias_inicio_antes_de_repouso_ou_feriado`: início nos dois dias antes do
+  repouso semanal ou de feriado.
+- `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida` e
+  `ferias_media_competencias_invalidas`: médias com alternativas que se
+  excluem, média repetida ou competências da média inválidas.
