@@ -57,3 +57,26 @@ Se optar por preservar proveniência detalhada de um original sem enviá-lo, con
 Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Recusa com campo e código de regra
+
+O campo e o código valem somente quando a resposta servida os apresentar.
+Quando o Loki recusar dados de afastamento, olhe a lista `errors`: cada item
+traz o campo exato (por exemplo `leave.retorno`) e um código que diz qual regra
+não fechou. Corrija só o campo apontado, conferindo com o documento original, e
+reenvie com um novo `request_ref` e o snapshot atual do caso. Reenviar o mesmo
+dado sem corrigir, com ou sem `field_sources`, vai ser recusado de novo. Se o
+documento realmente traz essas datas, não force o valor: registre a dúvida com
+a DP antes de reenviar.
+
+Códigos de afastamento:
+
+- `afastamento_inicio_antes_da_admissao`: início antes da admissão.
+- `afastamento_inicio_diverge_do_primeiro_periodo`: início diferente do
+  primeiro período.
+- `afastamento_periodos_descontinuos`: períodos com lacuna ou sobreposição.
+- `afastamento_fonte_de_retorno_sem_data`: fonte de retorno sem data de
+  retorno.
+- `afastamento_retorno_fora_da_vespera`: o retorno deve ser o dia seguinte ao
+  fim do último período.
+- `afastamento_periodo_invertido`: período com fim antes do início.

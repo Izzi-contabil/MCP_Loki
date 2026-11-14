@@ -1,5 +1,24 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.17 / instruções e plugin2.6.8 —14/11/2026
+
+Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
+mínimo2.0.0 permanecem. Domínios `ferias` e `afastamento`: a recusa de dados
+traz em `errors` o campo exato (ex.: `dados_ferias.data_aviso`,
+`leave.retorno`) e um código de regra (13 códigos `ferias_...` e 6
+`afastamento_...`, backend #316). A harness corrige só o campo apontado,
+conferindo com o original, e reenvia com novo `request_ref` e o snapshot atual;
+reenvio sem correção, com ou sem `field_sources`, é recusado de novo; data que o
+documento realmente traz vira dúvida com a DP, sem forçar valor. `geral` ganha
+um ponteiro junto de `case_write_constraints`. Plugin espelha em WORKFLOWS,
+CAPACIDADES_DP, operar-loki e registrar-problema-loki. Nenhuma proteção é
+removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.16 permanece
+imutável; fonte e wheel0.4.17 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.16 / instruções e plugin2.6.7 —14/11/2026
 
 Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e

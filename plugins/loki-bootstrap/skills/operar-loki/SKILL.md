@@ -28,6 +28,9 @@ Recusa `case_write_constraints` com `field`/`reason`, conexão fechada com
 `/healthz` normal, saldo de rescisão em mês comercial, segunda ocorrência de
 férias e lote de políticas de mapa (FGTS mensal e arredondamento) estão em
 “Recusas de gravação, conector, saldo comercial e lote de mapas”.
+Recusa de dados de férias ou de afastamento com campo exato e código de regra
+(`ferias_...`, `afastamento_...`) está em “Recusas de férias e afastamento com
+campo e código de regra”.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que
