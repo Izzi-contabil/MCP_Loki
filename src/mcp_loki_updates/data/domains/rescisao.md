@@ -27,8 +27,12 @@ para vencer a recusa. Sem o dado, preserve a pendência do efeito dependente.
 
 Preservação de imports da rescisão segue `preview_import_preservation`: folha
 mensal protegida classificada `equivalent` com
-`employee_excluded_from_current_calculation` deixa de bloquear; `"unknown"`
-continua em `import_preservation_protected_dependency`. Detalhes em
+`employee_excluded_from_current_calculation` (o cálculo de onde saiu o pacote
+da folha está ancorado e não inclui o funcionário) deixa de bloquear; a prévia
+não recalcula a folha viva. `"unknown"` continua em
+`import_preservation_protected_dependency`; `reconciliation_dependencies_busy`
+pede tentar depois; pacote envelhecido continua barrado na revisão
+(`calculo_desatualizado`). Detalhes em
 “Retomada, nova preparação e seleção da folha” do domínio `geral`.
 
 ## Faltas mensais e elegibilidade do 13º
@@ -165,16 +169,23 @@ universal de calendário. A harness informa fatos; os dias e centavos são deriv
 pelo motor, sem entrada livre para coincidir com a referência.
 
 O consumidor `rescisao-v42` estende o alcance ao mesmo mês civil de 31 dias,
-com divisor 30, desligamento até o dia 30 e sem afastamento sobreposto. A versão
-nova é selecionada somente nesse predicado. Mês30 e contratos anteriores
-permanecem no alcance próprio; fevereiro, desligamento no dia31 e outros
-divisores não são habilitados por essa extensão. Releia dias, seleção e memória;
-`regra_nao_medida:saldo_admissao_no_mes` continua um diagnóstico possível fora
-do alcance qualificado. Não adapte a data ou o divisor para coincidir com o comparador.
+com divisor 30, desligamento até o dia 30 e sem afastamento sobreposto. Mês30
+e contratos anteriores permanecem no alcance próprio. Releia dias, seleção e
+memória. Não adapte a data ou o divisor para coincidir com o comparador.
 
-`regra_nao_medida:saldo_admissao_no_mes` pode continuar pendente fora desse alcance; fevereiro,
-dia31, divisores e afastamentos seguem suas guardas próprias. Atualização de
-instruções não corrige o calculador publicado nem certifica o caso completo.
+Mês comercial (divisor 30, `trinta_fixo`), quando a resposta servida o
+apresentar (`rescisao-v43`/`rescisao-v44`): os dias do saldo são calculados
+pelo Loki; não informe dias nem troque o divisor. Desligamento em fevereiro ou
+no dia 31 agora calcula; mês inteiro trabalhado conta 30 dias; admissão no mesmo
+mês conta os dias corridos desde a admissão, incluindo atestado pago pela
+empresa. Continuam `regra_nao_medida:saldo_admissao_no_mes` até a DP responder:
+admissão no mês (depois do dia 1) com saída no dia 31 ou no último dia de
+fevereiro; afastamento pelo INSS ou licença-maternidade no mês da saída; empresa
+com divisor pelo calendário. Nesses casos não altere datas nem divisor;
+registre a dúvida com a DP. Cálculo novo exige gerar o pacote de novo e nova
+revisão; versões congeladas antigas desses cenários passam a exigir nova versão.
+Atualização de instruções não corrige o calculador publicado nem certifica o
+caso completo.
 Confira versão do motor, dias, memória e bases; não reutilize memorial parcial
 antigo ou aceite anterior como resultado da regra nova. Parcelas independentes
 permanecem disponíveis conforme o contrato, sem preencher ausência com zero.

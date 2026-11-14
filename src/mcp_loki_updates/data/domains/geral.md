@@ -57,6 +57,25 @@ campos seguros, o recibo e a referência de requisição. Uma recusa anterior à
 criação do caso não exige criar um caso fictício. O diagnóstico do cadastro
 empresarial não substitui o diagnóstico de onboarding ou de versões.
 
+Quando a resposta servida apresentar, a recusa `case_write_constraints` mantém
+o código, mas cada item de `errors` traz `field` e `reason` de vocabulário
+fechado (ex.: `campo_fora_do_schema`,
+`campo_ja_preenchido_exige_sobrescrever`, `dados_ferias_fora_do_schema`,
+`afastamentos_representacao_invalidos`,
+`vacation_preparation_requires_complete_input`,
+`caso_fora_de_estado_gravavel`), e `fields` não vem vazio quando há campo
+identificável. Corrija só o campo indicado; não reenvie o modelo inteiro às
+cegas. `reason` igual a `case_write_constraints` é motivo não classificado:
+registre como problema (skill `registrar-problema-loki`), sem dado pessoal.
+
+## Conector: conexão fechada ou tempo esgotado
+
+"Connection closed" ou timeout com `/healthz` normal pode ser falha antes do
+Loki, no caminho dos conectores. Espere alguns minutos, abra conversa nova ou
+faça Refresh do conector e avise pelo Caixa. Antes de repetir uma gravação,
+consulte o estado; só reenvie com o mesmo `request_ref` e o mesmo conteúdo,
+nunca sem `request_ref`.
+
 `get_case_dossier` mostra os RUNs e as memórias disponíveis. Quando o catálogo
 oferecer `get_case_calculation`, use caso e cálculo rescisório exatos para ler
 valores, seleção, versão e integridade sem recalcular. Ausência histórica de
@@ -142,15 +161,17 @@ de memória. Aprovação ou efeito pode exigir conciliação prévia.
 Quando a prévia apresentar `consumer_impact.protected_consumers[]`, folha
 mensal protegida (`aguardando_revisao`, `aprovado` ou `publicado`) deixa de
 bloquear só com `classification: "equivalent"` e
-`reason: "employee_excluded_from_current_calculation"`: cálculo vigente
-ancorado, funcionário fora da população e pacote gerado desse cálculo. O
+`reason: "employee_excluded_from_current_calculation"`: o cálculo de onde saiu
+o pacote dessa folha (o que está em revisão ou aprovado) está ancorado e não
+inclui o funcionário. A prévia não recalcula a folha viva e responde rápido;
+pacote envelhecido continua barrado na revisão com `calculo_desatualizado`. O
 contrato de preparação declara `protected_consumer_equivalence_proofs` quando
 aceita essa prova. `"unknown"` continua bloqueando com
 `import_preservation_protected_dependency`; não interprete nem force. No
 restart, `import_preservation_consumer_changed` indica consumidor alterado
 depois da prévia: refaça `preview_import_preservation` e use o plano novo.
-`reconciliation_dependencies_busy` em leitura indica dependências ocupadas:
-tente depois, sem forçar nem repetir em laço.
+`reconciliation_dependencies_busy` indica gravação em andamento em casos da
+mesma empresa: tente depois, sem forçar nem repetir em laço.
 
 Quando o serviço informar o motivo, a recusa de `restart_case`/`cancel_case`
 por efeitos conserva `restart_requires_effect_reconciliation` ou
@@ -477,6 +498,31 @@ encargos individuais. Apuração sobre base agrupada e FGTS rescisório têm
 contratos próprios. Disponibilidade da política não autoriza alterar configuração
 real, corrigir valores, aprovar casos ou transmitir. Uma diferença relatada de
 centavo só é conferida com os operandos e a referência daquele cálculo.
+
+## Lote de políticas de mapa: FGTS mensal e arredondamento
+
+Quando `get_client_config` anunciar `payroll_map_policy_patch_transport`, o
+envelope `loki.company-payroll-map-policy-patch/1` em `validate_client_config`
+→ `apply_client_config` (argumento `alteracoes`) altera a política de vários
+mapas de uma empresa sem reenviar `mapa` nem `mappings`: `company_code`,
+`selectors` exatos (grupo + `vigente_desde`) de todos os mapas,
+`confirmacao.expected_hash` atual e `sobrescrever: true`. Em `policy`:
+
+- `fgts_mensal`: `policy_version: "loki.fgts-mensal/1"`, `metodo`,
+  `escopo: "trabalhador_competencia_mensal_8pct"` e `fonte`;
+- `arredondamento_monetario`, sozinho ou junto com `fgts_mensal`, quando
+  `payroll_map_policy_patch_transport.policies.arredondamento_monetario.accepted`
+  aparecer: `{"verbas": ["<verba_loki do rounding_context da pendência>"],
+  "metodo": "half_up" | "half_even" | "exigir_qualificacao", "fonte": "<origem
+  da escolha: documento, regra ou pedido humano>"}`; `fonte` é obrigatória.
+
+Prévia `VALIDO` → aplique a mesma proposta com `motivo` (e a declaração humana
+se o gate de evidência pedir); sai uma única versão para todos os mapas. Se
+algum mapa não tiver a verba com fórmula `remuneracao_periodo`, nada é alterado
+(`payroll_policy_patch_rounding_verba_missing`,
+`payroll_policy_patch_rounding_verba_ambiguous` ou
+`payroll_policy_patch_rounding_formula_incompatible`). A escolha do método é decisão humana/DP; a harness não
+escolhe. O lote não recalcula folhas. Pode exigir Refresh do conector.
 
 
 # Dataprev mensal na folha

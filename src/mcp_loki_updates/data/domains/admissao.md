@@ -220,10 +220,14 @@ bloqueada depende de quem consulta: não reutilize prévia obtida por outra cont
 Em `preview_import_preservation`, folha mensal protegida deixa de bloquear
 quando `consumer_impact.protected_consumers[]` traz
 `classification: "equivalent"` com
-`reason: "employee_excluded_from_current_calculation"`; `"unknown"` continua
+`reason: "employee_excluded_from_current_calculation"`: o cálculo de onde saiu
+o pacote da folha (em revisão ou aprovado) está ancorado e não inclui o
+funcionário; a prévia não recalcula a folha viva. `"unknown"` continua
 bloqueando com `import_preservation_protected_dependency`. No restart,
 `import_preservation_consumer_changed` pede refazer a prévia;
-`reconciliation_dependencies_busy` pede tentar depois, sem forçar. Detalhes em
+`reconciliation_dependencies_busy` (gravação em andamento em casos da mesma
+empresa) pede tentar depois, sem forçar. Pacote envelhecido continua barrado na
+revisão (`calculo_desatualizado`). Detalhes em
 “Retomada, nova preparação e seleção da folha” do domínio `geral`.
 
 Siga o `next_action`. Quando for `null` ou houver dependente protegido, pare,

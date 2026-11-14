@@ -69,10 +69,14 @@ Folha mensal protegida (`aguardando_revisao`, `aprovado`, `publicado`) deixa de
 bloquear a preservação só com `consumer_impact.protected_consumers[]` em
 `classification: "equivalent"` e
 `reason: "employee_excluded_from_current_calculation"` (contrato declara
-`protected_consumer_equivalence_proofs`). `"unknown"` continua bloqueando com
+`protected_consumer_equivalence_proofs`): o cálculo de onde saiu o pacote da
+folha (em revisão ou aprovado) está ancorado e não inclui o funcionário; a
+prévia não recalcula a folha viva. `"unknown"` continua bloqueando com
 `import_preservation_protected_dependency`. No restart,
 `import_preservation_consumer_changed` pede refazer a prévia;
-`reconciliation_dependencies_busy` pede tentar depois, sem forçar.
+`reconciliation_dependencies_busy` (gravação em andamento em casos da mesma
+empresa) pede tentar depois, sem forçar. Pacote envelhecido continua barrado na
+revisão (`calculo_desatualizado`).
 
 Quando o serviço informar o motivo, a recusa de `restart_case`/`cancel_case`
 por efeitos conserva `restart_requires_effect_reconciliation` ou
@@ -249,16 +253,23 @@ universal de calendário. A harness informa fatos; os dias e centavos são deriv
 pelo motor, sem entrada livre para coincidir com a referência.
 
 O consumidor `rescisao-v42` estende o alcance ao mesmo mês civil de 31 dias,
-com divisor 30, desligamento até o dia 30 e sem afastamento sobreposto. A versão
-nova é selecionada somente nesse predicado. Mês30 e contratos anteriores
-permanecem no alcance próprio; fevereiro, desligamento no dia31 e outros
-divisores não são habilitados por essa extensão. Releia dias, seleção e memória;
-`regra_nao_medida:saldo_admissao_no_mes` continua um diagnóstico possível fora
-do alcance qualificado. Não adapte a data ou o divisor para coincidir com o comparador.
+com divisor 30, desligamento até o dia 30 e sem afastamento sobreposto. Mês30
+e contratos anteriores permanecem no alcance próprio. Releia dias, seleção e
+memória. Não adapte a data ou o divisor para coincidir com o comparador.
 
-`regra_nao_medida:saldo_admissao_no_mes` pode continuar pendente fora desse alcance; fevereiro,
-dia31, divisores e afastamentos seguem suas guardas próprias. Atualização de
-instruções não corrige o calculador publicado nem certifica o caso completo.
+Mês comercial (divisor 30, `trinta_fixo`), quando a resposta servida o
+apresentar (`rescisao-v43`/`rescisao-v44`): os dias do saldo são calculados
+pelo Loki; não informe dias nem troque o divisor. Desligamento em fevereiro ou
+no dia 31 agora calcula; mês inteiro trabalhado conta 30 dias; admissão no mesmo
+mês conta os dias corridos desde a admissão, incluindo atestado pago pela
+empresa. Continuam `regra_nao_medida:saldo_admissao_no_mes` até a DP responder:
+admissão no mês (depois do dia 1) com saída no dia 31 ou no último dia de
+fevereiro; afastamento pelo INSS ou licença-maternidade no mês da saída; empresa
+com divisor pelo calendário. Nesses casos não altere datas nem divisor;
+registre a dúvida com a DP. Cálculo novo exige gerar o pacote de novo e nova
+revisão; versões congeladas antigas desses cenários passam a exigir nova versão.
+Atualização de instruções não corrige o calculador publicado nem certifica o
+caso completo.
 Confira versão do motor, dias, memória e bases; não reutilize memorial parcial
 antigo ou aceite anterior como resultado da regra nova. Parcelas independentes
 permanecem disponíveis conforme o contrato, sem preencher ausência com zero.
@@ -282,9 +293,14 @@ pontual conserva seu alcance; documentos e decisões anteriores permanecem.
 
 `related_vacation_parameters_invalid` pede `get_case` do contexto relacionado
 para diagnóstico, sem inventar flags ou ignorar histórico parcial. A orientação
-não autoriza corrigir fatos ou reaplicar casos automaticamente. Segunda ocorrência
-em outra competência usa o caminho existente; suporte na mesma competência não
-é inferido desta substituição. Publicação e reteste real exigem provas próprias.
+não autoriza corrigir fatos ou reaplicar casos automaticamente. Publicação e
+reteste real exigem provas próprias.
+
+Segunda ocorrência de férias da mesma pessoa funciona em outra competência:
+envie sempre `competencia` igual ao mês de início do gozo. No `create_case`,
+`created: false` significa que o caso devolvido é o existente, não o novo: não
+continue nele. Duas frações na mesma competência ainda não têm suporte. Nunca
+cancele o primeiro caso para abrir o segundo.
 
 
 
@@ -303,3 +319,15 @@ encargos individuais. Apuração sobre base agrupada e FGTS rescisório têm
 contratos próprios. Disponibilidade da política não autoriza alterar configuração
 real, corrigir valores, aprovar casos ou transmitir. Uma diferença relatada de
 centavo só é conferida com os operandos e a referência daquele cálculo.
+
+Lote de políticas de mapa: quando `get_client_config` anunciar
+`payroll_map_policy_patch_transport`, o envelope
+`loki.company-payroll-map-policy-patch/1` (`validate_client_config` →
+`apply_client_config`, argumento `alteracoes`) aplica `fgts_mensal` e, se
+`payroll_map_policy_patch_transport.policies.arredondamento_monetario.accepted`
+aparecer, `arredondamento_monetario` (`verbas` do `rounding_context`, `metodo`
+`half_up`/`half_even`/`exigir_qualificacao`, `fonte` obrigatória) a todos os
+mapas selecionados, sem reenviar `mapa` nem `mappings`, com seletores exatos e
+`expected_hash` atual. Uma única versão; verba ausente ou sem fórmula
+`remuneracao_periodo` recusa o lote inteiro. Método é decisão humana/DP.
+Roteiro completo no domínio `geral`.

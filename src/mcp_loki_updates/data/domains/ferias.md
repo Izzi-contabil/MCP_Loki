@@ -96,6 +96,11 @@ resposta apresentar, `related_case_ids` aponta o caso de férias irmão do mesmo
 funcionário e `related_reason` diz `incomplete` ou `invalid`: complete ou
 corrija esse caso pelo caminho dele; se for duplicado, cancele-o somente com
 decisão humana explícita. A orientação
-não autoriza corrigir fatos ou reaplicar casos automaticamente. Segunda ocorrência
-em outra competência usa o caminho existente; suporte na mesma competência não
-é inferido desta substituição. Publicação e reteste real exigem provas próprias.
+não autoriza corrigir fatos ou reaplicar casos automaticamente. Publicação e
+reteste real exigem provas próprias.
+
+Segunda ocorrência de férias da mesma pessoa funciona em outra competência:
+envie sempre `competencia` igual ao mês de início do gozo. No `create_case`,
+`created: false` significa que o caso devolvido é o existente, não o novo: não
+continue nele. Duas frações na mesma competência ainda não têm suporte. Nunca
+cancele o primeiro caso para abrir o segundo.

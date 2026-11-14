@@ -323,10 +323,14 @@ nos domínios `geral`, `admissao`, `rescisao` e `ferias`.
 
 - `preview_import_preservation` (admissão/rescisão): folha mensal protegida
   com `classification: "equivalent"` e
-  `reason: "employee_excluded_from_current_calculation"` deixa de bloquear;
-  `"unknown"` continua em `import_preservation_protected_dependency`. No
-  restart, `import_preservation_consumer_changed` pede refazer a prévia;
-  `reconciliation_dependencies_busy` pede tentar depois, sem forçar.
+  `reason: "employee_excluded_from_current_calculation"` deixa de bloquear:
+  o cálculo de onde saiu o pacote da folha está ancorado e não inclui o
+  funcionário (a prévia não recalcula a folha viva). `"unknown"` continua em
+  `import_preservation_protected_dependency`. No restart,
+  `import_preservation_consumer_changed` pede refazer a prévia;
+  `reconciliation_dependencies_busy` (gravação em andamento na mesma empresa)
+  pede tentar depois, sem forçar. Pacote envelhecido continua barrado na
+  revisão (`calculo_desatualizado`).
 - Folha: `preview_payroll_population_correction` aceita item só
   `{"matricula"}` e devolve `funcionario_id` em `population`; matrícula que
   passou a outra pessoa recusa com
@@ -359,6 +363,39 @@ nos domínios `geral`, `admissao`, `rescisao` e `ferias`.
 Sem caminho servido, pare, guarde a resposta e use
 [registrar-problema-loki](../../registrar-problema-loki/SKILL.md), sem dado
 pessoal. Não contorne, cancele ou recrie.
+
+## Recusas de gravação, conector, saldo comercial e lote de mapas
+
+Valem somente quando a resposta servida os apresentar; o roteiro completo está
+nos domínios `geral`, `rescisao` e `ferias`.
+
+- `case_write_constraints`: cada item de `errors` traz `field` e `reason`
+  fechado (ex.: `campo_fora_do_schema`,
+  `campo_ja_preenchido_exige_sobrescrever`, `dados_ferias_fora_do_schema`,
+  `afastamentos_representacao_invalidos`,
+  `vacation_preparation_requires_complete_input`,
+  `caso_fora_de_estado_gravavel`). Corrija só o campo indicado; não reenvie o
+  modelo inteiro às cegas. `reason` igual a `case_write_constraints` = motivo
+  não classificado: registre como problema.
+- "Connection closed"/timeout com `/healthz` normal: a falha pode estar antes
+  do Loki. Espere alguns minutos, abra conversa nova ou faça Refresh do
+  conector e avise pelo Caixa; não repita gravações sem `request_ref`.
+- Rescisão em mês comercial (divisor 30, `trinta_fixo`): o Loki calcula os
+  dias do saldo; não informe dias nem troque divisor. Fevereiro e dia 31
+  calculam; admissão no mês com saída no dia 31 ou no último dia de
+  fevereiro, INSS/licença-maternidade no mês da saída e divisor pelo
+  calendário continuam `regra_nao_medida` até a DP responder. Cálculo novo
+  (`rescisao-v43`/`rescisao-v44`) exige gerar o pacote de novo e nova revisão.
+- Férias, segunda ocorrência: outra competência, com `competencia` = mês de
+  início do gozo. `created: false` devolve o caso existente: não continue
+  nele. Duas frações na mesma competência sem suporte; nunca cancele o
+  primeiro caso para abrir o segundo.
+- Lote `loki.company-payroll-map-policy-patch/1`: `fgts_mensal` e, quando
+  `payroll_map_policy_patch_transport.policies.arredondamento_monetario.accepted`
+  aparecer, `arredondamento_monetario` (`verbas`, `metodo`, `fonte`
+  obrigatória), com seletores exatos de todos os mapas e `expected_hash`;
+  prévia `VALIDO` → aplicar com `motivo`; uma única versão. O método é decisão
+  humana/DP. Pode exigir Refresh do conector.
 
 ## Ler recursos binários retornados pelo MCP
 
