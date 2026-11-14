@@ -217,6 +217,15 @@ processo que a conta pode consultar; para os demais vêm só `case_id` e
 `access: "not_authorized_for_process"`. Por isso o `preview_id` de uma prévia
 bloqueada depende de quem consulta: não reutilize prévia obtida por outra conta.
 
+Em `preview_import_preservation`, folha mensal protegida deixa de bloquear
+quando `consumer_impact.protected_consumers[]` traz
+`classification: "equivalent"` com
+`reason: "employee_excluded_from_current_calculation"`; `"unknown"` continua
+bloqueando com `import_preservation_protected_dependency`. No restart,
+`import_preservation_consumer_changed` pede refazer a prévia;
+`reconciliation_dependencies_busy` pede tentar depois, sem forçar. Detalhes em
+“Retomada, nova preparação e seleção da folha” do domínio `geral`.
+
 Siga o `next_action`. Quando for `null` ou houver dependente protegido, pare,
 guarde a resposta e relate pelo fluxo de problema (skill
 `registrar-problema-loki`, `registrar_problema`) com o `case_id` e os blockers,

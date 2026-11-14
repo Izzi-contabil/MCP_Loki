@@ -21,6 +21,9 @@ Em admissão travada por Beneficiários da ficha, nome diferente só em
 caixa/espaços ou recusa de reinício/conciliação, leia “Destravar admissão” em
 [WORKFLOWS.md](references/WORKFLOWS.md) e siga somente o `next_action` servido;
 sem ele, inclusive em cancelamento recusado por efeitos, pare e relate.
+Recusas com motivo fechado (preservação de imports, população da folha,
+afastamentos da rescisão, `field_sources`, simulação, reinício e férias
+relacionadas) estão em “Recusas e prévias com motivo fechado” no mesmo roteiro.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que
