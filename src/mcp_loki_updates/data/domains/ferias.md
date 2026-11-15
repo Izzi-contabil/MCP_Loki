@@ -137,3 +137,18 @@ Códigos de férias:
 - `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida` e
   `ferias_media_competencias_invalidas`: médias com alternativas que se
   excluem, média repetida ou competências da média inválidas.
+
+## Preparação corrente: recusa por campo
+
+O campo e o motivo valem somente quando a resposta servida os apresentar.
+Numa preparação corrente (por exemplo, depois de `restart_case`),
+`receive_case_data` recusa `dados_ferias` incompleto ou fora do modelo com
+`vacation_preparation_requires_complete_input`, e `errors` traz um item por
+campo: `{"field": "dados_ferias.data_aviso", "reason": "ferias_aviso_fora_do_prazo"}`.
+`reason` é um código `ferias_...` da lista acima, `missing` (campo obrigatório
+ausente) ou `extra_forbidden` (chave fora do schema, que vem como
+`dados_ferias.*`, sem o nome da chave). Corrija o campo apontado conferindo com
+o original e reenvie a seção `dados_ferias` completa, com novo `request_ref` e
+o snapshot atual. A fonte de um campo vai no campo `*_source` do schema (ex.:
+`programacao_source`, `calendario_source`), nunca numa chave própria dentro de
+`dados_ferias`: essa chave volta como `extra_forbidden`.

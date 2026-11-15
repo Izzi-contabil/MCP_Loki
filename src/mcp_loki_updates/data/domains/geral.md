@@ -73,6 +73,10 @@ apresentar, trazem em `errors` o campo exato (ex.: `dados_ferias.data_aviso`,
 `leave.retorno`) e um código de regra (`ferias_...`, `afastamento_...`).
 Corrija só o campo apontado e reenvie com novo `request_ref` e snapshot atual;
 a lista de códigos está nos domínios `ferias` e `afastamento`.
+Numa preparação corrente, `vacation_preparation_requires_complete_input` e
+`leave_preparation_requires_complete_input` também trazem `errors` por campo
+(código de regra, `missing` ou `extra_forbidden`): corrija o campo e reenvie a
+seção completa; fonte vai nos campos `*_source`, nunca numa chave própria.
 
 ## Conector: conexão fechada ou tempo esgotado
 
@@ -208,6 +212,12 @@ podem exigir conciliação própria. Nos demais
 estados a recusa é `restart_requires_adjustable_state`: não há reinício por
 esse caminho; não cancele nem recrie o caso para contorná-la.
 
+Depois de `restart_case`, quando a resposta servida apresentar, `get_case`
+continua listando as fontes da harness (`harness_sources`) e os anexos nativos
+já registrados (`documentos`): eles são insumo do caso e seguem válidos na
+nova preparação. Reutilize os mesmos EXTSRC e anexos nas novas fontes; não
+registre nem anexe de novo o mesmo original.
+
 Correção da população da folha depende de
 `preparation.population_correction` no contrato servido. Quando oferecido,
 prepare a lista final completa de `funcionario_id`+`matricula`, consulte
@@ -220,6 +230,18 @@ pessoa, o item só com `{"matricula"}` é recusado com
 vir no item; confirme antes com o humano que é outra pessoa. A aplicação
 continua exigindo `{funcionario_id, matricula}` copiados da prévia e o
 `preview_id`.
+Quando a resposta servida apresentar, a recusa
+`payroll_population_identity_changed` da prévia traz
+`next_action: "preview_payroll_population_correction"` e `errors` com
+`{"field": "population[*]", "index": N, "reason": ...}`: `index` é a posição
+do item na lista que você enviou, contando do zero. Motivos fechados:
+`admissao_posterior_ao_mes`, `entrada_empresa_posterior_ao_mes`,
+`desligamento_anterior_ao_mes`, `matricula_sem_vinculo_operacional`,
+`matricula_ambigua_na_competencia`, `funcionario_id_diverge_da_matricula` e
+`vinculo_fora_da_competencia`. Remova ou corrija esses itens, conferindo com o
+original, e peça a prévia de novo com a lista inteira. Item
+`{"field": "population"}` sem `index` não aponta item: confira a lista
+(matrícula repetida ou vazia) antes de repetir; sem causa visível, relate.
 A aplicação usa `loki.case-preparation/1`, `mode=replace_payroll_population`,
 `preview_id`, `reason`, `request_ref` e `reset_financial_inputs=true`,
 no restart autorizado ou seu transporte tipado anunciado. Não é complemento

@@ -1,5 +1,27 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.18 / instruções e plugin2.6.9 —15/11/2026
+
+Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
+mínimo2.0.0 permanecem; só se acrescentam campos de resposta (backend #320).
+Domínios `ferias` e `afastamento`: na preparação corrente,
+`vacation_preparation_requires_complete_input` e
+`leave_preparation_requires_complete_input` trazem `errors` por campo (código
+de regra, `missing` ou `extra_forbidden`); a harness corrige o campo e reenvia
+a seção completa, com a fonte nos campos `*_source`. `geral`: a recusa
+`payroll_population_identity_changed` da prévia traz `errors` com
+`population[*]`, `index` (posição na lista enviada, base zero) e motivo
+fechado, e `next_action: preview_payroll_population_correction`; depois de
+`restart_case`, `get_case` lista de novo `harness_sources` e anexos nativos,
+que a harness reutiliza sem registrar de novo (ponteiro em `documentos`).
+Plugin espelha em WORKFLOWS, CAPACIDADES_DP, operar-loki e
+registrar-problema-loki. Nenhuma proteção é removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.17 permanece
+imutável; fonte e wheel0.4.18 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.17 / instruções e plugin2.6.8 —14/11/2026
 
 Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
