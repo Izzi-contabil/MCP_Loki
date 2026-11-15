@@ -423,6 +423,34 @@ reenviar.
   `afastamento_retorno_fora_da_vespera` (retorno = dia seguinte ao fim do
   último período), `afastamento_periodo_invertido`.
 
+## Preparação corrente, população da folha e fontes após reinício
+
+Valem somente quando a resposta servida os apresentar; o roteiro completo está
+nos domínios `ferias`, `afastamento`, `geral` e `documentos`.
+
+- Férias e afastamento numa preparação corrente:
+  `vacation_preparation_requires_complete_input` e
+  `leave_preparation_requires_complete_input` trazem `errors` por campo, por
+  exemplo `{"field": "dados_ferias.data_aviso", "reason": "ferias_aviso_fora_do_prazo"}`.
+  `reason` é código de regra, `missing` (campo obrigatório ausente) ou
+  `extra_forbidden` (chave fora do schema, como `dados_ferias.*`). Corrija o
+  campo apontado e reenvie a seção completa com novo `request_ref` e o
+  snapshot atual. Fonte vai nos campos `*_source` do schema, nunca numa chave
+  própria dentro de `dados_ferias` ou `leave`.
+- Prévia da população da folha: `payroll_population_identity_changed` traz
+  `next_action: "preview_payroll_population_correction"` e `errors` com
+  `{"field": "population[*]", "index": N, "reason": ...}`; `index` é a posição
+  do item na lista enviada, contando do zero. Motivos:
+  `admissao_posterior_ao_mes`, `entrada_empresa_posterior_ao_mes`,
+  `desligamento_anterior_ao_mes`, `matricula_sem_vinculo_operacional`,
+  `matricula_ambigua_na_competencia`, `funcionario_id_diverge_da_matricula`,
+  `vinculo_fora_da_competencia`. Remova ou corrija esses itens e peça a prévia
+  de novo. `{"field": "population"}` sem `index` não aponta item: confira
+  matrícula repetida ou vazia antes de repetir.
+- Depois de `restart_case`, `get_case` lista de novo `harness_sources` e os
+  anexos nativos em `documentos`. Reutilize os mesmos EXTSRC e anexos; não
+  registre nem anexe de novo o mesmo original.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

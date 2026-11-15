@@ -105,6 +105,9 @@ envie `preparation` com `schema_version: "loki.case-preparation/1"`,
 `get_process_contract.preparation.modes`; efeitos persistidos ainda podem
 exigir conciliação própria. Nos demais estados, `restart_requires_adjustable_state` não tem
 reinício por esse caminho.
+Depois de `restart_case`, quando a resposta servida apresentar, `get_case`
+lista de novo `harness_sources` e os anexos nativos em `documentos`:
+reutilize os mesmos EXTSRC e anexos, sem registrar nem anexar de novo.
 
 Correção da população da folha depende de
 `preparation.population_correction` no contrato servido. Quando oferecido,
@@ -117,6 +120,15 @@ só com `{"matricula"}` (`payroll_population_rebound_requires_identifier`) até 
 `funcionario_id` novo vir no item; confirme antes com o humano que é outra
 pessoa. A aplicação exige `{funcionario_id, matricula}` copiados da prévia e o
 `preview_id`.
+Quando a resposta servida apresentar, `payroll_population_identity_changed`
+da prévia traz `next_action: "preview_payroll_population_correction"` e
+`errors` com `{"field": "population[*]", "index": N, "reason": ...}`: `index`
+é a posição do item na lista enviada, contando do zero; motivos
+`admissao_posterior_ao_mes`, `entrada_empresa_posterior_ao_mes`,
+`desligamento_anterior_ao_mes`, `matricula_sem_vinculo_operacional`,
+`matricula_ambigua_na_competencia`, `funcionario_id_diverge_da_matricula` e
+`vinculo_fora_da_competencia`. Remova ou corrija esses itens e peça a prévia
+de novo; `{"field": "population"}` sem `index` não aponta item.
 A aplicação usa `loki.case-preparation/1`, `mode=replace_payroll_population`,
 `preview_id`, `reason`, `request_ref` e `reset_financial_inputs=true`,
 no restart autorizado ou seu transporte tipado anunciado. Não é complemento
@@ -191,6 +203,13 @@ conferindo com o original, e reenvie com novo `request_ref` e o snapshot atual.
 Reenviar o mesmo dado sem corrigir, com ou sem `field_sources`, vai ser recusado
 de novo. Se o documento realmente traz essas datas, não force o valor: registre
 a dúvida com a DP antes de reenviar.
+
+Numa preparação corrente, quando a resposta servida apresentar,
+`leave_preparation_requires_complete_input` traz `errors` por campo (ex.:
+`{"field": "leave.retorno", "reason": "afastamento_retorno_fora_da_vespera"}`,
+`leave.periodos[*].fim`), com código de regra, `missing` ou `extra_forbidden`.
+Corrija o campo e reenvie a seção `leave` completa; fonte vai em
+`retorno_source`/`identity_source`, nunca numa chave própria dentro de `leave`.
 
 ## Consignado: contrato, competência e rescisão
 
@@ -330,6 +349,14 @@ Se o documento realmente traz essas datas, não force o valor: registre a dúvid
 com a DP antes de reenviar.
 
 
+
+Numa preparação corrente, quando a resposta servida apresentar,
+`vacation_preparation_requires_complete_input` traz `errors` por campo (ex.:
+`{"field": "dados_ferias.data_aviso", "reason": "ferias_aviso_fora_do_prazo"}`),
+com código de regra, `missing` ou `extra_forbidden` (chave fora do schema, como
+`dados_ferias.*`). Corrija o campo e reenvie a seção `dados_ferias` completa;
+fonte vai nos campos `*_source` do schema, nunca numa chave própria dentro de
+`dados_ferias`.
 
 ## Política contextual do FGTS mensal
 

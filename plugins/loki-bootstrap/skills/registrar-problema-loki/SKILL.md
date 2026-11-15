@@ -47,6 +47,12 @@ Recusa de férias ou de afastamento com campo exato e código de regra
 apontado conferindo com o original; se o documento realmente traz essas datas,
 registre a dúvida com a DP, não como problema. Reenviar o mesmo dado sem
 corrigir vai ser recusado de novo.
+`vacation_preparation_requires_complete_input`,
+`leave_preparation_requires_complete_input` e
+`payroll_population_identity_changed` com `errors` por campo ou `index` também
+não são defeito: corrija o campo ou o item apontado e reenvie. Fonte ou anexo
+que some de `get_case` depois de `restart_case` é problema a relatar; não
+registre o original de novo para contornar.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

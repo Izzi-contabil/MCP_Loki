@@ -80,3 +80,19 @@ Códigos de afastamento:
 - `afastamento_retorno_fora_da_vespera`: o retorno deve ser o dia seguinte ao
   fim do último período.
 - `afastamento_periodo_invertido`: período com fim antes do início.
+
+## Preparação corrente: recusa por campo
+
+O campo e o motivo valem somente quando a resposta servida os apresentar.
+Numa preparação corrente (por exemplo, depois de `restart_case`),
+`receive_case_data` recusa `leave` incompleto ou fora do modelo com
+`leave_preparation_requires_complete_input`, e `errors` traz um item por campo:
+`{"field": "leave.retorno", "reason": "afastamento_retorno_fora_da_vespera"}`.
+`[*]` indica um item da lista (ex.: `leave.periodos[*].fim`); a mesma regra
+pode apontar mais de um campo. `reason` é um código `afastamento_...` da lista
+acima, `missing` (campo obrigatório ausente) ou `extra_forbidden` (chave fora
+do schema, sem o nome da chave). Corrija o campo apontado conferindo com o
+original e reenvie a seção `leave` completa, com novo `request_ref` e o
+snapshot atual. A fonte de um campo vai no campo `*_source` do schema (ex.:
+`retorno_source`, `identity_source`), nunca numa chave própria dentro de
+`leave`: essa chave volta como `extra_forbidden`.

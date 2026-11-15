@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.6.8",
+  "instructions_version": "2.6.9",
   "contract_version": "2.6.3",
-  "plugin_version": "2.6.8",
+  "plugin_version": "2.6.9",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-14",
+  "updated_at": "2026-11-15",
   "domains": {
     "geral": {
-      "metadata_sha256": "74459a3666e774cddd4e5f04f3b82c9ac55c41f539c17eafe472e3302aa25812",
-      "content_sha256": "e3cfa560e681f506596c02353db28b49f29d570149c0ac841f592a7a66999291"
+      "metadata_sha256": "5ae67ac0f5010bd5ae680b8feb30c2763c2486788f865674acd36ccfa26a9280",
+      "content_sha256": "9d7ab0706c750ea0c0b23b75f562344654ba3784a2e1dba9735695fa6dc0a339"
     },
     "admissao": {
-      "metadata_sha256": "869d7134a1257b43e674e17554f5b7038285b74487cacf7f1e28654839f2abf4",
+      "metadata_sha256": "e18720209e27a1fd1adb51ce498b68728f30c24d1fc5f5783ef5b470e7bd91de",
       "content_sha256": "451e53b32779adebbc68b719af62267f5f9a2d59252cd85d800018ea1fd220b1"
     },
     "rescisao": {
-      "metadata_sha256": "4a236fc46b75455a64eef0de360778dae312fa8985462d515984a0a6794cba1f",
+      "metadata_sha256": "2d9a243260ad5856b4042bbd79de6a20cc8799f97e4f0e1dd1885c62554768e9",
       "content_sha256": "38e245d5f86568d6606f6befe1e1fbaed988b8be4287be175c1a94ad1abaaf51"
     },
     "ferias": {
-      "metadata_sha256": "9c12810a0e6015e35dd118ee850e3518714f910c8e92968a62ccd1c91b32e38c",
-      "content_sha256": "f972c613831d8124ad0a485492df7c9fda309a5d7416fdc2816a0c295d13c2b0"
+      "metadata_sha256": "47e0d8a856c766f01243c58261ed31d62773d94b602799adf8cab00b9e081a58",
+      "content_sha256": "52c85087c347d6fe39ed71ed89fde78c18e3408a17b419f70c316c534039c2ac"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "472df90e2c37ccbd9be6e5d95328ab2b6e9cb123dd9ca60a72a059029faa1f04",
+      "metadata_sha256": "a722cbb1a818f18fa8f5a32cf639ac9b6984342bfd48eed3f6568025ca947839",
       "content_sha256": "f570d2756e352fa1c338db112a9200a86a37476f556020034f32988658f461e9"
     },
     "afastamento": {
-      "metadata_sha256": "e43c7749d0c0fbb9129c3fe20d3bea1732fccec780ffc5c91ef1680361c48b3a",
-      "content_sha256": "f319e7790223b9b271655fe1f12b6bebde980fc4d9f424d6d8e3bc898fe34cfd"
+      "metadata_sha256": "b88733c6e37af5dd644bf681356b188111a0c0348d4221ecb182c914bb4bb4ab",
+      "content_sha256": "30a7d291de7fc3e8a81751524a0572f4a99ed1051a35da0c137c51499c9702b3"
     },
     "documentos": {
-      "metadata_sha256": "6363bb36e7b70fc8ce7f731a8432388f93f0bb891b231316d113194ed4950c92",
-      "content_sha256": "446d39c96fc76754e2f05432e7c2d838fcd0a7ebb31c3f421e94b0dca0cc7232"
+      "metadata_sha256": "0be9a0441cf9a0d6cf9c696df9bc8f233561be50a1baef9a31f44b4674589ca2",
+      "content_sha256": "f3f3962a6e9f0b313517af6b3e99bf885d1bf4444d41486ba5b2e07c8f08e038"
     },
     "aprovacoes": {
-      "metadata_sha256": "ae5d9d3807875c3d77ec04893232589796e70fc1b09a4317b3c0eed2c4fb0d22",
+      "metadata_sha256": "f9d3649f093d00a665c681cd0e4831c9c4ea87e4fda08f3b8063e81e88806aad",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "d411ff10da7a2edaa17c36f0d465c3f2582daf322b5c9f6d951997acbf4c206c",
+      "metadata_sha256": "a40cd8fb0f121996fb196eba40ef68ea0b85089a8c92b24297b17c3d249f6cc1",
       "content_sha256": "c99188b2af36a78570f4fd23193d7379b01a6edef4c8317cf4593346bbd8b3d2"
     },
     "ocorrencia": {
-      "metadata_sha256": "f8fa355aa7d308315ef39147d0b0970e13c62e2670e5b75422b4355e6924d039",
+      "metadata_sha256": "167eb3aa85ca676e2651005f40c4d200ca6697c74df3c589a8ae9c248f3c88a2",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "bad4b443e67695165ba8b781fa2e2dc53bf7934f8b8bad1e15714b8a8c5ffe1d",
+      "metadata_sha256": "a43c3ff03078b560fd74fd629ff83e84f6859a65eb6af457d4b8b170d2c01c4c",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "1bdebc213e0ac7ff67657e58c327fd5fed52e9796547ce3273e40eb1ef5e9049",
+      "metadata_sha256": "a8311186d199bf447dd7e56cbe476a3cbd6ae0135798bd3d41ff9aef21d61104",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "502c12b8b4cdf86ba0c962893215dfb3ee38e5276c37bc883e13ed7df3a6cf37",
+      "metadata_sha256": "60960c744367f8fc03d3080cf0d7e1b35568b11ae7bb9bc65b9228d0a3d5e944",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },
@@ -94,7 +94,8 @@
       "Instruções2.6.5: correções do destrave de admissão — recibo da retificação de nome segue o next_action recebido (run_prepared_case_workflow ou restart_case); alcance só caixa/espaços/NFC; import_preservation_blocked_by_pending_effects sem caminho; dependente fora do acesso só com case_id e access; cancel_case recusado por efeitos nunca traz next_action; error_type OverflowDeBeneficiarios no diagnóstico. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado.",
       "Instruções2.6.6: recusas e prévias com motivo fechado — consumidor equivalente (employee_excluded_from_current_calculation) na preservação de imports, unknown ainda bloqueia; import_preservation_consumer_changed refaz a prévia; reconciliation_dependencies_busy tenta depois; prévia de população só por matrícula (payroll_population_rebound_requires_identifier quando a matrícula passou a outra pessoa); field_sources por caminho-folha; subreason da simulação; restart_requires_preparation_for_state com modo de get_process_contract.preparation.modes; afastamentos da rescisão; related_case_ids/related_reason nas férias. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado.",
       "Instruções2.6.7: preservação de imports prova equivalência pelo cálculo de onde saiu o pacote da folha, sem recompor a folha viva (calculo_desatualizado segue na revisão; reconciliation_dependencies_busy = gravação em andamento na empresa); saldo da rescisão em mês comercial (trinta_fixo, rescisao-v43/v44) com fevereiro e dia31 e cenários ainda regra_nao_medida; conexão fechada com /healthz normal; segunda ocorrência de férias e created:false; lote loki.company-payroll-map-policy-patch/1 com fgts_mensal e arredondamento_monetario; case_write_constraints com field e reason fechados. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado.",
-      "Instruções2.6.8: recusas de dados de férias e de afastamento trazem em errors o campo exato (ex.: dados_ferias.data_aviso, leave.retorno) e um código de regra (ferias_..., afastamento_...); corrigir só o campo apontado e reenviar com novo request_ref e snapshot atual; reenvio sem correção, com ou sem field_sources, é recusado de novo; data confirmada no documento vira dúvida com a DP. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado."
+      "Instruções2.6.8: recusas de dados de férias e de afastamento trazem em errors o campo exato (ex.: dados_ferias.data_aviso, leave.retorno) e um código de regra (ferias_..., afastamento_...); corrigir só o campo apontado e reenviar com novo request_ref e snapshot atual; reenvio sem correção, com ou sem field_sources, é recusado de novo; data confirmada no documento vira dúvida com a DP. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado.",
+      "Instruções2.6.9: na preparação corrente, vacation_preparation_requires_complete_input e leave_preparation_requires_complete_input trazem errors por campo (código de regra, missing ou extra_forbidden); corrigir o campo e reenviar a seção completa, fonte nos campos *_source; payroll_population_identity_changed da prévia traz errors population[*] com index base0 e motivo fechado e next_action preview_payroll_population_correction; depois de restart_case, get_case lista harness_sources e anexos nativos, reutilizar sem registrar de novo. Valem quando a resposta servida os apresentar. Contrato2.6.3 inalterado."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -122,7 +123,8 @@
       "Plugin2.6.5 espelha as correções do destrave de admissão em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.14 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.13 permanece imutável.",
       "Plugin2.6.6 resume as recusas com motivo fechado em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.15 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.14 permanece imutável.",
       "Plugin2.6.7 espelha recusas de gravação com motivo, conector, saldo comercial, segunda ocorrência de férias e lote de mapas em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.16 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.15 permanece imutável.",
-      "Plugin2.6.8 espelha as recusas de férias e afastamento com campo e código de regra em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.17 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.16 permanece imutável."
+      "Plugin2.6.8 espelha as recusas de férias e afastamento com campo e código de regra em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.17 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.16 permanece imutável.",
+      "Plugin2.6.9 espelha a recusa por campo da preparação corrente de férias e afastamento, o índice da recusa da prévia de população da folha e o reuso de fontes e anexos após restart_case em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.18 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.17 permanece imutável."
     ]
   }
 }
