@@ -61,6 +61,14 @@ com `payroll_valuation_invalid`) ou com `index` incoerente com o payload
 enviado (funcionário fora da lista; lançamento além dos enviados só é
 incoerente quando não há efeito operacional que o explique); registre `case_id`, `job_id`, `field` e `reason`, sem matrícula ou
 valor, e não recomece o caso para contornar.
+Recusa de início de férias antes de feriado ou do repouso semanal
+(`ferias_inicio_antes_de_feriado`, `ferias_inicio_antes_de_repouso` e os
+códigos `ferias_inicio_antes_de_repouso_source_...`) não é defeito: feriado
+pede outra data com o cliente; repouso pede a declaração do DP com o pedido
+do cliente como fonte. Recibo de componentes `OBSOLETO` ou
+`medias_rescisao_obsoletas` depois do deploy também não é defeito: siga o
+caminho de recuperação (nova qualificação, nova consolidação, novo cálculo,
+geração, conferência e revisão), sem recomeçar o caso.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

@@ -357,7 +357,9 @@ Quando a resposta servida apresentar, a recusa de dados de férias traz em
 `ferias_gozo_antes_do_fim_do_aquisitivo`, `ferias_gozo_fora_do_concessivo`,
 `ferias_aviso_fora_do_prazo`, `ferias_pagamento_fora_do_prazo`,
 `ferias_abono_pedido_incoerente`, `ferias_pedido_abono_fora_do_prazo`,
-`ferias_inicio_antes_de_repouso_ou_feriado`,
+`ferias_inicio_antes_de_feriado`, `ferias_inicio_antes_de_repouso`,
+`ferias_inicio_antes_de_repouso_source_sem_uso`,
+`ferias_inicio_antes_de_repouso_source_sem_fundamento`,
 `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida` ou
 `ferias_media_competencias_invalidas`. Corrija só o campo apontado, conferindo
 com o original, e reenvie com novo `request_ref` e o snapshot atual. Reenviar o
@@ -374,6 +376,30 @@ com código de regra, `missing` ou `extra_forbidden` (chave fora do schema, como
 `dados_ferias.*`). Corrija o campo e reenvie a seção `dados_ferias` completa;
 fonte vai nos campos `*_source` do schema, nunca numa chave própria dentro de
 `dados_ferias`.
+
+Quando a resposta servida e o schema apresentarem,
+`ferias_inicio_antes_de_repouso_ou_feriado` não é mais emitido.
+`ferias_inicio_antes_de_feriado` sempre recusa, sem exceção: mude a data com
+o cliente. `ferias_inicio_antes_de_repouso` recusa sem a declaração do DP: a
+DP da Izzi aceita o início antes da folga semanal quando o cliente pede,
+porque não acompanha a escala praticada. A declaração vai em
+`dados_ferias.inicio_antes_de_repouso_source`, com o pedido do cliente como
+fonte: documento anexado, manifesto de harness ou declaração
+(`kind: "declaration"`, `reference`, `locator`) com `foundation` dizendo quem
+pediu e onde. Inferência e contexto são recusados
+(`ferias_inicio_antes_de_repouso_source_sem_fundamento`); fonte sem início na
+janela do repouso recusa com `ferias_inicio_antes_de_repouso_source_sem_uso`.
+A exceção não muda valores: aparece em `ressalvas.declaracoes_dp` e numa
+linha "Declaração do DP" do aviso e do recibo, e só vale com o aceite
+explícito das ressalvas na revisão. Num caso existente, mudar o repouso e
+acrescentar a declaração é uma única correção (`submit_operator_correction`
+com as duas folhas juntas em `changes`).
+
+Depois do deploy, recibos de componentes de férias e de rescisão e
+consolidações de médias emitidos antes ficam obsoletos (`OBSOLETO` em
+`get_case`; `medias_rescisao_obsoletas` no recálculo da rescisão). A
+recuperação é nova qualificação, nova consolidação, novo cálculo, depois
+geração, conferência e revisão. Casos aprovados ou entregues não mudam.
 
 ## Política contextual do FGTS mensal
 

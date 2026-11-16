@@ -132,8 +132,16 @@ Códigos de férias:
 - `ferias_abono_pedido_incoerente`: dias de abono e data do pedido de abono
   precisam vir juntos (ou nenhum dos dois).
 - `ferias_pedido_abono_fora_do_prazo`: pedido de abono depois do prazo.
-- `ferias_inicio_antes_de_repouso_ou_feriado`: início nos dois dias antes do
-  repouso semanal ou de feriado.
+- `ferias_inicio_antes_de_feriado`: início nos dois dias antes de feriado.
+  Sempre recusa e não há exceção: mude a data com o cliente.
+- `ferias_inicio_antes_de_repouso`: início nos dois dias antes do repouso
+  semanal, sem a declaração do DP (veja a seção seguinte).
+- `ferias_inicio_antes_de_repouso_source_sem_uso`: a declaração veio, mas o
+  início não cai nos dois dias antes do repouso. Retire a declaração ou
+  corrija a data ou o repouso.
+- `ferias_inicio_antes_de_repouso_source_sem_fundamento`: a fonte da
+  declaração não é documento, manifesto de harness nem declaração com
+  `foundation`. Inferência e contexto são recusados.
 - `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida` e
   `ferias_media_competencias_invalidas`: médias com alternativas que se
   excluem, média repetida ou competências da média inválidas.
@@ -152,3 +160,55 @@ o original e reenvie a seção `dados_ferias` completa, com novo `request_ref` e
 o snapshot atual. A fonte de um campo vai no campo `*_source` do schema (ex.:
 `programacao_source`, `calendario_source`), nunca numa chave própria dentro de
 `dados_ferias`: essa chave volta como `extra_forbidden`.
+
+## Início antes do repouso semanal: declaração do DP
+
+O código e o campo valem somente quando a resposta servida e o schema de
+`get_process_contract("ferias")` os apresentarem. O código antigo
+`ferias_inicio_antes_de_repouso_ou_feriado` não é mais emitido; ele só aparece
+em diagnósticos e recibos registrados antes.
+
+Regra da DP da Izzi: o início de férias nos dois dias antes da folga semanal é
+aceito quando o cliente pede, porque a Izzi não acompanha a escala praticada.
+A véspera de feriado continua vedada: `ferias_inicio_antes_de_feriado` recusa
+com ou sem declaração, e o feriado prevalece quando os dois caem na janela.
+Não envie a declaração para contornar feriado: mude a data com o cliente.
+
+Para aceitar o início antes do repouso, envie em `dados_ferias` o campo
+opcional `inicio_antes_de_repouso_source`. A fonte é o pedido do cliente:
+documento anexado ao caso (fonte documental do schema), manifesto de harness
+(`kind: "harness"`, com o EXTSRC e o mesmo `content_hash`) ou declaração
+(`kind: "declaration"`, `reference`, `locator`) com `foundation` dizendo quem
+pediu e onde (por exemplo, a mensagem do cliente
+na conversa). Inferência, contexto, regra ou histórico são recusados com
+`ferias_inicio_antes_de_repouso_source_sem_fundamento`. Sem pedido real do
+cliente, não envie o campo: a recusa `ferias_inicio_antes_de_repouso` é a
+resposta correta e a data volta ao cliente.
+
+A exceção não muda valores. Ela aparece como ressalva em
+`ressalvas.declaracoes_dp` da revisão, com `confirmed: false` e
+`exige_aceite_humano: true`, e numa linha "Declaração do DP" do aviso e do
+recibo. Só vale com o aceite explícito das ressalvas na revisão: apresente a
+ressalva à pessoa e não aprove sem esse aceite.
+
+Num caso existente, mudar `repouso_semanal` e acrescentar a declaração é uma
+única correção: `submit_operator_correction` com as duas folhas juntas em
+`changes` (`dados_ferias.repouso_semanal` e as folhas de
+`dados_ferias.inicio_antes_de_repouso_source`). Corrigir só o repouso antes
+deixa o pedido sem a declaração, e o escritor recusa com
+`ferias_inicio_antes_de_repouso`.
+
+## Recibos de componentes obsoletos depois do deploy
+
+Com esta mudança de regra, os recibos de componentes de férias e de rescisão
+e as consolidações de médias emitidos antes do deploy ficam obsoletos:
+`get_case` mostra o recibo como `OBSOLETO`, uma nova consolidação sobre o
+recibo antigo é recusada (`recibo_componentes_obsoleto`) e o recálculo da
+rescisão com consolidação recusa com `medias_rescisao_obsoletas`. Isso não é
+defeito e não pede reinício do caso.
+
+Caminho de recuperação de um caso aberto, nesta ordem: nova qualificação dos
+componentes, nova consolidação (médias de férias ou de rescisão), novo
+cálculo, depois geração, conferência e revisão. Casos aprovados ou entregues
+não mudam: decisão, pacote e bytes registrados ficam como estão. O Loki não
+recalcula nada sozinho.
