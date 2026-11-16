@@ -414,7 +414,9 @@ reenviar.
   `ferias_gozo_antes_do_fim_do_aquisitivo`, `ferias_gozo_fora_do_concessivo`,
   `ferias_aviso_fora_do_prazo`, `ferias_pagamento_fora_do_prazo`,
   `ferias_abono_pedido_incoerente`, `ferias_pedido_abono_fora_do_prazo`,
-  `ferias_inicio_antes_de_repouso_ou_feriado`,
+  `ferias_inicio_antes_de_feriado`, `ferias_inicio_antes_de_repouso`,
+  `ferias_inicio_antes_de_repouso_source_sem_uso`,
+  `ferias_inicio_antes_de_repouso_source_sem_fundamento`,
   `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida`,
   `ferias_media_competencias_invalidas`.
 - Afastamento: `afastamento_inicio_antes_da_admissao`,
@@ -489,6 +491,41 @@ domínio `geral`.
   incoerência: não prova que o resto está certo e não autoriza recomeçar o
   caso. Corrija pelo fluxo normal com novo `request_ref` e o
   `expected_snapshot` atual.
+
+## Férias antes do repouso semanal e recibos obsoletos
+
+Valem somente quando a resposta servida e o schema os apresentarem; o roteiro
+completo está no domínio `ferias` (e, para médias de rescisão, `rescisao`).
+
+- `ferias_inicio_antes_de_repouso_ou_feriado` não é mais emitido.
+  `ferias_inicio_antes_de_feriado` sempre recusa e não há exceção: mude a data
+  com o cliente. `ferias_inicio_antes_de_repouso` recusa sem a declaração do
+  DP.
+- Regra da DP da Izzi: aceita o início nos dois dias antes da folga semanal
+  quando o cliente pede, porque a Izzi não acompanha a escala praticada; a
+  véspera de feriado continua vedada.
+- A declaração vai no campo opcional
+  `dados_ferias.inicio_antes_de_repouso_source`. A fonte é o pedido do
+  cliente: documento anexado, manifesto de harness ou declaração
+  (`kind: "declaration"`, `reference`, `locator`) com `foundation` dizendo
+  quem pediu e onde. Inferência e contexto são recusados
+  (`ferias_inicio_antes_de_repouso_source_sem_fundamento`); declaração sem
+  início na janela do repouso recusa com
+  `ferias_inicio_antes_de_repouso_source_sem_uso`. Sem pedido real do
+  cliente, não envie o campo.
+- A exceção não muda valores: aparece em `ressalvas.declaracoes_dp` e numa
+  linha "Declaração do DP" do aviso e do recibo, e só vale com o aceite
+  explícito das ressalvas na revisão.
+- Num caso existente, mudar o repouso e acrescentar a declaração é uma única
+  correção: `submit_operator_correction` com as duas folhas juntas em
+  `changes`. Corrigir só o repouso antes é recusado com
+  `ferias_inicio_antes_de_repouso`.
+- Depois do deploy, recibos de componentes de férias e de rescisão e
+  consolidações de médias emitidos antes ficam obsoletos (`OBSOLETO` em
+  `get_case`; `medias_rescisao_obsoletas` no recálculo da rescisão). Não é
+  defeito e não pede reinício. Recuperação: nova qualificação, nova
+  consolidação, novo cálculo, depois geração, conferência e revisão. Casos
+  aprovados ou entregues não mudam.
 
 ## Ler recursos binários retornados pelo MCP
 
