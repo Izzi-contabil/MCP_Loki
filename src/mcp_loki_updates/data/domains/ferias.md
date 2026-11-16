@@ -132,10 +132,18 @@ Códigos de férias:
 - `ferias_abono_pedido_incoerente`: dias de abono e data do pedido de abono
   precisam vir juntos (ou nenhum dos dois).
 - `ferias_pedido_abono_fora_do_prazo`: pedido de abono depois do prazo.
-- `ferias_inicio_antes_de_feriado`: início nos dois dias antes de feriado.
-  Sempre recusa e não há exceção: mude a data com o cliente.
+- `ferias_inicio_antes_de_feriado`: início nos dois dias antes de feriado,
+  sem a decisão do cliente (veja "Início antes de feriado: decisão do
+  cliente").
+- `ferias_inicio_antes_de_feriado_source_sem_uso`: a decisão do cliente veio,
+  mas o início não cai nos dois dias antes de feriado. Retire a decisão ou
+  corrija a data ou os feriados.
+- `ferias_inicio_antes_de_feriado_source_sem_fundamento`: a fonte da decisão
+  não é documento, manifesto de harness nem declaração com `foundation`.
+  Inferência e contexto são recusados.
 - `ferias_inicio_antes_de_repouso`: início nos dois dias antes do repouso
-  semanal, sem a declaração do DP (veja a seção seguinte).
+  semanal, sem a declaração do DP (veja "Início antes do repouso semanal:
+  declaração do DP").
 - `ferias_inicio_antes_de_repouso_source_sem_uso`: a declaração veio, mas o
   início não cai nos dois dias antes do repouso. Retire a declaração ou
   corrija a data ou o repouso.
@@ -170,9 +178,10 @@ em diagnósticos e recibos registrados antes.
 
 Regra da DP da Izzi: o início de férias nos dois dias antes da folga semanal é
 aceito quando o cliente pede, porque a Izzi não acompanha a escala praticada.
-A véspera de feriado continua vedada: `ferias_inicio_antes_de_feriado` recusa
-com ou sem declaração, e o feriado prevalece quando os dois caem na janela.
-Não envie a declaração para contornar feriado: mude a data com o cliente.
+A véspera de feriado tem regra e fonte próprias (veja a seção seguinte): a
+declaração do repouso não libera o feriado. Quando o início cai nos dois dias
+antes de feriado e nos dois dias antes do repouso, as duas fontes são
+exigidas e cada uma libera só a sua regra.
 
 Para aceitar o início antes do repouso, envie em `dados_ferias` o campo
 opcional `inicio_antes_de_repouso_source`. A fonte é o pedido do cliente:
@@ -198,10 +207,57 @@ Num caso existente, mudar `repouso_semanal` e acrescentar a declaração é uma
 deixa o pedido sem a declaração, e o escritor recusa com
 `ferias_inicio_antes_de_repouso`.
 
+## Início antes de feriado: decisão do cliente
+
+O código e o campo valem somente quando a resposta servida e o schema de
+`get_process_contract("ferias")` os apresentarem.
+
+Regra da DP da Izzi (16/11/2026): a decisão é sempre do cliente. O DP informa
+o passivo (CLT art. 134 §3); se o cliente decidir manter o início nos dois
+dias antes de feriado, é feito. Sem essa decisão, `ferias_inicio_antes_de_feriado`
+continua recusando, e o caminho é levar a data e o passivo ao cliente.
+
+Para aceitar o início antes de feriado, envie em `dados_ferias` o campo
+opcional `inicio_antes_de_feriado_source`. A fonte é a decisão do cliente:
+documento anexado ao caso (fonte documental do schema), manifesto de harness
+(`kind: "harness"`, com o EXTSRC e o mesmo `content_hash`) ou declaração
+(`kind: "declaration"`, `reference`, `locator`) com `foundation`. Inferência,
+contexto, regra ou histórico são recusados com
+`ferias_inicio_antes_de_feriado_source_sem_fundamento`; fonte sem início na
+janela do feriado recusa com `ferias_inicio_antes_de_feriado_source_sem_uso`.
+
+O conteúdo da `foundation` é responsabilidade da harness e da operadora: diga
+quem decidiu, onde (por exemplo, a mensagem do cliente na conversa) e que o
+passivo foi informado. O Loki só exige `foundation` não vazia e não confere a
+fonte. Sem decisão real do cliente, depois de informado o passivo, não envie
+o campo: a recusa é a resposta correta.
+
+Quando o início cai antes de feriado e antes do repouso, as duas fontes são
+exigidas: sem a do feriado a recusa é `ferias_inicio_antes_de_feriado`; sem a
+do repouso, `ferias_inicio_antes_de_repouso`. Cada fonte libera só a sua
+regra.
+
+A exceção não muda valores. Ela aparece como ressalva
+`clt_134_3_vespera_feriado` em `ressalvas.declaracoes_dp` da revisão (depois
+da do repouso, quando houver), com `confirmed: false` e
+`exige_aceite_humano: true`, dizendo que a decisão foi do cliente, que o
+passivo foi informado e que a ressalva não afasta o passivo; e numa linha
+"Declaração do DP" do aviso e do recibo. Só vale com o aceite explícito das
+ressalvas na revisão: apresente a ressalva à pessoa e não aprove sem esse
+aceite.
+
+Num caso existente, mudar `feriados` e acrescentar a decisão é uma única
+correção: `submit_operator_correction` com as folhas juntas em `changes`
+(`dados_ferias.feriados` e as folhas de
+`dados_ferias.inicio_antes_de_feriado_source`). Corrigir só os feriados antes
+deixa o pedido sem a decisão, e o escritor recusa com
+`ferias_inicio_antes_de_feriado`.
+
 ## Recibos de componentes obsoletos depois do deploy
 
-Com esta mudança de regra, os recibos de componentes de férias e de rescisão
-e as consolidações de médias emitidos antes do deploy ficam obsoletos:
+Cada mudança da regra de férias deixa obsoletos os recibos de componentes de
+férias e de rescisão e as consolidações de médias emitidos antes do deploy
+dela, inclusive os emitidos depois da mudança anterior (2.6.11):
 `get_case` mostra o recibo como `OBSOLETO`, uma nova consolidação sobre o
 recibo antigo é recusada (`recibo_componentes_obsoleto`) e o recálculo da
 rescisão com consolidação recusa com `medias_rescisao_obsoletas`. Isso não é
@@ -212,3 +268,7 @@ componentes, nova consolidação (médias de férias ou de rescisão), novo
 cálculo, depois geração, conferência e revisão. Casos aprovados ou entregues
 não mudam: decisão, pacote e bytes registrados ficam como estão. O Loki não
 recalcula nada sozinho.
+
+A descrição da ressalva do repouso mudou: agora diz que a véspera de feriado
+tem regra e declaração próprias. Revisões já preparadas com essa ressalva
+precisam ser preparadas de novo; casos aprovados ou entregues não mudam.

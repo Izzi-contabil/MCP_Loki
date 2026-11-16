@@ -1,4 +1,39 @@
-# Atualizações MCP Loki — contrato 2.6.4
+# Atualizações MCP Loki — contrato 2.6.5
+
+## Candidata0.4.21 / instruções e plugin2.6.12, contrato2.6.5 —16/11/2026
+
+Mudança de interface aditiva: `dados_ferias` ganha o campo opcional
+`inicio_antes_de_feriado_source` (backend #332), sem ferramenta nova. Pela
+regra "mudou interface → novo contrato" e pelo precedente2.6.4, o contrato
+sobe de2.6.4 para2.6.5; mínimo2.0.0 permanece e clientes2.x anteriores
+continuam compatíveis. Regra da DP (16/11/2026): a decisão é sempre do
+cliente; o DP informa o passivo; se o cliente decidir, é feito. Domínio
+`ferias`: `ferias_inicio_antes_de_feriado` deixa de recusar sempre e recusa
+sem a decisão do cliente; `ferias_inicio_antes_de_feriado_source_sem_uso` e
+`..._source_sem_fundamento` recusam fonte sem uso ou sem fundamento. A fonte é
+a decisão do cliente (documento, manifesto de harness ou declaração com
+`foundation`); o conteúdo da `foundation` (quem decidiu, onde, passivo
+informado) é da harness e da operadora, e o Loki só exige `foundation` não
+vazia, sem conferir a fonte; inferência e contexto são recusados. Início
+antes de feriado e do repouso exige as duas fontes, e cada uma libera só a
+sua regra. A exceção não muda valores, vira ressalva
+`clt_134_3_vespera_feriado` em `ressalvas.declaracoes_dp` (`confirmed: false`,
+`exige_aceite_humano: true`) e linha "Declaração do DP" no aviso e no recibo,
+e só vale com aceite explícito das ressalvas. Feriados e decisão mudam numa
+única `submit_operator_correction`. Recibos de componentes de férias e de
+rescisão e consolidações de médias ficam obsoletos de novo, inclusive os
+emitidos depois da2.6.11, com o mesmo caminho de recuperação; a descrição da
+ressalva do repouso mudou, então revisões já preparadas com ela se preparam de
+novo; aprovados e entregues não mudam. `rescisao` ajusta o ponteiro; plugin
+espelha em WORKFLOWS, CAPACIDADES_DP, operar-loki e registrar-problema-loki.
+Nenhuma proteção é removida.
+
+O campo novo no schema pode exigir Refresh do conector e conversa nova na
+conta da operadora; a mudança nas skills exige atualizar o plugin instalado.
+Os textos valem somente quando a resposta servida e o schema apresentarem
+esses códigos e o campo. Wheel0.4.20 permanece imutável; fonte e wheel0.4.21
+locais não comprovam promoção, publicação, atualização do plugin instalado,
+uso pela operadora ou aceite de DP.
 
 ## Candidata0.4.20 / instruções e plugin2.6.11, contrato2.6.4 —16/11/2026
 
@@ -323,7 +358,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-Na candidata atual, o recomendado é2.6.11 e o contrato2.6.4 é aditivo;
+Na candidata atual, o recomendado é2.6.12 e o contrato2.6.5 é aditivo;
 cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.

@@ -1,61 +1,61 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.6.11",
-  "contract_version": "2.6.4",
-  "plugin_version": "2.6.11",
+  "instructions_version": "2.6.12",
+  "contract_version": "2.6.5",
+  "plugin_version": "2.6.12",
   "minimum_plugin_version": "2.0.0",
   "updated_at": "2026-11-16",
   "domains": {
     "geral": {
-      "metadata_sha256": "693deea84a755acce3859b39ed1ebb06b5c7108212b6f4ec621020d248bf87b6",
+      "metadata_sha256": "29e846cc4cacf7c163b45f8ddf0c4bd278874b26c716b4747446bac8ffdbe4fe",
       "content_sha256": "62a469c11984689199459428238444bd95f0ec06ca759abc2f8a99c3d1b699f8"
     },
     "admissao": {
-      "metadata_sha256": "d66825e436d49ceacfe7ae02414cd18c59667c6c870217030ab749011f395461",
+      "metadata_sha256": "886f562aeab3151a9b8457e5122a5b81847b568cb80406d69f0300f799c8e75e",
       "content_sha256": "451e53b32779adebbc68b719af62267f5f9a2d59252cd85d800018ea1fd220b1"
     },
     "rescisao": {
-      "metadata_sha256": "f7863ae503e5f4c399019aad9a1faafa187759e48b9a4bd0c97e463f34fba038",
-      "content_sha256": "545a8b2284c5d8cc5a7aeef6c4e2dcc0b99cf95aba42004a7bfa251c53ec0b03"
+      "metadata_sha256": "3df3153e160d215fb9e2944e3806f168e6f621852dc1425ab93f1a29e4c71f21",
+      "content_sha256": "f544f345e297d6526d35eb271670919c28c51da7d482c8121729e914063d709a"
     },
     "ferias": {
-      "metadata_sha256": "0f6191e0d8002b54ce02caba9d31a10ec95f84a7907100a95a45d15dca322295",
-      "content_sha256": "b3be29f664101264f9c32070a5a53123c943e5da092b70e514427e09b21f51b3"
+      "metadata_sha256": "ccf4918104e3264da6945e596810e9631d661d336c89cd983e51f608ba278b93",
+      "content_sha256": "b871c011b3816b645e7915db6f0796998a2e0f66f3c5dbf27f38fb9a81e8e8e6"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "510a1c84a97459808e824453eedd4c3af02ec9481da26aabf05a923377d7b0f6",
+      "metadata_sha256": "5fbb5c02e4e36748d8efc2ada09bd7790463301efc09cbf4042847835b47c89d",
       "content_sha256": "f570d2756e352fa1c338db112a9200a86a37476f556020034f32988658f461e9"
     },
     "afastamento": {
-      "metadata_sha256": "169ebddd396c44859e40ada9b82b0f776ca546308016b0206bb56e5cd5ba66f7",
+      "metadata_sha256": "eac3932bd6d7d37eeb02f16d8bf5c45bba19cd2672ee290270b16963daf11edc",
       "content_sha256": "30a7d291de7fc3e8a81751524a0572f4a99ed1051a35da0c137c51499c9702b3"
     },
     "documentos": {
-      "metadata_sha256": "e718bc7bbde51b1bfd67749adee947dc3799123d4d59cff4a1fd02a3a5dc05ef",
+      "metadata_sha256": "6cec5b13c2b02be769cf0e9ec0a12d09314eeab9051690b67b6a745a3078a498",
       "content_sha256": "f3f3962a6e9f0b313517af6b3e99bf885d1bf4444d41486ba5b2e07c8f08e038"
     },
     "aprovacoes": {
-      "metadata_sha256": "9d041e0dc1567f712710ddce47f77a83949fbddf8983cc48c4f4d4cf9bda74c5",
+      "metadata_sha256": "5239d167b73668d84a052ebaaabbbf2f0ff798ca6e92a4c1a4c8b3eb5a0be7da",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "43a731dfb58213f21e4b8eb3bf1663710330a779019f50f8cb37401112142e06",
+      "metadata_sha256": "db0f2a4c2e7b11676d1e68589dbed339ce57c9ddc0d5bfdb9f90dc9ca7e20010",
       "content_sha256": "c99188b2af36a78570f4fd23193d7379b01a6edef4c8317cf4593346bbd8b3d2"
     },
     "ocorrencia": {
-      "metadata_sha256": "11943c5007042f3590aedb0fe567146687816ad9cd0306dc2521bdb4d16e72ee",
+      "metadata_sha256": "ca567b47605b20a1922b40e075a6749c119fa72e28094dad6e72f62e0b57da26",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "37ebd53e9ec1365d0d0cc6e2dbcd1b5698d036ac69dd38e0322400779c44368b",
+      "metadata_sha256": "919f28374989f380225a43c99baeb305a9c670e5630b72fcfaffcd8c1f0dbd44",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "b4abda59bdb355fefa8c0b17162275ee7b29eb1d96d73e8e16b99e8e010dac91",
+      "metadata_sha256": "e82db2c6c72692bb8c2dbcba921c6678711facf375e15f11701fa0e78da82ab0",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "e35fa4c3d348364c9f91fb5deebe12b122781c7e3619779e18fc7432553cff20",
+      "metadata_sha256": "9a15204a8bdf115de014985cd8f813d4259da83e08329d3f518a27eb1bbcfebe",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     }
   },

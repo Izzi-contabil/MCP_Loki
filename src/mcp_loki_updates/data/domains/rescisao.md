@@ -193,9 +193,10 @@ permanecem disponíveis conforme o contrato, sem preencher ausência com zero.
 ## Médias de rescisão obsoletas depois do deploy
 
 Quando a resposta servida apresentar, os recibos de componentes de rescisão e
-as consolidações de médias emitidos antes da mudança da regra de férias ficam
-obsoletos: `get_case` mostra `OBSOLETO` e o recálculo da rescisão com
-consolidação recusa com `medias_rescisao_obsoletas`. Não é defeito e não pede
-reinício: faça nova qualificação dos componentes, nova consolidação das médias
-e novo cálculo, depois geração, conferência e revisão. Casos aprovados ou
-entregues não mudam. O roteiro está no domínio `ferias`.
+as consolidações de médias emitidos antes de cada mudança da regra de férias
+ficam obsoletos, inclusive os emitidos depois da mudança anterior (2.6.11):
+`get_case` mostra `OBSOLETO` e o recálculo da rescisão com consolidação recusa
+com `medias_rescisao_obsoletas`. Não é defeito e não pede reinício: faça nova
+qualificação dos componentes, nova consolidação das médias e novo cálculo,
+depois geração, conferência e revisão. Casos aprovados ou entregues não mudam.
+O roteiro está no domínio `ferias`.

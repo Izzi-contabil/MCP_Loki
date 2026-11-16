@@ -414,7 +414,10 @@ reenviar.
   `ferias_gozo_antes_do_fim_do_aquisitivo`, `ferias_gozo_fora_do_concessivo`,
   `ferias_aviso_fora_do_prazo`, `ferias_pagamento_fora_do_prazo`,
   `ferias_abono_pedido_incoerente`, `ferias_pedido_abono_fora_do_prazo`,
-  `ferias_inicio_antes_de_feriado`, `ferias_inicio_antes_de_repouso`,
+  `ferias_inicio_antes_de_feriado`,
+  `ferias_inicio_antes_de_feriado_source_sem_uso`,
+  `ferias_inicio_antes_de_feriado_source_sem_fundamento`,
+  `ferias_inicio_antes_de_repouso`,
   `ferias_inicio_antes_de_repouso_source_sem_uso`,
   `ferias_inicio_antes_de_repouso_source_sem_fundamento`,
   `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida`,
@@ -498,12 +501,11 @@ Valem somente quando a resposta servida e o schema os apresentarem; o roteiro
 completo está no domínio `ferias` (e, para médias de rescisão, `rescisao`).
 
 - `ferias_inicio_antes_de_repouso_ou_feriado` não é mais emitido.
-  `ferias_inicio_antes_de_feriado` sempre recusa e não há exceção: mude a data
-  com o cliente. `ferias_inicio_antes_de_repouso` recusa sem a declaração do
-  DP.
+  `ferias_inicio_antes_de_repouso` recusa sem a declaração do DP. A véspera
+  de feriado tem regra e fonte próprias (veja "Férias antes de feriado:
+  decisão do cliente"); a declaração do repouso não libera o feriado.
 - Regra da DP da Izzi: aceita o início nos dois dias antes da folga semanal
-  quando o cliente pede, porque a Izzi não acompanha a escala praticada; a
-  véspera de feriado continua vedada.
+  quando o cliente pede, porque a Izzi não acompanha a escala praticada.
 - A declaração vai no campo opcional
   `dados_ferias.inicio_antes_de_repouso_source`. A fonte é o pedido do
   cliente: documento anexado, manifesto de harness ou declaração
@@ -526,6 +528,45 @@ completo está no domínio `ferias` (e, para médias de rescisão, `rescisao`).
   defeito e não pede reinício. Recuperação: nova qualificação, nova
   consolidação, novo cálculo, depois geração, conferência e revisão. Casos
   aprovados ou entregues não mudam.
+
+## Férias antes de feriado: decisão do cliente
+
+Valem somente quando a resposta servida e o schema os apresentarem; o roteiro
+completo está no domínio `ferias`.
+
+- Regra da DP da Izzi (16/11/2026): a decisão é sempre do cliente. O DP
+  informa o passivo; se o cliente decidir, é feito.
+  `ferias_inicio_antes_de_feriado` recusa sem a decisão do cliente: leve a
+  data e o passivo ao cliente.
+- A decisão vai no campo opcional
+  `dados_ferias.inicio_antes_de_feriado_source`. A fonte é a decisão do
+  cliente: documento anexado, manifesto de harness ou declaração
+  (`kind: "declaration"`, `reference`, `locator`) com `foundation`. O
+  conteúdo da `foundation` (quem decidiu, onde e que o passivo foi
+  informado) é responsabilidade da harness e da operadora; o Loki só exige
+  `foundation` não vazia e não confere a fonte. Inferência e contexto são
+  recusados (`ferias_inicio_antes_de_feriado_source_sem_fundamento`); fonte
+  sem início na janela do feriado recusa com
+  `ferias_inicio_antes_de_feriado_source_sem_uso`. Sem decisão real do
+  cliente, não envie o campo.
+- Quando o início cai antes de feriado e antes do repouso, as duas fontes são
+  exigidas; cada uma libera só a sua regra.
+- A exceção não muda valores: aparece como ressalva
+  `clt_134_3_vespera_feriado` em `ressalvas.declaracoes_dp`
+  (`confirmed: false`, `exige_aceite_humano: true`), dizendo que a decisão foi
+  do cliente, que o passivo foi informado e que a ressalva não afasta o
+  passivo, e numa linha "Declaração do DP" do aviso e do recibo. Só vale com
+  o aceite explícito das ressalvas na revisão.
+- Num caso existente, mudar os feriados e acrescentar a decisão é uma única
+  correção: `submit_operator_correction` com as folhas juntas em `changes`
+  (`dados_ferias.feriados` e `dados_ferias.inicio_antes_de_feriado_source`).
+  Corrigir só os feriados antes é recusado com
+  `ferias_inicio_antes_de_feriado`.
+- Depois do deploy, recibos de componentes de férias e de rescisão e
+  consolidações de médias ficam obsoletos de novo, inclusive os emitidos
+  depois da 2.6.11, com o mesmo caminho de recuperação. A descrição da
+  ressalva do repouso mudou: revisões já preparadas com ela precisam ser
+  preparadas de novo. Casos aprovados ou entregues não mudam.
 
 ## Ler recursos binários retornados pelo MCP
 
