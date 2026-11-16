@@ -56,7 +56,7 @@ def test_closed_refusals_reach_their_domains_and_keep_the_contract() -> None:
     vacation = provider.get("ferias")["instructions"]
     for required in ("related_case_ids", "related_reason", "`incomplete`", "decisão humana"):
         assert required in vacation, required
-    assert provider.metadata()["mcp_contract_version"] == "2.6.4"
+    assert provider.metadata()["mcp_contract_version"] == "2.6.5"
 
 
 def test_plugin_mirrors_closed_refusals() -> None:

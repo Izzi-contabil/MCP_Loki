@@ -63,12 +63,17 @@ incoerente quando não há efeito operacional que o explique); registre `case_id
 valor, e não recomece o caso para contornar.
 Recusa de início de férias antes de feriado ou do repouso semanal
 (`ferias_inicio_antes_de_feriado`, `ferias_inicio_antes_de_repouso` e os
-códigos `ferias_inicio_antes_de_repouso_source_...`) não é defeito: feriado
-pede outra data com o cliente; repouso pede a declaração do DP com o pedido
-do cliente como fonte. Recibo de componentes `OBSOLETO` ou
+códigos `ferias_inicio_antes_de_feriado_source_...` e
+`ferias_inicio_antes_de_repouso_source_...`) não é defeito: feriado pede a
+decisão do cliente, informado o passivo, como fonte em
+`inicio_antes_de_feriado_source` (ou outra data); repouso pede a declaração
+do DP com o pedido do cliente como fonte. Quando o início cai antes dos dois,
+as duas fontes são exigidas. Recibo de componentes `OBSOLETO` ou
 `medias_rescisao_obsoletas` depois do deploy também não é defeito: siga o
 caminho de recuperação (nova qualificação, nova consolidação, novo cálculo,
-geração, conferência e revisão), sem recomeçar o caso.
+geração, conferência e revisão), sem recomeçar o caso, inclusive quando o
+recibo foi emitido depois da 2.6.11. Revisão preparada com a ressalva do
+repouso antes do deploy da 2.6.12 se prepara de novo; também não é defeito.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

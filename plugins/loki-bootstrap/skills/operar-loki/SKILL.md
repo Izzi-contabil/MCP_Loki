@@ -38,10 +38,12 @@ reinício”.
 Job da folha `blocked` em `calculate` com `diagnostic.errors` (funcionário por
 `index`, lançamento ou dado por `field`, `reason` fechado) está em
 “Diagnóstico do job da folha bloqueado no cálculo”.
-Início de férias antes de feriado (sem exceção) ou do repouso semanal (com a
-declaração do DP em `dados_ferias.inicio_antes_de_repouso_source`) e recibos
-de componentes ou médias obsoletos depois do deploy estão em “Férias antes do
-repouso semanal e recibos obsoletos”.
+Início de férias antes do repouso semanal (com a declaração do DP em
+`dados_ferias.inicio_antes_de_repouso_source`) e recibos de componentes ou
+médias obsoletos depois do deploy estão em “Férias antes do repouso semanal e
+recibos obsoletos”. Início antes de feriado (com a decisão do cliente,
+informado o passivo, em `dados_ferias.inicio_antes_de_feriado_source`) está em
+“Férias antes de feriado: decisão do cliente”.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

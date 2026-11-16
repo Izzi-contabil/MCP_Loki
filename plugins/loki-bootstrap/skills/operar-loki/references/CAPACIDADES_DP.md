@@ -357,7 +357,10 @@ Quando a resposta servida apresentar, a recusa de dados de férias traz em
 `ferias_gozo_antes_do_fim_do_aquisitivo`, `ferias_gozo_fora_do_concessivo`,
 `ferias_aviso_fora_do_prazo`, `ferias_pagamento_fora_do_prazo`,
 `ferias_abono_pedido_incoerente`, `ferias_pedido_abono_fora_do_prazo`,
-`ferias_inicio_antes_de_feriado`, `ferias_inicio_antes_de_repouso`,
+`ferias_inicio_antes_de_feriado`,
+`ferias_inicio_antes_de_feriado_source_sem_uso`,
+`ferias_inicio_antes_de_feriado_source_sem_fundamento`,
+`ferias_inicio_antes_de_repouso`,
 `ferias_inicio_antes_de_repouso_source_sem_uso`,
 `ferias_inicio_antes_de_repouso_source_sem_fundamento`,
 `ferias_medias_alternativas_exclusivas`, `ferias_media_repetida` ou
@@ -379,8 +382,7 @@ fonte vai nos campos `*_source` do schema, nunca numa chave própria dentro de
 
 Quando a resposta servida e o schema apresentarem,
 `ferias_inicio_antes_de_repouso_ou_feriado` não é mais emitido.
-`ferias_inicio_antes_de_feriado` sempre recusa, sem exceção: mude a data com
-o cliente. `ferias_inicio_antes_de_repouso` recusa sem a declaração do DP: a
+`ferias_inicio_antes_de_repouso` recusa sem a declaração do DP: a
 DP da Izzi aceita o início antes da folga semanal quando o cliente pede,
 porque não acompanha a escala praticada. A declaração vai em
 `dados_ferias.inicio_antes_de_repouso_source`, com o pedido do cliente como
@@ -395,11 +397,35 @@ explícito das ressalvas na revisão. Num caso existente, mudar o repouso e
 acrescentar a declaração é uma única correção (`submit_operator_correction`
 com as duas folhas juntas em `changes`).
 
+Quando a resposta servida e o schema apresentarem,
+`ferias_inicio_antes_de_feriado` recusa sem a decisão do cliente. Regra da DP
+da Izzi: a decisão é sempre do cliente; o DP informa o passivo e, se o
+cliente decidir, é feito. A decisão vai em
+`dados_ferias.inicio_antes_de_feriado_source`, com a decisão do cliente como
+fonte: documento anexado, manifesto de harness ou declaração com
+`foundation`. O conteúdo da `foundation` (quem decidiu, onde e que o passivo
+foi informado) é responsabilidade da harness e da operadora; o Loki só exige
+`foundation` não vazia e não confere a fonte. Inferência e contexto são
+recusados (`ferias_inicio_antes_de_feriado_source_sem_fundamento`); fonte sem
+início na janela do feriado recusa com
+`ferias_inicio_antes_de_feriado_source_sem_uso`. Quando o início cai antes de
+feriado e antes do repouso, as duas fontes são exigidas e cada uma libera só
+a sua regra. A exceção não muda valores: aparece como ressalva
+`clt_134_3_vespera_feriado` em `ressalvas.declaracoes_dp` (`confirmed: false`,
+`exige_aceite_humano: true`), dizendo que a decisão foi do cliente, que o
+passivo foi informado e que a ressalva não afasta o passivo, e numa linha
+"Declaração do DP" do aviso e do recibo; só vale com o aceite explícito das
+ressalvas na revisão. Num caso existente, mudar os feriados e acrescentar a
+decisão é uma única correção (`submit_operator_correction` com as folhas
+juntas em `changes`).
+
 Depois do deploy, recibos de componentes de férias e de rescisão e
-consolidações de médias emitidos antes ficam obsoletos (`OBSOLETO` em
-`get_case`; `medias_rescisao_obsoletas` no recálculo da rescisão). A
-recuperação é nova qualificação, nova consolidação, novo cálculo, depois
-geração, conferência e revisão. Casos aprovados ou entregues não mudam.
+consolidações de médias emitidos antes ficam obsoletos de novo, inclusive os
+emitidos depois da 2.6.11 (`OBSOLETO` em `get_case`;
+`medias_rescisao_obsoletas` no recálculo da rescisão). A recuperação é nova
+qualificação, nova consolidação, novo cálculo, depois geração, conferência e
+revisão. A descrição da ressalva do repouso mudou: revisões já preparadas com
+ela precisam ser preparadas de novo. Casos aprovados ou entregues não mudam.
 
 ## Política contextual do FGTS mensal
 
