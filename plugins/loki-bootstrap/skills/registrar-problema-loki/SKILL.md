@@ -53,6 +53,14 @@ corrigir vai ser recusado de novo.
 não são defeito: corrija o campo ou o item apontado e reenvie. Fonte ou anexo
 que some de `get_case` depois de `restart_case` é problema a relatar; não
 registre o original de novo para contornar.
+Job da folha `blocked` em `calculate` com `diagnostic.errors` apontando
+funcionário, lançamento ou motivo específico não é defeito: corrija o item
+apontado, ou o efeito/mapa, pelo fluxo normal. É problema a relatar a recusa
+sem item apontável e sem `reason` específico (só `dados_folha.valorizacao`
+com `payroll_valuation_invalid`) ou com `index` incoerente com o payload
+enviado (funcionário fora da lista; lançamento além dos enviados só é
+incoerente quando não há efeito operacional que o explique); registre `case_id`, `job_id`, `field` e `reason`, sem matrícula ou
+valor, e não recomece o caso para contornar.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

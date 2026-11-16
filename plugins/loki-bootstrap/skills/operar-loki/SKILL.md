@@ -35,6 +35,9 @@ Recusa por campo na preparação corrente de férias ou afastamento, índice da
 recusa da prévia de população da folha e reuso de fontes e anexos depois de
 `restart_case` estão em “Preparação corrente, população da folha e fontes após
 reinício”.
+Job da folha `blocked` em `calculate` com `diagnostic.errors` (funcionário por
+`index`, lançamento ou dado por `field`, `reason` fechado) está em
+“Diagnóstico do job da folha bloqueado no cálculo”.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

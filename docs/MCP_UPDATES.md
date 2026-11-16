@@ -1,5 +1,24 @@
 # Atualizações MCP Loki — contrato 2.6.3
 
+## Candidata0.4.19 / instruções e plugin2.6.10 —16/11/2026
+
+Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
+mínimo2.0.0 permanecem; só se acrescentam campos de resposta (backend #325).
+Domínio `geral`: quando `get_case_workflow_job` termina `blocked` em
+`calculate`, `diagnostic.errors` traz `field` (lançamento ou dado do
+funcionário), `index` (posição em `dados_folha.funcionarios` do payload, base
+zero) e `reason` fechado; índice de lançamento além dos enviados aponta efeito
+operacional do Loki; `verba_nao_mapeada` traz `codigo` e pede mapeamento;
+`dados_folha.valorizacao` sem `index` é recusa da competência, com motivo
+específico quando houver. A matrícula nunca volta e o diagnóstico não autoriza
+recomeçar o caso. Plugin espelha em WORKFLOWS, CAPACIDADES_DP, operar-loki e
+registrar-problema-loki. Nenhuma proteção é removida.
+
+Os textos valem somente quando a resposta servida apresentar esses campos; não
+afirmam que o backend correspondente está publicado. Wheel0.4.18 permanece
+imutável; fonte e wheel0.4.19 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
+
 ## Candidata0.4.18 / instruções e plugin2.6.9 —15/11/2026
 
 Mudança de orientação, sem ferramenta ou argumento novo: contrato2.6.3 e
