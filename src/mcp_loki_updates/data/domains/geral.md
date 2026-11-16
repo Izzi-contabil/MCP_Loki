@@ -159,6 +159,57 @@ Preserve `request_ref` e `job_id`; resposta perdida exige consulta do mesmo
 job, não outro cálculo. `exception_type`, `phase` e `reference` são diagnóstico
 técnico, sem provar correção dos dados ou autorizar restart.
 
+Quando a resposta servida apresentar, `get_case_workflow_job` que termina
+`blocked` em `calculate` traz `diagnostic.errors` com itens
+`{"field": ..., "index": N, "reason": ...}`. `reason` é código fechado;
+`index`, quando houver, é a posição do funcionário em
+`dados_folha.funcionarios` do payload enviado, contando do zero. `field`
+aponta o lançamento (`dados_folha.funcionarios.N.lancamentos.M`, ou seus
+`.valor`, `.quantidade`, `.divisor_quantidade` e
+`.fatos_datados.K.alocacao`) ou o dado do funcionário (`.salario_base`,
+`.periodo_remuneravel`, `.parcelas_salariais`, `.matricula`). O índice do
+lançamento pode passar do número de lançamentos enviados: aponta um efeito
+operacional que o próprio Loki acrescentou, e a correção é no efeito ou no
+mapa, não no lançamento enviado. Em `verba_nao_mapeada`, `codigo` é a rubrica
+do layout sem mapeamento: peça o mapeamento no mapa da empresa, sem mudar o
+lançamento. `.matricula` com `folha_population_incompatible` aponta item
+repetido ou ausente na população enviada.
+
+`{"field": "dados_folha.valorizacao"}` sem `index` é recusa da competência sem
+item apontável. O `reason` pode ser específico:
+`operational_pending_employee_out_of_scope` e
+`cadastro_pending_employee_out_of_scope` (contexto de matrícula fora do
+payload: confira a população enviada); `tabela_legal_fora_da_competencia`,
+`fgts_mensal_exige_mapa_contextual` e `fgts_mensal_contexto_fora_da_vigencia`
+(configuração). `payroll_valuation_invalid` é o motivo genérico. O Loki nunca
+devolve a matrícula: localize o funcionário pelo `index` na sua lista.
+
+Códigos principais, por grupo:
+
+- bases negativas: `base_inss_negativa`, `base_fgts_negativa`,
+  `base_irrf_negativa`, `base_efeito_desconhecido`;
+- salário-base: `salario_base_ausente`, `salario_base_fora_da_competencia`,
+  `salario_base_operands_not_accepted`;
+- quantidades e fatos: `quantity_fact_required`, `monetary_fact_required`,
+  `quantity_fact_not_applicable`, `monetary_fact_not_applicable`,
+  `quantity_unit_mismatch`, `dated_facts_quantity_mismatch`,
+  `fato_datado_sem_alocacao`;
+- parcelas e período: `salary_installments_period_mismatch`,
+  `salary_installments_quantity_mismatch`,
+  `salary_periods_require_period_formula`, `zero_period_inputs_conflict`;
+- rubricas: `verba_nao_mapeada`, `derived_item_not_input`,
+  `rubrica_automatica_sem_codigo`, `rubrica_base_sem_valor`,
+  `rubrica_dependencia_circular`;
+- adicionais: `insalubridade_...`, `periculosidade_...`,
+  `adicional_insalubridade_periculosidade_invalido`; vale-transporte:
+  `vale_transporte_...`.
+
+O vocabulário completo é o conjunto que o Loki serve no diagnóstico; código
+fora desta lista é igualmente fechado e se lê pelo `field`. O diagnóstico só
+aponta onde está a incoerência: não prova que o resto está certo e não
+autoriza recomeçar o caso. Corrija conferindo com o original, pelo fluxo
+normal, com novo `request_ref` e o `expected_snapshot` atual.
+
 Recomeçar exige pessoa autorizada, intenção específica e
 `expected_snapshot=get_case.correction_snapshot`. Siga `preparation` do
 contrato; `loki.case-preparation-transport/1` em `receive_case_data` só é rota

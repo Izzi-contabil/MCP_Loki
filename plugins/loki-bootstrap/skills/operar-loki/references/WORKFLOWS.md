@@ -451,6 +451,45 @@ nos domínios `ferias`, `afastamento`, `geral` e `documentos`.
   anexos nativos em `documentos`. Reutilize os mesmos EXTSRC e anexos; não
   registre nem anexe de novo o mesmo original.
 
+## Diagnóstico do job da folha bloqueado no cálculo
+
+Vale somente quando a resposta servida o apresentar; o roteiro completo está no
+domínio `geral`.
+
+- `get_case_workflow_job` que termina `blocked` em `calculate` traz
+  `diagnostic.errors` com `{"field": ..., "index": N, "reason": ...}`.
+  `reason` é código fechado; `index`, quando houver, é a posição do
+  funcionário em `dados_folha.funcionarios` do payload enviado, contando do
+  zero.
+- `field` aponta o lançamento (`dados_folha.funcionarios.N.lancamentos.M`,
+  `.valor`, `.quantidade`, `.divisor_quantidade`,
+  `.fatos_datados.K.alocacao`) ou o dado do funcionário (`.salario_base`,
+  `.periodo_remuneravel`, `.parcelas_salariais`, `.matricula`).
+- Índice de lançamento além dos enviados aponta um efeito operacional que o
+  próprio Loki acrescentou: corrija o efeito ou o mapa, não o lançamento
+  enviado.
+- `verba_nao_mapeada` traz `codigo`, a rubrica do layout sem mapeamento: peça
+  o mapeamento no mapa da empresa, sem mudar o lançamento.
+- `{"field": "dados_folha.valorizacao"}` sem `index` é recusa da competência
+  sem item apontável. `operational_pending_employee_out_of_scope` e
+  `cadastro_pending_employee_out_of_scope`: contexto de matrícula fora do
+  payload, confira a população. `tabela_legal_fora_da_competencia` e
+  `fgts_mensal_...`: configuração.
+- Grupos principais: bases negativas (`base_inss_negativa`,
+  `base_fgts_negativa`, `base_irrf_negativa`); salário-base
+  (`salario_base_ausente`, `salario_base_fora_da_competencia`); quantidades e
+  fatos (`quantity_fact_required`, `monetary_fact_required`,
+  `fato_datado_sem_alocacao`); parcelas e período
+  (`salary_installments_period_mismatch`, `salary_periods_require_period_formula`);
+  rubricas (`verba_nao_mapeada`, `rubrica_base_sem_valor`,
+  `rubrica_dependencia_circular`); adicionais (`insalubridade_...`,
+  `periculosidade_...`); vale-transporte (`vale_transporte_...`). O vocabulário completo é o
+  conjunto servido no diagnóstico.
+- O Loki nunca devolve a matrícula. O diagnóstico só aponta onde está a
+  incoerência: não prova que o resto está certo e não autoriza recomeçar o
+  caso. Corrija pelo fluxo normal com novo `request_ref` e o
+  `expected_snapshot` atual.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

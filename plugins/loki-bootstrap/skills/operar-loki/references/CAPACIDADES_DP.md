@@ -57,6 +57,23 @@ Preserve `request_ref` e `job_id`; resposta perdida exige consulta do mesmo
 job, não outro cálculo. `exception_type`, `phase` e `reference` são diagnóstico
 técnico, sem provar correção dos dados ou autorizar restart.
 
+Quando a resposta servida apresentar, job da folha `blocked` em `calculate`
+traz `diagnostic.errors` com `{"field": ..., "index": N, "reason": ...}`:
+`reason` é código fechado e `index` é a posição do funcionário em
+`dados_folha.funcionarios` do payload enviado, contando do zero. `field`
+aponta o lançamento (`...lancamentos.M`, `.valor`, `.quantidade`,
+`.divisor_quantidade`, `.fatos_datados.K.alocacao`) ou o dado do funcionário
+(`.salario_base`, `.periodo_remuneravel`, `.parcelas_salariais`,
+`.matricula`). Lançamento além dos enviados é efeito operacional acrescentado
+pelo Loki: corrija o efeito ou o mapa. `verba_nao_mapeada` traz `codigo`, a
+rubrica do layout sem mapeamento: peça o mapeamento no mapa da empresa.
+`dados_folha.valorizacao` sem `index` é recusa da competência;
+`operational_pending_employee_out_of_scope`/`cadastro_pending_employee_out_of_scope`
+indicam contexto de matrícula fora do payload (confira a população) e
+`tabela_legal_fora_da_competencia`/`fgts_mensal_...`, configuração. A
+matrícula nunca volta. O diagnóstico não prova o resto nem autoriza
+recomeçar: corrija pelo fluxo normal com novo `expected_snapshot`.
+
 Recomeçar exige pessoa autorizada, intenção específica e
 `expected_snapshot=get_case.correction_snapshot`. Siga `preparation` do
 contrato; `loki.case-preparation-transport/1` em `receive_case_data` só é rota
