@@ -1,4 +1,56 @@
-# Atualizações MCP Loki — contrato 2.7.0
+# Atualizações MCP Loki — contrato 2.7.1
+
+## Candidata0.4.23 / contrato, instruções e plugin2.7.1 —17/11/2026
+
+Mudança de interface aditiva da Onda 1 (backend #337, #338, #340, #341 e
+#342, ainda em revisão quando esta fonte foi preparada): códigos e campos
+novos nas respostas, `admission: "one_pending_job_per_company"` no contrato
+`durable_workflow` (mesmo `schema_version` `loki.case-workflow-command/1`) e
+`minLength: 1` em `funcionario.matricula`. Pela regra "mudou interface → novo
+contrato" e pelos precedentes de campo aditivo (2.6.4 e2.6.5), o contrato
+sobe de2.7.0 para2.7.1, não para um minor: não há processo, transporte ou
+ferramenta nova, como havia em2.7.0. Instruções e plugin acompanham o
+contrato em2.7.1, como em2.7.0; provider sobe um patch. O `minLength` só
+recusa matrícula vazia ou só com espaços, que nunca identificou vínculo; o
+mínimo2.0.0 permanece e clientes2.x anteriores continuam compatíveis.
+
+Domínio novo `folha_mensal` (permissão `consultar` no processo
+`folha_mensal`; o provider passa a15 domínios): o `geral` já tinha cerca de
+54KB do limite de64KB por arquivo, então a fila e o diagnóstico ficam num
+domínio próprio, com ponteiros no `geral`. Fila: um job pendente por empresa,
+`company_job_pending` (HTTP409, nada gravado) com `pending_job`, `next_action`
+`get_case_workflow_job` ou `retry_enqueue_later` e `retry_after_seconds`;
+enfileirar em série; não gravar em outro caso nem no cadastro da empresa
+durante o job (`job_sources_changed`); 524 com o mesmo `request_ref`;
+`BUSY`/429 com `retry_after_seconds`; retenção de até cerca de60 minutos.
+Diagnóstico: dossiê em vez de `get_case_calculation` para `CALCF-`
+(`calculation_kind_unsupported`), afastamento não qualificado como causa
+primária (`qualificar_afastamento_na_origem`, `dependent_fields`,
+`next_action_after_primary`, `leave_qualification` com origens), `EXTSRC` de
+outro caso não serve, `salario_base_ausente` com `code_next_action`,
+`population_count`/`population_hash` no restart e
+`payroll_population_dependencies_busy` `retryable`; rescisão declarada no
+onboarding na leitura da folha. `decimo_terceiro`: competência no dia1,
+cancelar antes de recriar, envio por partes com `pending_rules`, 2ª parcela
+por `historical_payments`, `medias_importadas`, dependentes de IRRF e recusas
+`thirteenth_*` com campo e mês. `geral`: matrícula omitida por padrão,
+`matricula_funcionario_divergente`/`_nao_qualificada`, `identifiers` e
+matrícula vazia recusada, com ponteiros em `admissao` e
+`alteracao_cadastral`. `ferias` e `afastamento`: códigos `historical_*` de
+`declaracao_do_vinculo_invalida`, cobertura que só limpa o gap terminando no
+corte ou antes, sem `leave` duplicado para afastamento antigo opaco, sem
+alterar coberturas de casos com seleção feita e lote validado antes da
+publicação revalidado. Plugin espelha em WORKFLOWS, CAPACIDADES_DP,
+operar-loki e registrar-problema-loki. Insalubridade e salário-família
+(backend #339) ficam para a Onda 2. Nenhuma proteção é removida.
+
+Não há ferramenta nova nem mudança de argumento: `create_case` recebe
+`payload` como objeto livre, e o `minLength` aparece só no schema servido por
+`get_process_contract`. Por isso não há Refresh do conector; a mudança nas
+skills exige atualizar o plugin instalado. Os textos valem somente quando a
+resposta servida apresentar os campos. Wheel0.4.22 permanece imutável; fonte e
+wheel0.4.23 locais não comprovam promoção, publicação, atualização do plugin
+instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata0.4.22 / contrato, instruções e plugin2.7.0 —17/11/2026
 
@@ -400,7 +452,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-Na candidata atual, o recomendado é2.7.0 e o contrato2.7.0 é aditivo;
+Na candidata atual, o recomendado é2.7.1 e o contrato2.7.1 é aditivo;
 cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.

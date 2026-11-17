@@ -104,6 +104,17 @@ Fontes `kind=document` conservam o significado de documento já arquivado no Lok
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
+## Matrícula na criação do caso
+
+Quando a resposta servida apresentar, `funcionario.matricula` vazio ou só com
+espaços é recusado na validação (espaços nas pontas são removidos). Na
+admissão, mande a matrícula só quando ela vier do documento de origem; não
+copie para o caso um valor lido no Loki. Se `create_case` recusar
+`matricula_funcionario_divergente` ou `matricula_funcionario_nao_qualificada`,
+reenvie omitindo `funcionario.matricula` e, se o documento indicar outra
+matrícula, use `registrar_problema`. O roteiro está no domínio `geral`
+("Matrícula no `create_case`").
+
 ## Complemento de identidade ausente
 
 `funcionario.nome` é identidade do caso, não um campo de `dados_rescisao` ou da

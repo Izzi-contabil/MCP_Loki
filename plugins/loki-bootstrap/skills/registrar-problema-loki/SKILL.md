@@ -85,6 +85,23 @@ relatar (`case_id` do caso coletivo, sem matrícula ou valor): não exclua,
 não reabra e não recomece o lote para contornar. Ao relatar um `PARTIAL`,
 descreva o estado real (aplicadas e pendentes); nunca diga que nada foi
 gravado se já houve efeito.
+`company_job_pending` não é defeito: acompanhe o job pendente ou repita o
+mesmo enqueue a cada `retry_after_seconds`; job pendente que retém a empresa
+por mais de cerca de 60 minutos é problema a relatar (`case_id` e `job_id`
+quando visíveis). `job_sources_changed` depois de gravar em outro caso da
+empresa durante o job também não é defeito. `calculation_kind_unsupported`,
+`payroll_population_dependencies_busy`, `dependent_fields` e
+`next_action_after_primary` não são defeito; `leave_qualification_not_recognized`
+é problema a relatar, sem CPF ou dado do afastamento. Recusas
+`thirteenth_...` com campo e mês, `pending_rules`, `historical_...` em
+`declaracao_do_vinculo_invalida` e `snapshot_desatualizado` de lote validado
+antes da atualização não são defeito: corrija o campo, cancele e recrie o 13º
+com a competência certa, ou valide o lote de novo. Matrícula: com
+`matricula_funcionario_divergente` ou `matricula_funcionario_nao_qualificada`,
+reenvie omitindo a matrícula; registre o problema somente quando o documento
+de origem mostrar matrícula diferente da registrada (empresa, processo e o
+código recebido, sem a matrícula, o CPF ou o nome), sem tentar acertar pela
+criação de caso.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

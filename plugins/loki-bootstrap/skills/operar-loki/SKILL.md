@@ -50,6 +50,16 @@ médias obsoletos depois do deploy estão em “Férias antes do repouso semanal
 recibos obsoletos”. Início antes de feriado (com a decisão do cliente,
 informado o passivo, em `dados_ferias.inicio_antes_de_feriado_source`) está em
 “Férias antes de feriado: decisão do cliente”.
+Folha da mesma empresa vai em série: com `company_job_pending`, acompanhe o
+job pendente ou repita o mesmo enqueue a cada `retry_after_seconds`, e não
+grave em outro caso da empresa durante o job (“Fila da folha: um job pendente
+por empresa”). O diagnóstico da folha fica no dossiê, com o afastamento não
+qualificado como causa primária (“Diagnóstico da folha no dossiê”). 13º com
+competência no dia 1, envio por partes e 2ª parcela por `historical_payments`
+estão em “13º por etapas”; matrícula omitida por padrão e
+`matricula_funcionario_divergente` em “Matrícula no `create_case`”; recusas
+`historical_...`, cobertura até o corte e lote revalidado em “Recusas de fatos
+históricos e cobertura até o corte”.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

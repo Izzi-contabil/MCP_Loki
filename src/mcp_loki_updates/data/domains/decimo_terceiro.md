@@ -1,5 +1,111 @@
 # Décimo terceiro
 
+As regras de etapas, competência, envio e recusas abaixo valem somente quando a
+resposta servida e o contrato de `get_process_contract("decimo_terceiro")` as
+apresentarem.
+
+## Etapas e meses
+
+- `primeira`: `data_pagamento` de fevereiro a novembro do `ano`; `meses` de 1
+  até o mês anterior ao pagamento (pagamento em 20/11 → meses 1 a 10). Sem
+  referências anteriores (`casos_anteriores=[]`, sem `historical_payments`).
+- `segunda`: `data_pagamento` entre 01/12 e 20/12 do `ano`; `meses` de 1 a 12.
+  A variável da segunda é a média de janeiro a novembro (÷ 11): dezembro pode
+  ir com `variavel_cents: null`.
+- `ajuste`: `numero_ajuste ≥ 1`, `data_pagamento` entre 01/01 e 10/01 do ano
+  seguinte; `meses` de 1 a 12, dezembro com valor.
+- Sem `medias_importadas`, cada mês exigido leva `variavel_cents`. Zero só
+  quando a fonte disser zero; ausência não vira zero.
+
+## Competência do caso
+
+`create_case` do 13º exige `competencia` no dia 1 do mês do pagamento da
+parcela (1ª paga em novembro → `AAAA-11-01`; 2ª → `AAAA-12-01`; ajuste →
+`(AAAA+1)-01-01`). Competência fora do dia 1 ou ausente é recusada na criação
+(`thirteenth_competence_required`, campo `competencia`); repetir a criação de
+um caso antigo sem competência também é recusado, em vez de devolver o caso
+existente. Competência diferente do mês de `data_pagamento` é recusada
+(`thirteenth_competence_mismatch`, `next_action=cancel_case`). A competência
+não se corrige no caso: cancele o caso antigo com `cancel_case` e só depois
+recrie com a competência certa. Não envie `occurrence_ref` no 13º operacional
+(`occurrence_ref_requires_shadow_scenario`).
+
+## Envio por partes
+
+A seção pode ir em mais de uma chamada de `receive_case_data`, cada uma com o
+`expected_snapshot` atual e um `request_ref` próprio. Por exemplo: primeiro os
+obrigatórios com `casos_anteriores=[]`, depois `historical_payments`. Uma regra
+que depende de `historical_payments`, `numero_ajuste`, `afastamento_source` ou
+`medias_importadas` só é cobrada no cálculo quando esse campo ainda não foi
+enviado. As demais regras são cobradas no receive. Caso cancelado ou fora de
+preparação é recusado pelo estado (`caso_fora_de_estado_gravavel`) antes de
+qualquer erro de campo.
+
+## Parcelas pagas fora do Loki
+
+Caso operacional não usa `casos_anteriores` (recusa
+`thirteenth_prior_cases_require_shadow`). A 2ª parcela e o ajuste leem o que já
+foi pago por `historical_payments`, com os IDs `ONBFACT-…` de fatos de
+onboarding `kind=historico_operacional` (`data.version=historical-state-v1`):
+
+- `type=thirteenth_payment` com `occurrence`, `year`, `installment`
+  (1 = adiantamento, 2 = segunda), `paid_on`, `gross_cents`, `inss_cents`,
+  `irrf_cents`, `fgts_cents` (INSS/IRRF em zero na 1ª, **nunca nulos**) e
+  `confirmed: true`;
+- `type=coverage`, `complete: true`, para `consumer=thirteenth_payments` (de
+  01/01, ou da admissão, até a data de pagamento desta parcela) e
+  `consumer=leave_occurrences` (até o corte da etapa).
+
+A cadeia traz todas as parcelas anteriores (1..N-1), confirmadas e pagas até a
+data desta parcela. Fluxo:
+
+1. Envie a seção com `casos_anteriores=[]`, sem `historical_payments`. O
+   recibo avisa, em `pending_rules`, o que ainda falta. É só aviso: não é
+   recusa, e o reenvio do mesmo `request_ref` devolve o recibo sem ele. Quem
+   cobra é o cálculo.
+2. Consulte `get_case_historical_state` do próprio caso e leia os ids
+   `ONBFACT-…` dos fatos `thirteenth_payment`.
+3. Envie `historical_payments` com esses ids.
+4. Aplique o estado (`apply_historical_state`) e calcule.
+
+O corte do estado depende só de `ano`, `etapa` e `data_pagamento`.
+`thirteenth_payment_coverage_not_certified` segue a regra de cobertura do
+domínio `ferias` ("Cobertura desde a admissão até o corte"): a cobertura tem
+de terminar no corte ou antes, emendada até ele.
+
+## Médias
+
+Para bater com o Domínio, use `medias_importadas` (média final do Domínio,
+finalidade `decimo_terceiro`). Ela é exclusiva com `variavel_cents` mensal:
+com ela, nenhum mês leva valor. A média por quantidade × valor atual e a
+produtividade ainda dependem de confirmação da DP; até lá, use a média
+importada.
+
+## Dependentes de IRRF
+
+O perfil documental é lido no corte da etapa: último dia do mês anterior ao
+pagamento na 1ª (pagamento em novembro → 31/10) e 31/12 na 2ª e no ajuste. O
+dependente precisa estar vigente nessa data. A 1ª parcela dispensa
+dependentes, salvo pensão `interdependente` no 13º; a 2ª e o ajuste exigem
+(`thirteenth_irrf_dependents_required` quando o valor é necessário).
+
+## Recusas
+
+`calculate_case`/`run_prepared_case_workflow` devolvem `BLOCKED` com `code`
+(`thirteenth_parameters_invalid` ou `thirteenth_competence_mismatch`),
+`fields`, `errors` e `months` (número dos meses apontados).
+`receive_case_data` devolve `invalid_case_data` com `{field, reason, mes}`.
+Nos dois, o código da regra é fechado `thirteenth_...` (ex.:
+`thirteenth_months_incomplete_for_stage`,
+`thirteenth_second_payment_date_invalid`,
+`thirteenth_imported_average_exclusive`); `thirteenth_month_variable_required`
+depende de `medias_importadas` e por isso só aparece no cálculo, já com campo e
+mês. Corrija o campo apontado e reenvie a seção. `thirteenth_stage_duplicated` e
+`thirteenth_peer_section_invalid` trazem `related_case_ids` e
+`next_action=get_case`: veja o outro caso com `get_case` e cancele o que
+sobrou, se for rascunho. Reenviar o mesmo pedido (mesmo `request_ref`) depois
+da preparação devolve o recibo original.
+
 ## Pensão por finalidade
 
 Analise o ofício/decisão na harness antes de preparar
