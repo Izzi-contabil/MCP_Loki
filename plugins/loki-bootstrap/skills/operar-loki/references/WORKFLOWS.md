@@ -595,6 +595,133 @@ Valem somente quando `get_process_contract("reajuste_salarial")` servir
   `diferenca_rescisao_complementar_pendente`, decidida pela DP no aceite das
   ressalvas. Nunca zere uma pendência nem informe a diferença à mão.
 
+## Fila da folha: um job pendente por empresa
+
+Vale somente quando o contrato anunciar
+`durable_workflow.admission: "one_pending_job_per_company"`; o roteiro completo
+está no domínio `folha_mensal`.
+
+- Outro caso da mesma empresa com job `queued` ou `running`:
+  `enqueue_case_workflow` devolve `BLOCKED` `company_job_pending` (HTTP 409),
+  nada gravado, com `pending_job: {case_id, job_id, request_ref}` e
+  `retry: "after_pending_job_terminal"`. Cada identificador só vem quando a
+  conta consegue usá-lo.
+- Com `job_id` (`next_action: "get_case_workflow_job"`): consulte o job até
+  `completed`, `blocked` ou `failed`. Sem ele (`next_action:
+  "retry_enqueue_later"`, `retry_after_seconds: 60`): repita o mesmo enqueue,
+  com a mesma referência, a cada `retry_after_seconds`; não troque de
+  `request_ref` por causa de `job_not_found`.
+- O job pendente pode reter a empresa por até cerca de 60 minutos se o worker
+  cair; depois disso, avise a engenharia pelo Caixa em vez de insistir.
+- Enfileire em série na mesma empresa; empresas diferentes podem ir em
+  paralelo. Releia `get_case` do caso recusado antes de repetir.
+- Durante o job, não grave em outro caso da empresa nem no cadastro dela
+  (`receive_case_data`, `update_case_payload`, `complement_payroll_items`,
+  anexos): o job termina `BLOCKED` `job_sources_changed`. Leituras são seguras.
+- 524 ou timeout: consulte `get_case_workflow_job` com o mesmo `request_ref`;
+  com `job_not_found`, repita o enqueue com o mesmo `request_ref` e o mesmo
+  corpo. `BUSY`/429: respeite `retry_after_seconds` ou `Retry-After`.
+  `company_job_pending` não é `BUSY`.
+
+## Diagnóstico da folha no dossiê
+
+Vale somente quando a resposta servida o apresentar; o roteiro completo está no
+domínio `folha_mensal`.
+
+- O diagnóstico está em `get_case_dossier`, `calculations[].diagnostics`. Um
+  `CALCF-` em `get_case_calculation` recusa com `calculation_kind_unsupported`
+  e `next_action: "get_case_dossier"`, sem dizer se o cálculo existe.
+- Na issue `contexto_operacional_pendente`, `leave_qualification_incomplete` é
+  a causa primária: `next_action: "qualificar_afastamento_na_origem"` vem
+  sempre primeiro. `dependent_fields` não se trata agora (nem com
+  `history_qualifications.payroll_context`); as causas próprias em
+  `missing_fields` seguem `next_action_after_primary` depois de qualificar e
+  recalcular. `missing_fields_complete: false`: há causa não reconhecida;
+  trate depois, sem inferir.
+- `leave_qualification.origins[*]` diz onde completar `leave.categoria`,
+  `leave.policy_version` e `leave.periodos[N].responsabilidade`:
+  `company_onboarding` (declaração `historico_operacional` do fato, com
+  `category_code`, `policy_version` e `payment_periods`; valide, aplique e fixe
+  de novo o histórico) ou `operational_effect` (nova preparação do caso de
+  afastamento). `leave_qualification_not_recognized`: nada foi separado;
+  registre o problema. Não infira categoria nem pagador.
+- Um `EXTSRC` de outro caso não serve como fonte da folha.
+- `salario_base_ausente`: siga `next_action`; `code_next_action:
+  "qualify_payroll_salary"` é a alternativa do código.
+- Restart com `replace_payroll_population`: o recibo traz `population_count` e
+  `population_hash`; compare com o `population_hash` da prévia.
+- `payroll_population_dependencies_busy` (`retryable: true`, `dependency`):
+  nada gravado; releia `get_case` e repita o mesmo `request_ref` depois.
+- Em `get_company_employee_history` com `process_type=folha_mensal`, rescisão
+  declarada no onboarding vem em `unqualified_facts` (`kind: "rescisao"`,
+  `effective_on`, `constraint_hash`). A ausência não prova vínculo ativo; com
+  `desligamento_anterior_ao_mes`, leve a restrição à operadora.
+
+## 13º por etapas: competência, envio por partes e 2ª parcela
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está no domínio `decimo_terceiro`.
+
+- `create_case` exige `competencia` no dia 1 do mês do pagamento da parcela
+  (`thirteenth_competence_required`). Competência diferente do mês de
+  `data_pagamento` recusa com `thirteenth_competence_mismatch` e
+  `next_action=cancel_case`: cancele o caso e só depois recrie. Sem
+  `occurrence_ref` no 13º operacional.
+- A segunda aceita dezembro com `variavel_cents: null` (média ÷ 11); o ajuste
+  exige dezembro. A 1ª parcela dispensa dependentes de IRRF, salvo pensão
+  `interdependente`.
+- A seção pode ir por partes: regra que depende de `historical_payments`,
+  `numero_ajuste`, `afastamento_source` ou `medias_importadas` ainda não
+  enviados só é cobrada no cálculo. O recibo avisa em `pending_rules`; é só
+  aviso e não volta no replay.
+- 2ª parcela e ajuste: `casos_anteriores=[]` (sem
+  `thirteenth_prior_cases_require_shadow`); envie a seção, leia os ids
+  `ONBFACT-…` dos fatos `thirteenth_payment` em `get_case_historical_state` do
+  próprio caso, envie `historical_payments`, aplique o estado e calcule.
+- `medias_importadas` (média final do Domínio) exclui `variavel_cents` mensal.
+- Recusas: no cálculo, `thirteenth_parameters_invalid` com `fields`, `errors` e
+  `months`; no receive, `invalid_case_data` com `{field, reason, mes}`.
+  `thirteenth_stage_duplicated` e `thirteenth_peer_section_invalid` trazem
+  `related_case_ids`: veja o outro caso e cancele o rascunho que sobrou.
+
+## Matrícula no `create_case`
+
+Vale somente quando a resposta servida o apresentar; o roteiro completo está no
+domínio `geral`.
+
+- Caminho padrão: omitir `funcionario.matricula` (identidade é CPF + data de
+  admissão). Nunca copie para o caso o valor lido no Loki;
+  `identifiers.matricula` de `get_company_employee_history` serve para conferir
+  o documento.
+- `matricula_funcionario_divergente` ou `matricula_funcionario_nao_qualificada`
+  (`campos: ["funcionario.matricula"]`): nada foi gravado. Reenvie omitindo a
+  matrícula; se o documento divergir da registrada, use `registrar_problema`.
+- Caso existente volta com `created: false`, sem comparar matrícula. Matrícula
+  vazia ou só com espaços é recusada.
+
+## Recusas de fatos históricos e cobertura até o corte
+
+Vale somente quando a resposta servida o apresentar; a tabela completa está no
+domínio `ferias`.
+
+- `declaracao_do_vinculo_invalida`: `diagnostic.details[*]` traz `path` e
+  `type` com o código da regra (`historical_vacation_period_inverted`,
+  `historical_vacation_use_inverted`,
+  `historical_vacation_use_period_incompatible`,
+  `historical_vacation_use_days_incompatible`,
+  `historical_leave_return_incompatible`,
+  `historical_leave_payment_outside_leave`, `historical_leave_payment_overlap`,
+  `historical_leave_payment_inverted`, `historical_coverage_inverted`).
+  Corrija conforme a fonte; antecipação real de férias fica pendente com a DP.
+- Lote validado antes da atualização pode recusar `snapshot_desatualizado`:
+  valide de novo e aplique com o `validation_hash` novo, sem mudar os dados.
+- `leave_history_coverage_not_certified` e
+  `thirteenth_payment_coverage_not_certified`: a cobertura só limpa o gap se
+  terminar no corte ou antes, emendada desde a admissão. Não altere coberturas
+  de casos com seleção histórica feita.
+- Afastamento antigo opaco: não grave `leave` duplicado; mantenha o gap
+  pendente.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

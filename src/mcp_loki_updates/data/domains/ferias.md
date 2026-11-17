@@ -36,6 +36,53 @@ Releia resultado e proveniência para demonstrar consumo real; seleção e
 contrato disponível são provas distintas. Não mova datas ou saldos para
 forçar aceitação de uma origem incompatível.
 
+## Recusas de fatos históricos do onboarding
+
+Os códigos valem somente quando a resposta servida os apresentar. Na recusa
+`declaracao_do_vinculo_invalida`, `diagnostic.details[*]` traz `path`
+(relativo ao vínculo, por exemplo `facts[*].data.start`) e `type`, que é o
+código da regra. Corrija o campo apontado conforme a fonte; nunca ajuste a
+data só para passar. As regras não mudaram; só a recusa ficou explícita.
+
+| Código | Significado | O que a harness corrige |
+|---|---|---|
+| `historical_vacation_period_inverted` | fim do aquisitivo antes do início | rever `period_start`/`period_end` na fonte |
+| `historical_vacation_use_inverted` | fim do gozo antes do início | rever `start`/`end` do gozo |
+| `historical_vacation_use_period_incompatible` | o gozo começa até o fim do próprio aquisitivo (`start <= period_end`, inclusive no último dia; o dia seguinte é aceito) | conferir se o aquisitivo atribuído ao gozo é o correto. Se a fonte mostra antecipação real, **não grave**: deixe pendente e leve a dúvida à DP |
+| `historical_vacation_use_days_incompatible` | `gozo_days_hundredths` diferente de (dias corridos de `start` a `end`) × 100 | rever `end` ou a quantidade de dias de gozo |
+| `historical_leave_return_incompatible` | `return_on` não é posterior a `start` | rever `start` e a data de retorno (primeiro dia de volta ao trabalho) |
+| `historical_leave_payment_outside_leave` | período de pagamento fora do afastamento (começa antes de `start` ou termina em `return_on` ou depois) | rever `start`, `return_on` e `payment_periods` |
+| `historical_leave_payment_overlap` | dois períodos de pagamento se sobrepõem, inclusive quando um termina no mesmo dia em que o seguinte começa | rever `payment_periods` (o seguinte começa no dia posterior ao fim do anterior) |
+| `historical_leave_payment_inverted` | período de pagamento com fim antes do início | rever `payment_periods[*].end` |
+| `historical_coverage_inverted` | cobertura com fim antes do início | rever `start`/`end` da cobertura |
+
+**Lote validado antes da atualização.** Se `apply_company_onboarding` recusar
+`snapshot_desatualizado` num lote validado antes desta versão, chame
+`validate_company_onboarding` de novo e aplique com o `validation_hash` novo.
+O diagnóstico das linhas recusadas ficou mais detalhado e entra no hash. Não
+reenvie nem altere os dados por causa disso.
+
+## Cobertura desde a admissão até o corte
+
+`leave_history_coverage_not_certified` (e
+`thirteenth_payment_coverage_not_certified`) só sai do estado quando coberturas
+`complete: true` do consumidor (`leave_occurrences` / `thirteenth_payments`)
+cobrem, sem lacuna, **da data de admissão até o corte**. O `effective_on` de
+uma cobertura é o seu `end`. Por enquanto, uma cobertura que termina **depois**
+do corte não aparece no estado desse corte: para limpar o gap num corte, a
+cobertura tem de terminar exatamente no corte (ou antes, emendada com outras
+até ele). Uma cobertura que começa depois da admissão não limpa o gap. Declare
+coberturas só quando a fonte atesta a completude do intervalo. Não altere
+coberturas já gravadas nem regrave para casos com seleção histórica feita:
+isso muda o estado e exige nova seleção.
+
+**Afastamento antigo opaco.** Se o estado mostra um fato antigo `afastamento`
+sem semântica operacional (`unqualified_documentary_facts`,
+`operational_semantics_missing` ou `leave_observations_not_classified`),
+**não grave um `leave` novo para o mesmo afastamento**: a qualificação por id
+ainda não existe, e um `leave` paralelo duplicaria a ocorrência. Mantenha o gap
+pendente e informe a operadora.
+
 ## Pensão por finalidade
 
 Analise o ofício/decisão na harness antes de preparar

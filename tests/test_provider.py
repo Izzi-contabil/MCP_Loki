@@ -25,6 +25,7 @@ DOMAINS = (
     "aviso_ferias",
     "aviso_rescisao",
     "reajuste_salarial",
+    "folha_mensal",
 )
 
 
@@ -57,12 +58,12 @@ def reseal(root: Path, domain: str) -> None:
     write_json(root / "release.json", release)
 
 
-def test_packaged_provider_exposes_fourteen_safe_domains_and_defensive_copies() -> None:
+def test_packaged_provider_exposes_fifteen_safe_domains_and_defensive_copies() -> None:
     provider = provider_type()()
     assert provider.domains() == DOMAINS
     value = provider.get("admissao")
     assert value["dominio"] == "admissao"
-    assert value["version"] == "2.7.0"
+    assert value["version"] == "2.7.1"
     assert value["updated_at"] == "2026-11-17"
     assert value["instructions"].strip()
     assert value["permissions"] == {"capabilities": ["consultar"], "processes": ["admissao"]}
@@ -174,13 +175,13 @@ def test_rejects_invalid_snapshot_even_when_hashes_are_consistent(
 def test_metadata_is_sanitized_and_returns_domain_versions() -> None:
     provider = provider_type()()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.22"
-    assert metadata["mcp_contract_version"] == "2.7.0"
-    assert metadata["versions_by_domain"] == {domain: "2.7.0" for domain in DOMAINS}
+    assert metadata["provider_version"] == "0.4.23"
+    assert metadata["mcp_contract_version"] == "2.7.1"
+    assert metadata["versions_by_domain"] == {domain: "2.7.1" for domain in DOMAINS}
     assert "root" not in metadata
     assert "instructions" not in metadata
     metadata["versions_by_domain"]["admissao"] = "999.0.0"
-    assert provider.metadata()["versions_by_domain"]["admissao"] == "2.7.0"
+    assert provider.metadata()["versions_by_domain"]["admissao"] == "2.7.1"
 
 
 def test_rejects_symlinked_data_file(snapshot: Path, tmp_path: Path) -> None:

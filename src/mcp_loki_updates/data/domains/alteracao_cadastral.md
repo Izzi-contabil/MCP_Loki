@@ -17,6 +17,17 @@ linha já aplicada. O lote exige esta conta com `alteracao_cadastral` na mesma
 empresa, com `consultar`, `decidir_chat` e `corrigir_dados`
 (`salary_adjustment_requires_employee_change_scope`).
 
+## Matrícula registrada não muda pelo caso
+
+`create_case` não troca a matrícula de um vínculo. Quando a resposta servida
+apresentar, matrícula enviada diferente da operacional registrada é recusada
+com `matricula_funcionario_divergente` (`campos: ["funcionario.matricula"]`,
+sem repetir valores) e nada é gravado. Reenvie omitindo `funcionario.matricula`;
+se o documento de origem mostra matrícula diferente da registrada, registre o
+problema com `registrar_problema` e avise a operadora. A correção de uma
+matrícula registrada errada não é alteração cadastral nem nova criação de
+caso; o roteiro está no domínio `geral` ("Matrícula no `create_case`").
+
 ## Declaração adicional no onboarding
 
 Use `get_company_onboarding_contract.additional_declaration_reconciliation`

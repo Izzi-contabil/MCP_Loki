@@ -57,6 +57,30 @@ Preserve `request_ref` e `job_id`; resposta perdida exige consulta do mesmo
 job, não outro cálculo. `exception_type`, `phase` e `reference` são diagnóstico
 técnico, sem provar correção dos dados ou autorizar restart.
 
+Quando o contrato anunciar `durable_workflow.admission:
+"one_pending_job_per_company"`, a fila aceita um job pendente por empresa.
+`company_job_pending` (HTTP 409, nada gravado) traz `pending_job` e
+`next_action`: com `job_id`, acompanhe por `get_case_workflow_job` até
+`completed`, `blocked` ou `failed`; com `retry_enqueue_later`, repita o mesmo
+enqueue, com a mesma referência, a cada `retry_after_seconds`. Enfileire em
+série na mesma empresa e não grave em outro caso nem no cadastro da empresa
+durante o job (`job_sources_changed`). Em 524, consulte o mesmo `request_ref`;
+em `BUSY`/429, respeite `retry_after_seconds`. Retenção acima de cerca de 60
+minutos vai à engenharia pelo Caixa. Roteiro em “Fila da folha: um job
+pendente por empresa” de [WORKFLOWS.md](WORKFLOWS.md).
+
+O diagnóstico da folha fica em `get_case_dossier`
+(`calculations[].diagnostics`); `CALCF-` em `get_case_calculation` recusa com
+`calculation_kind_unsupported`. Afastamento não qualificado é causa primária:
+`qualificar_afastamento_na_origem` primeiro, `dependent_fields` depois da
+qualificação, `next_action_after_primary` para as causas próprias, e
+`leave_qualification.origins[*]` diz onde completar (onboarding ou caso de
+afastamento). `salario_base_ausente` segue `next_action` (alternativa
+`code_next_action`); o restart da população traz `population_count` e
+`population_hash`, iguais ao da prévia; `payroll_population_dependencies_busy`
+é `retryable`. Roteiro em “Diagnóstico da folha no dossiê” de
+[WORKFLOWS.md](WORKFLOWS.md) e no domínio `folha_mensal`.
+
 Quando a resposta servida apresentar, job da folha `blocked` em `calculate`
 traz `diagnostic.errors` com `{"field": ..., "index": N, "reason": ...}`:
 `reason` é código fechado e `index` é a posição do funcionário em
@@ -185,6 +209,40 @@ Siga o schema atual para programação, calendário, incidências e fontes próp
 Releia resultado e proveniência para demonstrar consumo real; seleção e
 contrato disponível são provas distintas. Não mova datas ou saldos para
 forçar aceitação de uma origem incompatível.
+
+Quando a resposta servida apresentar, `declaracao_do_vinculo_invalida` traz em
+`diagnostic.details[*]` o `path` e o código da regra em `type`
+(`historical_vacation_...`, `historical_leave_...`,
+`historical_coverage_inverted`): corrija conforme a fonte, sem ajustar data
+para passar; antecipação real de férias fica pendente com a DP. Lote validado
+antes da atualização pode recusar `snapshot_desatualizado`: valide de novo e
+aplique com o `validation_hash` novo. `leave_history_coverage_not_certified` e
+`thirteenth_payment_coverage_not_certified` só saem quando a cobertura vai da
+admissão até o corte, terminando no corte ou antes; não altere coberturas de
+casos com seleção histórica feita. Afastamento antigo opaco não recebe `leave`
+duplicado. Roteiro em “Recusas de fatos históricos e cobertura até o corte” de
+[WORKFLOWS.md](WORKFLOWS.md).
+
+## 13º por etapas
+
+Quando a resposta servida apresentar, o 13º exige `competencia` no dia 1 do
+mês do pagamento (`thirteenth_competence_required`); competência divergente de
+`data_pagamento` (`thirteenth_competence_mismatch`) pede cancelar e recriar.
+A seção pode ir por partes, com `pending_rules` como aviso; a 2ª parcela e o
+ajuste leem as parcelas pagas fora do Loki por `historical_payments`
+(`ONBFACT-…` de `thirteenth_payment`), sem `casos_anteriores`.
+`medias_importadas` exclui a variável mensal; a 1ª parcela dispensa
+dependentes, salvo pensão `interdependente`. `thirteenth_stage_duplicated` e
+`thirteenth_peer_section_invalid` trazem `related_case_ids`. Roteiro no domínio
+`decimo_terceiro`.
+
+## Matrícula no `create_case`
+
+Quando a resposta servida apresentar, omita `funcionario.matricula` por padrão;
+`matricula_funcionario_divergente` e `matricula_funcionario_nao_qualificada`
+não gravam nada e pedem reenvio sem a matrícula, com `registrar_problema` se o
+documento divergir da registrada. Matrícula vazia é recusada. Roteiro no
+domínio `geral`.
 
 ## Nova preparação de afastamento
 

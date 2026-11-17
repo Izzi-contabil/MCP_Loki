@@ -24,7 +24,12 @@ resultado persistido e não recalcula: mostra causas reconhecidas por pessoa,
 separando completos, parciais e não calculados. Detalhe desconhecido fica
 indisponível, sem reconstrução pela configuração atual. Confirme cálculo, corte
 e pacote exatos antes de tratar um relato antigo como causa atual. Cobertura e
-integridade não comprovam paridade nem aceite financeiro.
+integridade não comprovam paridade nem aceite financeiro. O diagnóstico da
+folha fica no dossiê, não em `get_case_calculation` (`CALCF-` recusa com
+`calculation_kind_unsupported`); a causa primária de afastamento não
+qualificado (`qualificar_afastamento_na_origem`, `dependent_fields`,
+`next_action_after_primary`, `leave_qualification`) está no domínio
+`folha_mensal`.
 
 ## Conciliar declaração adicional com fato conservado
 
@@ -77,6 +82,48 @@ Numa preparação corrente, `vacation_preparation_requires_complete_input` e
 `leave_preparation_requires_complete_input` também trazem `errors` por campo
 (código de regra, `missing` ou `extra_forbidden`): corrija o campo e reenvie a
 seção completa; fonte vai nos campos `*_source`, nunca numa chave própria.
+
+## Matrícula no `create_case`
+
+Valem somente quando a resposta servida os apresentar. O caminho padrão é
+**omitir** `funcionario.matricula`: a identidade do vínculo é CPF + data de
+admissão. Mande a matrícula só quando ela vier do documento de origem do caso e
+for a mesma que o Loki já reconhece. Nunca copie para o caso o valor lido no
+Loki: um valor registrado pode estar errado. O `create_case` não troca a
+matrícula de um vínculo.
+
+Para conferir o documento (não para preencher o caso), use
+`get_company_employee_history` com `cliente_slug`, `empresa_cnpj`, `cpf`,
+`data_admissao`, `as_of` e `process_type`, e leia `identifiers.matricula` e
+`identifiers.matricula_operacional`; `matricula` vem `null` quando o valor
+registrado não é código operacional.
+
+- `matricula_funcionario_divergente`: a matrícula enviada difere da
+  operacional já registrada. O caso **não** foi criado, nada foi gravado e a
+  registrada continua a mesma; a resposta traz
+  `campos: ["funcionario.matricula"]` e `proxima_acao`, sem repetir valores.
+  Reenvie o `create_case` **omitindo** `funcionario.matricula`. Se o documento
+  de origem mostra matrícula diferente de `identifiers.matricula`, registre o
+  problema com `registrar_problema` e avise a operadora; não tente acertar pela
+  criação de caso.
+- `matricula_funcionario_nao_qualificada`: o valor não pode ser código
+  operacional deste vínculo (outro namespace ou vínculo reparado). Reenvie
+  omitindo `funcionario.matricula`; se o documento indicar outra matrícula,
+  use `registrar_problema`.
+- Caso já existente (mesma identidade) volta com `created: false`; a matrícula
+  não é comparada e nada é gravado no vínculo.
+- `funcionario.matricula` vazio ou só com espaços é recusado na validação;
+  espaços nas pontas são removidos.
+
+Na criação, `occurrence_ref` sem cenário (ou cenário sem `occurrence_ref`)
+recusa com `occurrence_ref_requires_shadow_scenario` ou
+`shadow_scenario_requires_occurrence_ref`, com o campo, no lugar de
+`value_error`. Rescisão declarada no onboarding na leitura da folha está no
+domínio `folha_mensal`; recusas de fatos históricos
+(`declaracao_do_vinculo_invalida` com `type` `historical_...`), cobertura até
+o corte e lote validado antes da atualização (`snapshot_desatualizado`:
+valide de novo e aplique com o `validation_hash` novo) estão no domínio
+`ferias`.
 
 ## Conector: conexão fechada ou tempo esgotado
 
@@ -158,6 +205,14 @@ Quando `available=true`, use os jobs duráveis
 Preserve `request_ref` e `job_id`; resposta perdida exige consulta do mesmo
 job, não outro cálculo. `exception_type`, `phase` e `reference` são diagnóstico
 técnico, sem provar correção dos dados ou autorizar restart.
+
+Quando o contrato anunciar `durable_workflow.admission:
+"one_pending_job_per_company"`, a fila aceita um job pendente por empresa:
+`company_job_pending` (HTTP 409, nada gravado) não é `BUSY`. Enfileire as
+folhas da mesma empresa em série, não grave em outro caso nem no cadastro da
+empresa durante o job (`job_sources_changed`), consulte o mesmo `request_ref`
+depois de 524 e respeite `retry_after_seconds` em `BUSY`/429. O roteiro
+completo está no domínio `folha_mensal`.
 
 Quando a resposta servida apresentar, `get_case_workflow_job` que termina
 `blocked` em `calculate` traz `diagnostic.errors` com itens

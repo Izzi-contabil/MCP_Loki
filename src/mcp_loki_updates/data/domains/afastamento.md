@@ -96,3 +96,25 @@ original e reenvie a seção `leave` completa, com novo `request_ref` e o
 snapshot atual. A fonte de um campo vai no campo `*_source` do schema (ex.:
 `retorno_source`, `identity_source`), nunca numa chave própria dentro de
 `leave`: essa chave volta como `extra_forbidden`.
+
+## Afastamento no histórico e no diagnóstico da folha
+
+Os códigos valem somente quando a resposta servida os apresentar. Fatos
+históricos de afastamento do onboarding recusados em
+`declaracao_do_vinculo_invalida` trazem `type` com o código da regra
+(`historical_leave_return_incompatible`, `historical_leave_payment_outside_leave`,
+`historical_leave_payment_overlap`, `historical_leave_payment_inverted`); a
+tabela completa e a regra de cobertura até o corte
+(`leave_history_coverage_not_certified`) estão no domínio `ferias`. Corrija
+conforme a fonte; nunca ajuste a data só para passar.
+
+Afastamento antigo opaco (`unqualified_documentary_facts`,
+`operational_semantics_missing` ou `leave_observations_not_classified`): não
+grave um `leave` novo para o mesmo afastamento, porque duplicaria a ocorrência;
+mantenha o gap pendente e informe a operadora.
+
+Quando o dossiê da folha apontar `leave_qualification.origins[*]` com
+`origin: "operational_effect"` e o `case_id` deste caso, complete categoria,
+`policy_version` e a responsabilidade de cada período pela nova preparação
+acima, quando o contrato oferecer; o roteiro está no domínio `folha_mensal`.
+Não infira categoria nem pagador.
