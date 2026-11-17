@@ -1,0 +1,18 @@
+{
+  "dominio": "reajuste_salarial",
+  "version": "2.7.0",
+  "updated_at": "2026-11-17",
+  "compatibility": {
+    "mcp_contract_version": "2.7.0",
+    "minimum_plugin_version": "2.0.0",
+    "recommended_plugin_version": "2.7.0"
+  },
+  "permissions": {
+    "capabilities": [
+      "consultar"
+    ],
+    "processes": [
+      "reajuste_salarial"
+    ]
+  }
+}

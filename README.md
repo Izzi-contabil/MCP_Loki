@@ -1,5 +1,18 @@
-# MCP Loki — contrato operacional 2.6.5
-Candidata **provider0.4.21 / instruções e plugin2.6.12**,16/11/2026; contrato2.6.5
+# MCP Loki — contrato operacional 2.7.0
+Candidata **provider0.4.22 / contrato, instruções e plugin2.7.0**,17/11/2026: processo
+coletivo `reajuste_salarial` (feedback 71, backend #334) servido por
+`get_process_contract` (`loki.salary-adjustment/1`), com prévia, exclusão e
+reabertura como transportes de `receive_case_data`
+(`loki.salary-adjustment-preview/1`, `-exclusion/1`, `-reopen/1`). Sem
+ferramenta nova; o domínio novo `reajuste_salarial` e o guia
+[REAJUSTE_SALARIAL.md](plugins/loki-bootstrap/skills/operar-loki/references/REAJUSTE_SALARIAL.md)
+orientam a leitura do instrumento pela harness, a prévia, a decisão humana do
+lote, a retomada até `APPLIED`/`PARTIAL`, as saídas, o pago declarado e as
+pendências da folha X que ficam com a DP. Vale quando o contrato servido
+apresentar a interface; wheel preparado não comprova publicação do backend,
+instalação ou uso.
+
+Edição anterior **provider0.4.21 / instruções e plugin2.6.12**,16/11/2026; contrato2.6.5
 aditivo (campo opcional `dados_ferias.inicio_antes_de_feriado_source`, backend
 #332): véspera de feriado recusa sem a decisão do cliente, tomada depois de o
 DP informar o passivo (`ferias_inicio_antes_de_feriado`); com a decisão como
@@ -86,11 +99,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.21** entrega instruções **2.6.12** ao backend.
+O pacote `mcp-loki-updates` **0.4.22** entrega instruções **2.7.0** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.6.12** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.7.0** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
@@ -105,7 +118,7 @@ nova preparação e parâmetros recentes. A seleção da folha da PR240 só se a
 quando o contrato servido oferecer a rota. A edição orienta a nova preparação
 de afastamento e o alcance salarial qualificado de mês civil30/divisor30 quando
 o backend os oferecer; o pacote de instruções não publica essas capacidades.
-O contrato atual é2.6.5, aditivo; o mínimo2.0.0 permanece. Acurácia exige coorte e medição reais;
+O contrato atual é2.7.0, aditivo; o mínimo2.0.0 permanece. Acurácia exige coorte e medição reais;
 esta candidata local não atualiza conta, instalação ou agenda da Ana.
 
 O Loki recebe dados estruturados, valida, calcula, gera documentos, registra e

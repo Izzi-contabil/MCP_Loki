@@ -74,6 +74,17 @@ caminho de recuperação (nova qualificação, nova consolidação, novo cálcul
 geração, conferência e revisão), sem recomeçar o caso, inclusive quando o
 recibo foi emitido depois da 2.6.11. Revisão preparada com a ressalva do
 repouso antes do deploy da 2.6.12 se prepara de novo; também não é defeito.
+No reajuste coletivo (`reajuste_salarial`), `BLOCKED` com
+`salary_adjustment_lines_divergent`, códigos de linha no recibo, pendências
+`diferenca_*`, `reajuste_coletivo_em_execucao`,
+`diferenca_rescisao_complementar_pendente` e
+`salary_adjustment_requires_employee_change_scope` não são defeito: corrija
+a linha, siga a saída do recibo, leve a pendência à DP ou peça o escopo de
+`alteracao_cadastral`. `salary_adjustment_line_key_changed` é problema a
+relatar (`case_id` do caso coletivo, sem matrícula ou valor): não exclua,
+não reabra e não recomece o lote para contornar. Ao relatar um `PARTIAL`,
+descreva o estado real (aplicadas e pendentes); nunca diga que nada foi
+gravado se já houve efeito.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

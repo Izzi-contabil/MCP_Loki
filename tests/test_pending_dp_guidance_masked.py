@@ -26,6 +26,8 @@ NEW_DOMAINS = (
     "aviso_ferias",
     "aviso_rescisao",
 )
+# Processo coletivo da 2.7.0: o caso nao tem funcionario e o dominio e proprio.
+COLLECTIVE_DOMAINS = ("reajuste_salarial",)
 PROCESS_TYPES = (
     "admissao",
     "folha_mensal",
@@ -41,15 +43,16 @@ PROCESS_TYPES = (
     "pro_labore",
     "distribuicao_lucros",
     *NEW_DOMAINS,
+    *COLLECTIVE_DOMAINS,
 )
 
 
 def test_additive_guides_declare_single_process_and_consultation() -> None:
     provider = InstructionsProvider()
-    assert provider.domains() == (*LEGACY_DOMAINS, *NEW_DOMAINS)
-    for process in NEW_DOMAINS:
+    assert provider.domains() == (*LEGACY_DOMAINS, *NEW_DOMAINS, *COLLECTIVE_DOMAINS)
+    for process in (*NEW_DOMAINS, *COLLECTIVE_DOMAINS):
         guide = provider.get(process)
-        assert guide["version"] == "2.6.12"
+        assert guide["version"] == "2.7.0"
         assert guide["permissions"] == {"capabilities": ["consultar"], "processes": [process]}
         assert "get_dp_capabilities" in guide["instructions"]
         assert "get_process_contract" in guide["instructions"]
@@ -108,7 +111,7 @@ def test_new_process_access_uses_existing_admin_browser_and_preserves_legacy_too
     None
 ):
     guide = InstructionsProvider().get("aprovacoes")
-    assert guide["version"] == "2.6.12"
+    assert guide["version"] == "2.7.0"
     text = guide["instructions"]
     for literal in ("preparar_autorizacao", "13 processos", "/admin", *NEW_DOMAINS):
         assert literal in text

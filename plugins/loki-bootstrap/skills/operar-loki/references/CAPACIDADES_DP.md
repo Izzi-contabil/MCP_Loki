@@ -228,6 +228,22 @@ Numa preparação corrente, quando a resposta servida apresentar,
 Corrija o campo e reenvie a seção `leave` completa; fonte vai em
 `retorno_source`/`identity_source`, nunca numa chave própria dentro de `leave`.
 
+## Reajuste coletivo com efeito retroativo
+
+Somente quando `get_process_contract("reajuste_salarial")` servir
+`loki.salary-adjustment/1`, siga [REAJUSTE_SALARIAL.md](REAJUSTE_SALARIAL.md).
+Não há ferramenta nova: prévia (`loki.salary-adjustment-preview/1`), exclusão
+(`loki.salary-adjustment-exclusion/1`) e reabertura
+(`loki.salary-adjustment-reopen/1`) são transportes de `receive_case_data`.
+A conta precisa de `reajuste_salarial` e `alteracao_cadastral` na mesma
+empresa, com `consultar`, `decidir_chat` e `corrigir_dados` em
+`alteracao_cadastral` (`salary_adjustment_requires_employee_change_scope`).
+A harness lê e confere o instrumento e monta a população; o Loki só valida a
+coerência interna e nunca confere a fonte. Mês sem folha do Loki pede o pago
+declarado com `sem_outras_verbas_dependentes_do_salario`; vigência fora do
+dia 1, RRA, rescisão complementar e abrangência, admitidos depois de Y e
+piso, e arredondamento ficam pendentes até a DP decidir.
+
 ## Consignado: contrato, competência e rescisão
 
 Para a consulta automática mensal, siga

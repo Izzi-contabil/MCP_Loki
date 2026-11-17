@@ -568,6 +568,33 @@ completo está no domínio `ferias`.
   ressalva do repouso mudou: revisões já preparadas com ela precisam ser
   preparadas de novo. Casos aprovados ou entregues não mudam.
 
+## Reajuste coletivo com efeito retroativo
+
+Valem somente quando `get_process_contract("reajuste_salarial")` servir
+`loki.salary-adjustment/1`; o roteiro completo está em
+[REAJUSTE_SALARIAL.md](REAJUSTE_SALARIAL.md) e no domínio `reajuste_salarial`.
+
+- `create_case` (`case_type=reajuste_salarial`, `competencia` no dia 1 de X,
+  `occurrence_ref` igual à referência do instrumento, sem funcionário) →
+  `get_process_contract` → `receive_case_data` com o `instrumento` e as
+  `linhas` em blocos de até 100 matrículas → `validate_case` → prévia
+  `loki.salary-adjustment-preview/1` (paginada por `proximo_inicio`, com
+  `resumo_total`) → conferência da operadora → `apply_case_effects` no caso
+  coletivo com a decisão humana explícita → retomada pelo mesmo
+  `request_ref` até `APPLIED` ou `PARTIAL`.
+- `BLOCKED` antes da decisão: nenhum efeito gravado; corrija as linhas e
+  refaça a prévia. `VALIDATING` e `IN_PROGRESS`: repita o mesmo pedido.
+- `PARTIAL` mostra o estado real (`aplicadas`, `pendentes`,
+  `effects_written`); nunca diga "nada foi gravado" se já houve efeito.
+  Linha com falha registrada sai pela reabertura
+  (`loki.salary-adjustment-reopen/1`) ou pela exclusão
+  (`loki.salary-adjustment-exclusion/1`); linha já aplicada sai pela
+  retirada no caso filho (`withdraw:true`).
+- Na folha X: `reajuste_coletivo_em_execucao` enquanto o lote não fecha,
+  pendências `diferenca_*` por matrícula e a ressalva
+  `diferenca_rescisao_complementar_pendente`, decidida pela DP no aceite das
+  ressalvas. Nunca zere uma pendência nem informe a diferença à mão.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

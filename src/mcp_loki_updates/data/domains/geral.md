@@ -312,6 +312,21 @@ pelo conector; integridade dos bytes usa provas do servidor/storage/backup.
 Baixe somente o documento necessário à demanda expressa. Metadados não são
 bytes lidos; checks de um pacote documental exigem a conferência correspondente.
 
+## Reajuste coletivo retroativo e a folha X
+
+Quando `get_process_contract("reajuste_salarial")` servir
+`loki.salary-adjustment/1`, o reajuste de CCT, ACT, termo aditivo, sentença
+normativa ou pedido do cliente com vigência anterior à competência de
+lançamento X entra pelo caso coletivo `reajuste_salarial`; o roteiro completo
+está no domínio `reajuste_salarial`. Na folha X: `reajuste_coletivo_em_execucao`
+recusa o cálculo enquanto o lote decidido não fecha (retome o caso coletivo
+até `APPLIED` ou `PARTIAL` e trate as pendências; não cancele para destravar);
+`diferenca_reflexos_nao_calculados`, `diferenca_funcionario_fora_da_folha` e
+as pendências `diferenca_*` por matrícula vão à DP e nunca viram zero;
+`diferenca_rescisao_complementar_pendente` não impede a aprovação, mas exige
+a decisão da DP sobre cada matrícula no aceite das ressalvas. Não informe a
+diferença à mão em `dados_folha` (`retroactive_difference_informed`).
+
 
 ## Identificar rubricas nas perguntas ao DP
 
