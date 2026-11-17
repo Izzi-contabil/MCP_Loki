@@ -17,6 +17,12 @@ servido, lacuna de catálogo, parâmetros da operação e acurácia medida; recu
 novos permanecem condicionados ao contrato efetivamente disponível.
 Para consulta mensal Dataprev, leia
 [DATAPREV_MENSAL.md](references/DATAPREV_MENSAL.md) antes de reservar ou aplicar.
+Para reajuste coletivo com efeito retroativo (CCT, ACT, termo aditivo,
+sentença normativa ou pedido do cliente, processo `reajuste_salarial`), leia
+[REAJUSTE_SALARIAL.md](references/REAJUSTE_SALARIAL.md) antes de criar o caso;
+a conta precisa de `reajuste_salarial` e `alteracao_cadastral` na empresa, e
+o recibo `PARTIAL` mostra o estado real: nunca diga que nada foi gravado
+quando já houve efeito.
 Em admissão travada por Beneficiários da ficha, nome diferente só em
 caixa/espaços ou recusa de reinício/conciliação, leia “Destravar admissão” em
 [WORKFLOWS.md](references/WORKFLOWS.md) e siga somente o `next_action` servido;

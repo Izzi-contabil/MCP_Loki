@@ -14,7 +14,7 @@ from functools import total_ordering
 from pathlib import Path
 from typing import Any, cast
 
-PROVIDER_VERSION = "0.4.21"
+PROVIDER_VERSION = "0.4.22"
 SUPPORTED_CONTRACT_MAJOR = 2
 DOMAINS = (
     "geral",
@@ -30,6 +30,7 @@ DOMAINS = (
     "adiantamento",
     "aviso_ferias",
     "aviso_rescisao",
+    "reajuste_salarial",
 )
 # Process scopes follow the host enum, independently of instruction domains.
 PROCESS_TYPES = frozenset(
@@ -52,6 +53,7 @@ PROCESS_TYPES = frozenset(
         "adiantamento",
         "aviso_ferias",
         "aviso_rescisao",
+        "reajuste_salarial",
     }
 )
 MAX_FILE_BYTES = 65536

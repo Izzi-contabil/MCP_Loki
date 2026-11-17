@@ -1,4 +1,46 @@
-# Atualizações MCP Loki — contrato 2.6.5
+# Atualizações MCP Loki — contrato 2.7.0
+
+## Candidata0.4.22 / contrato, instruções e plugin2.7.0 —17/11/2026
+
+Mudança de interface aditiva (backend #334, PR-C3 do feedback 71): processo
+coletivo novo `reajuste_salarial` em `get_process_contract`
+(`loki.salary-adjustment/1`) e três transportes novos em `receive_case_data`:
+`loki.salary-adjustment-preview/1`, `loki.salary-adjustment-exclusion/1` e
+`loki.salary-adjustment-reopen/1`. Pela regra "mudou interface → novo
+contrato" e por ser processo novo (não só campo opcional, como em2.6.4 e
+2.6.5), o contrato sobe de2.6.5 para2.7.0; instruções e plugin acompanham o
+minor do contrato, como em2.5.0 e2.6.0; provider sobe um patch, como em todas
+as promoções. Mínimo2.0.0 permanece e clientes2.x anteriores continuam
+compatíveis.
+
+Domínio novo `reajuste_salarial` (permissão `consultar` no processo
+`reajuste_salarial`; o provider passa a14 domínios e a aceitar o processo no
+allowlist): a harness lê e confere o instrumento e monta a população; o Loki
+só valida a coerência interna e nunca confere a fonte. Passo a passo de
+`create_case` à retomada pelo mesmo `request_ref` até `APPLIED`/`PARTIAL`;
+recibo `PARTIAL` mostra o estado real; saídas por reabertura, exclusão e
+retirada no caso filho; pago declarado com
+`sem_outras_verbas_dependentes_do_salario`; motivos fechados para salário
+fora da regra; blockers e ressalvas da folha X (`diferenca_*`,
+`reajuste_coletivo_em_execucao`, `diferenca_rescisao_complementar_pendente`);
+vigência fora do dia1, RRA, rescisão complementar e abrangência, admitidos
+depois de Y e piso, e arredondamento pendentes de decisão da DP. A conta
+precisa de `reajuste_salarial` e `alteracao_cadastral` na empresa. Ponteiros
+em `geral` (folha X) e `alteracao_cadastral` (casos filhos). O geral já tem
+cerca de54KB do limite de64KB por arquivo; por isso o roteiro fica num
+domínio próprio. Plugin acrescenta o guia `REAJUSTE_SALARIAL.md` (mesmo texto
+do domínio) e espelha em WORKFLOWS, CAPACIDADES_DP, operar-loki e
+registrar-problema-loki. Nenhuma proteção é removida.
+
+Não há ferramenta nova nem mudança de argumento: `process_type`, `payload` e
+`request` continuam strings e objetos livres no schema das ferramentas, e
+`loki_obter_instrucoes` recebe o domínio como string. Por isso o processo não
+exige Refresh do conector; a mudança nas skills exige atualizar o plugin
+instalado, e a conta da operadora precisa receber os dois escopos. Os textos
+valem somente quando o contrato servido apresentar a interface. Wheel0.4.21
+permanece imutável; fonte e wheel0.4.22 locais não comprovam promoção,
+publicação, atualização do plugin instalado, uso pela operadora ou aceite de
+DP.
 
 ## Candidata0.4.21 / instruções e plugin2.6.12, contrato2.6.5 —16/11/2026
 
@@ -358,7 +400,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-Na candidata atual, o recomendado é2.6.12 e o contrato2.6.5 é aditivo;
+Na candidata atual, o recomendado é2.7.0 e o contrato2.7.0 é aditivo;
 cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.

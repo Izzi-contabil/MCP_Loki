@@ -1,5 +1,22 @@
 # Alteração cadastral
 
+## Reajuste retroativo vem do caso coletivo
+
+Quando `get_process_contract("reajuste_salarial")` servir
+`loki.salary-adjustment/1`, o reajuste com efeito retroativo (data-base
+anterior à competência de lançamento) não entra por alteração cadastral
+pública: o bloco `retroatividade` é recusado com
+`retroactive_launch_not_available`. Ele entra pelo caso coletivo
+`reajuste_salarial`, que cria um caso filho de alteração cadastral por
+funcionário; o roteiro está no domínio `reajuste_salarial`. O prefixo
+`reajuste:` do `occurrence_ref` é reservado aos casos filhos
+(`reserved_occurrence_ref`). `apply_case_effects` direto num caso filho é
+recusado (`salary_adjustment_child_requires_collective`); a retirada
+(`withdraw:true`) no caso filho continua permitida e é a saída para uma
+linha já aplicada. O lote exige esta conta com `alteracao_cadastral` na mesma
+empresa, com `consultar`, `decidir_chat` e `corrigir_dados`
+(`salary_adjustment_requires_employee_change_scope`).
+
 ## Declaração adicional no onboarding
 
 Use `get_company_onboarding_contract.additional_declaration_reconciliation`
