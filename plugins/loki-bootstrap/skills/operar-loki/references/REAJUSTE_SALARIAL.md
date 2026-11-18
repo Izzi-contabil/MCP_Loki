@@ -194,7 +194,8 @@ o que foi pago, em `origens_declaradas["AAAA-MM"]`:
 `salario_pago_cents`, `verbas` (de 1 a 30, sem repetir código:
 `codigo_origem`, `valor_pago_cents` e `quantidade` em dias ou horas quando a
 fórmula do mapa exigir), `sem_outras_verbas_dependentes_do_salario` e
-`source`. Inclua todas as verbas do mês, não só o salário.
+`source`. Inclua todas as verbas do mês, não só o salário (o desconto de VT
+fica de fora; veja abaixo).
 
 - O pago recalculado pela fórmula do mapa tem de bater com o declarado; senão
   o mês fica `diferenca_pago_divergente`.
@@ -202,6 +203,13 @@ fórmula do mapa exigir), `sem_outras_verbas_dependentes_do_salario` e
   extra, DSR, adicional) vira reflexo não calculado, no blocker
   `diferenca_reflexos_nao_calculados`. Verba independente do salário é
   ignorada.
+- Descontos que dependem do salário, como o VT (6%), não entram na diferença
+  (regra da DP, 18/11/2026): o VT vale só sobre o salário do mês. Não declare
+  VT em `origens_declaradas.<mês>.verbas`. Ele não impede a afirmação
+  `sem_outras_verbas_dependentes_do_salario: true`, que trata das verbas de
+  provento (hora extra, DSR, adicionais). Na folha fechada do Loki, o VT
+  também não vira parcela de diferença nem reflexo, qualquer que seja a
+  fórmula do mapa (`declared_origins.transport_discount` no contrato).
 - Confirme `sem_outras_verbas_dependentes_do_salario: true` só depois de
   conferir que nenhuma verba dependente do salário ficou de fora. Sem essa
   afirmação, o mês fica `diferenca_origem_declarada_incompleta`.
@@ -250,6 +258,23 @@ abaixo do salário-base recusa com `salario_anterior_abaixo_do_salario_base`.
 Nos dois casos, confira o original e pergunte à DP. Não declare o reajuste
 por linha para contornar.
 
+## Admitido no próprio dia da data-base
+
+Regra da DP (18/11/2026), em `rule.admitted_on_base_date` do contrato:
+
+- Admitido no próprio dia da data-base: o salário de admissão já é o salário
+  novo. Envie a linha com `salario_anterior_esperado_cents` igual ao salário
+  de admissão e sem `salario_novo_cents`. O Loki devolve `sem_reajuste` com
+  `motivo_sem_reajuste = admitido_na_data_base_com_salario_novo`, e isso não
+  é divergência. Se o piso novo for maior, vale o piso.
+- Não informe percentual nem salário novo para essa pessoa:
+  `salario_novo_cents` maior sem motivo diverge da regra
+  (`salario_novo_diverge_da_regra`).
+- Linha desse tipo aplicada antes desta regra continua `aplicada` e a prévia
+  mostra o salário gravado no efeito.
+- Admitido no mesmo mês da data-base, mas depois do dia 1 e antes do dia da
+  data-base: ainda sem regra da DP. Não envie a linha; pergunte à Rafa.
+
 ## Salário novo já registrado no cadastro
 
 - **Como declarar a linha.** Quando o histórico já tem o salário novo da CCT
@@ -257,7 +282,8 @@ por linha para contornar.
   `salario_anterior_esperado_cents` é o salário **antes** da data-base (o da
   véspera). `salario_novo_cents` é o reajustado, ou fica vazio para a regra
   calcular. Não tente corrigir o fato de onboarding, não declare o anterior
-  igual ao novo e não exclua a pessoa por isso.
+  igual ao novo (quem tem véspera no vínculo) e não exclua a pessoa por
+  isso. Admitido no próprio dia da data-base segue a seção anterior.
 - **Na prévia.** A linha pode trazer
   `salario_novo_provavelmente_registrado: a_confirmar_na_aplicacao`. É só um
   aviso: a conferência é feita na aplicação.
@@ -265,11 +291,12 @@ por linha para contornar.
   `salario_novo_ja_registrado_no_cadastro:<fonte>` se o cadastro tiver
   exatamente esse salário novo na data-base e o anterior na véspera. A fonte é
   `fato_onboarding`, `alteracao_cadastral` ou `evento_vinculo`. Apresente a
-  ressalva à operadora no recibo e pergunte:
-  1. se o salário registrado na data-base é o próprio reajuste da CCT;
-  2. se a diferença dos meses desde a data-base já foi paga no sistema de
-     origem (Domínio ou outro). Se já foi, não siga com a diferença em X:
-     leve o caso à DP antes de calcular a folha.
+  ressalva à operadora no recibo. A DP confirmou (18/11/2026): o salário novo
+  já registrado com vigência na data-base é o próprio reajuste da CCT, e a
+  diferença ainda não foi paga. Envie a linha normalmente. Só se o original
+  mostrar a diferença dos meses desde a data-base já paga no sistema de
+  origem (Domínio ou outro), não siga com a diferença em X: leve o caso à DP
+  antes de calcular a folha.
 - **Diferença.** Sai na folha de lançamento, contra o salário efetivamente
   pago em cada mês de origem. Se algum mês de origem já foi pago com o
   salário novo, a diferença daquela pessoa fica pendente
@@ -280,12 +307,6 @@ por linha para contornar.
   anterior nem o novo, ou se a véspera não tiver o anterior, a recusa
   continua `salario_anterior_divergente`. Admitido depois da data-base é
   conferido só na vigência.
-- **Pergunta para a DP (pendente; não decida sozinha).** Pessoa admitida na
-  **própria data-base** que já tem o salário novo no cadastro: a linha é
-  recusada (`salario_anterior_divergente`, porque não há véspera no vínculo).
-  Pergunte à operadora e à DP se a linha deve sair por exclusão registrada ou
-  ser declarada sem reajuste (`motivo_salario_novo = acima_do_piso_mantido`,
-  quando couber). Enquanto não houver resposta, deixe a linha pendente.
 
 ## Desligados
 
@@ -374,10 +395,13 @@ decisão da DP.
 ## Pendente até a DP decidir
 
 A DP respondeu em 17/11/2026 a vigência fora do dia 1, o RRA, a abrangência
-de desligados, os admitidos depois de Y e o arredondamento (regras acima).
+de desligados, os admitidos depois de Y e o arredondamento, e em 18/11/2026 o
+admitido no próprio dia da data-base, o VT e o salário novo já registrado
+(regras acima).
 Fica pendente:
 
 - O cálculo da rescisão complementar dos desligados abrangidos (`sim`) ainda
   não existe: a ressalva continua exigindo a decisão da DP no aceite.
-- A pessoa admitida na própria data-base com o salário novo já no cadastro
-  (seção "Salário novo já registrado no cadastro").
+- Admitido no mesmo mês da data-base, mas depois do dia 1 e antes do dia da
+  data-base (seção "Admitido no próprio dia da data-base"): não envie a
+  linha; pergunte à Rafa.

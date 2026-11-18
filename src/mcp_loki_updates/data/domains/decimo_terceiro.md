@@ -105,8 +105,9 @@ parte fixa também entra inteira. Para conferir com o Domínio, compare
 Os campos de seis casas (`horas_micros`, `valor_micros`, `vantagens_micros`)
 e o `bloco` das médias, quando o contrato servido os apresentar, valem só nas
 férias da rescisão (domínio `rescisao`). O 13º continua com os centavos e não
-rateia por bloco. Se o cálculo por bloco vale também para o 13º ainda está
-pendente com a DP.
+rateia por bloco. A DP informou (18/11/2026) que o Domínio soma as médias de
+todas as empresas do grupo, sem separar por empresa, também no 13º: envie uma
+média com a soma das empresas, sem `bloco`.
 
 ## 13º com média importada que já estava em revisão
 

@@ -81,7 +81,7 @@ PAYROLL = (
 PENDING_DP = (
     "## Pendente até a DP decidir",
     "O cálculo da rescisão complementar dos desligados abrangidos (`sim`) ainda não existe",
-    "admitida na própria data-base",
+    "Admitido no mesmo mês da data-base, mas depois do dia 1 e antes do dia da data-base",
 )
 # Regras da DP de 17/11/2026 (backend #346 e #349), na 2.8.0.
 DP_RULES = (
@@ -104,7 +104,7 @@ DP_RULES = (
     "`salario_novo_provavelmente_registrado: a_confirmar_na_aplicacao`",
     "`salario_novo_ja_registrado_no_cadastro:<fonte>`",
     "`fato_onboarding`, `alteracao_cadastral` ou `evento_vinculo`",
-    "já foi paga no sistema de origem",
+    "já paga no sistema de origem",
     "não desfaz o fato de onboarding",
 )
 # Textos do rascunho que contradizem o backend: BLOCKED pode deixar casos filhos sem
@@ -120,6 +120,10 @@ STALE = (
     "- `proporcional_admissao`;",
     "arredondamento do percentual",
     "use `pendente` e pergunte à DP",
+    # Respondidos pela DP em 18/11/2026 (2.9.1).
+    "admitida na própria data-base",
+    "Enquanto não houver resposta, deixe a linha pendente",
+    "se o salário registrado na data-base é o próprio reajuste da CCT;",
 )
 
 
@@ -134,18 +138,18 @@ def domain() -> str:
 def test_collective_domain_is_served_with_the_new_contract() -> None:
     provider = InstructionsProvider()
     guide = provider.get("reajuste_salarial")
-    assert guide["version"] == "2.9.0"
-    assert guide["compatibility"]["mcp_contract_version"] == "2.9.0"
+    assert guide["version"] == "2.9.1"
+    assert guide["compatibility"]["mcp_contract_version"] == "2.9.1"
     assert guide["permissions"] == {
         "capabilities": ["consultar"],
         "processes": ["reajuste_salarial"],
     }
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.25"
-    assert metadata["instructions_version"] == "2.9.0"
-    assert metadata["mcp_contract_version"] == "2.9.0"
+    assert metadata["provider_version"] == "0.4.26"
+    assert metadata["instructions_version"] == "2.9.1"
+    assert metadata["mcp_contract_version"] == "2.9.1"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.6.5", "2.7.0", "2.7.1", "2.8.0", "2.9.0"):
+    for version in ("2.0.0", "2.6.5", "2.7.0", "2.7.1", "2.8.0", "2.9.0", "2.9.1"):
         assert provider.check_version(version, version)["compatible"] is True
 
 

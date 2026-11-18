@@ -1,6 +1,6 @@
 """Entrega das orientações da 2.8.0 (Onda 2); nao mede obediencia da harness.
 
-O aviso do geral passou a ser o da 2.9.0 (test_wave3_guidance_masked.py).
+O aviso do geral passou a ser o da 2.9.1 (test_dp_rules_1118_guidance_masked.py).
 """
 
 import json
@@ -131,14 +131,14 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_new_contract_minor() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.25"
-    assert metadata["instructions_version"] == "2.9.0"
-    assert metadata["mcp_contract_version"] == "2.9.0"
-    assert metadata["recommended_plugin_version"] == "2.9.0"
+    assert metadata["provider_version"] == "0.4.26"
+    assert metadata["instructions_version"] == "2.9.1"
+    assert metadata["mcp_contract_version"] == "2.9.1"
+    assert metadata["recommended_plugin_version"] == "2.9.1"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.7.1", "2.8.0", "2.9.0"):
+    for version in ("2.0.0", "2.7.1", "2.8.0", "2.9.0", "2.9.1"):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.9.0", "2.9.1")["compatible"] is False
+    assert provider.check_version("2.9.1", "2.9.2")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
@@ -146,14 +146,14 @@ def test_versions_follow_the_new_contract_minor() -> None:
     ]
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.9.0", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.9.0", path.name
+        assert data["version"] == "2.9.1", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.9.1", path.name
     for path in DOMAINS.glob("*.md"):
         assert len(path.read_bytes()) <= 65536, path.name
 
 
 def test_general_keeps_the_28_refresh_reminder() -> None:
-    # O aviso da 2.9.0 substitui o da 2.8.0, mas lembra os fluxos que exigem Refresh.
+    # O aviso da 2.9.1 substitui o da 2.9.0, mas lembra os fluxos da 2.8.0 que exigem Refresh.
     guide = text("geral")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(

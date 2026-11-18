@@ -31,6 +31,12 @@ quando a recusa disser que não
 há caminho automático, registre o problema com `registrar_problema`. O roteiro
 do `create_case` está no domínio `geral` ("Matrícula no `create_case`").
 
+**Matrícula do eSocial (DP, 18/11/2026).** A matrícula do eSocial é o
+identificador oficial do vínculo. Enquanto a forma de uso não for confirmada,
+não grave matrícula nova por worker `identifier_only` (restauração, troca de
+código Domínio ou qualificação por onboarding comum, nas seções abaixo) sem
+falar antes com a engenharia.
+
 ## Restaurar uma matrícula sobrescrita
 
 Só depois de combinar com a operadora. Não restaure por iniciativa própria:

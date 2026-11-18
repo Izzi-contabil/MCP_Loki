@@ -295,7 +295,7 @@ gravada com a expectativa de versão do cadastro:
   valor-dia com seis casas e exige ao menos um escopo de férias.
   `terco: por_parcela` arredonda o terço de cada rubrica e soma, e exige os
   quatro escopos de férias. `medias_por_bloco: true` exige escopo de férias
-  (seção seguinte). O aviso indenizado fica fora: não foi medido.
+  (seção seguinte) e não se liga sem conferência com a DP. O aviso indenizado fica fora: não foi medido.
 - As férias por componente exigem `medias_variaveis[].componentes` nas médias
   de férias; sem isso o bloco fica pendente, como antes.
 - `saldo: valor_dia_6_casas` exige a convenção
@@ -336,7 +336,13 @@ Quando o contrato servido apresentar:
   passa a trazer o campo `bloco`. Para o Loki ratear e arredondar cada bloco
   separadamente, a política precisa de `medias_por_bloco: true`, com `fonte`
   citando a medição; sem a opção, os blocos somam como uma média só. O 13º
-  não usa blocos nem micros (pendente com a DP).
+  não usa blocos nem micros.
+- **Regra da DP (18/11/2026): o Domínio soma as médias.** A DP informou que o
+  Domínio soma as médias de todas as empresas do grupo, sem separar por
+  empresa, em férias e no 13º. Não ligue `medias_por_bloco` sem conferência
+  com a DP: o padrão é enviar uma média por `origem` e `escopo`, com a soma
+  das empresas, sem `bloco`. A opção continua disponível só se a DP pedir uma
+  exceção.
 
 ## Simulação de rescisão
 

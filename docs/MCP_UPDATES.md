@@ -1,4 +1,61 @@
-# Atualizações MCP Loki — contrato 2.9.0
+# Atualizações MCP Loki — contrato 2.9.1
+
+## Candidata 0.4.26 / contrato, instruções e plugin 2.9.1 — 18/11/2026
+
+Backend #363 (b7c3d22f, já mesclado em `main` do Loki depois da 2.9.0):
+regras da DP de 18/11/2026. A mudança de interface é só texto aditivo no
+contrato `loki.salary-adjustment/1` (`rule.admitted_on_base_date` e
+`declared_origins.transport_discount`), sem ferramenta nova, sem schema novo
+e sem processo novo. Pela regra "mudou interface → novo contrato" e pelo
+precedente aditivo da 2.7.1 (campo novo sem processo, transporte ou
+ferramenta nova), o contrato sobe de 2.9.0 para 2.9.1, um patch; instruções e
+plugin acompanham o contrato em 2.9.1; provider sobe um patch. Mínimo 2.0.0
+permanece e clientes 2.x anteriores continuam compatíveis. A lista
+`compatible_tools` não muda.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.1)" (só atualizar o plugin;
+  sem Refresh), que substitui o da 2.9.0 e mantém o lembrete do Refresh da
+  2.8.0; na seção "Matrícula no `create_case`", a matrícula do eSocial é o
+  identificador oficial segundo a DP e, enquanto a forma de uso não for
+  confirmada, nenhuma matrícula nova se grava por `identifier_only` sem falar
+  com a engenharia. O `geral` fica com cerca de 60KB do limite de 64KB.
+- `alteracao_cadastral`: a mesma regra da matrícula do eSocial antes das
+  seções de restauração e troca de código Domínio.
+- `reajuste_salarial` (e o guia REAJUSTE_SALARIAL.md): seção nova "Admitido
+  no próprio dia da data-base" (`sem_reajuste` com
+  `admitido_na_data_base_com_salario_novo`, `rule.admitted_on_base_date`,
+  piso prevalece, `salario_novo_cents` maior diverge); sai a orientação antiga
+  de deixar a linha pendente (`salario_anterior_divergente`); o VT não entra
+  na diferença nem no pago declarado (`declared_origins.transport_discount`)
+  e não impede `sem_outras_verbas_dependentes_do_salario`; o salário novo já
+  registrado com vigência na data-base é o próprio reajuste e a diferença
+  ainda não foi paga; fica pendente o admitido no mesmo mês, antes do dia da
+  data-base.
+- `ferias`: o gozo em que o fim do aquisitivo cai dentro do período passa a
+  ser aceito no histórico do onboarding; só o que termina antes do fim do
+  aquisitivo continua `historical_vacation_use_period_incompatible`. Lote
+  recusado antes por esse código pode voltar `ready`: validar de novo e
+  aplicar com o `validation_hash` novo (o antigo dá `snapshot_desatualizado`).
+  O processo de férias segue a regra anterior.
+- `afastamento`: um registro por atestado, com o retorno no dia seguinte ao
+  fim; atestados encostados não são sobreposição; licença-maternidade não é
+  falta e não reduz o aquisitivo.
+- `rescisao`: a DP informou que o Domínio soma as médias das empresas do
+  grupo, sem separar por empresa, em férias e no 13º; não ligar
+  `medias_por_bloco` sem conferência com a DP.
+- `decimo_terceiro`: a mesma regra de soma no 13º; a pendência com a DP sobre
+  blocos no 13º sai.
+
+Plugin espelha em WORKFLOWS (seção "2.9.1: regras da DP de 18/11/2026"),
+CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki.
+
+Não exige Refresh do conector: as 96 ferramentas são as mesmas. Os textos
+chegam com o deploy do backend, na mesma conversa. A mudança nas skills exige
+atualizar o plugin instalado, sem bloquear o uso. Wheel 0.4.25 permanece
+imutável; fonte e wheel 0.4.26 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata 0.4.25 / contrato, instruções e plugin 2.9.0 — 18/11/2026
 

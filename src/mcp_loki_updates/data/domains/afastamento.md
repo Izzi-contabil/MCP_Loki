@@ -97,6 +97,19 @@ snapshot atual. A fonte de um campo vai no campo `*_source` do schema (ex.:
 `retorno_source`, `identity_source`), nunca numa chave própria dentro de
 `leave`: essa chave volta como `extra_forbidden`.
 
+## Atestados consecutivos e licença-maternidade
+
+Regras da DP (18/11/2026):
+
+- Lance cada documento como um registro próprio, respeitando o período de
+  cada um: dois atestados de 5 dias são dois afastamentos, cada um com
+  `inicio`, `retorno` (dia seguinte ao fim) e a fonte do seu atestado. Não
+  junte atestados num afastamento só e não estenda um registro para cobrir o
+  seguinte. Atestados encostados (o retorno de um é o início do outro) não são
+  sobreposição.
+- Licença-maternidade não é falta e não reduz o aquisitivo de férias: use
+  `categoria: licenca_maternidade` e não lance os dias como falta.
+
 ## Afastamento no histórico e no diagnóstico da folha
 
 Os códigos valem somente quando a resposta servida os apresentar. Fatos

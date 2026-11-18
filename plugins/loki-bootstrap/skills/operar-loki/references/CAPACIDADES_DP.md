@@ -214,7 +214,8 @@ Quando a resposta servida apresentar, `declaracao_do_vinculo_invalida` traz em
 `diagnostic.details[*]` o `path` e o código da regra em `type`
 (`historical_vacation_...`, `historical_leave_...`,
 `historical_coverage_inverted`): corrija conforme a fonte, sem ajustar data
-para passar; antecipação real de férias fica pendente com a DP. Lote validado
+para passar; gozo em que o fim do aquisitivo cai dentro do período é aceito
+(DP, 18/11/2026), e o que termina antes dele vai à Rafa. Lote validado
 antes da atualização pode recusar `snapshot_desatualizado`: valide de novo e
 aplique com o `validation_hash` novo. `leave_history_coverage_not_certified` e
 `thirteenth_payment_coverage_not_certified` só saem quando a cobertura vai da
@@ -284,6 +285,22 @@ simulação, `operational_context_changed` traz `subreason`, e
 exige Refresh; a operadora só atualiza o plugin. Roteiro em “2.9.0: reajuste,
 rescisão, simulação e admissão” de [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.1: regras da DP de 18/11/2026
+
+Quando a resposta servida apresentar: no reajuste, admitido no próprio dia da
+data-base com o salário novo fica `sem_reajuste`
+(`admitido_na_data_base_com_salario_novo`), o VT não entra na diferença nem
+no pago declarado e o salário novo já registrado na data-base é o próprio
+reajuste; nas férias antigas do onboarding, gozo em que o fim do aquisitivo
+cai dentro do período é aceito, e o lote recusado antes se valida de novo
+(`validation_hash` novo); no afastamento, um registro por atestado e
+licença-maternidade não é falta; nas médias, o Domínio soma as empresas do
+grupo, em férias e no 13º, e `medias_por_bloco` não se liga sem conferência
+com a DP; a matrícula do eSocial é o identificador oficial, e matrícula nova
+por `identifier_only` só depois de falar com a engenharia. Nada disso exige
+Refresh; a operadora só atualiza o plugin. Roteiro em “2.9.1: regras da DP de
+18/11/2026” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## Nova preparação de afastamento
 
 Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar
@@ -344,8 +361,11 @@ por padrão (`excluidas_automaticamente`), admitidos depois da data-base pelo
 `salario_base_anterior_cents`, sem reajuste proporcional
 (`reajuste_proporcional_nao_praticado`) e arredondamento meio centavo para
 cima. Salário novo já registrado no cadastro vira a ressalva
-`salario_novo_ja_registrado_no_cadastro`. A rescisão complementar dos
-desligados abrangidos fica pendente até a DP decidir.
+`salario_novo_ja_registrado_no_cadastro`. Regras da DP de 18/11/2026:
+admitido no próprio dia da data-base fica `sem_reajuste`, o VT não entra na
+diferença e o salário novo já registrado na data-base é o próprio reajuste.
+A rescisão complementar dos desligados abrangidos e o admitido no mesmo mês,
+antes do dia da data-base, ficam pendentes até a DP decidir.
 
 ## Consignado: contrato, competência e rescisão
 
