@@ -719,7 +719,9 @@ domínio `ferias`.
   `historical_leave_return_incompatible`,
   `historical_leave_payment_outside_leave`, `historical_leave_payment_overlap`,
   `historical_leave_payment_inverted`, `historical_coverage_inverted`).
-  Corrija conforme a fonte; antecipação real de férias fica pendente com a DP.
+  Corrija conforme a fonte. Gozo em que o fim do aquisitivo cai dentro do
+  período é aceito (regra da DP de 18/11/2026); gozo que termina antes do fim
+  do aquisitivo continua recusado: pergunte à Rafa.
 - Lote validado antes da atualização pode recusar `snapshot_desatualizado`:
   valide de novo e aplique com o `validation_hash` novo, sem mudar os dados.
 - `leave_history_coverage_not_certified` e
@@ -821,6 +823,39 @@ atualizar o plugin instalado.
   Cancele o caso com a mensagem do cliente em `human_message` e abra outro;
   antes, confira se o episódio antigo recebeu matrícula e, se recebeu,
   registre o problema.
+
+## 2.9.1: regras da DP de 18/11/2026
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está em cada domínio de `loki_obter_instrucoes`. **Não exige Refresh
+do conector**: as 96 ferramentas são as mesmas. A única ação da operadora é
+atualizar o plugin instalado.
+
+- Reajuste (`reajuste_salarial`): admitido no próprio dia da data-base com o
+  salário novo vai com `salario_anterior_esperado_cents` igual ao salário de
+  admissão e sem `salario_novo_cents`; o Loki devolve `sem_reajuste`
+  (`admitido_na_data_base_com_salario_novo`, `rule.admitted_on_base_date`),
+  sem divergência, e o piso novo prevalece. Admitido no mesmo mês, antes do
+  dia da data-base: não envie a linha; pergunte à Rafa. O VT não entra na
+  diferença nem no pago declarado (`declared_origins.transport_discount`):
+  não declare VT nas verbas, e ele não impede
+  `sem_outras_verbas_dependentes_do_salario`. Salário novo já registrado com
+  vigência na data-base é o próprio reajuste: envie a linha normalmente.
+- Férias antigas no onboarding (`ferias`): gozo em que o fim do aquisitivo cai
+  dentro do período, do primeiro ao último dia, passa a ser aceito. Lote
+  recusado antes com `historical_vacation_use_period_incompatible` pode vir
+  `ready` na próxima validação: valide de novo e aplique com o
+  `validation_hash` novo; o hash antigo dá `snapshot_desatualizado`.
+- Afastamento (`afastamento`): um registro por atestado, com `retorno` no dia
+  seguinte ao fim; atestados encostados não são sobreposição.
+  Licença-maternidade (`categoria: licenca_maternidade`) não é falta e não
+  reduz o aquisitivo.
+- Médias (`rescisao`, `decimo_terceiro`): o Domínio soma as médias das
+  empresas do grupo, sem separar por empresa, em férias e no 13º. Não ligue
+  `medias_por_bloco` sem conferência com a DP.
+- Matrícula (`geral`, `alteracao_cadastral`): a matrícula do eSocial é o
+  identificador oficial. Enquanto a forma de uso não for confirmada, não grave
+  matrícula nova por `identifier_only` sem falar com a engenharia.
 
 ## Ler recursos binários retornados pelo MCP
 

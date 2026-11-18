@@ -1,4 +1,7 @@
-"""Entrega das orientações da 2.9.0 (backend #358, #359, #360); nao mede obediencia."""
+"""Entrega das orientações da 2.9.0 (backend #358, #359, #360); nao mede obediencia.
+
+O aviso do geral passou a ser o da 2.9.1 (test_dp_rules_1118_guidance_masked.py).
+"""
 
 import json
 from pathlib import Path
@@ -13,15 +16,6 @@ CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
 GUIDE = OPERATOR / "references/REAJUSTE_SALARIAL.md"
 RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 
-NOTICE = (
-    "## O que mudou nesta versão (2.9.0)",
-    "Atualizações devem ser imperceptíveis",
-    "**Exige ação da operadora:** só atualizar o plugin instalado",
-    "**não exige Refresh do conector**",
-    "**Não exige nada**",
-    "`folha_bloqueante`",
-    "`selection_matches_current_state`",
-)
 ADJUSTMENT = (
     "## Folha que bloqueia a linha e pendência de cadastro",
     '`folha_bloqueante: {competencia: "AAAA-MM", estado}`',
@@ -97,14 +91,8 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
         assert flat(item) in body, item
 
 
-def test_versions_follow_the_new_contract_minor() -> None:
+def test_contract_290_entry_is_kept_in_the_release() -> None:
     provider = InstructionsProvider()
-    metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.25"
-    assert metadata["instructions_version"] == "2.9.0"
-    assert metadata["mcp_contract_version"] == "2.9.0"
-    assert metadata["recommended_plugin_version"] == "2.9.0"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in ("2.0.0", "2.8.0", "2.9.0"):
         assert provider.check_version(version, version)["compatible"] is True
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
@@ -112,22 +100,17 @@ def test_versions_follow_the_new_contract_minor() -> None:
         "loki_obter_instrucoes",
         "loki_verificar_versao",
     ]
-    assert release["changes"]["backend"][-1].startswith("Contrato2.9.0 aditivo")
-    assert "mesmo hash" in release["changes"]["backend"][-1]
+    entry = [
+        item for item in release["changes"]["backend"] if item.startswith("Contrato2.9.0 aditivo")
+    ]
+    assert len(entry) == 1
+    assert "mesmo hash" in entry[0]
 
 
-def test_general_notice_asks_only_for_the_plugin_update() -> None:
+def test_general_notice_is_no_longer_the_290_one() -> None:
     guide = text("geral")
-    assert guide.index("## O que mudou nesta versão (2.9.0)") < guide.index(
-        "## Reaproveitar respostas e causas persistidas"
-    )
-    notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
-    assert_all(notice, NOTICE)
+    assert "## O que mudou nesta versão (2.9.0)" not in guide
     assert "## O que mudou nesta versão (2.8.0)" not in guide
-    current = notice[: notice.index("**Continua da 2.8.0**")]
-    for domain in ("`reajuste_salarial`", "`rescisao`", "`admissao`"):
-        assert domain in current, domain
-    assert "Exige Refresh" not in current
     assert_all(guide, ('Simulação de rescisão"',))
 
 
@@ -135,10 +118,7 @@ def test_domains_carry_the_answers_given_to_the_operator() -> None:
     assert_all(text("reajuste_salarial"), ADJUSTMENT)
     assert_all(text("rescisao"), (*DOMINIO_METHOD, *AVERAGES, *SIMULATION))
     assert_all(text("admissao"), ADMISSION)
-    assert_all(
-        text("decimo_terceiro"),
-        ("O 13º continua com os centavos e não\nrateia por bloco", "pendente com a DP"),
-    )
+    assert_all(text("decimo_terceiro"), ("O 13º continua com os centavos e não\nrateia por bloco",))
 
 
 def test_plugin_guide_keeps_the_domain_text() -> None:

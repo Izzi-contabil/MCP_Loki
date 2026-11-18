@@ -48,7 +48,7 @@ data só para passar. As regras não mudaram; só a recusa ficou explícita.
 |---|---|---|
 | `historical_vacation_period_inverted` | fim do aquisitivo antes do início | rever `period_start`/`period_end` na fonte |
 | `historical_vacation_use_inverted` | fim do gozo antes do início | rever `start`/`end` do gozo |
-| `historical_vacation_use_period_incompatible` | o gozo começa até o fim do próprio aquisitivo (`start <= period_end`, inclusive no último dia; o dia seguinte é aceito) | conferir se o aquisitivo atribuído ao gozo é o correto. Se a fonte mostra antecipação real, **não grave**: deixe pendente e leve a dúvida à DP |
+| `historical_vacation_use_period_incompatible` | o gozo termina antes do fim do próprio aquisitivo (`end < period_end`). Gozo em que o fim do aquisitivo cai dentro do período (`start <= period_end <= end`, inclusive no primeiro ou no último dia) é aceito, assim como gozo que começa depois | conferir se o aquisitivo atribuído ao gozo é o correto. Se a fonte mostra gozo inteiro antes do fim do aquisitivo, não grave: pergunte à Rafa |
 | `historical_vacation_use_days_incompatible` | `gozo_days_hundredths` diferente de (dias corridos de `start` a `end`) × 100 | rever `end` ou a quantidade de dias de gozo |
 | `historical_leave_return_incompatible` | `return_on` não é posterior a `start` | rever `start` e a data de retorno (primeiro dia de volta ao trabalho) |
 | `historical_leave_payment_outside_leave` | período de pagamento fora do afastamento (começa antes de `start` ou termina em `return_on` ou depois) | rever `start`, `return_on` e `payment_periods` |
@@ -61,6 +61,21 @@ data só para passar. As regras não mudaram; só a recusa ficou explícita.
 `validate_company_onboarding` de novo e aplique com o `validation_hash` novo.
 O diagnóstico das linhas recusadas ficou mais detalhado e entra no hash. Não
 reenvie nem altere os dados por causa disso.
+
+**Gozo programado antes de concluir o aquisitivo** (regra da DP,
+18/11/2026). Declare o `vacation_use` com o `period_end` do aquisitivo que ele
+quita. O Loki aceita quando o fim do aquisitivo cai dentro do período de gozo,
+do primeiro ao último dia. Gozo que termina antes do fim do aquisitivo
+continua recusado (`historical_vacation_use_period_incompatible`): pergunte à
+Rafa. Isso vale só para as férias antigas do histórico de onboarding; o
+processo de férias (`ferias_gozo_antes_do_fim_do_aquisitivo`) segue a regra
+anterior.
+
+**Lote recusado antes por `historical_vacation_use_period_incompatible`.**
+Depois desta versão, a próxima validação pode devolver `ready`. Chame
+`validate_company_onboarding` de novo e aplique com o `validation_hash` novo.
+Repetir `apply_company_onboarding` com o `validation_hash` antigo é recusado
+com `snapshot_desatualizado`. Não altere as datas do gozo por causa disso.
 
 ## Cobertura desde a admissão até o corte
 

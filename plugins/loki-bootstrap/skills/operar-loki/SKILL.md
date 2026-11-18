@@ -75,6 +75,13 @@ Domínio opt-in na rescisão com médias de seis casas e por bloco, simulação 
 conferência do `state_hash` antes e `subreason` na recusa, e data de admissão
 errada (cancelar e abrir outro caso) não exigem Refresh; a operadora só
 atualiza o plugin.
+Na 2.9.1 (“2.9.1: regras da DP de 18/11/2026”): admitido no próprio dia da
+data-base sem reajuste, VT fora da diferença, gozo de férias antigas com o fim
+do aquisitivo dentro do período aceito (revalidar o lote recusado), um
+afastamento por atestado, médias somadas entre empresas sem
+`medias_por_bloco` e matrícula nova por `identifier_only` só depois de falar
+com a engenharia. Também não exigem Refresh; a operadora só atualiza o
+plugin.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

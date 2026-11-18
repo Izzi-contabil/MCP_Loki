@@ -131,6 +131,13 @@ sem alterar `dias_no_mes`. Não são defeito:
 `componentes_media_micros_incoerente` e `imported_average_micros_incoerente`
 (transcrição), `identity_changed` por chave nula omitida na simulação e
 `operational_context_changed` com `subreason` de estado histórico.
+Na 2.9.1 não são defeito: `sem_reajuste` com
+`admitido_na_data_base_com_salario_novo`; diferença do reajuste sem a parcela
+do VT; `snapshot_desatualizado` ao aplicar com o `validation_hash` antigo um
+lote de onboarding que voltou `ready` (valide de novo);
+`historical_vacation_use_period_incompatible` em gozo que termina antes do fim
+do aquisitivo (regra da DP, pergunte à Rafa). Admitido no mesmo mês, antes do
+dia da data-base, é pergunta à Rafa, não problema do Loki.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

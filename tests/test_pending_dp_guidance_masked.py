@@ -59,13 +59,13 @@ def test_additive_guides_declare_single_process_and_consultation() -> None:
     )
     for process in PAYROLL_DOMAINS:
         guide = provider.get(process)
-        assert guide["version"] == "2.9.0"
+        assert guide["version"] == "2.9.1"
         assert guide["permissions"] == {"capabilities": ["consultar"], "processes": [process]}
         assert "get_dp_capabilities" in guide["instructions"]
         assert f'get_process_contract("{process}")' in guide["instructions"]
     for process in (*NEW_DOMAINS, *COLLECTIVE_DOMAINS):
         guide = provider.get(process)
-        assert guide["version"] == "2.9.0"
+        assert guide["version"] == "2.9.1"
         assert guide["permissions"] == {"capabilities": ["consultar"], "processes": [process]}
         assert "get_dp_capabilities" in guide["instructions"]
         assert "get_process_contract" in guide["instructions"]
@@ -124,7 +124,7 @@ def test_new_process_access_uses_existing_admin_browser_and_preserves_legacy_too
     None
 ):
     guide = InstructionsProvider().get("aprovacoes")
-    assert guide["version"] == "2.9.0"
+    assert guide["version"] == "2.9.1"
     text = guide["instructions"]
     for literal in ("preparar_autorizacao", "13 processos", "/admin", *NEW_DOMAINS):
         assert literal in text

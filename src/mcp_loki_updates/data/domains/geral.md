@@ -1,27 +1,30 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.0)
+## O que mudou nesta versão (2.9.1)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele.
 
 **Exige ação da operadora:** só atualizar o plugin instalado (as skills
-mudaram). Isso não bloqueia o uso: as instruções vêm do servidor. Não há
-ferramenta nova nem ferramenta alterada: **não exige Refresh do conector**.
+mudaram). Isso não bloqueia o uso: as instruções vêm do servidor. As 96
+ferramentas são as mesmas: **não exige Refresh do conector**.
 
-**Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
+**Não exige nada** (vale assim que o Loki for publicado, na mesma conversa).
+São regras da DP de 18/11/2026:
 
-- Reajuste coletivo: a linha recusada por folha em revisão ou fechada mostra
-  qual é a folha (`folha_bloqueante`); a pendência `cliente_config_incompleta`
-  fecha no apply. Domínio `reajuste_salarial`.
-- Rescisão: método do Domínio por opção declarada da empresa
-  (`metodo_ferias`, `terco`, `saldo`), médias com seis casas e por bloco de
-  empresa; simulação com as chaves nulas da origem, `foundation`, locator e
-  `subreason` na recusa. Domínio `rescisao`.
-- `get_case_historical_state` mostra `selection_matches_current_state` também
-  para pessoa.
-- Admissão com data de admissão errada: cancelar e abrir outro caso. Domínio
-  `admissao`.
+- Reajuste coletivo: admitido no próprio dia da data-base com o salário novo
+  fica `sem_reajuste` (`admitido_na_data_base_com_salario_novo`); o VT não
+  entra na diferença; salário novo já registrado na data-base é o próprio
+  reajuste. Domínio `reajuste_salarial`.
+- Férias antigas no onboarding: gozo em que o fim do aquisitivo cai dentro do
+  período passa a ser aceito; lote recusado antes por isso se valida de novo.
+  Domínio `ferias`.
+- Afastamento: um registro por atestado; licença-maternidade não é falta.
+  Domínio `afastamento`.
+- Médias: o Domínio soma as empresas do grupo, em férias e no 13º; não ligue
+  `medias_por_bloco` sem conferência com a DP. Domínio `rescisao`.
+- Matrícula do eSocial é o identificador oficial (seção "Matrícula no
+  `create_case`").
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), troca de código Domínio e revogação de
@@ -147,6 +150,12 @@ registrado não é código operacional.
   não é comparada e nada é gravado no vínculo.
 - `funcionario.matricula` vazio ou só com espaços é recusado na validação;
   espaços nas pontas são removidos.
+
+A matrícula do eSocial é o identificador oficial do vínculo, segundo a DP
+(18/11/2026). Enquanto a forma de uso não for confirmada, não grave matrícula
+nova por worker `identifier_only` no onboarding (inclusive restauração ou
+troca de código Domínio) sem falar antes com a engenharia: avise a operadora
+e use `registrar_problema` se o caso precisar da matrícula.
 
 Na criação, `occurrence_ref` sem cenário (ou cenário sem `occurrence_ref`)
 recusa com `occurrence_ref_requires_shadow_scenario` ou
