@@ -200,3 +200,80 @@ com `medias_rescisao_obsoletas`. Não é defeito e não pede reinício: faça no
 qualificação dos componentes, nova consolidação das médias e novo cálculo,
 depois geração, conferência e revisão. Casos aprovados ou entregues não mudam.
 O roteiro está no domínio `ferias`.
+
+## Acrescentar ou trocar uma parcela no mapa de rescisão da empresa
+
+Use quando a empresa já tem uma seleção de `rescisao_rubricas` com `mapa`
+embutido e só uma ou poucas parcelas de `mapa.parcelas_do_mes` precisam entrar
+ou mudar. Não reenvie o mapa inteiro nem use caminho indexado
+(`rescisao_rubricas[0]...`), que volta `forma_incompativel`.
+
+1. Chame `get_client_config(cliente_slug)` e confira que a resposta tem
+   `termination_map_patch_transport`. Se a chave faltar, o servidor ainda não
+   oferece o patch: use a escrita da seleção inteira. Anote `doc_hash` e, em
+   `documento.empresas[<código>].rescisao_rubricas`, o `group` e o
+   `vigente_desde` exatos da seleção que cobre a data de desligamento. Copie
+   os dois da configuração, sem aproximar.
+2. Monte `alteracoes`:
+   ```json
+   {
+     "schema_version": "loki.company-termination-map-patch/1",
+     "company_code": "{{CODIGO_EMPRESA}}",
+     "selector": {"group": "{{GRUPO}}", "vigente_desde": "{{AAAA-MM-01}}"},
+     "operations": [
+       {"action": "add", "parcela": {
+         "codigo": "{{CODIGO_RUBRICA}}", "rotulo": "{{ROTULO_DA_FICHA}}",
+         "natureza": "provento|desconto", "disposicao": "por_tributo",
+         "incidencias": {
+           "inss": {"efeito": "adicionar|reduzir|sem_efeito", "fonte": "{{FONTE}}"},
+           "fgts": {"efeito": "...", "fonte": "{{FONTE}}"},
+           "irrf": {"efeito": "...", "fonte": "{{FONTE}}"}
+         }}}
+     ],
+     "confirmacao": {"expected_hash": "{{CONFIG.doc_hash}}"},
+     "proveniencia": {"field_sources": {"empresas[{{CODIGO_EMPRESA}}].rescisao_rubricas": {"kind": "declaration", "reference": "{{REFERENCIA}}", "locator": "{{LOCALIZADOR}}"}}}
+   }
+   ```
+   `add` só aceita código que ainda não está no mapa, e a parcela entra no fim
+   da lista. `replace` só aceita código presente e troca a parcela inteira:
+   mande todos os campos dela, não só o que mudou. Um código aparece uma vez
+   só por declaração. Os campos da parcela seguem o mesmo schema do mapa
+   (`inline_map_schema` em `termination_rubric_catalog`). A incidência de cada
+   tributo vem da ficha ou do DP com a fonte. Não presuma incidência.
+3. Chame `validate_client_config` com `cliente_slug`, `expected_hash` igual ao
+   mesmo `doc_hash`, `sobrescrever: true` e `alteracoes`. Espere `VALIDO` com
+   `caminhos_alterados: ["empresas[<código>].rescisao_rubricas"]`. Se vier
+   `parametro_de_gate_com_evidencia`, acrescente
+   `confirmacao.evidence_gate_paths` com esse caminho e a `human_message` da
+   operadora no apply.
+4. Chame `apply_client_config` com os mesmos argumentos mais `motivo`. Releia a
+   versão e o `doc_hash`.
+5. Recusas (`cliente_config_invalida`, campo `erros`):
+   - `termination_patch_selector_missing`: grupo ou início não conferem.
+     Releia a configuração.
+   - `termination_patch_embedded_map_required`: a seleção só nomeia um grupo
+     do catálogo. Grave antes uma seleção com `mapa` (o catálogo aceita
+     `herda` mais as parcelas).
+   - `termination_patch_parcel_exists`: use `replace`.
+     `termination_patch_parcel_missing`: use `add`.
+   - `rescisao_parcela_duplicada` em `operations`: o mesmo código foi
+     declarado duas vezes.
+   - `cliente_config_versao_desatualizada`: outra escrita chegou antes.
+     Releia e refaça a prévia.
+6. Efeito nos casos: os casos da empresa recebem `cliente_config_alterada`,
+   como em qualquer mudança de mapa. A rescisão cujo desligamento cai na
+   vigência alterada perde o cálculo corrente. Recalcule pelo fluxo normal:
+   sem a parcela nova, o resultado é o mesmo. Casos em outras vigências não
+   mudam.
+
+## Desligamento gravado pelo onboarding
+
+Rescisão vinda do cadastro de onboarding que não aconteceu (o contrato segue
+ativo) se desfaz pela revogação auditada, no domínio `alteracao_cadastral`
+("Revogar desligamento gravado pelo onboarding"). Não use esse caminho para
+desfazer rescisão calculada por caso: essa segue o cancelamento do caso. Se
+houver caso de rescisão ou aviso de rescisão do próprio vínculo em aberto, a
+revogação só segue com a confirmação da operadora
+(`revoga_com_rescisao_aberta: true`). Uma rescisão verdadeira na mesma data da
+revogada não entra pelo onboarding (`onboarding_termination_fact_revoked`):
+use o caso de rescisão.

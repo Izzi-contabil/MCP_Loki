@@ -112,8 +112,10 @@ admissão, mande a matrícula só quando ela vier do documento de origem; não
 copie para o caso um valor lido no Loki. Se `create_case` recusar
 `matricula_funcionario_divergente` ou `matricula_funcionario_nao_qualificada`,
 reenvie omitindo `funcionario.matricula` e, se o documento indicar outra
-matrícula, use `registrar_problema`. O roteiro está no domínio `geral`
-("Matrícula no `create_case`").
+matrícula, avise a operadora: a correção combinada com ela segue a restauração
+ou a troca auditada do código Domínio (domínio `alteracao_cadastral`); sem
+caminho automático, use `registrar_problema`. O roteiro está no domínio
+`geral` ("Matrícula no `create_case`").
 
 ## Complemento de identidade ausente
 

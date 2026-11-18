@@ -70,8 +70,20 @@ data desta parcela. Fluxo:
 
 O corte do estado depende só de `ano`, `etapa` e `data_pagamento`.
 `thirteenth_payment_coverage_not_certified` segue a regra de cobertura do
-domínio `ferias` ("Cobertura desde a admissão até o corte"): a cobertura tem
-de terminar no corte ou antes, emendada até ele.
+domínio `ferias` ("Cobertura desde a admissão até o corte"): com o estado
+`historical-state-v2`, uma cobertura completa desde a admissão que termina
+depois do corte também limpa o gap, só até o corte.
+
+**Recusa de cobertura.** `historical_thirteenth_coverage_incomplete` (campo
+`historical_state`, próxima ação `get_case_historical_state`) traz
+`required_windows` e `missing_intervals`, cada um com `consumer`
+(`leave_occurrences` ou `thirteenth_payments`), `start` e `end`. Declare na
+carga histórica uma cobertura completa (`type: coverage`, `complete: true`) do
+consumidor indicado que feche cada lacuna, selecione o estado de novo e
+recalcule. Se a recusa vier sem janelas, a admissão do estado histórico é
+posterior à referência salarial ou ao pagamento: confira a admissão e as
+datas do 13º antes de declarar cobertura. Não presuma ausência de afastamento
+ou de pagamento só porque falta cobertura.
 
 ## Médias
 
@@ -80,6 +92,46 @@ finalidade `decimo_terceiro`). Ela é exclusiva com `variavel_cents` mensal:
 com ela, nenhum mês leva valor. A média por quantidade × valor atual e a
 produtividade ainda dependem de confirmação da DP; até lá, use a média
 importada.
+
+**`final_average` é a média mensal integral do Domínio.** Envie essa média
+inteira, como veio, em `medias_importadas={fact_id}`, sem `variavel_cents`
+mensal. Nunca envie uma média já proporcional aos avos: o Loki aplica
+`média × avos ÷ 12` em todas as etapas, e uma média já dividida sairia
+dividida duas vezes. Na 1ª parcela, a média só entra inteira quando a pessoa
+foi admitida antes do ano e tem todos os avos até o mês-limite, que é quando a
+parte fixa também entra inteira. Para conferir com o Domínio, compare
+`variavel_cents` com média × avos ÷ 12.
+
+## 13º com média importada que já estava em revisão
+
+Um caso em `aguardando_revisao` calculado antes desta versão perde o cálculo
+atual, e os pacotes gerados ficam obsoletos de propósito: eles usavam a média
+inteira. O caminho é:
+
+1. registrar a decisão `ajustar`, com intenção humana explícita. O caso volta
+   a `em_preparacao` com o payload intacto, sem reenviar nada;
+2. `calculate_case`;
+3. gerar os documentos de novo;
+4. fazer nova conferência do pacote e levar à revisão.
+
+`restart_case` com `preparation` também serve, mas obriga a reenviar a seção
+`dados_decimo_terceiro` inteira. Casos `aprovado` ou `publicado` continuam com
+o cálculo que gerou o pacote aprovado.
+
+## Reiniciar um 13º
+
+Se um campo já gravado estiver errado (mês, variável, dedução, fonte), use
+`restart_case` com
+`preparation={schema_version:"loki.case-preparation/1", mode:"replace_process_inputs", request_ref:<novo>}`
+e `expected_snapshot=get_case.correction_snapshot`. Isso exige intenção humana
+explícita, mas não exige a capacidade `corrigir_dados`. A seção volta só com
+`ano`, `etapa` e `numero_ajuste`. Depois, mande a seção completa e corrigida
+por `receive_case_data`, aplique de novo o estado histórico
+(`apply_historical_state`), se for o caso, e recalcule. Ano, etapa e número do
+ajuste não mudam no reinício (`preparation_identity_changed`); se um deles
+estiver errado, cancele o caso e crie outro. Repetir o mesmo `request_ref`
+devolve o recibo original. Casos aprovados ou publicados continuam fora do
+reinício (`restart_requires_adjustable_state`).
 
 ## Dependentes de IRRF
 

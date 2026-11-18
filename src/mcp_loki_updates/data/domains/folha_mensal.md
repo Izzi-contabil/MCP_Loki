@@ -33,9 +33,14 @@ os apresentar.
    - O job pendente pode reter a empresa por até cerca de 60 minutos
      (tentativas máximas × lease) se o worker cair. Passado esse tempo, avise
      a engenharia pelo Caixa em vez de insistir.
-3. **Enfileire em série.** Para várias folhas da mesma empresa, envie uma,
-   espere o estado terminal e só então envie a próxima. Empresas diferentes
-   podem ir em paralelo. Depois da recusa, releia `get_case` do caso recusado
+3. **Enfileire em série na mesma empresa, em paralelo entre empresas.** Para
+   várias folhas da mesma empresa, envie uma, espere o estado terminal e só
+   então envie a próxima. Folhas de **empresas diferentes** rodam ao mesmo
+   tempo no worker, no máximo uma por empresa: para várias empresas,
+   enfileire uma folha de cada sem esperar as outras; o tempo total deixa de
+   ser a soma. Consultas Dataprev mensais podem demorar mais enquanto houver
+   folhas em execução, porque só rodam com a fila de folha vazia; acompanhe
+   pelo recibo, sem reenviar. Depois da recusa, releia `get_case` do caso recusado
    antes de repetir o enqueue; a mesma referência pode ser usada, porque nada
    foi gravado. O replay de um `request_ref` já aceito devolve o recibo
    original.
@@ -43,7 +48,8 @@ os apresentar.
    `queued` ou `running`, não chame `receive_case_data`, `update_case_payload`,
    `complement_payroll_items`, anexos ou outras escritas em **outro** caso da
    mesma empresa, nem no cadastro dela. O job confere a empresa inteira e
-   termina `BLOCKED` com `job_sources_changed`. Leituras são seguras. A recusa
+   termina `BLOCKED` com `job_sources_changed`. Leituras são seguras, e gravar
+   em casos de **outras** empresas também é seguro. A recusa
    no enqueue só avisa da fila; ela não protege o job de uma escrita
    concorrente.
 5. **Em 524 ou timeout, não reenvie às cegas.** Consulte
@@ -54,6 +60,30 @@ os apresentar.
    `Retry-After`) antes de tentar de novo, com a mesma referência. 429 quer
    dizer que o pedido não foi aceito. `company_job_pending` não é `BUSY`:
    repetir depois de alguns segundos não resolve; siga o item 2.
+
+## Janela de publicação e a fila de folha
+
+- **Na janela que publica esta versão** (a primeira com a re-fixação de
+  jobs), a fila de folha ainda precisa estar vazia antes da janela: jobs
+  aceitos na versão anterior não são retomados.
+- **A partir das janelas seguintes**, não é mais preciso esvaziar a fila.
+  Durante a janela avisada, só pare de gravar dados (`receive_case_data`,
+  correções, anexos) e de iniciar jobs novos (`enqueue_case_workflow`). Jobs
+  que estavam na fila e ainda não tinham começado são retomados depois da
+  janela, no build novo, sem reenfileirar. A trilha do caso registra
+  `case_job_build_repinned`. O aviso de que pode voltar a usar o Loki chega
+  assim que a publicação libera a operação, antes do fim da janela.
+- Depois da janela, acompanhe cada job com `get_case_workflow_job`. Ainda pode
+  vir `BLOCKED` com:
+  - `job_build_changed`: o job já tinha começado antes da janela;
+  - `job_snapshot_changed` / `job_sources_changed`: dados do caso ou da
+    empresa mudaram depois do enqueue;
+  - `job_fingerprint_snapshot_changed`: a versão nova mudou o que o cálculo
+    confere.
+
+  Nesses casos, confira o caso com `get_case` e reenfileire com um
+  `request_ref` novo e o `expected_snapshot` atual. Não reenfileire um job
+  que ainda esteja `queued` ou `running`.
 
 ## Diagnóstico da folha no dossiê
 
@@ -130,6 +160,53 @@ registros e nada foi gravado. Releia o caso (`get_case`) e repita o mesmo
 pedido, com o mesmo `request_ref`, depois de alguns instantes. Se o snapshot
 tiver mudado, gere uma prévia nova.
 
+## Contexto do mês por pessoa e hashes dos lançamentos
+
+Folha com afastamento ou gozo no mês: depois de `enqueue_case_workflow` e
+`get_case_workflow_job`, chame `get_case_dossier(case_id)`. Em
+`calculations[]`, pegue a entrada `kind=folha_mensal` cujo `calculation_id` é
+o do job. Em `diagnostics.employees[]`, cada pessoa com pendência de contexto
+tem `payroll_context`.
+
+1. Se `payroll_context.available=false`, informe o `reason` e não qualifique o
+   mês daquela pessoa. Não invente hash.
+2. Se `leave_qualification.next_action=qualificar_afastamento_na_origem`,
+   qualifique primeiro o afastamento na origem. Depois recalcule e leia o
+   dossiê de novo, porque o `context_hash` muda.
+3. Com o pacote em `aguardando_revisao`, os lançamentos saem
+   `payroll_effective_launches_not_read`. Com o aceite humano, faça
+   `restart_case` e leia o dossiê de novo. Só o cálculo mais recente traz
+   lançamentos.
+4. Use o `context_hash` só com `context_current=true`. Com `false` e
+   `payroll_context_changed_since_calculation`, recalcule antes. Com `null`,
+   informe o `context_current_reason`.
+5. Monte `history_qualifications.payroll_context`: o envelope
+   `{version: qualification_version, competencia, funcionarios: [...]}`; por
+   pessoa, `funcionario_id` e `context_hash` copiados do bloco; os `periodos`
+   remunerados com fonte; `encargos_afastamento` ou `mes_sem_remuneracao`,
+   quando há período não pago pelo empregador.
+6. Confira que `lancamentos.calculation_id` é o do job. Se
+   `lancamentos.available=true`, coloque cada item de `lancamentos.items` em
+   `lancamentos_conciliados`, com o mesmo `codigo` e `lancamento_hash` e os
+   `periodos` datados com fonte documental. Todos os códigos da pessoa
+   entram; cada período precisa caber nos `periodos` remunerados; não calcule
+   o hash você mesma.
+7. Motivos de `lancamentos` indisponível:
+   - `payroll_effective_inputs_changed_since_calculation`: recalcule e leia
+     de novo;
+   - `payroll_effective_launches_busy`: tente de novo mais tarde, sem
+     reiniciar nada;
+   - `payroll_effective_launch_codes_repeated`: a pessoa tem dois lançamentos
+     com o mesmo código. Hoje o Loki não concilia esse caso; registre o
+     problema e não qualifique os lançamentos dela;
+   - `payroll_effective_launches_unavailable`: informe e não concilie.
+8. Envie por `receive_case_data`, com `expected_snapshot`/`request_ref`, e
+   recalcule. Se vier `payroll_context_qualification_stale`, o contexto
+   mudou: leia o dossiê de novo.
+
+O bloco não traz CPF, nome, referência nem descrição. Também não atesta
+paridade nem aceite de DP.
+
 ## Rescisão declarada no onboarding e a população do mês
 
 Em `get_company_employee_history` com `process_type=folha_mensal`, uma
@@ -138,9 +215,19 @@ rescisão **declarada no onboarding** aparece em `unqualified_facts` com
 A ausência dessa restrição **não** prova que o vínculo está ativo: a recusa
 que vale é a da população mensal, `desligamento_anterior_ao_mes`. Quando ela
 aparecer, leve a restrição à operadora em vez de insistir em incluir a pessoa
-na folha do mês. A leitura também traz `identifiers.matricula` e
+na folha do mês. Se a operadora confirmar que o contrato segue ativo, o
+caminho é a revogação auditada do desligamento (domínio
+`alteracao_cadastral`, "Revogar desligamento gravado pelo onboarding").
+Depois da revogação, nada é recalculado sozinho: cada folha aberta da
+empresa a partir do mês recebe `populacao_desatualizada_por_revogacao`;
+refaça a preparação incluindo a pessoa e refaça as seleções históricas.
+
+A leitura também traz `identifiers.matricula` e
 `identifiers.matricula_operacional`; a regra da matrícula no `create_case`
-está no domínio `geral`.
+está no domínio `geral`. Depois de uma restauração ou troca auditada do
+código Domínio (domínio `alteracao_cadastral`), a folha aberta com o código
+antigo no payload fica `vinculo_nao_identificado_na_competencia` até você
+reenviar a população com o código novo.
 
 ## Regras comuns da operação
 

@@ -98,10 +98,28 @@ empresa durante o job também não é defeito. `calculation_kind_unsupported`,
 antes da atualização não são defeito: corrija o campo, cancele e recrie o 13º
 com a competência certa, ou valide o lote de novo. Matrícula: com
 `matricula_funcionario_divergente` ou `matricula_funcionario_nao_qualificada`,
-reenvie omitindo a matrícula; registre o problema somente quando o documento
-de origem mostrar matrícula diferente da registrada (empresa, processo e o
+reenvie omitindo a matrícula. Quando o documento de origem mostrar matrícula
+diferente da registrada, a correção combinada com a operadora segue a
+restauração ou a troca auditada do código Domínio; registre o problema só
+quando a recusa não deixar caminho automático
+(`restauracao_matricula_legado_nao_reparavel`,
+`restauracao_matricula_vinculo_reparado`,
+`restauracao_matricula_em_uso_na_empresa`,
+`closed_consumers_without_closed_history`) ou na revogação com
+`onboarding_termination_revocation_effect_unresolved` (empresa, processo e o
 código recebido, sem a matrícula, o CPF ou o nome), sem tentar acertar pela
-criação de caso.
+criação de caso. `troca_de_codigo_dominio_exige_message_reference_cx`,
+`restauracao_matricula_exige_conciliacao_de_consumidores` e
+`onboarding_termination_revocation_open_termination_case` não são defeito:
+complete a prova, revise os consumidores ou confirme com a operadora.
+Ferramenta de revogação ausente do catálogo antes do Refresh também não é
+defeito: use o transporte `@connector`. No dossiê da folha,
+`payroll_effective_launch_codes_repeated` é problema a relatar;
+`payroll_effective_launches_busy` e `payroll_context_qualification_stale` não
+são. Depois de uma janela, `job_build_changed` e
+`job_fingerprint_snapshot_changed` não são defeito: reenfileire com
+`request_ref` novo. No 13º, média importada mandada já proporcional aos avos
+é erro de preparação, não do Loki.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

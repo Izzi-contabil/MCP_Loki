@@ -105,7 +105,8 @@ históricos de afastamento do onboarding recusados em
 (`historical_leave_return_incompatible`, `historical_leave_payment_outside_leave`,
 `historical_leave_payment_overlap`, `historical_leave_payment_inverted`); a
 tabela completa e a regra de cobertura até o corte
-(`leave_history_coverage_not_certified`) estão no domínio `ferias`. Corrija
+(`leave_history_coverage_not_certified`), inclusive a cobertura que termina
+depois do corte (`historical-state-v2`), estão no domínio `ferias`. Corrija
 conforme a fonte; nunca ajuste a data só para passar.
 
 Afastamento antigo opaco (`unqualified_documentary_facts`,

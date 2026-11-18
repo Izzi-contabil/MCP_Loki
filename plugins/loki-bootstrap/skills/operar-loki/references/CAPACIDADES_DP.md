@@ -218,8 +218,9 @@ para passar; antecipação real de férias fica pendente com a DP. Lote validado
 antes da atualização pode recusar `snapshot_desatualizado`: valide de novo e
 aplique com o `validation_hash` novo. `leave_history_coverage_not_certified` e
 `thirteenth_payment_coverage_not_certified` só saem quando a cobertura vai da
-admissão até o corte, terminando no corte ou antes; não altere coberturas de
-casos com seleção histórica feita. Afastamento antigo opaco não recebe `leave`
+admissão até o corte; com o estado `historical-state-v2`, a que termina depois
+do corte também limpa o gap, só até o corte, e uma seleção v1 consumível não
+se refaz. Não altere coberturas de casos com seleção histórica feita. Afastamento antigo opaco não recebe `leave`
 duplicado. Roteiro em “Recusas de fatos históricos e cobertura até o corte” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
@@ -233,16 +234,41 @@ ajuste leem as parcelas pagas fora do Loki por `historical_payments`
 (`ONBFACT-…` de `thirteenth_payment`), sem `casos_anteriores`.
 `medias_importadas` exclui a variável mensal; a 1ª parcela dispensa
 dependentes, salvo pensão `interdependente`. `thirteenth_stage_duplicated` e
-`thirteenth_peer_section_invalid` trazem `related_case_ids`. Roteiro no domínio
-`decimo_terceiro`.
+`thirteenth_peer_section_invalid` trazem `related_case_ids`. `final_average` é a
+média mensal integral do Domínio e nunca vai proporcional aos avos: o Loki
+aplica `média × avos ÷ 12`. 13º em `aguardando_revisao` com média importada
+segue a decisão `ajustar`, `calculate_case`, geração e nova conferência; o
+reinício usa `restart_case` com `replace_process_inputs`, sem `corrigir_dados`.
+Roteiro no domínio `decimo_terceiro`.
 
 ## Matrícula no `create_case`
 
 Quando a resposta servida apresentar, omita `funcionario.matricula` por padrão;
 `matricula_funcionario_divergente` e `matricula_funcionario_nao_qualificada`
-não gravam nada e pedem reenvio sem a matrícula, com `registrar_problema` se o
-documento divergir da registrada. Matrícula vazia é recusada. Roteiro no
-domínio `geral`.
+não gravam nada e pedem reenvio sem a matrícula. Se o documento divergir da
+registrada, avise a operadora: a correção combinada com ela segue a
+restauração ou a troca auditada do código Domínio (domínio
+`alteracao_cadastral`), e `registrar_problema` fica para quando não há caminho
+automático. Matrícula vazia é recusada. Roteiro no domínio `geral`.
+
+## Onda 2: dossiê da folha, rescisão e cadastro
+
+Quando a resposta servida apresentar: folhas de empresas diferentes rodam em
+paralelo, no máximo uma por empresa; o dossiê da folha traz `payroll_context`
+por pessoa (`context_hash`, `lancamentos.items` com `lancamento_hash`) para
+montar `history_qualifications.payroll_context`; o mapa de rescisão aceita
+`add`/`replace` de uma parcela por `loki.company-termination-map-patch/1`.
+Nada disso exige Refresh.
+
+Exigem Refresh do conector e conversa nova, todos no domínio
+`alteracao_cadastral` e só depois de combinar com a operadora: restauração de
+matrícula (`restoration_declaration`), troca de código Domínio
+(`motivo: "troca_de_codigo_dominio"`, `message_reference` `CX-…` obrigatória)
+e revogação de desligamento gravado pelo onboarding
+(`preview_onboarding_termination_revocation`, `revoke_onboarding_termination`,
+`revoga_com_rescisao_aberta`; antes do Refresh, pelo transporte
+`receive_case_data(case_id="@connector")`). Roteiro em “Cadastro: matrícula,
+código Domínio e desligamento do onboarding” de [WORKFLOWS.md](WORKFLOWS.md).
 
 ## Nova preparação de afastamento
 
@@ -298,9 +324,14 @@ empresa, com `consultar`, `decidir_chat` e `corrigir_dados` em
 `alteracao_cadastral` (`salary_adjustment_requires_employee_change_scope`).
 A harness lê e confere o instrumento e monta a população; o Loki só valida a
 coerência interna e nunca confere a fonte. Mês sem folha do Loki pede o pago
-declarado com `sem_outras_verbas_dependentes_do_salario`; vigência fora do
-dia 1, RRA, rescisão complementar e abrangência, admitidos depois de Y e
-piso, e arredondamento ficam pendentes até a DP decidir.
+declarado com `sem_outras_verbas_dependentes_do_salario`. Regras da DP de
+17/11/2026: reajuste por competência, ano anterior sem RRA, desligados fora
+por padrão (`excluidas_automaticamente`), admitidos depois da data-base pelo
+`salario_base_anterior_cents`, sem reajuste proporcional
+(`reajuste_proporcional_nao_praticado`) e arredondamento meio centavo para
+cima. Salário novo já registrado no cadastro vira a ressalva
+`salario_novo_ja_registrado_no_cadastro`. A rescisão complementar dos
+desligados abrangidos fica pendente até a DP decidir.
 
 ## Consignado: contrato, competência e rescisão
 

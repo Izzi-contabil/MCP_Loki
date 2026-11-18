@@ -43,9 +43,15 @@ não invente convenção.
    `sentenca_normativa` ou `cliente`), a referência, a data-base
    (`data_base`), a competência de lançamento (`competencia_lancamento`,
    `AAAA-MM`), a regra (`regra.percentual_bp` em pontos-base, 550 = 5,50%,
-   e/ou `regra.piso_cents`) e se o instrumento abrange desligados no
-   intervalo (`abrange_desligados_no_intervalo`: `sim`, `nao` ou
-   `pendente`). Se o instrumento não diz, use `pendente` e pergunte à DP.
+   e/ou `regra.piso_cents`) e a abrangência de desligados
+   (`abrange_desligados_no_intervalo`). O padrão da DP é `nao`. Use `sim`
+   só quando o instrumento ou o cliente pedir expressamente. Se o
+   instrumento não diz, não envie o campo: ausente ou `pendente` valem
+   `nao`. Com regra percentual, declare em
+   `regra.salario_base_anterior_cents` o salário-base (piso) da categoria
+   antes do reajuste. Se o instrumento tem mais de um piso, declare o da
+   pessoa em `linhas.<matricula>.salario_base_anterior_cents`. Isso decide
+   o reajuste de quem foi admitido depois da data-base.
 2. `create_case` com `case_type=reajuste_salarial`, `competencia` no dia 1
    de X e `occurrence_ref` igual à referência do instrumento, sem
    funcionário.
@@ -167,8 +173,9 @@ Códigos de linha (fechados, por matrícula): `salario_novo_diverge_da_regra`,
 `origem_declarada_fora_do_intervalo`, `origem_declarada_com_folha_do_loki`,
 `funcionario_nao_encontrado`, `funcionario_ambiguo`,
 `salario_anterior_divergente`, `admissao_posterior_ao_lancamento`,
-`desligado_antes_da_vigencia`, `desligado_nao_abrangido_pelo_instrumento`,
-`abrangencia_de_desligados_pendente`,
+`desligado_antes_da_vigencia`, `reajuste_proporcional_nao_praticado`,
+`salario_base_nao_declarado_para_admitido_apos_data_base`,
+`salario_anterior_abaixo_do_salario_base`,
 `reajuste_retroativo_ja_lancado_na_competencia`,
 `folha_do_lancamento_em_revisao_ou_fechada`,
 `perfil_do_funcionario_indisponivel`, `secao_interna_ja_gravada_divergente`,
@@ -209,11 +216,14 @@ percentual com arredondamento meio para cima em centavos; com percentual e
 piso, vale o maior. Um `salario_novo_cents` diferente da regra só é aceito
 com `motivo_salario_novo` fechado:
 
-- `proporcional_admissao`;
 - `acima_do_piso_mantido`, só para quem já ganha o piso ou mais, com salário
   novo igual ao anterior; abaixo do piso a linha recusa com
   `salario_novo_diverge_da_regra`;
 - `outro_declarado`, com `motivo_texto` obrigatório.
+
+A DP não pratica reajuste proporcional à admissão. `proporcional_admissao`
+recusa a linha (`reajuste_proporcional_nao_praticado`). Arredondamento: meio
+centavo para cima, igual ao Domínio.
 
 O motivo vira ressalva por matrícula (`salario_novo_fora_da_regra`). Com
 regra só de piso, quem já ganha o piso ou mais fica `sem_reajuste`: não tem
@@ -223,14 +233,68 @@ diferença e não é recusado. Sem regra, o salário novo é obrigatório
 `rescisao_complementar_pendente`. Ressalva não recusa o lote; leve-a à
 operadora antes do aceite.
 
+## Admitidos depois da data-base
+
+Com regra percentual, declare o salário-base em
+`regra.salario_base_anterior_cents` (só com `percentual_bp`) ou em
+`linhas.<matricula>.salario_base_anterior_cents`. Quem foi admitido depois de
+Y no salário-base da categoria recebe o reajuste integral desde a admissão.
+Quem foi admitido acima do salário-base não tem reajuste: a prévia mostra
+`sem_reajuste` com
+`motivo_sem_reajuste = admitido_apos_data_base_acima_do_salario_base`, e o
+piso novo ainda prevalece. Sem salário-base declarado, a linha recusa com
+`salario_base_nao_declarado_para_admitido_apos_data_base`. Salário anterior
+abaixo do salário-base recusa com `salario_anterior_abaixo_do_salario_base`.
+Nos dois casos, confira o original e pergunte à DP. Não declare o reajuste
+por linha para contornar.
+
+## Salário novo já registrado no cadastro
+
+- **Como declarar a linha.** Quando o histórico já tem o salário novo da CCT
+  com vigência na data-base, declare a linha normalmente.
+  `salario_anterior_esperado_cents` é o salário **antes** da data-base (o da
+  véspera). `salario_novo_cents` é o reajustado, ou fica vazio para a regra
+  calcular. Não tente corrigir o fato de onboarding, não declare o anterior
+  igual ao novo e não exclua a pessoa por isso.
+- **Na prévia.** A linha pode trazer
+  `salario_novo_provavelmente_registrado: a_confirmar_na_aplicacao`. É só um
+  aviso: a conferência é feita na aplicação.
+- **Na aplicação.** O Loki aceita a linha com a ressalva
+  `salario_novo_ja_registrado_no_cadastro:<fonte>` se o cadastro tiver
+  exatamente esse salário novo na data-base e o anterior na véspera. A fonte é
+  `fato_onboarding`, `alteracao_cadastral` ou `evento_vinculo`. Apresente a
+  ressalva à operadora no recibo e pergunte:
+  1. se o salário registrado na data-base é o próprio reajuste da CCT;
+  2. se a diferença dos meses desde a data-base já foi paga no sistema de
+     origem (Domínio ou outro). Se já foi, não siga com a diferença em X:
+     leve o caso à DP antes de calcular a folha.
+- **Diferença.** Sai na folha de lançamento, contra o salário efetivamente
+  pago em cada mês de origem. Se algum mês de origem já foi pago com o
+  salário novo, a diferença daquela pessoa fica pendente
+  (`diferenca_salario_pago_divergente`) e nada é pago de novo.
+- **Retirada do efeito.** Retirar o efeito do lote não desfaz o fato de
+  onboarding: o salário na data-base continua sendo o novo registrado.
+- **Recusas.** Se o cadastro tiver na data-base um valor que não é nem o
+  anterior nem o novo, ou se a véspera não tiver o anterior, a recusa
+  continua `salario_anterior_divergente`. Admitido depois da data-base é
+  conferido só na vigência.
+- **Pergunta para a DP (pendente; não decida sozinha).** Pessoa admitida na
+  **própria data-base** que já tem o salário novo no cadastro: a linha é
+  recusada (`salario_anterior_divergente`, porque não há véspera no vínculo).
+  Pergunte à operadora e à DP se a linha deve sair por exclusão registrada ou
+  ser declarada sem reajuste (`motivo_salario_novo = acima_do_piso_mantido`,
+  quando couber). Enquanto não houver resposta, deixe a linha pendente.
+
 ## Desligados
 
-Rescisão antes da vigência recusa a linha (`desligado_antes_da_vigencia`).
-Desligado até o fim de X com abrangência `nao` também recusa
-(`desligado_nao_abrangido_pelo_instrumento`); com `pendente`, a linha fica
-pendente de decisão da DP (`abrangencia_de_desligados_pendente`). Com `sim`,
-o efeito é gravado e a folha X mostra a ressalva
-`diferenca_rescisao_complementar_pendente`.
+Padrão da DP: desligados não são abrangidos. Quem foi desligado até o fim de
+X sai do lote sozinho (`situacao = excluida`,
+`exclusao_automatica = desligado_nao_abrangido_pelo_instrumento`), sem
+recusar o lote e sem efeito. O recibo lista essas pessoas em
+`excluidas_automaticamente` e `resumo_total.excluidas` as conta. Mostre a
+lista à operadora. Com `sim` explícito, rescisão antes da vigência recusa a
+linha (`desligado_antes_da_vigencia`). Nas demais linhas o efeito é gravado e
+a folha X mostra a ressalva `diferenca_rescisao_complementar_pendente`.
 
 ## O que a operadora vê na folha X
 
@@ -255,9 +319,8 @@ o efeito é gravado e a folha X mostra a ressalva
   `diferenca_origem_sem_base`, `diferenca_origem_sem_linha`,
   `diferenca_origem_declarada_incompleta`, `diferenca_origem_invalida`,
   `diferenca_mapa_origem_divergente`, `diferenca_salario_pago_divergente`,
-  `diferenca_pago_divergente`, `diferenca_exige_particao_do_periodo`,
-  `diferenca_revalorizacao_pendente`, `diferenca_reajustes_sobrepostos`,
-  `diferenca_rra_exige_qualificacao` e `diferenca_retroativa_nao_positiva`;
+  `diferenca_pago_divergente`, `diferenca_revalorizacao_pendente`,
+  `diferenca_reajustes_sobrepostos` e `diferenca_retroativa_nao_positiva`;
   também `politica_diferenca_retroativa_ausente` e
   `instrumento_reajuste_divergente`. A diferença dessas pessoas não entra.
   Leve as pendências à DP; nunca as zere nem informe a diferença à mão em
@@ -267,23 +330,23 @@ o efeito é gravado e a folha X mostra a ressalva
   X. Editar a vigência que cobre um mês já fechado muda o hash e deixa a
   diferença em `diferenca_mapa_origem_divergente`. A verba 19 fica fora das
   médias de férias e 13º.
+- O reajuste é por competência: o mês da vigência inteiro leva o salário
+  novo, qualquer que seja o dia da data-base. Competências de ano anterior a
+  X entram na verba 19 de X e são tributadas em X, como as demais (sem RRA).
+  O 13º desse ano não é recalculado: aparece em
+  `diferenca_reflexos_nao_calculados` como `decimo_terceiro`. Decida com a
+  DP; nunca o trate como zero.
 
 ## Pendente até a DP decidir
 
-Estes pontos não têm convenção confirmada. Mostre a pendência, pergunte à DP
-e não invente regra:
+A DP respondeu em 17/11/2026 a vigência fora do dia 1, o RRA, a abrangência
+de desligados, os admitidos depois de Y e o arredondamento (regras acima).
+Fica pendente:
 
-- vigência fora do dia 1: o mês de Y fica
-  `diferenca_exige_particao_do_periodo` até a convenção da partição;
-- RRA para competências de ano-calendário anterior a X
-  (`diferenca_rra_exige_qualificacao`);
-- rescisão complementar dos desligados abrangidos, e a abrangência quando o
-  instrumento é omisso (`pendente`);
-- regra para quem foi admitido depois de Y (proporcional ou integral) e para
-  quem já está acima do piso: hoje é declarada por linha, com motivo fechado
-  e ressalva;
-- arredondamento do percentual: hoje é meio para cima em centavos sobre o
-  salário anterior; falta confirmar a paridade com o Domínio.
+- O cálculo da rescisão complementar dos desligados abrangidos (`sim`) ainda
+  não existe: a ressalva continua exigindo a decisão da DP no aceite.
+- A pessoa admitida na própria data-base com o salário novo já no cadastro
+  (seção "Salário novo já registrado no cadastro").
 
 Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 

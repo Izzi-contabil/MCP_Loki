@@ -613,11 +613,15 @@ está no domínio `folha_mensal`.
   `request_ref` por causa de `job_not_found`.
 - O job pendente pode reter a empresa por até cerca de 60 minutos se o worker
   cair; depois disso, avise a engenharia pelo Caixa em vez de insistir.
-- Enfileire em série na mesma empresa; empresas diferentes podem ir em
-  paralelo. Releia `get_case` do caso recusado antes de repetir.
+- Enfileire em série na mesma empresa. Folhas de empresas diferentes rodam
+  ao mesmo tempo no worker, no máximo uma por empresa: enfileire uma de cada
+  empresa sem esperar as outras. Consultas Dataprev mensais esperam a fila de
+  folha esvaziar; acompanhe pelo recibo, sem reenviar. Releia `get_case` do
+  caso recusado antes de repetir.
 - Durante o job, não grave em outro caso da empresa nem no cadastro dela
   (`receive_case_data`, `update_case_payload`, `complement_payroll_items`,
-  anexos): o job termina `BLOCKED` `job_sources_changed`. Leituras são seguras.
+  anexos): o job termina `BLOCKED` `job_sources_changed`. Leituras e gravações
+  em casos de outras empresas são seguras.
 - 524 ou timeout: consulte `get_case_workflow_job` com o mesmo `request_ref`;
   com `job_not_found`, repita o enqueue com o mesmo `request_ref` e o mesmo
   corpo. `BUSY`/429: respeite `retry_after_seconds` ou `Retry-After`.
@@ -695,7 +699,10 @@ domínio `geral`.
   o documento.
 - `matricula_funcionario_divergente` ou `matricula_funcionario_nao_qualificada`
   (`campos: ["funcionario.matricula"]`): nada foi gravado. Reenvie omitindo a
-  matrícula; se o documento divergir da registrada, use `registrar_problema`.
+  matrícula; se o documento divergir da registrada, avise a operadora. A
+  correção combinada com ela segue a restauração ou a troca auditada do código
+  Domínio (“Cadastro: matrícula, código Domínio e desligamento do onboarding”);
+  sem caminho automático, use `registrar_problema`.
 - Caso existente volta com `created: false`, sem comparar matrícula. Matrícula
   vazia ou só com espaços é recusada.
 
@@ -716,11 +723,68 @@ domínio `ferias`.
 - Lote validado antes da atualização pode recusar `snapshot_desatualizado`:
   valide de novo e aplique com o `validation_hash` novo, sem mudar os dados.
 - `leave_history_coverage_not_certified` e
-  `thirteenth_payment_coverage_not_certified`: a cobertura só limpa o gap se
-  terminar no corte ou antes, emendada desde a admissão. Não altere coberturas
-  de casos com seleção histórica feita.
+  `thirteenth_payment_coverage_not_certified`: a cobertura completa desde a
+  admissão limpa o gap até o corte, termine ela no corte, antes (emendada) ou
+  depois dele (estado `historical-state-v2`). Seleção v1 consumível não se
+  refaz. Não altere coberturas de casos com seleção histórica feita.
 - Afastamento antigo opaco: não grave `leave` duplicado; mantenha o gap
   pendente.
+
+## Onda 2: folha, 13º, rescisão, reajuste e cadastro
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está em cada domínio de `loki_obter_instrucoes`.
+
+**Não exige nada da operadora:**
+
+- Folha (`folha_mensal`): empresas diferentes em paralelo, uma por empresa.
+  Contexto do mês por pessoa no dossiê: `payroll_context` com `context_hash`
+  (use só com `context_current=true`) e `lancamentos.items` com
+  `lancamento_hash` copiados para `history_qualifications.payroll_context`;
+  `payroll_effective_launch_codes_repeated` é problema a relatar.
+- Janela de publicação: na que publica esta versão a fila de folha ainda
+  precisa estar vazia; nas seguintes, job nunca iniciado é retomado no build
+  novo (`case_job_build_repinned`). Depois da janela, `job_build_changed`,
+  `job_snapshot_changed`, `job_sources_changed` ou
+  `job_fingerprint_snapshot_changed` pedem reenfileirar com `request_ref` novo.
+- 13º (`decimo_terceiro`): `final_average` é a média mensal integral do
+  Domínio, nunca proporcional aos avos (o Loki aplica `média × avos ÷ 12`).
+  Caso em `aguardando_revisao` com média importada: decisão `ajustar`, depois
+  `calculate_case`, geração e nova conferência. Reinício com `restart_case` e
+  `replace_process_inputs`, sem `corrigir_dados`.
+  `historical_thirteenth_coverage_incomplete` traz `missing_intervals`.
+- Rescisão (`rescisao`): `loki.company-termination-map-patch/1` com `add` ou
+  `replace` de uma parcela, quando `get_client_config` trouxer
+  `termination_map_patch_transport`.
+- Reajuste (`reajuste_salarial`): desligados ficam fora por padrão
+  (`excluidas_automaticamente`); admitido depois da data-base depende de
+  `salario_base_anterior_cents`; `proporcional_admissao` recusa
+  (`reajuste_proporcional_nao_praticado`); salário novo já registrado vira
+  ressalva `salario_novo_ja_registrado_no_cadastro`.
+
+**Exige Refresh do conector e conversa nova (`alteracao_cadastral`):**
+
+- Restauração de matrícula: worker `identifier_only` com
+  `expected_current_matricula` e `restoration_declaration`
+  (`human_message` mais `message_reference` ou `reason`), só depois de
+  combinar com a operadora.
+- Troca de código Domínio: o mesmo worker com o extrato do código novo e
+  `restoration_declaration` com `motivo: "troca_de_codigo_dominio"`; a
+  `message_reference` `CX-…` é obrigatória
+  (`troca_de_codigo_dominio_exige_message_reference_cx`).
+- Revogação de desligamento do onboarding:
+  `preview_onboarding_termination_revocation` e
+  `revoke_onboarding_termination` (ou, antes do Refresh,
+  `receive_case_data(case_id="@connector")`), com
+  `revoga_com_rescisao_aberta` igual a `true` quando houver
+  `open_termination_cases`.
+
+## Cadastro: matrícula, código Domínio e desligamento do onboarding
+
+Os roteiros completos (passos, provas e recusas) estão no domínio
+`alteracao_cadastral`. Depois de qualquer um deles, folhas abertas com o
+código antigo ficam `vinculo_nao_identificado_na_competencia` até reenviar a
+população, e as seleções históricas do vínculo precisam ser refeitas.
 
 ## Ler recursos binários retornados pelo MCP
 

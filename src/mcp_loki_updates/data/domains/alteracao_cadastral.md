@@ -23,10 +23,202 @@ empresa, com `consultar`, `decidir_chat` e `corrigir_dados`
 apresentar, matrícula enviada diferente da operacional registrada é recusada
 com `matricula_funcionario_divergente` (`campos: ["funcionario.matricula"]`,
 sem repetir valores) e nada é gravado. Reenvie omitindo `funcionario.matricula`;
-se o documento de origem mostra matrícula diferente da registrada, registre o
-problema com `registrar_problema` e avise a operadora. A correção de uma
-matrícula registrada errada não é alteração cadastral nem nova criação de
-caso; o roteiro está no domínio `geral` ("Matrícula no `create_case`").
+se o documento de origem mostra matrícula diferente da registrada, avise a
+operadora. A correção de uma matrícula registrada errada não é alteração
+cadastral nem nova criação de caso: depois de combinar com a operadora, ela
+segue a restauração ou a troca auditada do código Domínio (seções abaixo);
+quando a recusa disser que não
+há caminho automático, registre o problema com `registrar_problema`. O roteiro
+do `create_case` está no domínio `geral` ("Matrícula no `create_case`").
+
+## Restaurar uma matrícula sobrescrita
+
+Só depois de combinar com a operadora. Não restaure por iniciativa própria:
+nenhuma matrícula corrigida por ela é revertida sem combinar antes. Para cada
+vínculo, combine com ela o valor certo e a fonte, e guarde a mensagem dela: o
+texto literal e a referência, por exemplo `CX-…`. Os campos novos do worker
+exigem Refresh do conector e conversa nova.
+
+1. Leia `get_company_employee_history` (com `process_type`) e anote
+   `identifiers.matricula`. Esse é o valor atual literal.
+2. Antes de restaurar, confira com a operadora os casos do vínculo: casos em
+   revisão, aprovados ou publicados bloqueiam a restauração; casos de folha
+   abertos com a matrícula atual vão precisar de reenvio (passo 6).
+3. Crie um lote de onboarding da empresa e anexe o documento Domínio de onde
+   sai o código, por exemplo o Extrato. Use `attach_onboarding_source` ou o
+   envio autenticado.
+4. Envie um worker com `existing_employee_id`, `identifier_only: true`,
+   `reuse_registered_company: true`, `matricula: <código Domínio>`,
+   `matricula_namespace: "dominio"`, `matricula_source` apontando para o
+   documento anexado (`document_id`, `content_hash`, `locator`),
+   `expected_current_matricula: <valor atual literal>` e
+   `restoration_declaration: {human_message, message_reference, reason}`. Além
+   de `human_message` (a mensagem literal da operadora), informe pelo menos
+   `message_reference` ou `reason`.
+5. Rode `validate_company_onboarding`, mostre a linha à operadora e rode
+   `apply_company_onboarding` com o `validation_hash`. É preciso ter
+   `corrigir_dados`. Recusas:
+   - `matricula_esperada_divergente`: o valor mudou. Releia e confirme com a
+     operadora.
+   - `matricula_atual_qualificada_por_onboarding`: o valor atual tem recibo de
+     onboarding com fonte (inclusive uma confirmação do mesmo valor). Não pode
+     ser trocado pela restauração simples: se o Domínio trocou o código do
+     mesmo contrato, use a troca de código abaixo; senão, `registrar_problema`.
+   - `restauracao_matricula_valor_legado_use_reparo`: o valor atual é legado e
+     reparável. Combine com a operadora e faça o reparo de namespace
+     (`repair_employee_identifier_namespace`) com o `onboarding_id` e o
+     `worker_ref` de `diagnostic.previous_origin`. Depois, qualifique o código
+     Domínio por um onboarding comum (`identifier_only` sem
+     `expected_current_matricula`).
+   - `restauracao_matricula_legado_nao_reparavel` e
+     `restauracao_matricula_vinculo_reparado`: não há caminho automático. Não
+     tente de novo; use `registrar_problema` e leve à engenharia.
+   - `restauracao_matricula_em_uso_na_empresa`: o código já pertence a outro
+     vínculo. Não force; use `registrar_problema`.
+   - `restauracao_matricula_exige_conciliacao_de_consumidores`: há caso do
+     vínculo em revisão, aprovado ou publicado. Leve a lista
+     `diagnostic.consumers` à operadora; nada foi alterado.
+   - `restauracao_matricula_exige_fonte_documental`: anexe o documento.
+   - `snapshot_desatualizado`: valide de novo.
+   - `matricula_do_vinculo_conflitante`: faltou `expected_current_matricula`.
+   - erro de validação `restauracao_de_matricula_exige_*`: falta a declaração
+     ou ela está incompleta.
+6. Depois de restaurar:
+   - A folha passa a resolver pelo código Domínio. Um caso de folha aberto que
+     traz a matrícula antiga no payload fica pendente
+     (`vinculo_nao_identificado_na_competencia`) até você reenviar o payload
+     com o código Domínio.
+   - Refaça a seleção de histórico com `pin_company_employee_history`, porque
+     os pins anteriores ficam `historico_desatualizado`.
+   - Refazer a população pode mudar quem entra na folha e invalida a
+     conferência feita antes. Combine com a operadora antes de refazer meses
+     já conferidos.
+   - Casos de vínculo único continuam ligados ao vínculo, mas a matrícula
+     antiga no payload deles não é corrigida. Não crie casos novos com o
+     código antigo: eles são recusados.
+
+**Matrícula vinda do caso.** Quando o `create_case` preenche uma matrícula
+vazia, a trilha do caso registra `vinculo_matricula_introduzida_pelo_caso`:
+origem caso, sem fonte documental, com o valor guardado só como chave cifrada.
+Esse valor pode ser substituído depois pelo código Domínio com o mesmo
+procedimento. Continue omitindo `funcionario.matricula` no `create_case`
+quando ela não vier do documento do caso.
+
+## Troca de código Domínio do mesmo contrato
+
+Quando usar: o Domínio passou a usar outro código de empregado para o mesmo
+contrato (mesmo CPF e admissão, sem nova admissão no eSocial), e o Loki ainda
+guarda o código antigo, qualificado por onboarding. Se o vínculo aparece
+desligado por engano pelo cadastro, revogue o desligamento antes (seção
+seguinte). Exige Refresh do conector e conversa nova, por causa do campo
+`motivo`.
+
+Provas: o Extrato (ou outro relatório do Domínio) **com o código novo**,
+anexado ao lote. Não reanexe o documento que qualificou o código antigo. Também
+é preciso a mensagem literal da operadora com a referência da Caixa (`CX-…`):
+neste motivo, `message_reference` com prefixo `CX-` é obrigatória e `reason`
+sozinho não basta.
+
+Como enviar: worker `identifier_only` com `existing_employee_id`,
+`matricula` = código novo, `matricula_namespace: "dominio"`,
+`matricula_source` = o extrato novo anexado, `expected_current_matricula` =
+código atual literal e
+`restoration_declaration = {human_message, message_reference: "CX-…", motivo: "troca_de_codigo_dominio"}`.
+Depois `validate_company_onboarding` e `apply_company_onboarding` (exige
+`corrigir_dados`). Sem `motivo`, o worker segue a restauração da seção
+anterior.
+
+Recusas:
+
+- `troca_de_codigo_dominio_exige_codigo_qualificado`: o código atual não veio
+  de onboarding Domínio. Use a restauração sem motivo.
+- `troca_de_codigo_dominio_fonte_do_codigo_anterior`: a fonte é o mesmo
+  documento que qualificou o código atual. Anexe o extrato com o código novo.
+- `troca_de_codigo_dominio_exige_message_reference_cx`: falta a referência
+  `CX-…` da mensagem da operadora.
+- `restauracao_matricula_exige_conciliacao_de_consumidores`: revise os casos
+  listados antes. Se o diagnóstico trouxer
+  `closed_consumers_without_closed_history`, a folha fechada não tem o
+  histórico fechado do vínculo (aprovação antiga) e a troca não segue por
+  este caminho: leve à engenharia.
+- `restauracao_matricula_vinculo_reparado`: leve à engenharia.
+- `matricula_esperada_divergente`: refaça a leitura do código atual.
+
+Efeito: o código antigo fica como identificador histórico, sem uso
+operacional. Voltar a um código antigo do mesmo vínculo é permitido e fica
+registrado no recibo. Folhas abertas com o código antigo ficam pendentes:
+reenvie a população com o código novo. Casos de vínculo único seguem pelo
+`funcionario_id`. As seleções históricas do vínculo ficam desatualizadas e
+precisam ser refeitas. Folhas aprovadas ou publicadas que só citam o código
+antigo e já têm o histórico fechado do vínculo naquela competência não
+impedem a troca e não são alteradas; esse histórico continua ligado ao
+vínculo pelo `funcionario_id`, e o recibo da troca lista esses casos. Sem o
+histórico fechado (aprovação antiga), a folha impede a troca. Os demais casos
+aprovados ou publicados do vínculo, e qualquer folha em revisão com o código
+antigo, impedem a troca até serem revisados.
+
+## Revogar desligamento gravado pelo onboarding
+
+Quando usar: o Loki mostra o vínculo desligado (`desligado_em`, fora da
+população da folha) por uma rescisão que veio do cadastro de onboarding, e a
+operadora confirma que o contrato segue ativo; por exemplo, o eSocial tem o
+S-2200 e nenhum S-2299, e o Domínio só trocou o código do empregado. Não use
+para desfazer rescisão calculada por caso: essa segue o cancelamento do caso.
+
+Provas necessárias:
+
+1. Anexe ao lote de onboarding (`attach_onboarding_source` ou
+   `register_onboarding_harness_source`) o documento que mostra o vínculo
+   ativo, por exemplo o extrato do eSocial sem S-2299. Declaração no chat não
+   basta como fonte.
+2. Mensagem literal da operadora pedindo a revogação, com a referência da
+   mensagem (`CX-…`) ou o motivo.
+
+Passos:
+
+1. `get_company_employee_effect_state` para achar o `target_fact_id` (fato
+   `rescisao`, `effect_state: active`).
+2. `preview_onboarding_termination_revocation(onboarding_id, target={funcionario_id, target_fact_id, source})`.
+   Mostre à operadora: data do desligamento, fonte, estado depois
+   (`projected_state_after.desligado_em: null`) e `open_consumers`.
+3. Com o aceite explícito,
+   `revoke_onboarding_termination(onboarding_id, request={schema_version: "loki.company-onboarding-termination-revocation/1", intent: "revoke_onboarding_termination", request_ref, funcionario_id, target_fact_id, source, preview_id, expected_snapshot, human_message, message_reference ou reason})`.
+4. As duas ferramentas são novas e aparecem só depois do Refresh do conector e
+   de uma conversa nova. Antes disso, ou se não aparecerem no catálogo, use o
+   transporte já servido
+   `receive_case_data(case_id="@connector", request={schema_version: "loki.connector-command/1", operation: "preview_onboarding_termination_revocation" | "revoke_onboarding_termination", onboarding_id, target | request})`,
+   com a mesma autoridade.
+
+Se a prévia mostrar `open_termination_cases` (caso de rescisão ou aviso de
+rescisão do próprio vínculo em aberto), confirme com a operadora que a
+revogação vale mesmo assim e envie `revoga_com_rescisao_aberta: true`; sem
+isso recusa com `onboarding_termination_revocation_open_termination_case`. A
+confirmação fica no recibo. Se a prévia mostrar `same_cpf_active_employee_ids`,
+a mesma pessoa tem outro vínculo ativo na empresa (provável cadastro duplicado
+por troca de código). Mostre isso à operadora antes de seguir.
+
+Recusas:
+
+- `…requires_consumer_reconciliation`: há caso do vínculo, ou caso da empresa
+  a partir do mês do desligamento, em revisão, aprovado ou publicado. O Loki
+  não reabre caso fechado. Revise cada consumidor listado antes.
+- `…snapshot_changed`: refaça a prévia.
+- `…requires_documentary_source`: anexe a fonte ao mesmo lote.
+- `onboarding_termination_revocation_effect_unresolved`: a rescisão do
+  cadastro não tem evento (fundamento não qualificado ou campo faltando). Ela
+  não tira a pessoa da folha, mas fica no histórico. Registre como problema.
+- `onboarding_termination_fact_revoked`: uma rescisão verdadeira na mesma data
+  da revogada não entra pelo onboarding; use o caso de rescisão. Não reenvie a
+  rescisão revogada.
+
+Efeito nas folhas abertas: nada é recalculado sozinho. Cada folha aberta da
+empresa a partir do mês recebe na trilha `populacao_desatualizada_por_revogacao`.
+Folhas abertas a partir do mês do desligamento passam a aceitar a pessoa na
+população: refaça a preparação, incluindo a pessoa, e refaça as seleções
+históricas (pins), que ficam desatualizadas. Casos de 13º, férias e rescisão
+abertos deixam de ver o desligamento na próxima leitura do histórico. Folhas e
+casos fechados não mudam. Depois da revogação, se o Domínio trocou o código do
+empregado, faça a troca auditada do código (seção anterior).
 
 ## Declaração adicional no onboarding
 
