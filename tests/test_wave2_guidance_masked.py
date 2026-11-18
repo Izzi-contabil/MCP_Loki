@@ -1,4 +1,7 @@
-"""Entrega das orientações da 2.8.0 (Onda 2); nao mede obediencia da harness."""
+"""Entrega das orientações da 2.8.0 (Onda 2); nao mede obediencia da harness.
+
+O aviso do geral passou a ser o da 2.9.0 (test_wave3_guidance_masked.py).
+"""
 
 import json
 from pathlib import Path
@@ -19,19 +22,6 @@ REFRESH_FLOWS = (
     "`preview_onboarding_termination_revocation`",
     "`revoke_onboarding_termination`",
     "`revoga_com_rescisao_aberta`",
-)
-NOTICE = (
-    "## O que mudou nesta versão (2.8.0)",
-    "Atualizações devem ser imperceptíveis",
-    "**Não exige nada**",
-    "**Exige Refresh do conector e conversa nova**",
-    "nesta janela ainda é preciso esvaziar a fila",
-    "no máximo uma por empresa",
-    "nunca vai proporcional aos avos",
-    "`ajustar` → `calculate_case` → geração → nova conferência",
-    "Peça o Refresh só quando ela for usar um desses três fluxos",
-    'receive_case_data(case_id="@connector")',
-    *REFRESH_FLOWS,
 )
 PAYROLL = (
     "## Janela de publicação e a fila de folha",
@@ -141,14 +131,14 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_new_contract_minor() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.24"
-    assert metadata["instructions_version"] == "2.8.0"
-    assert metadata["mcp_contract_version"] == "2.8.0"
-    assert metadata["recommended_plugin_version"] == "2.8.0"
+    assert metadata["provider_version"] == "0.4.25"
+    assert metadata["instructions_version"] == "2.9.0"
+    assert metadata["mcp_contract_version"] == "2.9.0"
+    assert metadata["recommended_plugin_version"] == "2.9.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.7.1", "2.8.0"):
+    for version in ("2.0.0", "2.7.1", "2.8.0", "2.9.0"):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.8.0", "2.8.1")["compatible"] is False
+    assert provider.check_version("2.9.0", "2.9.1")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
@@ -156,25 +146,26 @@ def test_versions_follow_the_new_contract_minor() -> None:
     ]
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.8.0", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.8.0", path.name
+        assert data["version"] == "2.9.0", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.9.0", path.name
     for path in DOMAINS.glob("*.md"):
         assert len(path.read_bytes()) <= 65536, path.name
 
 
-def test_general_notice_separates_refresh_from_nothing() -> None:
+def test_general_keeps_the_28_refresh_reminder() -> None:
+    # O aviso da 2.9.0 substitui o da 2.8.0, mas lembra os fluxos que exigem Refresh.
     guide = text("geral")
-    assert guide.index("## O que mudou nesta versão (2.8.0)") < guide.index(
-        "## Reaproveitar respostas e causas persistidas"
-    )
-    assert_all(guide, NOTICE)
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
-    nothing, refresh = notice.split("**Exige Refresh do conector e conversa nova**")
-    for flow in REFRESH_FLOWS:
-        assert flow not in nothing, flow
-    for domain in ("`folha_mensal`", "`decimo_terceiro`", "`rescisao`", "`reajuste_salarial`"):
-        assert domain in nothing, domain
-        assert domain not in refresh, domain
+    assert_all(
+        notice,
+        (
+            "**Continua da 2.8.0**",
+            "`restoration_declaration`",
+            "`preview_onboarding_termination_revocation`",
+            "`revoke_onboarding_termination`",
+            'receive_case_data(case_id="@connector")',
+        ),
+    )
 
 
 def test_payroll_thirteenth_coverage_and_termination_domains() -> None:

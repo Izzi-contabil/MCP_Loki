@@ -1,4 +1,58 @@
-# Atualizações MCP Loki — contrato 2.8.0
+# Atualizações MCP Loki — contrato 2.9.0
+
+## Candidata 0.4.25 / contrato, instruções e plugin 2.9.0 — 18/11/2026
+
+Backend #358, #359 e #360, já mesclados em `main` do Loki depois da 2.8.0.
+Há mudança de interface, toda aditiva e sem ferramenta nova: no reajuste,
+`folha_bloqueante` na linha da prévia e os campos de documentação
+`preview.blocking_payroll` e `decision.config_pending_reconciled`
+(`loki.salary-adjustment/1`); na recusa, `subreason` fechado em
+`operational_context_changed` (`loki.operation-refusal/1`) e
+`version_refusal_subreasons` em `get_process_contract`;
+`selection_matches_current_state` para pessoa em `get_case_historical_state`;
+no mapa de rescisão, `metodo_ferias`, `terco`, `saldo` e `medias_por_bloco` em
+`arredondamento_proporcionais`, com a recusa de cadastro
+`rescisao_saldo_valor_dia_exige_trinta_fixo`; em `DadosRescisao`
+(`medias_variaveis`) e `ImportedFinalAverage`, `horas_micros`, `valor_micros`,
+`vantagens_micros` e `bloco`; `bloco` no formulário de fatos. Pela regra
+"mudou interface → novo contrato", e por somar campos em vários schemas de
+processo, o contrato sobe de 2.8.0 para 2.9.0; instruções e plugin acompanham
+o minor; provider sobe um patch. Mínimo 2.0.0 permanece e clientes 2.x
+anteriores continuam compatíveis. A lista `compatible_tools` não muda.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.0)", separando o que exige
+  ação da operadora (só atualizar o plugin) do que não exige nada, com o
+  lembrete de que os três fluxos da 2.8.0 ainda exigem Refresh se ele não foi
+  feito; ponteiro da simulação para `rescisao`. O `geral` fica com cerca de
+  60KB do limite de 64KB.
+- `reajuste_salarial` (e o guia REAJUSTE_SALARIAL.md): `folha_bloqueante`
+  (#358) vale para a folha do Loki em X ou em qualquer competência posterior,
+  e o histórico importado não conta; lançar na primeira competência depois da
+  última folha do Loki em revisão ou fechada, com a DP confirmando o mês;
+  `cliente_config_incompleta` fecha no apply, depois da decisão;
+  `processo_nao_habilitado_no_cliente` não barra o apply, mas o certo é
+  habilitar com a DP.
+- `rescisao`: método do Domínio opt-in (#359), médias com micros e por bloco
+  (#360) e simulação (#358): chaves nulas da origem, `foundation`, locator,
+  `subreason`; comparar o `state_hash` de `get_case_historical_state` com o
+  da seleção (ou `selection_matches_current_state`) antes de simular; sem
+  reiniciar o caso real, não há caminho quando a seleção está desatualizada.
+- `decimo_terceiro`: micros e blocos não valem no 13º (pendente com a DP).
+- `admissao`: a data de admissão é identidade e não se troca; cancelar o caso
+  com a mensagem do cliente e abrir outro, conferindo antes se o episódio
+  antigo recebeu matrícula (se recebeu, registrar problema).
+
+Plugin espelha em WORKFLOWS (seção "2.9.0"), CAPACIDADES_DP,
+REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki.
+
+Não exige Refresh do conector: a revisão do backend confirmou que as 96
+ferramentas têm o mesmo hash. Os textos chegam com o deploy do backend, na
+mesma conversa. A mudança nas skills exige atualizar o plugin instalado, sem
+bloquear o uso. Wheel 0.4.24 permanece imutável; fonte e wheel 0.4.25 locais
+não comprovam promoção, publicação, atualização do plugin instalado, uso pela
+operadora ou aceite de DP.
 
 ## Candidata 0.4.24 / contrato, instruções e plugin 2.8.0 — 18/11/2026
 

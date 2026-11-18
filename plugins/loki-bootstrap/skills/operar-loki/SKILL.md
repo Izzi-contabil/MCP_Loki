@@ -69,6 +69,12 @@ exigem nada. Restauração de matrícula, troca de código Domínio (`CX-…`
 obrigatória) e revogação de desligamento do onboarding exigem Refresh do
 conector e conversa nova (“Cadastro: matrícula, código Domínio e desligamento
 do onboarding”); peça o Refresh só quando a operadora for usar um deles.
+Na 2.9.0 (“2.9.0: reajuste, rescisão, simulação e admissão”): reajuste com
+`folha_bloqueante` e pendência de cadastro que fecha no apply, método do
+Domínio opt-in na rescisão com médias de seis casas e por bloco, simulação com
+conferência do `state_hash` antes e `subreason` na recusa, e data de admissão
+errada (cancelar e abrir outro caso) não exigem Refresh; a operadora só
+atualiza o plugin.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

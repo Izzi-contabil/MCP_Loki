@@ -120,6 +120,17 @@ são. Depois de uma janela, `job_build_changed` e
 `job_fingerprint_snapshot_changed` não são defeito: reenfileire com
 `request_ref` novo. No 13º, média importada mandada já proporcional aos avos
 é erro de preparação, não do Loki.
+Na 2.9.0: admissão cancelada por data de admissão errada cujo episódio antigo
+já recebeu matrícula é problema a relatar (empresa, processo e o fato, sem a
+matrícula, o CPF ou o nome); o `cancel_case` não libera a matrícula. Rescisão
+retida com `saldo_valor_dia_exige_mes_comercial` também é problema a relatar,
+sem alterar `dias_no_mes`. Não são defeito:
+`folha_do_lancamento_em_revisao_ou_fechada` (leia `folha_bloqueante`),
+`cliente_config_incompleta` aberta antes da decisão do reajuste,
+`rescisao_saldo_valor_dia_exige_trinta_fixo` (regra da DP, pergunte à Rafa),
+`componentes_media_micros_incoerente` e `imported_average_micros_incoerente`
+(transcrição), `identity_changed` por chave nula omitida na simulação e
+`operational_context_changed` com `subreason` de estado histórico.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

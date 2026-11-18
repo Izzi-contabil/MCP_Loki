@@ -117,6 +117,22 @@ ou a troca auditada do código Domínio (domínio `alteracao_cadastral`); sem
 caminho automático, use `registrar_problema`. O roteiro está no domínio
 `geral` ("Matrícula no `create_case`").
 
+## Data de admissão errada no caso
+
+A data de admissão é identidade do caso e do episódio: não se troca no caso
+(nem por correção, nem por reinício). O caminho é cancelar o caso com
+`cancel_case`, transcrevendo em `human_message` a mensagem do cliente que
+informa a data certa, e abrir outro caso de admissão com a data correta.
+
+Antes de cancelar, confira se o episódio antigo já recebeu matrícula
+(`get_case` ou `get_employee_identifier_state`). O `cancel_case` não libera a
+matrícula: o episódio cancelado continua com ela e, na folha, aparece como
+mais um candidato para a mesma matrícula até `resolve_payroll_employee`
+escolher a pessoa certa. Se o episódio antigo recebeu matrícula, registre o
+problema com `registrar_problema` (sem CPF, nome ou matrícula no texto) e
+avise a operadora. Reaproveitar a matrícula de uma admissão cancelada
+depende de regra da DP.
+
 ## Complemento de identidade ausente
 
 `funcionario.nome` é identidade do caso, não um campo de `dados_rescisao` ou da

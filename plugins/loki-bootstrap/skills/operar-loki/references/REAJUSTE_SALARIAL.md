@@ -339,6 +339,38 @@ a folha X mostra a ressalva `diferenca_rescisao_complementar_pendente`.
   `diferenca_reflexos_nao_calculados` como `decimo_terceiro`. Decida com a
   DP; nunca o trate como zero.
 
+## Folha que bloqueia a linha e pendência de cadastro
+
+Quando a resposta servida apresentar, a linha da prévia com
+`folha_do_lancamento_em_revisao_ou_fechada` traz
+`folha_bloqueante: {competencia: "AAAA-MM", estado}`. A regra não mudou e
+está em `get_process_contract("reajuste_salarial").preview.blocking_payroll`:
+bloqueia a `folha_mensal` da empresa de competência X **ou qualquer
+competência posterior**, em `aguardando_revisao`, `aprovado` ou `publicado`,
+que tenha a matrícula em `dados_folha.funcionarios`. Com mais de uma, vem a
+de menor competência. O histórico importado não conta: só folhas do Loki
+bloqueiam.
+
+- Diga à operadora qual folha é (competência e estado). Não tente contornar
+  a recusa.
+- As saídas são duas: devolver essa folha para ajuste, se a DP quiser, ou
+  lançar o reajuste em outra competência. Lance na primeira competência
+  depois da última folha do Loki da empresa em revisão ou fechada, com a DP
+  confirmando o mês. A competência do caso coletivo é a do lançamento
+  (`salary_adjustment_instrument_case_mismatch` se divergirem): antes da
+  decisão, cancele o caso e crie outro com `competencia` no dia 1 do novo X
+  e o instrumento com a nova `competencia_lancamento`.
+- Use sempre o `expected_snapshot` da prévia mais recente.
+
+A pendência `cliente_config_incompleta` do caso de reajuste agora **fecha no
+apply** (`decision.config_pending_reconciled` no contrato): depois da decisão
+gravada (recibo `IN_PROGRESS`, `PARTIAL` ou `APPLIED`), quando o cadastro do
+cliente está pronto. Antes da decisão e na prévia (só leitura) ela não muda.
+Ela não impede o `apply_case_effects`. Se o motivo for
+`processo_nao_habilitado_no_cliente`, o apply segue, mas o certo é habilitar
+o processo no cadastro do cliente com a DP: avise a operadora; habilitar é
+decisão da DP.
+
 ## Pendente até a DP decidir
 
 A DP respondeu em 17/11/2026 a vigência fora do dia 1, o RRA, a abrangência
