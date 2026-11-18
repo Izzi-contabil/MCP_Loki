@@ -1,5 +1,44 @@
 # Operação do Loki
 
+## O que mudou nesta versão (2.8.0)
+
+Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
+vez, curto, e não interrompa o trabalho dela por causa dele.
+
+**Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
+
+- Folha: empresas diferentes rodam em paralelo, no máximo uma por empresa;
+  contexto do mês por pessoa e hashes dos lançamentos no dossiê; a partir da
+  próxima publicação, job nunca iniciado sobrevive à troca de versão (nesta
+  janela ainda é preciso esvaziar a fila). Domínio `folha_mensal`.
+- 13º: `final_average` é a média mensal integral do Domínio e nunca vai
+  proporcional aos avos; 13º em `aguardando_revisao` com média importada
+  segue `ajustar` → `calculate_case` → geração → nova conferência; reinício
+  com preparação. Domínio `decimo_terceiro`.
+- Histórico: cobertura que termina depois do corte limpa o gap até o corte
+  (`historical-state-v2`). Domínio `ferias`.
+- Rescisão: acrescentar ou trocar uma parcela do mapa sem reenviar o mapa
+  inteiro. Domínio `rescisao`.
+- Reajuste coletivo: regras da DP de 17/11/2026 (competência, sem RRA,
+  desligados fora por padrão, admitidos depois da data-base, sem
+  proporcional) e salário novo já registrado no cadastro. Domínio
+  `reajuste_salarial`.
+
+**Exige Refresh do conector e conversa nova** (domínio `alteracao_cadastral`):
+
+- restauração auditada de matrícula (`restoration_declaration`);
+- troca de código Domínio (`motivo: "troca_de_codigo_dominio"`, com
+  `message_reference` `CX-…` obrigatória);
+- revogação de desligamento gravado pelo onboarding (ferramentas novas
+  `preview_onboarding_termination_revocation` e
+  `revoke_onboarding_termination`, com `revoga_com_rescisao_aberta`). Antes
+  do Refresh, a revogação já funciona pelo transporte
+  `receive_case_data(case_id="@connector")`.
+
+Peça o Refresh só quando ela for usar um desses três fluxos. Atualizar o
+plugin instalado é outra etapa e não bloqueia o uso: as instruções vêm do
+servidor.
+
 ## Reaproveitar respostas e causas persistidas
 
 Uma resposta do contato DP convidado já registrada não deve ser solicitada outra
@@ -103,9 +142,11 @@ registrado não é código operacional.
   registrada continua a mesma; a resposta traz
   `campos: ["funcionario.matricula"]` e `proxima_acao`, sem repetir valores.
   Reenvie o `create_case` **omitindo** `funcionario.matricula`. Se o documento
-  de origem mostra matrícula diferente de `identifiers.matricula`, registre o
-  problema com `registrar_problema` e avise a operadora; não tente acertar pela
-  criação de caso.
+  de origem mostra matrícula diferente de `identifiers.matricula`, avise a
+  operadora; não tente acertar pela criação de caso. Depois de combinar com
+  ela, a correção segue a restauração ou a troca auditada do código Domínio
+  (domínio `alteracao_cadastral`); sem caminho automático, use
+  `registrar_problema`.
 - `matricula_funcionario_nao_qualificada`: o valor não pode ser código
   operacional deste vínculo (outro namespace ou vínculo reparado). Reenvie
   omitindo `funcionario.matricula`; se o documento indicar outra matrícula,
@@ -209,8 +250,9 @@ técnico, sem provar correção dos dados ou autorizar restart.
 Quando o contrato anunciar `durable_workflow.admission:
 "one_pending_job_per_company"`, a fila aceita um job pendente por empresa:
 `company_job_pending` (HTTP 409, nada gravado) não é `BUSY`. Enfileire as
-folhas da mesma empresa em série, não grave em outro caso nem no cadastro da
-empresa durante o job (`job_sources_changed`), consulte o mesmo `request_ref`
+folhas da mesma empresa em série (empresas diferentes rodam em paralelo), não
+grave em outro caso nem no cadastro da empresa durante o job
+(`job_sources_changed`), consulte o mesmo `request_ref`
 depois de 524 e respeite `retry_after_seconds` em `BUSY`/429. O roteiro
 completo está no domínio `folha_mensal`.
 

@@ -65,6 +65,7 @@ DECLARED = (
 )
 REASONS = (
     "`proporcional_admissao`",
+    "`reajuste_proporcional_nao_praticado`",
     "`acima_do_piso_mantido`",
     "`outro_declarado`, com `motivo_texto` obrigatório",
     "`salario_novo_diverge_da_regra`",
@@ -74,20 +75,37 @@ PAYROLL = (
     "`reajuste_coletivo_em_execucao`",
     "`diferenca_rescisao_complementar_pendente`",
     "`diferenca_funcionario_fora_da_folha`",
-    "`diferenca_exige_particao_do_periodo`",
-    "`diferenca_rra_exige_qualificacao`",
     "`retroactive_difference_informed`",
     "nunca as zere",
 )
 PENDING_DP = (
     "## Pendente até a DP decidir",
-    "vigência fora do dia 1",
-    "RRA",
-    "rescisão complementar",
-    "admitido depois de Y",
-    "acima do piso",
-    "arredondamento do percentual",
-    "paridade com o Domínio",
+    "O cálculo da rescisão complementar dos desligados abrangidos (`sim`) ainda não existe",
+    "admitida na própria data-base",
+)
+# Regras da DP de 17/11/2026 (backend #346 e #349), na 2.8.0.
+DP_RULES = (
+    "O padrão da DP é `nao`",
+    "ausente ou `pendente` valem `nao`",
+    "`regra.salario_base_anterior_cents`",
+    "`linhas.<matricula>.salario_base_anterior_cents`",
+    "## Admitidos depois da data-base",
+    "`motivo_sem_reajuste = admitido_apos_data_base_acima_do_salario_base`",
+    "`salario_base_nao_declarado_para_admitido_apos_data_base`",
+    "`salario_anterior_abaixo_do_salario_base`",
+    "`exclusao_automatica = desligado_nao_abrangido_pelo_instrumento`",
+    "`excluidas_automaticamente`",
+    "`resumo_total.excluidas`",
+    "o mês da vigência inteiro leva o salário novo",
+    "(sem RRA)",
+    "como `decimo_terceiro`",
+    "meio centavo para cima, igual ao Domínio",
+    "## Salário novo já registrado no cadastro",
+    "`salario_novo_provavelmente_registrado: a_confirmar_na_aplicacao`",
+    "`salario_novo_ja_registrado_no_cadastro:<fonte>`",
+    "`fato_onboarding`, `alteracao_cadastral` ou `evento_vinculo`",
+    "já foi paga no sistema de origem",
+    "não desfaz o fato de onboarding",
 )
 # Textos do rascunho que contradizem o backend: BLOCKED pode deixar casos filhos sem
 # efeito; a saida do recibo e uma lista; ha tres transportes, nao dois.
@@ -95,6 +113,13 @@ STALE = (
     "BLOCKED` significa que nada foi gravado",
     "`saida: exclusao`",
     "dois transportes",
+    # Respondidos pela DP em 17/11/2026: nao podem voltar como pendencia ou codigo.
+    "`diferenca_exige_particao_do_periodo`",
+    "`diferenca_rra_exige_qualificacao`",
+    "`abrangencia_de_desligados_pendente`",
+    "- `proporcional_admissao`;",
+    "arredondamento do percentual",
+    "use `pendente` e pergunte à DP",
 )
 
 
@@ -109,18 +134,18 @@ def domain() -> str:
 def test_collective_domain_is_served_with_the_new_contract() -> None:
     provider = InstructionsProvider()
     guide = provider.get("reajuste_salarial")
-    assert guide["version"] == "2.7.1"
-    assert guide["compatibility"]["mcp_contract_version"] == "2.7.1"
+    assert guide["version"] == "2.8.0"
+    assert guide["compatibility"]["mcp_contract_version"] == "2.8.0"
     assert guide["permissions"] == {
         "capabilities": ["consultar"],
         "processes": ["reajuste_salarial"],
     }
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.23"
-    assert metadata["instructions_version"] == "2.7.1"
-    assert metadata["mcp_contract_version"] == "2.7.1"
+    assert metadata["provider_version"] == "0.4.24"
+    assert metadata["instructions_version"] == "2.8.0"
+    assert metadata["mcp_contract_version"] == "2.8.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.6.5", "2.7.0", "2.7.1"):
+    for version in ("2.0.0", "2.6.5", "2.7.0", "2.7.1", "2.8.0"):
         assert provider.check_version(version, version)["compatible"] is True
 
 
@@ -150,6 +175,7 @@ def test_domain_explains_flow_authority_exits_and_pending_decisions() -> None:
         *REASONS,
         *PAYROLL,
         *PENDING_DP,
+        *DP_RULES,
         "`dados_reajuste_salarial`",
         "`BLOCKED` (`salary_adjustment_lines_divergent`",
         "nenhum efeito foi gravado",

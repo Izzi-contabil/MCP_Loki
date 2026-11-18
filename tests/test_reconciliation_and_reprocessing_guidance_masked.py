@@ -7,8 +7,8 @@ from mcp_loki_updates import InstructionsProvider
 
 def test_new_contract_keeps_existing_clients_and_unknown_installations() -> None:
     provider = InstructionsProvider()
-    assert provider.metadata()["provider_version"] == "0.4.23"
-    assert provider.metadata()["mcp_contract_version"] == "2.7.1"
+    assert provider.metadata()["provider_version"] == "0.4.24"
+    assert provider.metadata()["mcp_contract_version"] == "2.8.0"
     for version in (
         "2.0.0",
         "2.3.0",
@@ -21,6 +21,7 @@ def test_new_contract_keeps_existing_clients_and_unknown_installations() -> None
         "2.6.5",
         "2.7.0",
         "2.7.1",
+        "2.8.0",
     ):
         assert provider.check_version(version, version)["compatible"] is True
     assert provider.check_version()["compatible"] is None

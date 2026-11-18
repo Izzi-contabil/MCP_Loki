@@ -1,4 +1,68 @@
-# Atualizações MCP Loki — contrato 2.7.1
+# Atualizações MCP Loki — contrato 2.8.0
+
+## Candidata 0.4.24 / contrato, instruções e plugin 2.8.0 — 18/11/2026
+
+Onda 2 do Loki (backend #343 a #355, ainda em revisão quando esta fonte foi
+preparada). Há mudança de interface: duas ferramentas novas
+(`preview_onboarding_termination_revocation` e
+`revoke_onboarding_termination`, também como operações do transporte
+`@connector`, #350), o campo `revoga_com_rescisao_aberta` e campos novos de
+prévia (`open_termination_cases`, `same_cpf_active_employee_ids`), e o schema
+de `WorkerDeclaration.restoration_declaration` (#345, com `motivo` fechado
+`troca_de_codigo_dominio` em #351). Pela regra "mudou interface → novo
+contrato" e por haver ferramenta nova, como no precedente de processo novo da
+2.7.0, o contrato sobe de 2.7.1 para 2.8.0; instruções e plugin acompanham o
+minor; provider sobe um patch. Mínimo 2.0.0 permanece e clientes 2.x
+anteriores continuam compatíveis. A lista `compatible_tools` da distribuição
+não muda.
+
+Por domínio:
+
+- `geral`: aviso curto "O que mudou nesta versão (2.8.0)" para a operadora,
+  com a regra operacional de atualização imperceptível e a separação entre o
+  que exige Refresh e o que não exige nada; matrícula divergente aponta a
+  restauração ou troca combinada com a operadora; fila com empresas em
+  paralelo. O `geral` fica com cerca de 60KB do limite de 64KB.
+- `folha_mensal`: paralelismo entre empresas, no máximo um job por empresa, e
+  Dataprev esperando a fila (#347); janela de publicação (#352): nesta janela
+  ainda é preciso esvaziar a fila, nas seguintes job nunca iniciado sobrevive
+  à troca de build (`case_job_build_repinned`) e `job_build_changed` /
+  `job_fingerprint_snapshot_changed` pedem reenfileirar; contexto do mês por
+  pessoa e hashes dos lançamentos no dossiê (#343); efeitos da revogação e da
+  troca de código na população.
+- `decimo_terceiro`: `final_average` é a média mensal integral do Domínio e
+  nunca vai proporcional aos avos; casos em `aguardando_revisao` com média
+  importada seguem `ajustar` → `calculate_case` → geração → nova conferência;
+  reinício com `replace_process_inputs` sem `corrigir_dados`;
+  `historical_thirteenth_coverage_incomplete` com `missing_intervals` (#353).
+- `ferias` e `afastamento`: cobertura completa que termina depois do corte
+  limpa o gap até o corte (`historical-state-v2`); seleção v1 consumível não
+  se refaz (#348). Substitui o texto da 2.7.1 que exigia terminar no corte.
+- `rescisao`: patch de uma parcela do mapa de rescisão
+  (`loki.company-termination-map-patch/1`, #344) e ponteiro da revogação.
+- `reajuste_salarial` (e o guia REAJUSTE_SALARIAL.md): regras da DP de
+  17/11/2026 (#346): abrangência `nao` por padrão com exclusão automática,
+  salário-base para admitidos depois da data-base, sem reajuste proporcional,
+  reajuste por competência e sem RRA, arredondamento igual ao Domínio; salário
+  novo já registrado no cadastro (#349). As pendências respondidas saem.
+- `alteracao_cadastral`: restauração auditada de matrícula (#345), troca de
+  código Domínio com `message_reference` `CX-` obrigatória (#351) e revogação
+  de desligamento gravado pelo onboarding (#350). `admissao`: ponteiro.
+- #354 (executor de publicação) e #355 (memória do worker) não pedem
+  instrução; o aviso de volta ao uso logo após a liberação entra na seção da
+  janela.
+
+Plugin espelha em WORKFLOWS (seções "Onda 2" e "Cadastro"), CAPACIDADES_DP,
+REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki.
+
+Exigem Refresh do conector e conversa nova na conta da operadora: #345, #350 e
+#351 (restauração de matrícula, revogação de desligamento e troca de código).
+Até o Refresh, a revogação já funciona pelo transporte
+`receive_case_data(case_id="@connector")`. Os demais itens não exigem nada:
+chegam com o deploy do backend, na mesma conversa. A mudança nas skills exige
+atualizar o plugin instalado, sem bloquear o uso. Wheel 0.4.23 permanece
+imutável; fonte e wheel 0.4.24 locais não comprovam promoção, publicação,
+Refresh, atualização do plugin instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata0.4.23 / contrato, instruções e plugin2.7.1 —17/11/2026
 
@@ -452,7 +516,7 @@ Correção, concorrência, idempotência e gates humanos continuam no backend.
 `runtime_instructions`. Esse fallback entrega orientação; não restaura contratos
 retirados. `loki_obter_instrucoes` mantém allowlist e autorização pelo host.
 `loki_verificar_versao` compara apenas versões declaradas. Plugin mínimo permanece2.0.0;
-Na candidata atual, o recomendado é2.7.1 e o contrato2.7.1 é aditivo;
+Na candidata atual, o recomendado é 2.8.0 e o contrato 2.8.0 é aditivo;
 cliente2.0.0 permanece compatível. Contrato1.x declarado é incompatível; cliente desconhecido
 continua `compatible=null`, sem presumir instalação. `refresh_tools_required=null`
 permanece desconhecido até conferir o catálogo no aplicativo.

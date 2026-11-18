@@ -68,13 +68,35 @@ reenvie nem altere os dados por causa disso.
 `thirteenth_payment_coverage_not_certified`) só sai do estado quando coberturas
 `complete: true` do consumidor (`leave_occurrences` / `thirteenth_payments`)
 cobrem, sem lacuna, **da data de admissão até o corte**. O `effective_on` de
-uma cobertura é o seu `end`. Por enquanto, uma cobertura que termina **depois**
-do corte não aparece no estado desse corte: para limpar o gap num corte, a
-cobertura tem de terminar exatamente no corte (ou antes, emendada com outras
-até ele). Uma cobertura que começa depois da admissão não limpa o gap. Declare
-coberturas só quando a fonte atesta a completude do intervalo. Não altere
-coberturas já gravadas nem regrave para casos com seleção histórica feita:
-isso muda o estado e exige nova seleção.
+uma cobertura é o seu `end`.
+
+**Cobertura que termina depois do corte (estado `historical-state-v2`).** Uma
+cobertura `complete: true`, lançada até o mês do corte, que começa na admissão
+(ou emendada desde ela) e termina **depois** do corte limpa o gap **até o
+corte**. O estado nunca certifica dia posterior ao corte. Não é mais preciso
+terminar exatamente no corte; terminar no corte ou antes, emendada com outras
+até ele, continua valendo. Uma cobertura que começa depois da admissão não
+limpa o gap. Declare coberturas só quando a fonte atesta a completude do
+intervalo inteiro.
+
+**Versão do estado.** O estado vem `version: "historical-state-v2"` só quando
+uma cobertura dessas entrou e limpou o gap. Cobertura incompleta ou que não
+fecha desde a admissão não muda o estado; nesse caso, `facts` traz a cobertura
+íntegra, com `effective_on` (o fim) depois de `as_of`. Sem isso, o estado
+continua `historical-state-v1`, com o mesmo `state_hash` de antes.
+
+**Seleção já feita.** Uma seleção v1 continua válida e consumível: mesmo
+`state_hash`, mesmo gap e nenhum `historical_state_stale`. Nesses vínculos a
+prévia pode mostrar a v2, com o gap limpo e
+`selection_matches_current_state: false`. **Não reselecione se a seleção v1
+for consumível.** Reselecionar (`apply_historical_state` com o `state_hash`
+da prévia atual) só cabe quando o caso não consegue seguir com a seleção v1
+por causa desse gap. A nova seleção vale para o próximo cálculo; cálculos já
+feitos continuam ligados à seleção que consumiram. Se `apply_historical_state`
+recusar `historical_state_stale` com um hash consultado antes da atualização,
+consulte de novo e aplique o hash novo. Não altere coberturas já gravadas nem
+regrave para casos com seleção histórica feita: isso muda o estado e exige
+nova seleção.
 
 **Afastamento antigo opaco.** Se o estado mostra um fato antigo `afastamento`
 sem semântica operacional (`unqualified_documentary_facts`,
