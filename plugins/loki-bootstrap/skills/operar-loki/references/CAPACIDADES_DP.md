@@ -270,6 +270,20 @@ e revogação de desligamento gravado pelo onboarding
 `receive_case_data(case_id="@connector")`). Roteiro em “Cadastro: matrícula,
 código Domínio e desligamento do onboarding” de [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.0: método do Domínio na rescisão, reajuste e simulação
+
+Quando a resposta servida apresentar: a política
+`arredondamento_proporcionais` da empresa aceita, por opção medida e citada
+em `fonte`, `metodo_ferias: valor_dia_6_casas`, `terco: por_parcela`,
+`saldo: valor_dia_6_casas` (exige `trinta_fixo`) e `medias_por_bloco: true`;
+as médias aceitam `horas_micros`, `valor_micros`, `vantagens_micros` e
+`bloco`, só nas férias da rescisão. No reajuste, a linha recusada traz
+`folha_bloqueante` e `cliente_config_incompleta` fecha no apply. Na
+simulação, `operational_context_changed` traz `subreason`, e
+`selection_matches_current_state` aparece também para pessoa. Nada disso
+exige Refresh; a operadora só atualiza o plugin. Roteiro em “2.9.0: reajuste,
+rescisão, simulação e admissão” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## Nova preparação de afastamento
 
 Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar

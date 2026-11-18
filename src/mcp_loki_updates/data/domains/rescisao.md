@@ -266,6 +266,106 @@ ou mudar. Não reenvie o mapa inteiro nem use caminho indexado
    sem a parcela nova, o resultado é o mesmo. Casos em outras vigências não
    mudam.
 
+## Método do Domínio na rescisão (opt-in por empresa e vigência)
+
+Quando o contrato servido apresentar, a política
+`arredondamento_proporcionais` do mapa de rubricas da empresa aceita opções
+que reproduzem o método do Domínio. Quem não declara nada não muda nada.
+Declare só quando a operadora tiver medido o método contra TRCTs do Domínio
+daquela empresa, e cite a medição em `fonte`. A política fica em
+`empresas[<codigo_dominio>].rescisao_rubricas[].mapa.arredondamento_proporcionais`,
+gravada com a expectativa de versão do cadastro:
+
+```json
+"arredondamento_proporcionais": {
+  "tipo": "por_componentes",
+  "arredondamento": "half_up",
+  "escopos": ["ferias_proporcionais_indenizadas", "ferias_vencidas_indenizadas",
+              "ferias_em_dobro_indenizadas", "ferias_aviso_indenizado"],
+  "metodo_ferias": "valor_dia_6_casas",
+  "terco": "por_parcela",
+  "saldo": "valor_dia_6_casas",
+  "medias_por_bloco": true,
+  "fonte": "Medição da operadora: N de N TRCTs do Domínio conferidos (referência)"
+}
+```
+
+- Cada opção é independente: omita a que não foi medida.
+  `metodo_ferias: valor_dia_6_casas` calcula as férias por componente pelo
+  valor-dia com seis casas e exige ao menos um escopo de férias.
+  `terco: por_parcela` arredonda o terço de cada rubrica e soma, e exige os
+  quatro escopos de férias. `medias_por_bloco: true` exige escopo de férias
+  (seção seguinte). O aviso indenizado fica fora: não foi medido.
+- As férias por componente exigem `medias_variaveis[].componentes` nas médias
+  de férias; sem isso o bloco fica pendente, como antes.
+- `saldo: valor_dia_6_casas` exige a convenção
+  `convencoes.dias_do_mes: trinta_fixo` da empresa (ou do cliente, se a
+  empresa não declarar). Sem ela, `validate_client_config` e
+  `apply_client_config` recusam com
+  `rescisao_saldo_valor_dia_exige_trinta_fixo` em
+  `empresas[<codigo>].rescisao_rubricas`. Não troque a convenção para
+  contornar: ela é regra da DP; pergunte à Rafa. Se um caso ainda chegar com
+  divisor diferente de 30, o Loki retém o saldo com
+  `saldo_valor_dia_exige_mes_comercial`: não altere `dias_no_mes` do caso e
+  relate o problema.
+- Cálculo com opção traz `calculator_version` com `+metodo-dominio-v1`.
+  Casos já calculados não mudam; trocar a política invalida o cálculo
+  corrente, que precisa ser recalculado, gerado e conferido de novo.
+- O Loki não confere a fonte; a conferência do pacote contra o Domínio
+  continua sendo da harness e da operadora.
+
+## Médias com seis casas e por bloco de empresa
+
+Quando o contrato servido apresentar:
+
+- **Seis casas.** Se o original do Domínio mostra a média da categoria com
+  mais casas que centavos, declare em `medias_variaveis[].componentes` os
+  centavos (como hoje) e também `horas_micros`, `valor_micros` e
+  `vantagens_micros`, em milionésimos de real (R$ 30,125003 → `30125003`).
+  Cada micros precisa arredondar para os centavos declarados; senão o Loki
+  recusa com `componentes_media_micros_incoerente` e o nome do campo
+  (`ctx.campo`). Corrija a transcrição; não ajuste os centavos. Médias
+  importadas (`ImportedFinalAverage`) aceitam os mesmos campos na declaração
+  estruturada (recusa `imported_average_micros_incoerente`); a carga por CSV
+  ainda não tem colunas de micros. Os micros só têm efeito com
+  `metodo_ferias: valor_dia_6_casas`, e só nas férias.
+- **Por bloco.** Quando a média de férias vier apurada por empresa do grupo
+  (blocos separados no Domínio), declare uma entrada por bloco com `bloco`
+  igual à referência da empresa (por exemplo, o código Domínio dela) e a
+  mesma `origem` e `escopo`. O formulário de fatos de `medias_variaveis`
+  passa a trazer o campo `bloco`. Para o Loki ratear e arredondar cada bloco
+  separadamente, a política precisa de `medias_por_bloco: true`, com `fonte`
+  citando a medição; sem a opção, os blocos somam como uma média só. O 13º
+  não usa blocos nem micros (pendente com a DP).
+
+## Simulação de rescisão
+
+Antes de simular, confira o estado histórico da origem: compare o
+`state_hash` de `get_case_historical_state` com o da seleção do caso, ou leia
+`selection_matches_current_state` (agora também para pessoa). Se vier
+`false`, a seleção do caso real está desatualizada e a simulação será
+recusada. Sem reiniciar o caso real, não há caminho: diga isso à operadora;
+reiniciar o caso real é decisão dela, nunca um passo para viabilizar a
+simulação.
+
+- Copie para a hipótese todas as chaves de topo da origem (`get_case`),
+  inclusive as que vierem `null`: `origem`, `origem_ref`,
+  `shadow_scenario_id`, `occurrence_ref` e `shadow_termination`. Omitir uma
+  chave dá `identity_changed`; o Loki não trata chave ausente como nula.
+- Em `field_sources`: com `kind=declaration`, o `locator` é
+  `$.payload.<caminho da folha>` (por exemplo
+  `$.payload.dados_rescisao.salario_base_cents`). Com basis `derived` ou
+  `reported`, ou com kind `harness`, preencha `foundation`.
+- Recusa `operational_context_changed` traz `subreason` (lista fechada em
+  `get_process_contract(...).version_refusal_subreasons`):
+  `historical_state_stale` (os fatos mudaram depois da seleção),
+  `historical_state_pin_missing` ou `historical_state_window_pin_missing` (o
+  pin do histórico sumiu) e `canonical_anchor_changed` (parta de uma captura
+  nova). Nos três primeiros o caminho seria reselecionar o estado na origem
+  com `apply_historical_state`, o que, no caso real já calculado, depende do
+  reinício acima. Sem `subreason`, a recusa vem de outra origem (deduções,
+  frescor de férias e 13º): leia o `reason` e relate se não houver caminho.
+
 ## Desligamento gravado pelo onboarding
 
 Rescisão vinda do cadastro de onboarding que não aconteceu (o contrato segue

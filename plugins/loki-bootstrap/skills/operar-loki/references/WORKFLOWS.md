@@ -786,6 +786,42 @@ Os roteiros completos (passos, provas e recusas) estão no domínio
 código antigo ficam `vinculo_nao_identificado_na_competencia` até reenviar a
 população, e as seleções históricas do vínculo precisam ser refeitas.
 
+## 2.9.0: reajuste, rescisão, simulação e admissão
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está em cada domínio de `loki_obter_instrucoes`. **Não exige Refresh
+do conector**: as 96 ferramentas são as mesmas. A única ação da operadora é
+atualizar o plugin instalado.
+
+- Reajuste (`reajuste_salarial`): `folha_do_lancamento_em_revisao_ou_fechada`
+  traz `folha_bloqueante` (`competencia`, `estado`). Vale para a folha do
+  Loki em X ou em qualquer competência posterior; o histórico importado não
+  conta. Diga qual folha é; as saídas são devolver a folha para ajuste ou
+  lançar na primeira competência depois da última folha do Loki em revisão
+  ou fechada, com a DP confirmando o mês (caso coletivo novo nessa
+  competência). `cliente_config_incompleta` fecha no apply, depois da
+  decisão; `processo_nao_habilitado_no_cliente` não barra o apply, mas o
+  certo é habilitar o processo com a DP.
+- Rescisão (`rescisao`): método do Domínio opt-in em
+  `arredondamento_proporcionais` (`metodo_ferias: valor_dia_6_casas`,
+  `terco: por_parcela`, `saldo: valor_dia_6_casas`, `medias_por_bloco`), só
+  com medição citada em `fonte`; `saldo` exige `trinta_fixo`
+  (`rescisao_saldo_valor_dia_exige_trinta_fixo`); cálculo com opção traz
+  `+metodo-dominio-v1`. Médias com `horas_micros`, `valor_micros`,
+  `vantagens_micros` (coerentes com os centavos) e `bloco` por empresa do
+  grupo. O 13º não usa micros nem blocos.
+- Simulação de rescisão: antes, compare o `state_hash` de
+  `get_case_historical_state` com o da seleção (ou leia
+  `selection_matches_current_state`); seleção desatualizada não tem caminho
+  sem reiniciar o caso real. Copie as chaves de topo da origem, inclusive as
+  nulas; `locator` `$.payload.<caminho>` na declaração; `foundation` com
+  `derived`/`reported` ou `harness`; `operational_context_changed` traz
+  `subreason` (`version_refusal_subreasons` no contrato).
+- Admissão (`admissao`): a data de admissão é identidade e não se troca.
+  Cancele o caso com a mensagem do cliente em `human_message` e abra outro;
+  antes, confira se o episódio antigo recebeu matrícula e, se recebeu,
+  registre o problema.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

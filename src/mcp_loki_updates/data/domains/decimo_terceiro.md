@@ -102,6 +102,12 @@ foi admitida antes do ano e tem todos os avos até o mês-limite, que é quando 
 parte fixa também entra inteira. Para conferir com o Domínio, compare
 `variavel_cents` com média × avos ÷ 12.
 
+Os campos de seis casas (`horas_micros`, `valor_micros`, `vantagens_micros`)
+e o `bloco` das médias, quando o contrato servido os apresentar, valem só nas
+férias da rescisão (domínio `rescisao`). O 13º continua com os centavos e não
+rateia por bloco. Se o cálculo por bloco vale também para o 13º ainda está
+pendente com a DP.
+
 ## 13º com média importada que já estava em revisão
 
 Um caso em `aguardando_revisao` calculado antes desta versão perde o cálculo

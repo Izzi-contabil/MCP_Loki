@@ -1,43 +1,35 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.8.0)
+## O que mudou nesta versão (2.9.0)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele.
 
+**Exige ação da operadora:** só atualizar o plugin instalado (as skills
+mudaram). Isso não bloqueia o uso: as instruções vêm do servidor. Não há
+ferramenta nova nem ferramenta alterada: **não exige Refresh do conector**.
+
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Folha: empresas diferentes rodam em paralelo, no máximo uma por empresa;
-  contexto do mês por pessoa e hashes dos lançamentos no dossiê; a partir da
-  próxima publicação, job nunca iniciado sobrevive à troca de versão (nesta
-  janela ainda é preciso esvaziar a fila). Domínio `folha_mensal`.
-- 13º: `final_average` é a média mensal integral do Domínio e nunca vai
-  proporcional aos avos; 13º em `aguardando_revisao` com média importada
-  segue `ajustar` → `calculate_case` → geração → nova conferência; reinício
-  com preparação. Domínio `decimo_terceiro`.
-- Histórico: cobertura que termina depois do corte limpa o gap até o corte
-  (`historical-state-v2`). Domínio `ferias`.
-- Rescisão: acrescentar ou trocar uma parcela do mapa sem reenviar o mapa
-  inteiro. Domínio `rescisao`.
-- Reajuste coletivo: regras da DP de 17/11/2026 (competência, sem RRA,
-  desligados fora por padrão, admitidos depois da data-base, sem
-  proporcional) e salário novo já registrado no cadastro. Domínio
-  `reajuste_salarial`.
+- Reajuste coletivo: a linha recusada por folha em revisão ou fechada mostra
+  qual é a folha (`folha_bloqueante`); a pendência `cliente_config_incompleta`
+  fecha no apply. Domínio `reajuste_salarial`.
+- Rescisão: método do Domínio por opção declarada da empresa
+  (`metodo_ferias`, `terco`, `saldo`), médias com seis casas e por bloco de
+  empresa; simulação com as chaves nulas da origem, `foundation`, locator e
+  `subreason` na recusa. Domínio `rescisao`.
+- `get_case_historical_state` mostra `selection_matches_current_state` também
+  para pessoa.
+- Admissão com data de admissão errada: cancelar e abrir outro caso. Domínio
+  `admissao`.
 
-**Exige Refresh do conector e conversa nova** (domínio `alteracao_cadastral`):
-
-- restauração auditada de matrícula (`restoration_declaration`);
-- troca de código Domínio (`motivo: "troca_de_codigo_dominio"`, com
-  `message_reference` `CX-…` obrigatória);
-- revogação de desligamento gravado pelo onboarding (ferramentas novas
-  `preview_onboarding_termination_revocation` e
-  `revoke_onboarding_termination`, com `revoga_com_rescisao_aberta`). Antes
-  do Refresh, a revogação já funciona pelo transporte
-  `receive_case_data(case_id="@connector")`.
-
-Peça o Refresh só quando ela for usar um desses três fluxos. Atualizar o
-plugin instalado é outra etapa e não bloqueia o uso: as instruções vêm do
-servidor.
+**Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
+matrícula (`restoration_declaration`), troca de código Domínio e revogação de
+desligamento do onboarding (`preview_onboarding_termination_revocation`,
+`revoke_onboarding_termination`) exigem Refresh do conector e conversa nova
+(domínio `alteracao_cadastral`). Peça o Refresh só quando ela for usar um
+desses fluxos; antes dele, a revogação funciona pelo transporte
+`receive_case_data(case_id="@connector")`.
 
 ## Reaproveitar respostas e causas persistidas
 
@@ -193,6 +185,9 @@ Quando o contrato servido oferecer simulação, ele declara `hypothesis_payload`
 completo. `simulation_process_unsupported` não tem caminho: não troque de
 processo nem converta a hipótese em caso real. Simulação não substitui caso,
 revisão ou aceite.
+Na rescisão, chaves nulas da origem, `foundation`, locator, `subreason` de
+`operational_context_changed` e conferência do `state_hash` antes de simular
+estão no domínio `rescisao` ("Simulação de rescisão").
 
 ## Descobrir prontidão e medir acurácia
 
