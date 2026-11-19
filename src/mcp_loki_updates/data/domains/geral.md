@@ -11,12 +11,11 @@ ferramentas são as mesmas: **não exige Refresh do conector**.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Mapa de rescisão: a política de arredondamento
-  (`arredondamento_proporcionais`) se troca sozinha, em várias empresas numa
-  versão, pelo patch `loki.company-termination-map-policy-patch/1`, sem
-  reenviar `rescisao_rubricas`. A política declarada substitui a atual
-  inteira; mostre o `termination_policy_preview` antes do apply. Domínio
-  `rescisao`.
+- Mapa de rescisão: troca-se só a política de arredondamento
+  (`arredondamento_proporcionais`), em várias empresas numa versão, pelo
+  patch `loki.company-termination-map-policy-patch/1`, sem reenviar
+  `rescisao_rubricas`. A política declarada substitui a atual inteira;
+  mostre o `termination_policy_preview` antes do apply. Domínio `rescisao`.
 - 13º: a recusa `historical_thirteenth_unqualified_documentary_facts` passa a
   listar os fatos em `blocking_facts`. Qualificar um fato muda o `state_hash`
   do empregado e desatualiza as seleções dos outros casos abertos dele: com

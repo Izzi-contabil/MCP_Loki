@@ -82,9 +82,9 @@ afastamento por atestado, médias somadas entre empresas sem
 `medias_por_bloco` e matrícula nova por `identifier_only` só depois de falar
 com a engenharia. Também não exigem Refresh; a operadora só atualiza o
 plugin.
-Na 2.9.2 (“2.9.2: política do mapa de rescisão e fatos do 13º”): a política
-de arredondamento do mapa de rescisão se troca sozinha, em várias empresas
-numa versão, substituindo a atual inteira, com o `termination_policy_preview`
+Na 2.9.2 (“2.9.2: política do mapa de rescisão e fatos do 13º”): troca-se só
+a política de arredondamento do mapa de rescisão, sem reenviar o mapa, em
+várias empresas numa versão, substituindo a atual inteira, com o `termination_policy_preview`
 mostrado antes do apply; a recusa do 13º por fatos documentais lista
 `blocking_facts`, e qualificar um `outro` muda o `state_hash` do empregado
 (com outros casos abertos dele, alinhar com a DP antes). Não exigem Refresh;

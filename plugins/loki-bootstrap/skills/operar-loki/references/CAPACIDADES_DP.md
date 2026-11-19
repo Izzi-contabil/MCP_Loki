@@ -303,8 +303,8 @@ Refresh; a operadora só atualiza o plugin. Roteiro em “2.9.1: regras da DP de
 
 ## 2.9.2: política do mapa de rescisão e fatos do 13º
 
-Quando a resposta servida apresentar: no mapa de rescisão, a política
-`arredondamento_proporcionais` se troca sozinha pelo patch
+Quando a resposta servida apresentar: no mapa de rescisão, troca-se só a
+política `arredondamento_proporcionais` pelo patch
 `loki.company-termination-map-policy-patch/1`, em várias empresas numa
 versão, substituindo a política atual inteira, com o
 `termination_policy_preview` mostrado à operadora antes do apply e
