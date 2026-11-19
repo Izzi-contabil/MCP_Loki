@@ -1,26 +1,33 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.2)
+## O que mudou nesta versão (2.9.3)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
-vez, curto, e não interrompa o trabalho dela por causa dele.
+vez, curto, e não interrompa o trabalho dela por causa dele. A exceção é o
+recálculo da folha abaixo: avise antes de ela conferir ou entregar uma folha.
 
-**Exige ação da operadora:** só atualizar o plugin instalado (as skills
-mudaram). Isso não bloqueia o uso: as instruções vêm do servidor. As 96
-ferramentas são as mesmas: **não exige Refresh do conector**.
+> **Atenção: recalcular as folhas mensais não entregues.** O motor da folha
+> passou a `folha-v31` e isso deixa desatualizadas (`calculation_stale`)
+> todas as folhas mensais não entregues: abertas, em revisão e aprovadas e
+> ainda não entregues. Cada uma precisa ser recalculada, conferida de novo e
+> receber novo aceite; a aprovação anterior não vale para o novo cálculo. As
+> folhas já entregues não mudam. Domínio `folha_mensal`.
+
+**Exige ação da operadora:** o recálculo acima e atualizar o plugin instalado
+(as skills mudaram). O plugin não bloqueia o uso: as instruções vêm do
+servidor. As 96 ferramentas são as mesmas: **não exige Refresh do conector**.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Mapa de rescisão: troca-se só a política de arredondamento
-  (`arredondamento_proporcionais`), em várias empresas numa versão, pelo
-  patch `loki.company-termination-map-policy-patch/1`, sem reenviar
-  `rescisao_rubricas`. A política declarada substitui a atual inteira;
-  mostre o `termination_policy_preview` antes do apply. Domínio `rescisao`.
-- 13º: a recusa `historical_thirteenth_unqualified_documentary_facts` passa a
-  listar os fatos em `blocking_facts`. Qualificar um fato muda o `state_hash`
-  do empregado e desatualiza as seleções dos outros casos abertos dele: com
-  outros casos abertos, alinhe com a DP antes. Domínio `decimo_terceiro`.
-- As regras da DP de 18/11/2026 (2.9.1) continuam valendo, cada uma no seu
+- Folha mensal (`folha-v31`): o limite do salário-família usa a base do INSS
+  do mês; pendências novas no mês de admissão e com base zero saem por
+  correção do operador depois da decisão da DP; insalubridade no mês de
+  admissão paga pelos dias; VT do admitido no mês continua retido. Domínio
+  `folha_mensal`.
+- Simulação de rescisão: com seleção desatualizada no caso real,
+  `payload.simulation.historical_state: "current"` simula com o estado
+  histórico atual, com ressalvas, sem mexer no caso real. Domínio `rescisao`.
+- As orientações da 2.9.2 e da 2.9.1 continuam valendo, cada uma no seu
   domínio.
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
@@ -192,8 +199,9 @@ completo. `simulation_process_unsupported` não tem caminho: não troque de
 processo nem converta a hipótese em caso real. Simulação não substitui caso,
 revisão ou aceite.
 Na rescisão, chaves nulas da origem, `foundation`, locator, `subreason` de
-`operational_context_changed` e conferência do `state_hash` antes de simular
-estão no domínio `rescisao` ("Simulação de rescisão").
+`operational_context_changed`, conferência do `state_hash` antes de simular e
+a simulação com o estado histórico atual estão no domínio `rescisao`
+("Simulação de rescisão" e "Simulação com o estado histórico atual").
 
 ## Descobrir prontidão e medir acurácia
 

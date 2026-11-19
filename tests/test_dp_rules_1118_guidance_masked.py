@@ -1,8 +1,8 @@
 """Entrega das orientações da 2.9.1 (regras da DP de 18/11/2026, backend #363).
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
-O aviso do geral passou a ser o da 2.9.2
-(test_policy_patch_and_thirteenth_facts_guidance_masked.py).
+O aviso do geral passou a ser o da 2.9.3
+(test_payroll_v31_and_simulation_current_state_guidance_masked.py).
 """
 
 import json

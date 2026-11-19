@@ -316,6 +316,24 @@ casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.3: folha v31 e simulação com o estado atual
+
+Quando a resposta servida apresentar: a folha mensal passa ao motor
+`folha-v31`, e **todas as folhas mensais não entregues precisam ser
+recalculadas, conferidas e aceitas de novo** (as entregues não mudam). O
+limite do salário-família usa a base do INSS do mês; as pendências
+`salario_familia_mes_admissao_pendente_regra`,
+`salario_familia_remuneracao_zero_sem_declaracao` e
+`salario_familia_base_inss_zero_com_proventos` saem por
+`submit_operator_correction` (`target: "calculation"`) depois da decisão da
+DP. Insalubridade no mês de admissão é paga pelos dias, só com a
+`rubrica_loki` no mapa; VT do admitido no mês continua retido. Na rescisão,
+`payload.simulation.historical_state: "current"` simula com o estado
+histórico atual, com ressalvas e sem mexer no caso real. Nada disso exige
+Refresh; a operadora atualiza o plugin e recalcula as folhas. Roteiro em
+“2.9.3: folha v31 (salário-família e insalubridade) e simulação com o estado
+atual” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## Nova preparação de afastamento
 
 Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar

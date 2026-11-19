@@ -814,8 +814,8 @@ atualizar o plugin instalado.
   grupo. O 13º não usa micros nem blocos.
 - Simulação de rescisão: antes, compare o `state_hash` de
   `get_case_historical_state` com o da seleção (ou leia
-  `selection_matches_current_state`); seleção desatualizada não tem caminho
-  sem reiniciar o caso real. Copie as chaves de topo da origem, inclusive as
+  `selection_matches_current_state`); com seleção desatualizada, a 2.9.3
+  oferece a simulação com o estado histórico atual (seção 2.9.3). Copie as chaves de topo da origem, inclusive as
   nulas; `locator` `$.payload.<caminho>` na declaração; `foundation` com
   `derived`/`reported` ou `harness`; `operational_context_changed` traz
   `subreason` (`version_refusal_subreasons` no contrato).
@@ -884,6 +884,47 @@ atualizar o plugin instalado.
   fim da cobertura. Não use `final_average` para qualificar fato do 13º.
   `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
   problema.
+
+## 2.9.3: folha v31 (salário-família e insalubridade) e simulação com o estado atual
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está em cada domínio de `loki_obter_instrucoes`. **Não exige Refresh
+do conector**: as 96 ferramentas são as mesmas. A operadora atualiza o plugin
+instalado e recalcula as folhas abaixo.
+
+- **Recálculo obrigatório (`folha_mensal`).** O motor passou a `folha-v31`:
+  todas as folhas mensais não entregues (abertas, em revisão e aprovadas e
+  não entregues) ficam desatualizadas (`calculation_stale`) e precisam ser
+  recalculadas, conferidas de novo e receber novo aceite. As entregues não
+  mudam. Avise a operadora antes de ela conferir ou entregar uma folha.
+- Salário-família: o limite usa a base do INSS do mês calculada pelo Loki
+  (não informe remuneração própria). Pendências novas:
+  `salario_familia_mes_admissao_pendente_regra` (entrada na empresa no mês,
+  transferência inclusive; vínculo sem líquido até a DP responder),
+  `salario_familia_remuneracao_zero_sem_declaracao` (benefício ou afastamento
+  no mês inteiro → `mes_sem_remuneracao`; faltas ou suspensão → pendente) e
+  `salario_familia_base_inss_zero_com_proventos` (qualificar a incidência
+  INSS das rubricas; não declarar `mes_sem_remuneracao`). Saída, depois da
+  decisão da DP: `submit_operator_correction` com `target: "calculation"` e
+  `changes` em `funcionarios.<matricula>.bases.salario_familia_cents`. Falta
+  de filhos se resolve completando o cadastro, não por essa rota.
+- Em consulta à DP: 1/3 de férias e faltas na base do limite, mês de
+  admissão cheio ou parcial e transferência contando como entrada. Divergência
+  nesses pontos é a confirmar com a DP, não defeito.
+- Insalubridade: o mapa só exige a `rubrica_loki` do grau declarado; com
+  `vigente_desde` igual à admissão, o mês de entrada é pago pelos dias. VT do
+  admitido no mês continua retido (`vale_transporte_vigencia_parcial_exige_regra`)
+  até a regra da DP.
+- Simulação de rescisão (`rescisao`): com seleção desatualizada no caso real,
+  repita o `create_case` da simulação com
+  `payload.simulation.historical_state: "current"` e `simulation_ref` nova.
+  Nada muda no caso real. Repasse as ressalvas (`notices`, PDF, recibo) e
+  leia `historical_state_basis` (`differs_from_selection`,
+  `history_consumed`). Qualificações do caso real ficam pendentes em
+  `pending_qualifications`: a ação é renovar seleção e qualificação no caso
+  real. Recusas novas: `historical_state_source_incompatible` e
+  `historical_settlement_bound_to_selection`. Fontes `CPH-*` de folha fechada
+  nova ainda recusam (`source_document_missing`).
 
 ## Ler recursos binários retornados pelo MCP
 
