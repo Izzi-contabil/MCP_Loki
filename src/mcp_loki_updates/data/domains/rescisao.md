@@ -207,6 +207,8 @@ Use quando a empresa já tem uma seleção de `rescisao_rubricas` com `mapa`
 embutido e só uma ou poucas parcelas de `mapa.parcelas_do_mes` precisam entrar
 ou mudar. Não reenvie o mapa inteiro nem use caminho indexado
 (`rescisao_rubricas[0]...`), que volta `forma_incompativel`.
+Este patch só aceita `operations` e não altera a política de arredondamento;
+para ela, veja "Trocar só a política de arredondamento do mapa".
 
 1. Chame `get_client_config(cliente_slug)` e confira que a resposta tem
    `termination_map_patch_transport`. Se a chave faltar, o servidor ainda não
@@ -274,7 +276,8 @@ que reproduzem o método do Domínio. Quem não declara nada não muda nada.
 Declare só quando a operadora tiver medido o método contra TRCTs do Domínio
 daquela empresa, e cite a medição em `fonte`. A política fica em
 `empresas[<codigo_dominio>].rescisao_rubricas[].mapa.arredondamento_proporcionais`,
-gravada com a expectativa de versão do cadastro:
+gravada com a expectativa de versão do cadastro (para trocar só a política,
+use o patch da seção seguinte):
 
 ```json
 "arredondamento_proporcionais": {
@@ -313,6 +316,84 @@ gravada com a expectativa de versão do cadastro:
   corrente, que precisa ser recalculado, gerado e conferido de novo.
 - O Loki não confere a fonte; a conferência do pacote contra o Domínio
   continua sendo da harness e da operadora.
+
+## Trocar só a política de arredondamento do mapa
+
+Quando `get_client_config` anunciar `termination_map_policy_patch_transport`,
+ligue, desligue ou troque as opções de `arredondamento_proporcionais` (seção
+anterior) sem reenviar `rescisao_rubricas` inteira. Uma chamada leva várias
+empresas e grava uma única versão do cadastro. Se a chave não for anunciada,
+avise a operadora que o servidor ainda não tem o patch. Não tente o caminho
+indexado (`rescisao_rubricas[0]...`), que volta `forma_incompativel`.
+
+1. Em `get_client_config`, anote o `doc_hash` e, de cada empresa, o `group` e
+   o `vigente_desde` exatos das seleções que vão receber a política. Leia
+   também a `mapa.arredondamento_proporcionais` atual de cada uma delas. **A
+   política declarada substitui a atual inteira:** repita nela os `escopos`,
+   a `fonte` e as opções que devem continuar ligadas. Opção omitida fica
+   desligada. Todas as seleções indicadas de uma empresa recebem a mesma
+   política; para manter políticas diferentes, faça uma chamada por política.
+2. Monte `alteracoes`, com uma entrada por empresa em `companies`:
+   ```json
+   {
+     "schema_version": "loki.company-termination-map-policy-patch/1",
+     "companies": [
+       {
+         "company_code": "{{CODIGO_EMPRESA}}",
+         "selectors": [{"group": "{{GRUPO}}", "vigente_desde": "{{INICIO_ISO}}"}],
+         "policy": {"arredondamento_proporcionais": {
+           "escopos": ["ferias_proporcionais_indenizadas", "ferias_vencidas_indenizadas",
+                       "ferias_em_dobro_indenizadas", "ferias_aviso_indenizado"],
+           "fonte": "{{FONTE}}",
+           "metodo_ferias": "valor_dia_6_casas",
+           "terco": "por_parcela",
+           "saldo": "valor_dia_6_casas"
+         }}
+       }
+     ],
+     "confirmacao": {"expected_hash": "{{CONFIG.doc_hash}}"}
+   }
+   ```
+   `fonte` é obrigatória. As regras são as da seção anterior: `terco:
+   por_parcela` exige os quatro escopos de férias, e `saldo:
+   valor_dia_6_casas` exige `dias_do_mes: trinta_fixo` na empresa (senão vem
+   `rescisao_saldo_valor_dia_exige_trinta_fixo` no caminho dela). Não mande
+   `medias_por_bloco`: ela continua desligada sem conferência com a DP. O
+   patch não pede `parcelas_do_mes`: parcelas, caixas e tributos do mapa não
+   são reenviados nem alterados.
+3. Chame `validate_client_config` com `cliente_slug`, `expected_hash` igual ao
+   `doc_hash`, `sobrescrever: true` e `alteracoes`. Proveniência e gate usam o
+   caminho `empresas[<código>].rescisao_rubricas` de cada empresa. A prévia
+   devolve `termination_policy_preview`, uma linha por empresa e seleção.
+   **Mostre à operadora, antes do apply:**
+   - opções ligadas, desligadas e alteradas (`opcoes_ligadas`,
+     `opcoes_desligadas`, `opcoes_alteradas`);
+   - escopos adicionados e removidos (`escopos_adicionados`,
+     `escopos_removidos`);
+   - se a fonte muda (`fonte_trocada`);
+   - se seleções com políticas diferentes serão unificadas
+     (`politicas_distintas_unificadas`).
+
+   Se algo que seria desligado ou removido não era a intenção dela, refaça a
+   declaração.
+4. Só com a prévia `VALIDO` e o aceite dela, aplique a mesma proposta em
+   `apply_client_config`, com `motivo`. Se houver gate de evidência, declare
+   em `confirmacao.evidence_gate_paths` os caminhos
+   `empresas[<código>].rescisao_rubricas` devolvidos e a `human_message`
+   aceita pela operadora. `remover` não combina com o patch
+   (`termination_policy_patch_remove_incompatible`).
+5. Recusas: qualquer recusa recusa o pedido inteiro, sem gravar. Nas recusas
+   de seleção (`termination_patch_selector_missing`,
+   `termination_patch_embedded_map_required`,
+   `termination_patch_company_not_unique`) e de `trinta_fixo`, o caminho
+   indica a empresa. Erro de formato da política volta como
+   `companies[*].policy.arredondamento_proporcionais` (`value_error`): confira
+   a política de cada empresa e refaça a prévia.
+6. Efeito nos casos: só os casos abertos cuja fatia mudou (cliente mais a
+   empresa do caso) recebem `cliente_config_alterada`, um por versão. A
+   rescisão cujo desligamento cai na vigência alterada perde o cálculo
+   corrente; recalcule pelo fluxo normal. As outras vigências mantêm o
+   cálculo.
 
 ## Médias com seis casas e por bloco de empresa
 

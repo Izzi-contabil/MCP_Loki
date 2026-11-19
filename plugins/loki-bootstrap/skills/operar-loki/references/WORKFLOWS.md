@@ -857,6 +857,34 @@ atualizar o plugin instalado.
   identificador oficial. Enquanto a forma de uso não for confirmada, não grave
   matrícula nova por `identifier_only` sem falar com a engenharia.
 
+## 2.9.2: política do mapa de rescisão e fatos do 13º
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está em cada domínio de `loki_obter_instrucoes`. **Não exige Refresh
+do conector**: as 96 ferramentas são as mesmas. A única ação da operadora é
+atualizar o plugin instalado.
+
+- Mapa de rescisão (`rescisao`): com `termination_map_policy_patch_transport`
+  em `get_client_config`, troque só `arredondamento_proporcionais` pelo patch
+  `loki.company-termination-map-policy-patch/1`, uma entrada por empresa em
+  `companies`, numa única versão. A política declarada substitui a atual
+  inteira: leia antes a de cada seleção e repita `escopos`, `fonte` e as
+  opções que continuam ligadas. Seleções da mesma empresa recebem a mesma
+  política. O patch não pede `parcelas_do_mes`. Não mande `medias_por_bloco`
+  sem conferência com a DP. Mostre o `termination_policy_preview` à operadora
+  antes do apply; sem a chave de descoberta, o servidor ainda não tem o patch.
+- 13º (`decimo_terceiro`): `historical_thirteenth_unqualified_documentary_facts`
+  vem em `BLOCKED`/`code` com `blocking_facts` (tipo, data, identificador,
+  `reason` e `path`). `outro` se qualifica pelo reenvio da cobertura
+  `thirteenth_payments` da mesma ficha, com `replaces_fact_id` e
+  `qualifies_legacy_fact_ids`. Isso muda o `state_hash` do empregado: as
+  seleções dos outros casos abertos dele exigem novo
+  `apply_historical_state`, então não qualifique sem alinhar com a DP quando
+  houver outros casos abertos. A qualificação só vale em cortes a partir do
+  fim da cobertura. Não use `final_average` para qualificar fato do 13º.
+  `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
+  problema.
+
 ## Ler recursos binários retornados pelo MCP
 
 `get_case_document(case_id, doc_id)` pode retornar os bytes no bloco

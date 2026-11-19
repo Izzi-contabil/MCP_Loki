@@ -1,6 +1,7 @@
 """Entrega das orientações da 2.9.0 (backend #358, #359, #360); nao mede obediencia.
 
-O aviso do geral passou a ser o da 2.9.1 (test_dp_rules_1118_guidance_masked.py).
+O aviso do geral passou a ser o da 2.9.2
+(test_policy_patch_and_thirteenth_facts_guidance_masked.py).
 """
 
 import json

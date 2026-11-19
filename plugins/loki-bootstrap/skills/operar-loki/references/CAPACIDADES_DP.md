@@ -301,6 +301,21 @@ por `identifier_only` só depois de falar com a engenharia. Nada disso exige
 Refresh; a operadora só atualiza o plugin. Roteiro em “2.9.1: regras da DP de
 18/11/2026” de [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.2: política do mapa de rescisão e fatos do 13º
+
+Quando a resposta servida apresentar: no mapa de rescisão, a política
+`arredondamento_proporcionais` se troca sozinha pelo patch
+`loki.company-termination-map-policy-patch/1`, em várias empresas numa
+versão, substituindo a política atual inteira, com o
+`termination_policy_preview` mostrado à operadora antes do apply e
+`medias_por_bloco` desligada sem conferência da DP; no 13º, a recusa
+`historical_thirteenth_unqualified_documentary_facts` traz `blocking_facts`,
+e o `outro` se qualifica pela cobertura `thirteenth_payments` da mesma ficha,
+o que muda o `state_hash` do empregado e desatualiza as seleções dos outros
+casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
+plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
+[WORKFLOWS.md](WORKFLOWS.md).
+
 ## Nova preparação de afastamento
 
 Consulte `get_process_contract("afastamento")`. Quando o contrato anunciar

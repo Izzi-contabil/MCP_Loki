@@ -138,6 +138,15 @@ lote de onboarding que voltou `ready` (valide de novo);
 `historical_vacation_use_period_incompatible` em gozo que termina antes do fim
 do aquisitivo (regra da DP, pergunte à Rafa). Admitido no mesmo mês, antes do
 dia da data-base, é pergunta à Rafa, não problema do Loki.
+Na 2.9.2, no 13º, `historical_thirteenth_unqualified_documentary_facts` com
+`path=no_typed_exit` (afastamento opaco) ou `path=dp_rule_pending` (rescisão
+ou transferência da carga) é pendência a registrar, com o `fact_id`, o
+`path` e as datas que a ficha mostrar, sem nome, CPF ou texto da ficha; a de
+`dp_rule_pending` também vai à DP (Rafa). `path=qualify_legacy_fact` não é
+defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
+são defeito `termination_policy_patch_remove_incompatible`, o
+`value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
+falta de `termination_map_policy_patch_transport` (servidor sem o patch).
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a
@@ -195,6 +204,11 @@ Com `problem_id`, acompanhe por `consultar_problema(problem_id)` e
 `listar_problemas(limit=50)`, sem reenviar: relator ativo vê próprios relatos,
 proprietário ativo vê todos. Leia status, revisão, histórico e jobs retornados;
 pendência, interrupção e esgotamento exigem relatar o limite, não declarar sucesso.
+
+Relate sempre pelo assistente, com `registrar_problema`. No canal de suporte
+do Slack, o Loki Suporte só responde nas threads dos pedidos que ele publicou
+ou quando alguém o menciona (`@Loki Suporte`); conversas da equipe no canal
+não são tratadas como pedido.
 
 Na thread Slack, consulte a última atualização, pergunta, motivo e próximo
 passo. O agente pode acionar somente áreas/pessoas cadastradas pelo servidor:

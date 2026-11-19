@@ -85,6 +85,58 @@ posterior à referência salarial ou ao pagamento: confira a admissão e as
 datas do 13º antes de declarar cobertura. Não presuma ausência de afastamento
 ou de pagamento só porque falta cobertura.
 
+## Fatos documentais não qualificados
+
+Quando a resposta servida apresentar `blocking_facts`: `calculate_case` ou o
+workflow devolvem `BLOCKED` com
+`code=historical_thirteenth_unqualified_documentary_facts`, campo
+`historical_state`, `next_action=get_case_historical_state`, `blocking_facts`
+(no máximo 32 linhas) e `blocking_facts_total` (a contagem bruta). Servidor
+anterior devolve só `{"erro": "<código>"}`, sem a lista. Cada linha tem
+`origin`, `kind`, um identificador (`fact_id`, `event_seq` ou `case_id`),
+`effective_on` (data ou `null`), `reason` e `path`, sem texto nem referência
+da ficha. Não recalcule, não reinicie o caso e não troque o fato por zero ou
+"irrelevante" por conta própria.
+
+- `path=qualify_legacy_fact` (`outro` ou `decimo_terceiro`): releia a ficha
+  original. Se a ficha mostrar o que o fato é para o 13º, envie pela carga da
+  empresa um `historico_operacional` de um dos `allowed_types` da linha (só
+  esses; o escritor aceita outros tipos, como férias e `final_average`, que
+  também retiram o fato da lista, mas não dizem nada sobre o 13º), com a
+  **mesma fonte** (`document_id` e `content_hash`) do fato e
+  `qualifies_legacy_fact_ids=[<fact_id>]`. Para declarar que o fato não
+  altera o 13º, reenvie a cobertura `thirteenth_payments` já declarada a
+  partir daquela ficha, com os mesmos dados, `replaces_fact_id=<id da
+  cobertura>` e `qualifies_legacy_fact_ids` com todos os fatos daquela fonte.
+  Não crie cobertura nova nem intervalo que a ficha não certifique. Fatos de
+  outra ficha precisam da cobertura daquela ficha. Se nada na ficha sustentar
+  a cobertura, o fato continua pendente: pergunte à DP. Depois rode
+  `apply_historical_state` no caso e calcule de novo.
+- **Antes de qualificar**, veja se o empregado tem outros casos abertos
+  (férias, rescisão, simulação, outro 13º). A qualificação muda o
+  `history_hash` e o `state_hash` dele: as seleções já aplicadas nesses casos
+  ficam desatualizadas e exigem novo `apply_historical_state`. **Não
+  qualifique quem tem outros casos abertos sem alinhar com a DP.** A
+  qualificação só vale em cortes a partir do `effective_on` da cobertura, que
+  é o fim dela.
+- `path=no_typed_exit` (afastamento opaco da carga): o afastamento pode afetar
+  avos e continua pendente. Hoje não existe qualificação que o retire, e
+  reenviar a ficha estruturada não remove o fato opaco. Registre a pendência
+  (`registrar_problema`) com o `fact_id` e as datas que a ficha mostrar. Não
+  invente datas.
+- `path=dp_rule_pending` (rescisão ou transferência da carga): não existe
+  qualificação tipada que valha para o 13º. `final_average` com
+  `qualifies_legacy_fact_ids` tira a rescisão da lista, mas **não deve ser
+  usado para qualificar fato do 13º**: média final não diz nada sobre o 13º do
+  ano. Registre a pendência e leve o caso à DP (Rafa).
+- `path=episode_reconciliation`: concilie o evento ou o caso do vínculo
+  indicado.
+- `reason=effective_date_missing`: o fato não tem data e por isso não pode ser
+  posto fora do ano. Um fato datado depois do fim da janela, ou um `outro` ou
+  `decimo_terceiro` datado antes do ano, não aparece na lista. Os outros
+  motivos são `inside_thirteenth_window`, `leave_started_before_window` e
+  `episode_change_before_window`.
+
 ## Médias
 
 Para bater com o Domínio, use `medias_importadas` (média final do Domínio,
@@ -101,6 +153,9 @@ dividida duas vezes. Na 1ª parcela, a média só entra inteira quando a pessoa
 foi admitida antes do ano e tem todos os avos até o mês-limite, que é quando a
 parte fixa também entra inteira. Para conferir com o Domínio, compare
 `variavel_cents` com média × avos ÷ 12.
+Esse uso da média em `medias_importadas` não muda; o que não vale é usar
+`final_average` para qualificar fato da carga ("Fatos documentais não
+qualificados").
 
 Os campos de seis casas (`horas_micros`, `valor_micros`, `vantagens_micros`)
 e o `bloco` das médias, quando o contrato servido os apresentar, valem só nas
