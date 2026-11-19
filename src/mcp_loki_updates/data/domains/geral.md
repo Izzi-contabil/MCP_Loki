@@ -1,6 +1,6 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.1)
+## O que mudou nesta versão (2.9.2)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele.
@@ -9,22 +9,19 @@ vez, curto, e não interrompa o trabalho dela por causa dele.
 mudaram). Isso não bloqueia o uso: as instruções vêm do servidor. As 96
 ferramentas são as mesmas: **não exige Refresh do conector**.
 
-**Não exige nada** (vale assim que o Loki for publicado, na mesma conversa).
-São regras da DP de 18/11/2026:
+**Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Reajuste coletivo: admitido no próprio dia da data-base com o salário novo
-  fica `sem_reajuste` (`admitido_na_data_base_com_salario_novo`); o VT não
-  entra na diferença; salário novo já registrado na data-base é o próprio
-  reajuste. Domínio `reajuste_salarial`.
-- Férias antigas no onboarding: gozo em que o fim do aquisitivo cai dentro do
-  período passa a ser aceito; lote recusado antes por isso se valida de novo.
-  Domínio `ferias`.
-- Afastamento: um registro por atestado; licença-maternidade não é falta.
-  Domínio `afastamento`.
-- Médias: o Domínio soma as empresas do grupo, em férias e no 13º; não ligue
-  `medias_por_bloco` sem conferência com a DP. Domínio `rescisao`.
-- Matrícula do eSocial é o identificador oficial (seção "Matrícula no
-  `create_case`").
+- Mapa de rescisão: troca-se só a política de arredondamento
+  (`arredondamento_proporcionais`), em várias empresas numa versão, pelo
+  patch `loki.company-termination-map-policy-patch/1`, sem reenviar
+  `rescisao_rubricas`. A política declarada substitui a atual inteira;
+  mostre o `termination_policy_preview` antes do apply. Domínio `rescisao`.
+- 13º: a recusa `historical_thirteenth_unqualified_documentary_facts` passa a
+  listar os fatos em `blocking_facts`. Qualificar um fato muda o `state_hash`
+  do empregado e desatualiza as seleções dos outros casos abertos dele: com
+  outros casos abertos, alinhe com a DP antes. Domínio `decimo_terceiro`.
+- As regras da DP de 18/11/2026 (2.9.1) continuam valendo, cada uma no seu
+  domínio.
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), troca de código Domínio e revogação de

@@ -1,6 +1,8 @@
 """Entrega das orientações da 2.9.1 (regras da DP de 18/11/2026, backend #363).
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
+O aviso do geral passou a ser o da 2.9.2
+(test_policy_patch_and_thirteenth_facts_guidance_masked.py).
 """
 
 import json
@@ -16,17 +18,6 @@ CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
 GUIDE = OPERATOR / "references/REAJUSTE_SALARIAL.md"
 RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 
-NOTICE = (
-    "## O que mudou nesta versão (2.9.1)",
-    "Atualizações devem ser imperceptíveis",
-    "**Exige ação da operadora:** só atualizar o plugin instalado",
-    "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
-    "**Não exige nada**",
-    "`admitido_na_data_base_com_salario_novo`",
-    "o VT não entra na diferença",
-    "não ligue `medias_por_bloco` sem conferência com a DP",
-    "Matrícula do eSocial é o identificador oficial",
-)
 ADMITTED_ON_BASE_DATE = (
     "## Admitido no próprio dia da data-base",
     "`rule.admitted_on_base_date`",
@@ -111,37 +102,25 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
         assert flat(item) not in body, item
 
 
-def test_versions_follow_the_additive_contract_patch() -> None:
+def test_contract_291_entries_are_kept_in_the_release() -> None:
     provider = InstructionsProvider()
-    metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.26"
-    assert metadata["instructions_version"] == "2.9.1"
-    assert metadata["mcp_contract_version"] == "2.9.1"
-    assert metadata["recommended_plugin_version"] == "2.9.1"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in ("2.0.0", "2.8.0", "2.9.0", "2.9.1"):
         assert provider.check_version(version, version)["compatible"] is True
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["compatible_tools"] == [
-        "loki_obter_instrucoes",
-        "loki_verificar_versao",
-    ]
-    assert release["changes"]["backend"][-1].startswith("Contrato2.9.1 aditivo")
-    assert "as 96 ferramentas são as mesmas" in release["changes"]["backend"][-1]
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.9.1")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.9.1")
+    for category, prefix in (
+        ("backend", "Contrato2.9.1 aditivo"),
+        ("instructions", "Instruções2.9.1"),
+        ("plugin", "Plugin2.9.1"),
+    ):
+        entry = [item for item in release["changes"][category] if item.startswith(prefix)]
+        assert len(entry) == 1, prefix
+    backend = [i for i in release["changes"]["backend"] if i.startswith("Contrato2.9.1")]
+    assert "as 96 ferramentas são as mesmas" in backend[0]
 
 
-def test_general_notice_asks_only_for_the_plugin_update() -> None:
+def test_general_notice_is_no_longer_the_291_one() -> None:
     guide = text("geral")
-    end = guide.index("## Reaproveitar respostas e causas persistidas")
-    assert guide.index("## O que mudou nesta versão (2.9.1)") < end
-    notice = guide[:end]
-    assert_all(notice, NOTICE)
-    current = notice[: notice.index("**Continua da 2.8.0**")]
-    for domain in ("`reajuste_salarial`", "`ferias`", "`afastamento`", "`rescisao`"):
-        assert domain in current, domain
-    assert "Exige Refresh" not in current
+    assert "## O que mudou nesta versão (2.9.1)" not in guide
     assert "## O que mudou nesta versão (2.9.0)" not in guide
     assert_all(guide, REGISTRATION)
     assert len(guide.encode("utf-8")) <= 65536

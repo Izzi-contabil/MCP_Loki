@@ -1,69 +1,69 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.9.1",
-  "contract_version": "2.9.1",
-  "plugin_version": "2.9.1",
+  "instructions_version": "2.9.2",
+  "contract_version": "2.9.2",
+  "plugin_version": "2.9.2",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-18",
+  "updated_at": "2026-11-19",
   "domains": {
     "geral": {
-      "metadata_sha256": "3c632083afa7a132164c3bb9404473dfaf8c2df4dd015b710f3094230e7bb1b5",
-      "content_sha256": "b1c079e6c20ab4511b140da024e68a315f220f0749be7d255c155c0fb66e3de1"
+      "metadata_sha256": "f04a43aa6fed0dee9158a9252491ed074f14c5d31411f40b82328c141658cac2",
+      "content_sha256": "36f8eaa5bc66cf069aadd883ca7f50337e2debb1d5e92e190356ecdbf1cc5231"
     },
     "admissao": {
-      "metadata_sha256": "a8e198b185e00db9c360063e75a94cfa383d19c4ae468ed5faa632ef81c1dfe5",
+      "metadata_sha256": "3a1987b62695bc3d84bc1b16ed1be5e4669ba4cde4b9eae7c7e4b94424abd2a5",
       "content_sha256": "7a33a1202abba1318e2b81ffce7f760fa92a0aa9052c91b1600e51988588d70f"
     },
     "rescisao": {
-      "metadata_sha256": "dd7e5283be54fd90887fd929267106a452fc93d48a6d06c873ee5712add4e099",
-      "content_sha256": "791494f66b0768ee09315fe777585b2119fd3da7f4782930eddc8a2c64d86393"
+      "metadata_sha256": "3b2468e1ab877a4e6b30cc9e9f96ad9330e47d02407647bfe1f1120d470545d8",
+      "content_sha256": "abab2dbd4a2f9f728ea390cbd20f5c19375d0273937074febf0082f6017f4186"
     },
     "ferias": {
-      "metadata_sha256": "73d27deeef1f73171816a8ed6842c5324c25b37931ec7109e7491f50a7c2282a",
+      "metadata_sha256": "8f43274ec6e02116733e5cf76f24de2ee9214b63e8027e23a137ffdad6ded91e",
       "content_sha256": "48a04acbbc162fc0bde0d5d766f7a69295a1fe8ef09cc3900e2ec4c27d858b34"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "d359b49c774a327ef1f1a618315d6050df29687dce9596c519e3ceb3ffbfc8e4",
-      "content_sha256": "9e58eae6750cbe3f2ecf8e662a1391720c4b06887a050b4a08ccfb37ae2caa3b"
+      "metadata_sha256": "3dbb32ff61b2636ad07fa2f343ac909c37a31f3907727b01ddd0d717dbf1c1d7",
+      "content_sha256": "8079f64eb1ad887de6cf3664aa4389108ace5ff157a730c79cf029539bad74be"
     },
     "afastamento": {
-      "metadata_sha256": "8985b231f868522e78a40a35016bbc3bacbb9d4e574577f2bc55c8f19eed2ee7",
+      "metadata_sha256": "4af56297e06374a63611e72be84e92e18bce25cac33ec1249f9dbaac3e70aaa6",
       "content_sha256": "1e6d655f0db355266cbcd0a83a7b9d8e7f3c9606b18ee0e832854cbae5544e14"
     },
     "documentos": {
-      "metadata_sha256": "f47156a117a2fa41bc0d026087a1be9645939f1d274c179addc85fb32ce28d96",
+      "metadata_sha256": "a40d6a3d52ee1ea193e62ad062feb0ae35e7454f7a25dda6db1beaec2ed41f2c",
       "content_sha256": "f3f3962a6e9f0b313517af6b3e99bf885d1bf4444d41486ba5b2e07c8f08e038"
     },
     "aprovacoes": {
-      "metadata_sha256": "9290ebc25c17bcf511313e764b53693dcd455ba654764096f82fecbeaebfb80c",
+      "metadata_sha256": "860cfbc7235f86f177428b81e59af30462eba3d874e6ffd0148550fee42f6f47",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "ba55fb7c337427b020ebe451660cea1ee9172b8de7e0d45a98521b73e3e0d3d2",
+      "metadata_sha256": "34728128bcb5dc3ff2663c55bdc32babc68e6e193759648c3e6c6c10ec289b1d",
       "content_sha256": "3195f101df231af51845e337a011861ff0b0e652ae58d872e160a81442adb599"
     },
     "ocorrencia": {
-      "metadata_sha256": "a18ad4b20299dcbf455975d959bc119740c5176c4346c221e7b48a6b1a47fe78",
+      "metadata_sha256": "849d91ac306bdd35d23bfb7ccec1ef4ae54f756ac725c282b3cad93e23b2f3b9",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "fc06233d7a3a7e8078ec5a0600ebef1f1f3028af10912caf533bc9d79d66213c",
+      "metadata_sha256": "d1268cfc9c3fa06ef6e31610ae49fdcf3b532cb988815c165dbe49e4681de8ba",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "bec777e03493cb9b63efcb64dde31ee4d612633c386e9566604eea1d03c956d7",
+      "metadata_sha256": "ec519a965f5e502699ca20ec18713c149a1d4cb9aac33b80a416bc5b4ee864c0",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "91455c782efae799da7f1b6c681def0d331332d4cd111cdd10eb2d24c8581523",
+      "metadata_sha256": "71a7ef37a31bda64c5495213152e4fa466947ecdeaff35a5f7b0d9f163c53244",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     },
     "reajuste_salarial": {
-      "metadata_sha256": "25d6433df1577a8905da35c867a2c45473618b17e0e1ef808bf76f00b26a537a",
+      "metadata_sha256": "87002599bdeef1331e92eda97b2638509abe78375f0af81483baab72a479f833",
       "content_sha256": "05bcb71c41b357e3c6c01de0a10d89f4aeca17fc5a9697b3dd9e15dc555f4177"
     },
     "folha_mensal": {
-      "metadata_sha256": "f40e298f586991f290a304146ce5b0f5544d83e715a628b9f62ae9413c6da487",
+      "metadata_sha256": "5e773d48a95faed24202ed5e4761ad15588ea97fdb686d947c99a0268cc37fab",
       "content_sha256": "694d9511a784ea21dffe6139fa3f53e2eb15613f3f1f02d2237e3fc0ccf0e864"
     }
   },
@@ -81,7 +81,8 @@
       "Contrato2.7.1 aditivo (Onda 1, backend #337, #338, #340, #341 e #342): durable_workflow.admission=one_pending_job_per_company e recusa company_job_pending no enqueue; diagnóstico da folha no dossiê com causa primária de afastamento, leave_qualification, code_next_action, calculation_kind_unsupported, population_count/population_hash e busy retryable; 13º com competência no dia1, recusas thirteenth_* por campo/mês, pending_rules e etapa duplicada tipada; create_case com matricula_funcionario_divergente, campos/proxima_acao e minLength em funcionario.matricula; códigos historical_* em declaracao_do_vinculo_invalida. Sem ferramenta nova nem mudança de argumento de ferramenta.",
       "Contrato2.8.0 aditivo (Onda 2, backend #343 a #355): duas ferramentas novas de onboarding (preview_onboarding_termination_revocation e revoke_onboarding_termination, também como operações do transporte @connector) com revoga_com_rescisao_aberta; restoration_declaration no worker de onboarding (human_message, message_reference, reason e motivo fechado troca_de_codigo_dominio com CX- obrigatória); payroll_context e lancamentos no dossiê da folha; termination_map_patch_transport em get_client_config; historical-state-v2; salario_base_anterior_cents, excluidas_automaticamente e salario_novo_provavelmente_registrado no reajuste; historical_thirteenth_coverage_incomplete e reinício do 13º com preparação; jobs de folha em paralelo entre empresas e re-fixação de job não iniciado na troca de build. Ferramentas novas e schema alterado do worker exigem Refresh do conector e conversa nova; o restante não muda ferramenta.",
       "Contrato2.9.0 aditivo (backend #358, #359 e #360): folha_bloqueante na linha folha_do_lancamento_em_revisao_ou_fechada, preview.blocking_payroll e decision.config_pending_reconciled em loki.salary-adjustment/1; subreason fechado em operational_context_changed (loki.operation-refusal/1) e version_refusal_subreasons em get_process_contract; selection_matches_current_state para pessoa em get_case_historical_state; metodo_ferias, terco, saldo e medias_por_bloco em arredondamento_proporcionais do mapa de rescisão, com a recusa de cadastro rescisao_saldo_valor_dia_exige_trinta_fixo; horas_micros, valor_micros, vantagens_micros e bloco em DadosRescisao (medias_variaveis) e ImportedFinalAverage, bloco no formulário de fatos. Sem ferramenta nova nem mudança de argumento: as 96 ferramentas têm o mesmo hash.",
-      "Contrato2.9.1 aditivo (backend #363): só texto novo em loki.salary-adjustment/1 — rule.admitted_on_base_date (admitido no próprio dia da data-base fica sem_reajuste com motivo admitido_na_data_base_com_salario_novo; piso prevalece; salario_novo_cents maior diverge) e declared_origins.transport_discount (o VT não é revalorizado na diferença nem declarado no pago). Histórico de férias aceita gozo com o fim do aquisitivo dentro do período. Sem ferramenta nova, sem schema novo e sem mudança de argumento: as 96 ferramentas são as mesmas."
+      "Contrato2.9.1 aditivo (backend #363): só texto novo em loki.salary-adjustment/1 — rule.admitted_on_base_date (admitido no próprio dia da data-base fica sem_reajuste com motivo admitido_na_data_base_com_salario_novo; piso prevalece; salario_novo_cents maior diverge) e declared_origins.transport_discount (o VT não é revalorizado na diferença nem declarado no pago). Histórico de férias aceita gozo com o fim do aquisitivo dentro do período. Sem ferramenta nova, sem schema novo e sem mudança de argumento: as 96 ferramentas são as mesmas.",
+      "Contrato2.9.2 aditivo (backend #366 e #367): envelope loki.company-termination-map-policy-patch/1 em alteracoes de validate_client_config e apply_client_config (política arredondamento_proporcionais inteira por empresa e seleção, várias empresas numa versão, sem parcelas_do_mes), chave de descoberta termination_map_policy_patch_transport em get_client_config, termination_policy_preview na prévia e recusa termination_policy_patch_remove_incompatible; a recusa historical_thirteenth_unqualified_documentary_facts passa de {erro} para BLOCKED/code com fields, next_action, blocking_facts (origin, kind, identificador, effective_on, reason, path, allowed_types) e blocking_facts_total. Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas."
     ],
     "instructions": [
       "Extensão aditiva2.2: intenção fiscal de administrador humano, prévia/hash/revisão e readback; assinatura, representação, fila e recibo verificados continuam pendentes.",
@@ -114,7 +115,8 @@
       "Instruções2.7.1: domínio novo folha_mensal — uma folha por empresa na fila (company_job_pending, retry_enqueue_later, enfileirar em série, não gravar em outro caso da empresa durante o job, 524 com o mesmo request_ref, BUSY/429 com retry_after, retenção de até ~60min) e diagnóstico no dossiê (qualificar_afastamento_na_origem, dependent_fields, next_action_after_primary, leave_qualification, salario_base_ausente, calculation_kind_unsupported, population_count/population_hash, busy retryable; EXTSRC de outro caso não serve; rescisão declarada no onboarding). decimo_terceiro: competência no dia1, cancelar antes de recriar, envio por partes com pending_rules, 2ª parcela por historical_payments, medias_importadas, dependentes e recusas tipadas. geral: matrícula omitida por padrão, matricula_funcionario_divergente, identifiers e matrícula vazia recusada. ferias/afastamento: códigos historical_*, cobertura só limpa o gap terminando no corte ou antes, sem leave duplicado para afastamento antigo opaco, sem alterar coberturas de casos com seleção feita e lote validado antes da publicação revalidado. Ponteiros em admissao e alteracao_cadastral. Valem quando a resposta servida os apresentar.",
       "Instruções2.8.0 (Onda 2): aviso curto do que mudou no geral, separando o que exige Refresh (restauração de matrícula, troca de código Domínio, revogação de desligamento do onboarding, em alteracao_cadastral) do que não exige nada. folha_mensal: paralelismo entre empresas, janela de publicação (nesta ainda esvaziar a fila; nas seguintes job nunca iniciado sobrevive), contexto do mês por pessoa e hashes dos lançamentos no dossiê, efeitos da revogação e da troca de código. decimo_terceiro: final_average integral nunca proporcional aos avos, ajustar para casos em revisão, reinício com preparação, historical_thirteenth_coverage_incomplete. ferias/afastamento: cobertura que termina depois do corte (historical-state-v2) substitui a regra de terminar no corte. rescisao: patch de parcela no mapa e ponteiro da revogação. reajuste_salarial: regras da DP de17/11/2026 e salário novo já registrado no cadastro; pendências respondidas retiradas. geral/admissao: matrícula divergente aponta a restauração combinada com a operadora. Valem quando a resposta servida os apresentar.",
       "Instruções2.9.0: geral com aviso curto do que mudou (só atualizar o plugin; sem Refresh) e lembrete do Refresh da 2.8.0. reajuste_salarial: folha_bloqueante vale para X ou competência posterior e não conta histórico importado; lançar na primeira competência depois da última folha do Loki em revisão ou fechada, com a DP confirmando o mês; cliente_config_incompleta fecha no apply e processo_nao_habilitado_no_cliente não barra o apply, mas o certo é habilitar com a DP. rescisao: método do Domínio opt-in (metodo_ferias, terco, saldo, medias_por_bloco), médias com micros e por bloco, simulação com chaves nulas, foundation, locator, subreason e conferência do state_hash antes de simular; sem reiniciar o caso real não há caminho para seleção desatualizada. decimo_terceiro: micros e blocos não valem no 13º. admissao: data de admissão é identidade; cancelar com a mensagem do cliente e abrir outro caso, conferindo antes a matrícula do episódio antigo. Valem quando a resposta servida os apresentar.",
-      "Instruções2.9.1 (regras da DP de18/11/2026): geral com aviso curto (só atualizar o plugin; sem Refresh), lembrete do Refresh da 2.8.0 e matrícula do eSocial como identificador oficial (sem gravar matrícula nova por identifier_only sem falar com a engenharia; ponteiro em alteracao_cadastral). reajuste_salarial: admitido no próprio dia da data-base sem reajuste (sai a orientação de deixar pendente), VT fora da diferença e do pago declarado, salário novo já registrado na data-base é o próprio reajuste; admitido no mesmo mês antes do dia fica pendente. ferias: gozo com o fim do aquisitivo dentro do período aceito no histórico; lote recusado antes volta ready e se aplica com o validation_hash novo. afastamento: um registro por atestado; licença-maternidade não é falta. rescisao/decimo_terceiro: o Domínio soma as médias das empresas; medias_por_bloco só com conferência da DP. Valem quando a resposta servida os apresentar."
+      "Instruções2.9.1 (regras da DP de18/11/2026): geral com aviso curto (só atualizar o plugin; sem Refresh), lembrete do Refresh da 2.8.0 e matrícula do eSocial como identificador oficial (sem gravar matrícula nova por identifier_only sem falar com a engenharia; ponteiro em alteracao_cadastral). reajuste_salarial: admitido no próprio dia da data-base sem reajuste (sai a orientação de deixar pendente), VT fora da diferença e do pago declarado, salário novo já registrado na data-base é o próprio reajuste; admitido no mesmo mês antes do dia fica pendente. ferias: gozo com o fim do aquisitivo dentro do período aceito no histórico; lote recusado antes volta ready e se aplica com o validation_hash novo. afastamento: um registro por atestado; licença-maternidade não é falta. rescisao/decimo_terceiro: o Domínio soma as médias das empresas; medias_por_bloco só com conferência da DP. Valem quando a resposta servida os apresentar.",
+      "Instruções2.9.2: geral com aviso curto (só atualizar o plugin; sem Refresh) e lembrete do Refresh da 2.8.0. rescisao: patch só da política de arredondamento do mapa, várias empresas numa versão; a política declarada substitui a atual inteira (ler antes em get_client_config e repetir escopos, fonte e opções ligadas), seleções da mesma empresa recebem a mesma política, termination_policy_preview mostrado à operadora antes do apply, parcelas_do_mes não exigido, medias_por_bloco desligada sem conferência da DP; sem a chave de descoberta, avisar que o servidor ainda não tem o patch. decimo_terceiro: blocking_facts na recusa por fatos documentais; outro qualificado pelo reenvio da cobertura thirteenth_payments da mesma ficha com replaces_fact_id e qualifies_legacy_fact_ids; a qualificação muda o state_hash do empregado e desatualiza seleções de outros casos abertos (alinhar com a DP antes) e só vale em cortes a partir do fim da cobertura; final_average não qualifica fato do 13º; no_typed_exit e dp_rule_pending ficam pendentes. Valem quando a resposta servida os apresentar."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -149,7 +151,8 @@
       "Plugin2.7.1 espelha fila da folha por empresa, diagnóstico da folha no dossiê, 13º por etapas, matrícula no create_case e recusas de fatos históricos em WORKFLOWS/CAPACIDADES_DP, operar-loki e registrar-problema-loki; wheel0.4.23 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.22 permanece imutável.",
       "Plugin2.8.0 espelha a Onda 2 em WORKFLOWS (Onda 2 e Cadastro), CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki, com o que exige Refresh e o que não exige nada; wheel0.4.24 preparado não comprova backend publicado, Refresh feito, instalação ou uso. Wheel0.4.23 permanece imutável.",
       "Plugin2.9.0 espelha a 2.9.0 em WORKFLOWS (seção 2.9.0), CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.25 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.24 permanece imutável.",
-      "Plugin2.9.1 espelha as regras da DP de18/11/2026 em WORKFLOWS (seção 2.9.1), CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.26 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.25 permanece imutável."
+      "Plugin2.9.1 espelha as regras da DP de18/11/2026 em WORKFLOWS (seção 2.9.1), CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.26 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.25 permanece imutável.",
+      "Plugin2.9.2 espelha a política do mapa de rescisão e os fatos do 13º em WORKFLOWS (seção 2.9.2), CAPACIDADES_DP, operar-loki e registrar-problema-loki, com a nota do suporte no Slack (o bot só age quando mencionado ou na thread do próprio pedido); não exige Refresh do conector, só atualizar o plugin; wheel0.4.27 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.26 permanece imutável."
     ]
   }
 }

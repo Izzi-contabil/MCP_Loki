@@ -1,4 +1,59 @@
-# Atualizações MCP Loki — contrato 2.9.1
+# Atualizações MCP Loki — contrato 2.9.2
+
+## Candidata 0.4.27 / contrato, instruções e plugin 2.9.2 — 19/11/2026
+
+Backend #365, #366 e #367, já mesclados em `main` do Loki depois da 2.9.1.
+A mudança de interface é aditiva e sem ferramenta nova: o envelope
+`loki.company-termination-map-policy-patch/1` no mesmo argumento `alteracoes`
+de `validate_client_config` e `apply_client_config`, a chave de descoberta
+`termination_map_policy_patch_transport` em `get_client_config`,
+`termination_policy_preview` na prévia e a recusa
+`termination_policy_patch_remove_incompatible` (#366); e, no 13º, a recusa
+`historical_thirteenth_unqualified_documentary_facts` sai de `{"erro": ...}`
+para `BLOCKED`/`code` com `blocking_facts` e `blocking_facts_total` (#367).
+Pela regra "mudou interface → novo contrato" e pelo precedente aditivo da
+2.9.1, o contrato sobe de 2.9.1 para 2.9.2, um patch; instruções e plugin
+acompanham o contrato em 2.9.2; provider sobe um patch. Mínimo 2.0.0
+permanece e clientes 2.x anteriores continuam compatíveis. A lista
+`compatible_tools` não muda.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.2)" (só atualizar o plugin;
+  sem Refresh), que substitui o da 2.9.1 e mantém o lembrete do Refresh da
+  2.8.0. O `geral` fica com cerca de 60KB do limite de 64KB.
+- `rescisao`: seção nova "Trocar só a política de arredondamento do mapa"
+  (#366): várias empresas numa versão; a política declarada substitui a atual
+  inteira, então ler antes a política de cada seleção em `get_client_config`
+  e repetir `escopos`, `fonte` e as opções que continuam ligadas; seleções da
+  mesma empresa recebem a mesma política; `termination_policy_preview`
+  mostrado à operadora antes do apply; `parcelas_do_mes` não é exigido;
+  `medias_por_bloco` continua desligada sem conferência da DP; sem a chave de
+  descoberta, avisar que o servidor ainda não tem o patch. Ponteiros nas
+  seções do patch de parcela e do método do Domínio.
+- `decimo_terceiro`: seção nova "Fatos documentais não qualificados" (#367):
+  `blocking_facts` com `origin`, `kind`, identificador, `effective_on`,
+  `reason` e `path`; `outro` qualificado pelo reenvio da cobertura
+  `thirteenth_payments` da mesma ficha, com `replaces_fact_id` e
+  `qualifies_legacy_fact_ids`; aviso de que isso muda o `state_hash` do
+  empregado e desatualiza as seleções dos outros casos abertos dele (não
+  qualificar sem alinhar com a DP); a qualificação só vale em cortes a partir
+  do fim da cobertura; `final_average` não qualifica fato do 13º (o uso em
+  `medias_importadas` não muda); `no_typed_exit` e `dp_rule_pending` ficam
+  pendentes e se registram.
+- #365 (suporte no Slack) não pede instrução de domínio: só a nota no
+  `registrar-problema-loki`.
+
+Plugin espelha em WORKFLOWS (seção "2.9.2: política do mapa de rescisão e
+fatos do 13º"), CAPACIDADES_DP, operar-loki e registrar-problema-loki (o que
+é ou não defeito na 2.9.2 e a nota de que o bot do Slack só age quando
+mencionado ou na thread do próprio pedido; o relato segue pelo assistente).
+
+Não exige Refresh do conector: as 96 ferramentas são as mesmas. Os textos
+chegam com o deploy do backend, na mesma conversa. A mudança nas skills exige
+atualizar o plugin instalado, sem bloquear o uso. Wheel 0.4.26 permanece
+imutável; fonte e wheel 0.4.27 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata 0.4.26 / contrato, instruções e plugin 2.9.1 — 18/11/2026
 
