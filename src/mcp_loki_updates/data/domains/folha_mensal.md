@@ -17,10 +17,20 @@ os apresentar.
 > aceite dado ao cálculo anterior não vale para o novo. As folhas já
 > entregues não mudam e não são reescritas.
 
-Nada é recalculado, reaberto ou decidido automaticamente. Recalcule pelo
-mesmo fluxo da folha (`enqueue_case_workflow`, uma folha por empresa na fila),
-com `expected_snapshot` atual e novo `request_ref`, e gere o pacote corrente
-para a conferência. Não cancele o caso para isso. Diferenças entre o cálculo
+Nada é recalculado, reaberto ou decidido automaticamente. Não cancele o caso
+para isso.
+
+- **Abertas e em revisão** (`aberto`, `em_preparacao`, `aguardando_revisao`):
+  recalcule pelo mesmo fluxo da folha (`enqueue_case_workflow`, uma folha por
+  empresa na fila), com `input_snapshot` e `expected_snapshot` atuais e novo
+  `request_ref`, gere o pacote corrente e confira de novo.
+- **Aprovadas e não entregues:** a aprovação pertence ao pacote anterior; a
+  entrega exige novo cálculo, conferência e aceite humano. O enqueue recusa
+  caso aprovado (`case_not_preparable`). Siga a próxima ação servida e, se
+  não houver caminho para recalcular, não entregue o pacote antigo: avise a
+  operadora e registre o problema.
+
+Diferenças entre o cálculo
 anterior e o novo vêm das regras abaixo (salário-família e insalubridade no
 mês de admissão); mostre-as à operadora na conferência. Uma folha recalculada
 pode trazer as pendências novas de salário-família: elas não são erro do

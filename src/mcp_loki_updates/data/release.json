@@ -16,7 +16,7 @@
     },
     "rescisao": {
       "metadata_sha256": "bd999cb8d155de033eef5a9893759e867bd85d9e2669055528d890685d7c37db",
-      "content_sha256": "0e47d65851a75414b988aaf31c38a2c8cd0753aa586f1eafb8da33331889ca08"
+      "content_sha256": "b032bfc792e95cb52cfb1f1957de3b6f9b930cd26fd5aad6e428365b9b819c5d"
     },
     "ferias": {
       "metadata_sha256": "05c95c4d2c0adcfd5b141a8fcbc148f2cf836697dd032177af8349922979989d",
@@ -64,7 +64,7 @@
     },
     "folha_mensal": {
       "metadata_sha256": "04090a0f468c59eb08177d9aab1675a6c44f8c8227c7860b705bb9e4fa2bab4f",
-      "content_sha256": "f718021755463ed7f38b701564f753e3701fcb1b1d9d66a3b16aa6e3a6d02c6b"
+      "content_sha256": "36695678b39d8085f355aac3c6e55bc45b61d54911a61dff5547967154a9f004"
     }
   },
   "changes": {

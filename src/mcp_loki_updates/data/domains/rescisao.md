@@ -449,8 +449,9 @@ real é decisão da operadora, nunca um passo para viabilizar a simulação.
   `historical_state_pin_missing` ou `historical_state_window_pin_missing` (o
   pin do histórico sumiu) e `canonical_anchor_changed` (parta de uma captura
   nova). Nos três primeiros, no caso real, o caminho é reselecionar o estado
-  na origem com `apply_historical_state`; quando isso não é possível (caso já
-  calculado ou em `aguardando_revisao`), simule com o estado atual. Sem
+  na origem com `apply_historical_state`. Com `historical_state_stale`,
+  quando isso não é possível (caso já calculado ou em `aguardando_revisao`),
+  simule com o estado atual (seção seguinte). Sem
   `subreason`, a recusa vem de outra origem (deduções, frescor de férias e
   13º): leia o `reason` e relate se não houver caminho.
 

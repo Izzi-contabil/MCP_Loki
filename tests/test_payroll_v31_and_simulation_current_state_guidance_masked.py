@@ -40,6 +40,9 @@ PAYROLL_RECALC = (
     "As folhas já entregues não mudam e não são reescritas",
     "Nada é recalculado, reaberto ou decidido automaticamente",
     "Competência já entregue só se refaz por retificação",
+    "com `input_snapshot` e `expected_snapshot` atuais e novo `request_ref`",
+    "O enqueue recusa caso aprovado (`case_not_preparable`)",
+    "não entregue o pacote antigo: avise a operadora e registre o problema",
 )
 FAMILY_ALLOWANCE = (
     "## Salário-família pelo limite da base do INSS (folha-v31)",
