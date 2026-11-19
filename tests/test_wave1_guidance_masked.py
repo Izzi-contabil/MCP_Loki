@@ -122,11 +122,11 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.27"
-    assert metadata["instructions_version"] == "2.9.2"
-    assert metadata["mcp_contract_version"] == "2.9.2"
+    assert metadata["provider_version"] == "0.4.28"
+    assert metadata["instructions_version"] == "2.9.3"
+    assert metadata["mcp_contract_version"] == "2.9.3"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.7.0", "2.7.1", "2.8.0", "2.9.0", "2.9.1", "2.9.2"):
+    for version in ("2.0.0", "2.7.0", "2.7.1", "2.8.0", "2.9.0", "2.9.1", "2.9.2", "2.9.3"):
         assert provider.check_version(version, version)["compatible"] is True
     guide = provider.get("folha_mensal")
     assert guide["permissions"] == {"capabilities": ["consultar"], "processes": ["folha_mensal"]}
@@ -206,8 +206,9 @@ def test_plugin_mirrors_wave1_guidance() -> None:
 
 
 def test_wave2_payroll_items_are_not_distributed() -> None:
-    # Insalubridade e salario-familia da folha-v31 ficam para a Onda 2.
-    for guide in (text("folha_mensal"), text("decimo_terceiro")):
+    # Insalubridade e salário-família da folha-v31 chegaram na 2.9.3, só na folha mensal
+    # (test_payroll_v31_and_simulation_current_state_guidance_masked.py); o 13º segue sem eles.
+    for guide in (text("decimo_terceiro"),):
         lowered = guide.casefold()
         assert "salário-família" not in lowered
         assert "salario_familia" not in lowered

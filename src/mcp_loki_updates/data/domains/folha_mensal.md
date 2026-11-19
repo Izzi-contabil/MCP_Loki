@@ -7,6 +7,89 @@ operar, consulte `meu_acesso`, `get_dp_capabilities` e
 anunciado. Os códigos e campos abaixo valem somente quando a resposta servida
 os apresentar.
 
+## Motor folha-v31: recalcular as folhas não entregues
+
+> **Atenção.** O motor da folha mensal passou a `folha-v31`. A versão do motor
+> entra no hash das entradas, então **todas as folhas mensais não entregues
+> ficam desatualizadas** (`calculation_stale`): as abertas, as que estão em
+> revisão e as aprovadas que ainda não foram entregues. Cada uma precisa ser
+> recalculada, conferida de novo e receber novo aceite antes da entrega; o
+> aceite dado ao cálculo anterior não vale para o novo. As folhas já
+> entregues não mudam e não são reescritas.
+
+Nada é recalculado, reaberto ou decidido automaticamente. Recalcule pelo
+mesmo fluxo da folha (`enqueue_case_workflow`, uma folha por empresa na fila),
+com `expected_snapshot` atual e novo `request_ref`, e gere o pacote corrente
+para a conferência. Não cancele o caso para isso. Diferenças entre o cálculo
+anterior e o novo vêm das regras abaixo (salário-família e insalubridade no
+mês de admissão); mostre-as à operadora na conferência. Uma folha recalculada
+pode trazer as pendências novas de salário-família: elas não são erro do
+recálculo. Competência já entregue só se refaz por retificação.
+
+## Salário-família pelo limite da base do INSS (folha-v31)
+
+O Loki testa o limite da cota contra a **base do INSS do mês que ele mesmo
+calcula** (regra da DP: a remuneração reúne as verbas de natureza salarial).
+Até a v30 o teste usava a soma dos proventos, que incluía verbas sem
+incidência e o abono de férias. Não informe o salário-família nem uma
+remuneração própria para o limite. Quando a base do INSS ainda depende de um
+componente pendente, a cota também fica pendente: uma base subestimada nunca
+paga cota a quem está acima do limite.
+
+Pendências novas no diagnóstico do dossiê, com a próxima ação servida:
+
+- `salario_familia_mes_admissao_pendente_regra` (próxima ação
+  `aguardar_regra_dp_do_salario_familia_no_mes_de_admissao`): o vínculo
+  entrou na empresa nesta competência com base até o limite. A entrada é
+  `inicio_empresa_em` ou, sem ela, `admitido_em`; a transferência entre
+  empresas do grupo hoje também conta como entrada. A regra é da DP: o Loki
+  não paga nem nega. Enquanto ela não responder, o vínculo fica parcial, sem
+  total de proventos e sem líquido; INSS, FGTS e IRRF saem calculados. Não
+  invente remuneração nem marque `mes_sem_remuneracao` para destravar. Com a
+  base parcial acima do limite a cota é zero, sem pendência.
+- `salario_familia_remuneracao_zero_sem_declaracao` (próxima ação
+  `declarar_mes_sem_remuneracao_ou_regra_de_salario_familia_do_afastamento`):
+  base do INSS zero com filhos. Se for benefício do INSS ou afastamento no mês
+  inteiro, declare o contexto `mes_sem_remuneracao`. Se forem faltas ou
+  suspensão, deixe pendente e avise a operadora.
+- `salario_familia_base_inss_zero_com_proventos` (próxima ação
+  `qualificar_incidencia_inss_das_rubricas_do_mes`): a base do INSS deu zero,
+  mas há proventos sem incidência (abono, por exemplo). Confira a incidência
+  das rubricas no mapa. Não declare `mes_sem_remuneracao`.
+
+**Saída das três pendências, depois da decisão da DP.** Quando a DP informar a
+cota do caso (ou zero), registre-a com `submit_operator_correction`:
+`target: "calculation"`, `changes:
+{"funcionarios.<matricula>.bases.salario_familia_cents": <centavos>}`, com
+`expected_snapshot` atual, `idempotency_ref` estável, `human_message` com a
+resposta da DP e `reason`. O Loki recalcula e o vínculo fica integral. Não
+use essa rota sem a decisão da DP nem para antecipar a regra. A falta de
+filhos no cadastro não usa essa rota: complete o cadastro dos dependentes.
+Uma correção registrada antes da v31 continua consumida no recálculo.
+
+**Em consulta à DP, sem mudança agora:** o terço de férias do mês entra na base
+do limite; faltas que reduzem a base podem levá-la para baixo do limite e
+permitir a cota; no mês de admissão, se o limite usa a remuneração do mês
+parcial ou do mês cheio (e se a cota é proporcional aos dias); e se a
+transferência entre empresas do grupo deve contar como entrada. Se a equipe
+divergir do Loki nesses pontos, registre como divergência a confirmar com a
+DP, não como defeito.
+
+## Insalubridade e VT no mês de admissão (folha-v31)
+
+- **Insalubridade.** O mapa precisa ter só a rubrica do grau declarado
+  (`rubrica_loki`). Não acrescente a incompatível ao mapa: a ausência dela não
+  bloqueia. A periculosidade segue o mesmo relaxamento do mapa. No mês da
+  admissão, declare `vigente_desde` igual à data de admissão: o Loki paga
+  pelos dias de `periodo_remuneravel` (ou pela quantidade lançada) sobre o
+  divisor do mapa e não exige mais segmentação. Uma regra iniciada depois da
+  admissão continua pendente (`insalubridade_vigencia_parcial_exige_segmentacao`).
+  A periculosidade parcial continua exigindo segmentação. Se o Domínio pagar
+  diferente no mês de entrada (dias ou DSR), é ponto a confirmar com a DP.
+- **VT do admitido no mês: sem mudança.** O desconto continua retido com
+  `vale_transporte_vigencia_parcial_exige_regra` até a regra da DP. Não
+  declare vigência desde o dia 1 para destravar.
+
 ## Fila durável: um job pendente por empresa
 
 1. **Uma folha por empresa na fila.** O Loki aceita um único job pendente

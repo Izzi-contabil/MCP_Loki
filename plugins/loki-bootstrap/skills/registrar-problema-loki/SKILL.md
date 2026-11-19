@@ -147,6 +147,20 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
+Na 2.9.3 não são defeito: folha mensal não entregue com `calculation_stale`
+depois da troca para `folha-v31` (recalcule); as pendências
+`salario_familia_mes_admissao_pendente_regra` (regra da DP, pergunte à Rafa),
+`salario_familia_remuneracao_zero_sem_declaracao` e
+`salario_familia_base_inss_zero_com_proventos`; o VT do admitido no mês
+retido com `vale_transporte_vigencia_parcial_exige_regra`; divergência da
+equipe sobre 1/3 de férias ou faltas na base do limite, mês de admissão cheio
+ou parcial e transferência como entrada (em consulta à DP). Na simulação com
+o estado atual, não são defeito a ressalva, `pending_qualifications` com
+"renovar seleção e qualificação no caso real",
+`historical_settlement_bound_to_selection` e `source_document_missing` por
+fonte `CPH-*` de folha fechada nova (limite conhecido). Já
+`historical_state_source_incompatible` com fonte que a operadora confirma
+íntegra é problema a relatar, com o `subreason` e o caso, sem nome ou CPF.
 
 Carregue esta skill mesmo se o leitor local só retornar `error`. Quando houver
 `support_handoff`, preserve seu `report_id`; o leitor não enviou nada. Para a

@@ -1,7 +1,7 @@
 """Entrega das orientações da 2.9.0 (backend #358, #359, #360); nao mede obediencia.
 
-O aviso do geral passou a ser o da 2.9.2
-(test_policy_patch_and_thirteenth_facts_guidance_masked.py).
+O aviso do geral passou a ser o da 2.9.3
+(test_payroll_v31_and_simulation_current_state_guidance_masked.py).
 """
 
 import json
@@ -57,7 +57,7 @@ AVERAGES = (
 SIMULATION = (
     "## Simulação de rescisão",
     "compare o\n`state_hash` de `get_case_historical_state` com o da seleção",
-    "Sem reiniciar o caso real, não há caminho",
+    "O caminho sem mexer no caso real é a\nsimulação com o estado histórico atual",
     "`shadow_scenario_id`, `occurrence_ref` e `shadow_termination`",
     "Omitir uma\n  chave dá `identity_changed`",
     "`$.payload.dados_rescisao.salario_base_cents`",
@@ -144,7 +144,7 @@ def test_plugin_mirrors_290_guidance() -> None:
             "`processo_nao_habilitado_no_cliente` não barra o apply",
             "`rescisao_saldo_valor_dia_exige_trinta_fixo`",
             "`+metodo-dominio-v1`",
-            "seleção desatualizada não tem caminho sem reiniciar o caso real",
+            "com seleção desatualizada, a 2.9.3 oferece a simulação com o estado histórico atual",
             "a data de admissão é identidade e não se troca",
         ),
     )

@@ -430,10 +430,10 @@ Quando o contrato servido apresentar:
 Antes de simular, confira o estado histórico da origem: compare o
 `state_hash` de `get_case_historical_state` com o da seleção do caso, ou leia
 `selection_matches_current_state` (agora também para pessoa). Se vier
-`false`, a seleção do caso real está desatualizada e a simulação será
-recusada. Sem reiniciar o caso real, não há caminho: diga isso à operadora;
-reiniciar o caso real é decisão dela, nunca um passo para viabilizar a
-simulação.
+`false`, a seleção do caso real está desatualizada e a simulação padrão será
+recusada (`historical_state_stale`). O caminho sem mexer no caso real é a
+simulação com o estado histórico atual (seção seguinte). Reiniciar o caso
+real é decisão da operadora, nunca um passo para viabilizar a simulação.
 
 - Copie para a hipótese todas as chaves de topo da origem (`get_case`),
   inclusive as que vierem `null`: `origem`, `origem_ref`,
@@ -448,10 +448,72 @@ simulação.
   `historical_state_stale` (os fatos mudaram depois da seleção),
   `historical_state_pin_missing` ou `historical_state_window_pin_missing` (o
   pin do histórico sumiu) e `canonical_anchor_changed` (parta de uma captura
-  nova). Nos três primeiros o caminho seria reselecionar o estado na origem
-  com `apply_historical_state`, o que, no caso real já calculado, depende do
-  reinício acima. Sem `subreason`, a recusa vem de outra origem (deduções,
-  frescor de férias e 13º): leia o `reason` e relate se não houver caminho.
+  nova). Nos três primeiros, no caso real, o caminho é reselecionar o estado
+  na origem com `apply_historical_state`; quando isso não é possível (caso já
+  calculado ou em `aguardando_revisao`), simule com o estado atual. Sem
+  `subreason`, a recusa vem de outra origem (deduções, frescor de férias e
+  13º): leia o `reason` e relate se não houver caminho.
+
+## Simulação com o estado histórico atual
+
+Use quando a simulação voltou `operational_context_changed` /
+`historical_state_stale` e o caso real não pode ser reiniciado (por exemplo,
+está em `aguardando_revisao`). Antes, consulte `get_case_historical_state` do
+caso real para ver o estado atual que será usado. Repita o `create_case` da
+simulação com `payload.simulation.historical_state: "current"` e uma
+`simulation_ref` **nova**: a mesma referência com outra base é recusada com
+`simulation_intent_conflict`. Sem o campo (ou com `selected`), nada muda: a
+simulação usa a seleção do caso real, como antes. O opt-in só vale em
+simulação; num caso real é recusado com `parameters_invalid`.
+
+- **O que muda e o que não muda.** A simulação usa o estado atual só para si.
+  Não renova a seleção do caso real nem grava nada nele (seleção, pin,
+  evento, versão ou snapshot); o caso real continua recusando
+  `historical_state_stale` até a seleção ser renovada lá. A simulação
+  continua sem efeito e não aprovável. Fontes `ONBSRC-*` de um upload novo do
+  histórico entram nesta simulação sem pin no caso real.
+- **Limite:** fontes `CPH-*` de folha fechada nova ainda não entram. Um fato
+  de folha fechada que o caso real nunca pinou recusa com
+  `source_document_missing`; não há contorno pela simulação.
+- **`historical_state_basis`** (em `simulation` de `get_case`, das listas, do
+  dossiê e em `get_case_version`): o `state_hash` usado, o
+  `selected_state_hash` do caso real, `differs_from_selection`,
+  `history_consumed` e as fontes congeladas. A simulação já nascida não muda
+  se o histórico mudar depois.
+- **Ressalvas** (`notices`, todas as páginas do PDF e o recibo). Repasse-as à
+  operadora sempre que mostrar números da simulação: eles não valem para o
+  caso real até a seleção ser renovada lá.
+  - "ESTADO HISTÓRICO ATUAL, DIFERENTE DO SELECIONADO NO CASO REAL" ou "IGUAL
+    AO SELECIONADO NO CASO REAL".
+  - "HISTÓRICO NÃO CONSUMIDO NO CÁLCULO DESTA SIMULAÇÃO"
+    (`history_consumed: false`): o caso não tem qualificação que use o
+    histórico; os números são os de uma simulação sem o opt-in.
+  - "QUALIFICAÇÕES DO HISTÓRICO PERTENCEM À SELEÇÃO ANTERIOR: OPERANDOS
+    QUALIFICADOS PENDENTES".
+- **Qualificações do caso real pertencem à seleção anterior** (faltas do
+  aquisitivo, médias qualificadas ou importadas, prazo de experiência, saldo
+  de FGTS e avos e faltas do 13º). Com o estado atual esses operandos ficam
+  pendentes e a simulação sai `completed_partial`;
+  `simulation.pending_qualifications` traz
+  `historical_qualification_context_incompatible` com a ação "renovar seleção
+  e qualificação no caso real". Não é erro dos dados nem defeito: para
+  simular com essas qualificações no estado atual, é preciso renovar a
+  seleção e qualificar de novo no caso real, decisão da operadora ou da DP.
+  Fatos que não dependem de qualificação (dependentes de IRRF, por exemplo)
+  entram.
+- **Recusas** (`operational_context_changed`, `subreason` fechado):
+  - `historical_state_not_selected`: o caso real nunca teve seleção; o
+    opt-in substitui uma seleção, não a cria.
+  - `historical_state_pin_missing` ou `historical_state_window_pin_missing`:
+    o histórico atual não sustenta um pin (hash ou fatos incompletos).
+  - `historical_state_source_incompatible` (novo): uma fonte do histórico
+    está ausente, alterada ou ilegível; confira o cadastro histórico e a
+    fonte.
+  - `historical_settlement_bound_to_selection` (novo; antes chegava como
+    `simulation_operation_failed`): a liquidação foi qualificada na seleção
+    anterior; renove a seleção e a qualificação no caso real.
+- `simulation_source_changed`: o histórico mudou durante a criação; repita
+  com outra `simulation_ref`.
 
 ## Desligamento gravado pelo onboarding
 

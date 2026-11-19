@@ -289,7 +289,9 @@ explícitas, com `recebe`, vigência, rubrica e operandos do schema; ausência n
 com CNPJ, estabelecimento, cargos, período e população de admissões.
 `inherit_future_hires` exige escolha e corte de admissão explícitos;
 o nome do cargo isolado não cria direito. Sobreposição, cargo/unidade desconhecidos
-e vigência parcial conservam pendência/necessidade de segmentação.
+e vigência parcial conservam pendência/necessidade de segmentação. Exceção
+da folha `folha-v31`: insalubridade com `vigente_desde` igual à data de
+admissão cobre o mês de entrada, paga pelos dias (domínio `folha_mensal`).
 
 Elegibilidade difere de valoração: base, percentual, divisor, quantidade e
 incidências dependem do mapa/regra qualificados; não invente fórmula universal.

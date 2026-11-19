@@ -89,6 +89,14 @@ mostrado antes do apply; a recusa do 13º por fatos documentais lista
 `blocking_facts`, e qualificar um `outro` muda o `state_hash` do empregado
 (com outros casos abertos dele, alinhar com a DP antes). Não exigem Refresh;
 a operadora só atualiza o plugin.
+Na 2.9.3 (“2.9.3: folha v31 (salário-família e insalubridade) e simulação com
+o estado atual”): **todas as folhas mensais não entregues precisam ser
+recalculadas, conferidas e aceitas de novo** por causa do motor `folha-v31`
+(as entregues não mudam); o salário-família usa a base do INSS do mês, com
+pendências que saem por correção do operador depois da decisão da DP;
+insalubridade no mês de admissão é paga pelos dias; a simulação de rescisão
+aceita `historical_state: "current"` sem mexer no caso real. Não exigem
+Refresh; a operadora atualiza o plugin e recalcula as folhas.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

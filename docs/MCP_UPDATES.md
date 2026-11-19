@@ -1,4 +1,74 @@
-# Atualizações MCP Loki — contrato 2.9.2
+# Atualizações MCP Loki — contrato 2.9.3
+
+## Candidata 0.4.28 / contrato, instruções e plugin 2.9.3 — 19/11/2026
+
+Backend #370 (folha-v31) e #368 (simulação com o estado histórico atual), já
+mesclados em `main` do Loki depois da 2.9.2. A mudança de interface é aditiva e
+sem ferramenta nova: o campo opcional `historical_state` (`selected` padrão |
+`current`) no marcador de simulação, publicado em
+`get_process_contract("rescisao").simulation.historical_state`, com
+`historical_state_basis` (`loki.simulation-historical-state/1`), `notices`,
+`pending_qualifications` e os subreasons novos
+`historical_state_source_incompatible` e
+`historical_settlement_bound_to_selection` (#368); na folha, três códigos de
+pendência de salário-família no diagnóstico, a `next_action`
+`qualificar_incidencia_inss_das_rubricas_do_mes` e o caminho de correção do
+operador em `funcionarios.<matricula>.bases.salario_familia_cents` (#370).
+Pela regra "mudou interface → novo contrato" e pelo precedente aditivo da
+2.9.2, o contrato sobe de 2.9.2 para 2.9.3, um patch; instruções e plugin
+acompanham o contrato em 2.9.3; provider sobe um patch. Mínimo 2.0.0
+permanece e clientes 2.x anteriores continuam compatíveis. A lista
+`compatible_tools` não muda.
+
+**A troca de motor para `folha-v31` deixa desatualizadas todas as folhas
+mensais não entregues** (abertas, em revisão e aprovadas não entregues): elas
+precisam ser recalculadas, conferidas e aceitas de novo; as entregues não
+mudam. O aviso do `geral` destaca isso.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.3)", com o recálculo da folha
+  v31 em destaque como ação da operadora, além de atualizar o plugin (sem
+  Refresh); substitui o da 2.9.2 e mantém o lembrete do Refresh da 2.8.0; o
+  ponteiro da simulação cita a seção nova de `rescisao`. O `geral` fica com
+  cerca de 61KB do limite de 64KB.
+- `folha_mensal`: três seções novas no topo. "Motor folha-v31: recalcular as
+  folhas não entregues" (abertas, em revisão e aprovadas não entregues; novo
+  aceite; entregues não mudam; retificação para competência entregue).
+  "Salário-família pelo limite da base do INSS (folha-v31)": limite contra a
+  base do INSS do mês; pendências
+  `salario_familia_mes_admissao_pendente_regra`,
+  `salario_familia_remuneracao_zero_sem_declaracao` e
+  `salario_familia_base_inss_zero_com_proventos` com as próximas ações
+  servidas; saída por `submit_operator_correction` com
+  `target: "calculation"` depois da decisão da DP; falta de filhos se resolve
+  completando o cadastro; pontos em consulta à DP (1/3 de férias e faltas na
+  base do limite, mês de admissão cheio ou parcial, transferência como
+  entrada). "Insalubridade e VT no mês de admissão (folha-v31)": só a
+  `rubrica_loki` no mapa, pagamento pelos dias no mês de admissão, VT do
+  admitido no mês continua retido.
+- `alteracao_cadastral`: exceção da insalubridade vigente desde a admissão na
+  seção de adicionais.
+- `rescisao`: seção nova "Simulação com o estado histórico atual" (#368):
+  `payload.simulation.historical_state: "current"` com `simulation_ref` nova;
+  nada muda no caso real; ressalvas, `historical_state_basis`,
+  `history_consumed` e `pending_qualifications` com a ação "renovar seleção e
+  qualificação no caso real"; subreasons novos; limite das fontes `CPH-*`
+  (`source_document_missing`). Sai a orientação de que seleção desatualizada
+  não tem caminho sem reiniciar o caso real.
+
+Plugin espelha em WORKFLOWS (seção "2.9.3: folha v31 (salário-família e
+insalubridade) e simulação com o estado atual", e o bullet de simulação da
+2.9.0 aponta para ela), CAPACIDADES_DP, operar-loki e registrar-problema-loki
+(o que é ou não defeito na 2.9.3).
+
+Não exige Refresh do conector: as 96 ferramentas são as mesmas
+(`build_server().list_tools()` em `main` do Loki, f35f5b1c). Os textos chegam
+com o deploy do backend, na mesma conversa. A mudança nas skills exige
+atualizar o plugin instalado, sem bloquear o uso. Wheel 0.4.27 permanece
+imutável; fonte e wheel 0.4.28 locais não comprovam promoção, publicação,
+atualização do plugin instalado, recálculo das folhas, uso pela operadora ou
+aceite de DP.
 
 ## Candidata 0.4.27 / contrato, instruções e plugin 2.9.2 — 19/11/2026
 
