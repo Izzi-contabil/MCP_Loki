@@ -96,7 +96,8 @@ recalculadas, conferidas e aceitas de novo** por causa do motor `folha-v31`
 pendências que saem por correção do operador depois da decisão da DP;
 insalubridade no mês de admissão é paga pelos dias; a simulação de rescisão
 aceita `historical_state: "current"` sem mexer no caso real. Não exigem
-Refresh; a operadora atualiza o plugin e recalcula as folhas.
+Refresh; a operadora atualiza o plugin e recalcula as folhas. Substituída em
+parte pela 2.9.4: salário-família e VT do admitido.
 Na 2.9.4 (“2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova
 no worker”): **todas as folhas mensais não entregues precisam ser
 recalculadas, conferidas e aceitas de novo** por causa do motor `folha-v32`,

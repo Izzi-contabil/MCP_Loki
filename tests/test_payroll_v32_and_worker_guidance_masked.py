@@ -20,7 +20,7 @@ SECTION_294 = "## 2.9.4: folha v32 (salário-família, VT do admitido) e empresa
 NOTICE = (
     "## O que mudou nesta versão (2.9.4)",
     "> **Atenção: recalcular as folhas mensais não entregues.**",
-    "passou a `folha-v32`",
+    "Quando `loki_verificar_versao` ou o cálculo da folha mostrar o motor `folha-v32`",
     "`calculation_stale`",
     "inclusive as já recalculadas na `folha-v31`",
     "Uma correção de salário-família registrada na v31 continua valendo e prevalece",
@@ -28,7 +28,7 @@ NOTICE = (
     "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
     "o limite usa a remuneração devida no mês",
     "o percentual incide uma vez sobre o salário proporcional",
-    "Empresa nova: a pessoa owner inclui a empresa no worker de folha pelo "
+    "Empresa nova: a pessoa owner (ou master) inclui a empresa no worker de folha pelo "
     "comando aditivo `prepare_authorization_addition`; a recusa "
     "`worker_not_authorized` diz o que falta",
 )
@@ -64,6 +64,9 @@ FAMILY = (
     "`declarar_cota_pela_dp_com_medias_de_ferias`",
     '{"funcionarios.<matricula>.bases.salario_familia_cents": <centavos>}',
     "A falta de filhos no cadastro não usa essa rota",
+    "A saída normal é qualificar ou corrigir a rubrica de salário no mapa da empresa. "
+    "`submit_operator_correction` só vale com decisão explícita da DP sobre a cota "
+    "daquele caso.",
 )
 TRANSPORT = (
     "## VT do admitido no mês (folha-v32)",
@@ -76,6 +79,9 @@ TRANSPORT = (
     '{"funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents":',
     "`vale_transporte_mes_transferencia_pendente_regra`",
     "Afastamento e desligamento no mês: sem mudança",
+    "Quando a fonte mostrar a regra valendo desde a admissão (ou antes), declare essa "
+    "data; o Loki não retém mais. Não ajuste `vigente_desde` para destravar.",
+    "o caminho exato da linha de VT vem em `operator_corrections` do cálculo",
 )
 STALE_V31 = (
     "## Salário-família pelo limite da base do INSS (folha-v31)",
@@ -162,6 +168,8 @@ def test_payroll_domain_carries_v32_guidance() -> None:
         payroll,
         (
             "**Empresa nova sem o worker.**",
+            "A pessoa owner (ou master) inclui pelo conector",
+            "registre o problema e avise a engenharia pelo Caixa",
             '`reason: "worker_company_grant_missing"`',
         ),
     )
@@ -176,7 +184,12 @@ def test_plugin_mirrors_294_guidance() -> None:
         section,
         (
             "**Não exige Refresh do conector**: as 96 ferramentas são as mesmas",
-            "O motor passou a `folha-v32`",
+            "Quando o cálculo mostrar o motor `folha-v32`",
+            "A saída normal é qualificar ou corrigir a rubrica de salário no mapa da empresa",
+            "só vale com decisão explícita da DP sobre a cota daquele caso",
+            "Não ajuste `vigente_desde` para destravar",
+            "o caminho exato da linha de VT vem em `operator_corrections` do cálculo",
+            "a pessoa owner (ou master) inclui a empresa",
             "**Correção da v31 prevalece.**",
             "`salario_familia_mes_admissao_pendente_regra` não aparece mais",
             "`salario_familia_mes_transferencia_pendente_regra`",
@@ -190,6 +203,7 @@ def test_plugin_mirrors_294_guidance() -> None:
         (
             "## 2.9.4: folha v32, VT do admitido e empresa nova no worker",
             "Uma correção de salário-família registrada na v31 prevalece",
+            "Substituída em parte pela 2.9.4: salário-família e VT do admitido.",
         ),
     )
     assert_all(
@@ -197,6 +211,7 @@ def test_plugin_mirrors_294_guidance() -> None:
         (
             "“2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova no worker”",
             "correções de salário-família da v31 prevalecem e devem ser conferidas",
+            "Substituída em parte pela 2.9.4: salário-família e VT do admitido.",
         ),
     )
     assert_all(
@@ -205,5 +220,7 @@ def test_plugin_mirrors_294_guidance() -> None:
             "Na 2.9.4 não são defeito",
             "`calculation_stale` depois da troca para `folha-v32`",
             "`salario_familia_salario_do_mes_nao_identificado` é problema do mapa",
+            "`vale_transporte_mes_transferencia_pendente_regra` e",
+            "iniciada depois da admissão ou encerrada no mês",
         ),
     )

@@ -152,7 +152,8 @@ depois da troca para `folha-v32` (recalcule); as pendências
 `salario_familia_mes_transferencia_pendente_regra`,
 `salario_familia_adicional_mes_cheio_nao_identificado`,
 `salario_familia_deducao_nao_classificada`,
-`salario_familia_medias_ferias_nao_classificadas` e
+`salario_familia_medias_ferias_nao_classificadas`,
+`vale_transporte_mes_transferencia_pendente_regra` e
 `vale_transporte_proporcao_concessao_admissao_ambigua` (decisão da DP,
 pergunte à Rafa); divergência da equipe na contagem `30 − dia + 1` do mês de
 admissão (em confirmação com a DP); correção da v31 que prevalece sobre a cota
@@ -165,7 +166,8 @@ depois da troca para `folha-v31` (recalcule); as pendências
 `salario_familia_mes_admissao_pendente_regra` (regra da DP, pergunte à Rafa),
 `salario_familia_remuneracao_zero_sem_declaracao` e
 `salario_familia_base_inss_zero_com_proventos`; o VT do admitido no mês
-retido com `vale_transporte_vigencia_parcial_exige_regra`; divergência da
+retido com `vale_transporte_vigencia_parcial_exige_regra` quando a regra foi
+iniciada depois da admissão ou encerrada no mês; divergência da
 equipe sobre 1/3 de férias ou faltas na base do limite, mês de admissão cheio
 ou parcial e transferência como entrada (em consulta à DP). Na simulação com
 o estado atual, não são defeito a ressalva, `pending_qualifications` com

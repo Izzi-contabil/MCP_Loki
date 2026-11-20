@@ -893,7 +893,7 @@ exige Refresh do conector**: as 96 ferramentas são as mesmas. A operadora
 atualiza o plugin instalado e recalcula as folhas abaixo. Substitui as partes
 de salário-família e de VT do admitido da 2.9.3.
 
-- **Recálculo obrigatório (`folha_mensal`).** O motor passou a `folha-v32`:
+- **Recálculo obrigatório (`folha_mensal`).** Quando o cálculo mostrar o motor `folha-v32`:
   todas as folhas mensais não entregues (abertas, em revisão e aprovadas e não
   entregues, inclusive as já recalculadas na v31) ficam `calculation_stale` e
   precisam ser recalculadas, conferidas de novo e receber novo aceite. As
@@ -909,27 +909,25 @@ de salário-família e de VT do admitido da 2.9.3.
   reduzem a remuneração. Mês de admissão não é mais pendência: limite pelo mês
   cheio e cota proporcional a `30 − dia + 1` dias (em confirmação com a DP).
   `salario_familia_mes_admissao_pendente_regra` não aparece mais.
-- **Pendências novas de salário-família**, todas com saída por
+- `salario_familia_salario_do_mes_nao_identificado`: o mapa da empresa não tem rubrica de salário reconhecível (fórmula `salario_base` ou `remuneracao_periodo`; por exemplo, o salário vem como valor informado). A saída normal é qualificar ou corrigir a rubrica de salário no mapa da empresa. `submit_operator_correction` só vale com decisão explícita da DP sobre a cota daquele caso.
+- **Demais pendências novas de salário-família**, com saída por
   `submit_operator_correction` (`target: "calculation"`,
   `funcionarios.<matricula>.bases.salario_familia_cents`) depois da decisão
   da DP: `salario_familia_mes_transferencia_pendente_regra` (transferência no
-  mês), `salario_familia_salario_do_mes_nao_identificado` (mapa sem rubrica de
-  salário reconhecível: registre o problema do mapa),
-  `salario_familia_adicional_mes_cheio_nao_identificado`,
+  mês), `salario_familia_adicional_mes_cheio_nao_identificado`,
   `salario_familia_deducao_nao_classificada` (estorno ou falta lançada como
   valor informado) e `salario_familia_medias_ferias_nao_classificadas`. As de
   base zero não mudam.
 - **VT do admitido no mês:** percentual uma vez sobre o salário proporcional
-  (salário × dias do contrato / 30); declare `vigente_desde` igual à admissão
-  (não fica mais retido). Com concessão: admissão no dia 1 segue a fórmula de
+  (salário × dias do contrato / 30). Quando a fonte mostrar a regra valendo desde a admissão (ou antes), declare essa data; o Loki não retém mais. Não ajuste `vigente_desde` para destravar. Com concessão: admissão no dia 1 segue a fórmula de
   sempre; proporção igual aos dias do contrato não é reaplicada; outra
   proporção fica `vale_transporte_proporcao_concessao_admissao_ambigua`, com
   saída por `submit_operator_correction` em
-  `funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents`.
+  `funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents` (o caminho exato da linha de VT vem em `operator_corrections` do cálculo).
   Transferência: `vale_transporte_mes_transferencia_pendente_regra`.
   Afastamento e desligamento no mês: sem mudança.
 - **Empresa nova no worker (`geral`).** `worker_not_authorized` com
-  `reason: "worker_company_grant_missing"`: a pessoa owner inclui a empresa na
+  `reason: "worker_company_grant_missing"`: a pessoa owner (ou master) inclui a empresa na
   conta do worker pelo comando aditivo `prepare_authorization_addition`
   (`receive_case_data` com `case_id: "@connector"`) e aplica com
   `aplicar_autorizacao`; depois repita o mesmo enqueue. Nunca use

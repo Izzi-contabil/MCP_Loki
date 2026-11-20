@@ -9,8 +9,8 @@ os apresentar.
 
 ## Motor folha-v32: recalcular as folhas não entregues
 
-> **Atenção.** O motor da folha mensal passou a `folha-v32`. A versão do motor
-> entra no hash das entradas, então **todas as folhas mensais não entregues
+> **Atenção.** Quando o cálculo da folha mostrar o motor `folha-v32`: a versão
+> do motor entra no hash das entradas, então **todas as folhas mensais não entregues
 > ficam desatualizadas** (`calculation_stale`): as abertas, as que estão em
 > revisão e as aprovadas que ainda não foram entregues. Cada uma precisa ser
 > recalculada, conferida de novo e receber novo aceite antes da entrega; o
@@ -87,10 +87,7 @@ INSS, FGTS e IRRF saem calculados. Não invente remuneração nem marque
   remuneração devida até o limite. A regra da DP vale só para a admissão. Não
   pague nem negue.
 - `salario_familia_salario_do_mes_nao_identificado` (próxima ação
-  `qualificar_rubrica_do_salario_do_mes_no_mapa`): o mapa da empresa não tem
-  rubrica de salário reconhecível (fórmula `salario_base` ou
-  `remuneracao_periodo`); por exemplo, o salário vem como valor informado.
-  Avise a operadora e registre o problema do mapa.
+  `qualificar_rubrica_do_salario_do_mes_no_mapa`): o mapa da empresa não tem rubrica de salário reconhecível (fórmula `salario_base` ou `remuneracao_periodo`; por exemplo, o salário vem como valor informado). A saída normal é qualificar ou corrigir a rubrica de salário no mapa da empresa. `submit_operator_correction` só vale com decisão explícita da DP sobre a cota daquele caso.
 - `salario_familia_adicional_mes_cheio_nao_identificado` (próxima ação
   `qualificar_adicional_do_mes_cheio_ou_declarar_cota_pela_dp`): há um
   adicional proporcional aos dias cujo valor do mês cheio o Loki não
@@ -127,8 +124,7 @@ mudança" da `folha-v31`.
 - O desconto é o percentual da regra individual aplicado **uma vez** sobre o
   salário proporcional do mês: salário × dias do contrato no mês comercial /
   30. O limite informativo das pendências de VT também usa esse salário.
-- Declare `vigente_desde` igual à data de admissão: o Loki não exige mais
-  regra de vigência parcial no mês de admissão. Uma regra vigente desde antes
+- Quando a fonte mostrar a regra valendo desde a admissão (ou antes), declare essa data; o Loki não retém mais. Não ajuste `vigente_desde` para destravar. Uma regra vigente desde antes
   do mês também passa a descontar sobre o salário proporcional. Uma regra que
   começa depois da admissão, ou termina no mês, continua
   `vale_transporte_vigencia_parcial_exige_regra`.
@@ -145,7 +141,7 @@ mudança" da `folha-v31`.
     ajuste a proporção para destravar. Com a decisão da DP, declare o desconto
     com `submit_operator_correction`, `target: "calculation"`, `changes:
     {"funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents":
-    <centavos>}`.
+    <centavos>}` (o caminho exato da linha de VT vem em `operator_corrections` do cálculo).
   - Se o Domínio aplicar as duas proporções, registre como divergência a
     confirmar com a DP.
 - Na transferência entre empresas do grupo, a regra iniciada na entrada fica
@@ -168,10 +164,10 @@ mudança" da `folha-v31`.
 
 0. **Empresa nova sem o worker.** `worker_not_authorized` com
    `reason: "worker_company_grant_missing"` quer dizer que falta a empresa na
-   conta do worker. A pessoa owner inclui pelo conector, sem pedir à
-   engenharia (domínio `geral`, "Empresa nova: acesso do worker e da rotina").
-   Depois repita o mesmo enqueue. Sem esse `reason`, é outro problema:
-   registre pelo Caixa.
+   conta do worker. A pessoa owner (ou master) inclui pelo conector, sem
+   pedir à engenharia (domínio `geral`, "Empresa nova: acesso do worker e da
+   rotina"). Depois repita o mesmo enqueue. Sem esse `reason`, é outro
+   problema: registre o problema e avise a engenharia pelo Caixa.
 1. **Uma folha por empresa na fila.** O Loki aceita um único job pendente
    (`queued` ou `running`) por empresa. O contrato anuncia isso em
    `durable_workflow.admission: "one_pending_job_per_company"`. Se outro caso

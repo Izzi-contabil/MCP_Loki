@@ -6,8 +6,9 @@ Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. A exceção é o
 recálculo da folha abaixo: avise antes de ela conferir ou entregar uma folha.
 
-> **Atenção: recalcular as folhas mensais não entregues.** O motor da folha
-> passou a `folha-v32` e isso deixa desatualizadas (`calculation_stale`)
+> **Atenção: recalcular as folhas mensais não entregues.** Quando
+> `loki_verificar_versao` ou o cálculo da folha mostrar o motor `folha-v32`,
+> a troca de motor deixa desatualizadas (`calculation_stale`)
 > todas as folhas mensais não entregues: abertas, em revisão e aprovadas e
 > ainda não entregues, inclusive as já recalculadas na `folha-v31`. Cada uma
 > precisa ser recalculada, conferida de novo e receber novo aceite; a
@@ -32,7 +33,7 @@ servidor. As 96 ferramentas são as mesmas: **não exige Refresh do conector**.
 - VT do admitido no mês: o percentual incide uma vez sobre o salário
   proporcional; a regra vigente desde a admissão não fica mais retida; a
   concessão com outra proporção fica pendente. Domínio `folha_mensal`.
-- Empresa nova: a pessoa owner inclui a empresa no worker de folha pelo
+- Empresa nova: a pessoa owner (ou master) inclui a empresa no worker de folha pelo
   comando aditivo `prepare_authorization_addition`; a recusa
   `worker_not_authorized` diz o que falta ("Empresa nova: acesso do worker e
   da rotina", abaixo).

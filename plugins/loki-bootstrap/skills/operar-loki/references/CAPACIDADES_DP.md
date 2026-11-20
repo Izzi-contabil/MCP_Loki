@@ -335,7 +335,7 @@ DP. O VT do admitido no mês incide uma vez sobre o salário proporcional; a
 concessão com outra proporção fica
 `vale_transporte_proporcao_concessao_admissao_ambigua`. Empresa nova entra no
 worker de folha pelo comando aditivo `prepare_authorization_addition`, feito
-pela pessoa owner. Nada disso exige Refresh; a operadora atualiza o plugin e
+pela pessoa owner (ou master). Nada disso exige Refresh; a operadora atualiza o plugin e
 recalcula as folhas. Roteiro em “2.9.4: folha v32 (salário-família, VT do
 admitido) e empresa nova no worker” de [WORKFLOWS.md](WORKFLOWS.md).
 
@@ -355,7 +355,8 @@ DP. Insalubridade no mês de admissão é paga pelos dias, só com a
 histórico atual, com ressalvas e sem mexer no caso real. Nada disso exige
 Refresh; a operadora atualiza o plugin e recalcula as folhas. Roteiro em
 “2.9.3: folha v31 (salário-família e insalubridade) e simulação com o estado
-atual” de [WORKFLOWS.md](WORKFLOWS.md).
+atual” de [WORKFLOWS.md](WORKFLOWS.md). Substituída em parte pela 2.9.4:
+salário-família e VT do admitido.
 
 ## Nova preparação de afastamento
 
