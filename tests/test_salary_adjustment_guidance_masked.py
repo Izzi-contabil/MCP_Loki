@@ -138,16 +138,16 @@ def domain() -> str:
 def test_collective_domain_is_served_with_the_new_contract() -> None:
     provider = InstructionsProvider()
     guide = provider.get("reajuste_salarial")
-    assert guide["version"] == "2.9.3"
-    assert guide["compatibility"]["mcp_contract_version"] == "2.9.3"
+    assert guide["version"] == "2.9.4"
+    assert guide["compatibility"]["mcp_contract_version"] == "2.9.4"
     assert guide["permissions"] == {
         "capabilities": ["consultar"],
         "processes": ["reajuste_salarial"],
     }
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.28"
-    assert metadata["instructions_version"] == "2.9.3"
-    assert metadata["mcp_contract_version"] == "2.9.3"
+    assert metadata["provider_version"] == "0.4.29"
+    assert metadata["instructions_version"] == "2.9.4"
+    assert metadata["mcp_contract_version"] == "2.9.4"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -159,6 +159,7 @@ def test_collective_domain_is_served_with_the_new_contract() -> None:
         "2.9.1",
         "2.9.2",
         "2.9.3",
+        "2.9.4",
     ):
         assert provider.check_version(version, version)["compatible"] is True
 

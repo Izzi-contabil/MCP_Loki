@@ -316,6 +316,29 @@ casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.4: folha v32, VT do admitido e empresa nova no worker
+
+Quando a resposta servida apresentar: a folha mensal passa ao motor
+`folha-v32`, e **todas as folhas mensais não entregues precisam ser
+recalculadas, conferidas e aceitas de novo** (as entregues não mudam). O
+limite do salário-família usa a remuneração devida no mês (salário cheio,
+adicionais pelo mês cheio, sem faltas, sem 13º e sem terço de férias); no mês
+de admissão a cota sai proporcional aos dias do contrato, sem pendência. Uma
+correção de salário-família registrada na v31 prevalece: confira-a. As
+pendências novas `salario_familia_mes_transferencia_pendente_regra`,
+`salario_familia_salario_do_mes_nao_identificado`,
+`salario_familia_adicional_mes_cheio_nao_identificado`,
+`salario_familia_deducao_nao_classificada` e
+`salario_familia_medias_ferias_nao_classificadas` saem por
+`submit_operator_correction` (`target: "calculation"`) depois da decisão da
+DP. O VT do admitido no mês incide uma vez sobre o salário proporcional; a
+concessão com outra proporção fica
+`vale_transporte_proporcao_concessao_admissao_ambigua`. Empresa nova entra no
+worker de folha pelo comando aditivo `prepare_authorization_addition`, feito
+pela pessoa owner (ou master). Nada disso exige Refresh; a operadora atualiza o plugin e
+recalcula as folhas. Roteiro em “2.9.4: folha v32 (salário-família, VT do
+admitido) e empresa nova no worker” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## 2.9.3: folha v31 e simulação com o estado atual
 
 Quando a resposta servida apresentar: a folha mensal passa ao motor
@@ -332,7 +355,8 @@ DP. Insalubridade no mês de admissão é paga pelos dias, só com a
 histórico atual, com ressalvas e sem mexer no caso real. Nada disso exige
 Refresh; a operadora atualiza o plugin e recalcula as folhas. Roteiro em
 “2.9.3: folha v31 (salário-família e insalubridade) e simulação com o estado
-atual” de [WORKFLOWS.md](WORKFLOWS.md).
+atual” de [WORKFLOWS.md](WORKFLOWS.md). Substituída em parte pela 2.9.4:
+salário-família e VT do admitido.
 
 ## Nova preparação de afastamento
 

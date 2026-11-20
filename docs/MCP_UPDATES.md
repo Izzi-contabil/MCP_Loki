@@ -1,4 +1,60 @@
-# Atualizações MCP Loki — contrato 2.9.3
+# Atualizações MCP Loki — contrato 2.9.4
+
+## Candidata 0.4.29 / contrato, instruções e plugin 2.9.4 — 20/11/2026
+
+Backend #374 (folha-v32, regra da DP de 19/11) e #375 (recusa do worker sem a
+empresa). A #375 já está em `main` do Loki; a #374 sai junto com esta versão.
+A mudança de interface é aditiva e sem ferramenta nova: na folha, os códigos
+de pendência `salario_familia_mes_transferencia_pendente_regra`,
+`salario_familia_salario_do_mes_nao_identificado`,
+`salario_familia_adicional_mes_cheio_nao_identificado`,
+`salario_familia_deducao_nao_classificada`,
+`salario_familia_medias_ferias_nao_classificadas`,
+`vale_transporte_mes_transferencia_pendente_regra` e
+`vale_transporte_proporcao_concessao_admissao_ambigua`, com as próximas ações;
+o caminho de correção `funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents`
+para o VT ambíguo; `calculated: null` na memória de correção sobre valor
+pendente; `salario_familia_mes_admissao_pendente_regra` deixa de ser emitida
+(#374). Na fila, `worker_not_authorized` com
+`reason: "worker_company_grant_missing"`, `required_grant`,
+`worker_account_id`/`worker_account_revision` e `next_action` para o comando
+aditivo `prepare_authorization_addition` (#375). Pela regra "mudou interface →
+novo contrato" e pelo precedente aditivo da 2.9.3, o contrato sobe de 2.9.3
+para 2.9.4, um patch; instruções e plugin acompanham em 2.9.4; provider sobe um
+patch. Mínimo 2.0.0 permanece. A lista `compatible_tools` não muda.
+
+**A troca de motor para `folha-v32` deixa desatualizadas todas as folhas
+mensais não entregues**, inclusive as recalculadas na v31. As correções de
+salário-família registradas na v31 continuam consumidas e prevalecem sobre a
+cota nova: a harness confere declarado e calculado com a operadora.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.4)", com o recálculo da folha
+  v32 e a conferência das correções da v31 em destaque, além de atualizar o
+  plugin (sem Refresh); seção nova "Empresa nova: acesso do worker e da
+  rotina" (passos com `listar_solicitacoes_acesso`,
+  `prepare_authorization_addition` só com as empresas novas, `aplicar_autorizacao`
+  e repetir o enqueue; `preparar_autorizacao` nunca para incluir empresa no
+  worker).
+- `folha_mensal`: "Motor folha-v32: recalcular as folhas não entregues" (com
+  as correções da v31 que prevalecem); "Salário-família pela remuneração
+  devida no mês (folha-v32)" (salário cheio, adicionais pelo mês cheio, fora
+  faltas, 13º e terço; mês de admissão proporcional por `30 − dia + 1`, em
+  confirmação com a DP; pendências novas e saída); "VT do admitido no mês
+  (folha-v32)" (percentual uma vez sobre o salário proporcional; três casos da
+  concessão; pendência ambígua com correção da linha do VT); a insalubridade
+  da v31 fica em seção própria; saem os pontos "em consulta à DP" e o VT
+  retido da v31; item 0 da fila durável para empresa nova sem o worker.
+
+Plugin espelha em WORKFLOWS (seção "2.9.4: folha v32 (salário-família, VT do
+admitido) e empresa nova no worker", com nota de substituição parcial na
+2.9.3), CAPACIDADES_DP, operar-loki e registrar-problema-loki.
+
+Não exige Refresh do conector: as 96 ferramentas são as mesmas. Os textos
+chegam com o deploy do backend. Wheel 0.4.28 permanece imutável; fonte e wheel
+0.4.29 locais não comprovam promoção, publicação, atualização do plugin
+instalado, recálculo das folhas, uso pela operadora ou aceite de DP.
 
 ## Candidata 0.4.28 / contrato, instruções e plugin 2.9.3 — 19/11/2026
 
