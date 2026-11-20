@@ -147,7 +147,20 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
-Na 2.9.3 não são defeito: folha mensal não entregue com `calculation_stale`
+Na 2.9.4 não são defeito: folha mensal não entregue com `calculation_stale`
+depois da troca para `folha-v32` (recalcule); as pendências
+`salario_familia_mes_transferencia_pendente_regra`,
+`salario_familia_adicional_mes_cheio_nao_identificado`,
+`salario_familia_deducao_nao_classificada`,
+`salario_familia_medias_ferias_nao_classificadas` e
+`vale_transporte_proporcao_concessao_admissao_ambigua` (decisão da DP,
+pergunte à Rafa); divergência da equipe na contagem `30 − dia + 1` do mês de
+admissão (em confirmação com a DP); correção da v31 que prevalece sobre a cota
+nova (confira com a operadora). `salario_familia_salario_do_mes_nao_identificado`
+é problema do mapa da empresa: registre. `worker_not_authorized` com
+`worker_company_grant_missing` não é defeito: a pessoa owner inclui a empresa
+no worker.
+Na 2.9.3 não são defeito (o salário-família e o VT do admitido valem pela 2.9.4): folha mensal não entregue com `calculation_stale`
 depois da troca para `folha-v31` (recalcule); as pendências
 `salario_familia_mes_admissao_pendente_regra` (regra da DP, pergunte à Rafa),
 `salario_familia_remuneracao_zero_sem_declaracao` e

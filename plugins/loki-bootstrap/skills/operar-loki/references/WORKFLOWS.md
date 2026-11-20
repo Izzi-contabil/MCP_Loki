@@ -885,7 +885,61 @@ atualizar o plugin instalado.
   `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
   problema.
 
+## 2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova no worker
+
+Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
+completo está em `folha_mensal` e `geral` de `loki_obter_instrucoes`. **Não
+exige Refresh do conector**: as 96 ferramentas são as mesmas. A operadora
+atualiza o plugin instalado e recalcula as folhas abaixo. Substitui as partes
+de salário-família e de VT do admitido da 2.9.3.
+
+- **Recálculo obrigatório (`folha_mensal`).** O motor passou a `folha-v32`:
+  todas as folhas mensais não entregues (abertas, em revisão e aprovadas e não
+  entregues, inclusive as já recalculadas na v31) ficam `calculation_stale` e
+  precisam ser recalculadas, conferidas de novo e receber novo aceite. As
+  entregues não mudam. Avise a operadora antes de ela conferir ou entregar.
+- **Correção da v31 prevalece.** Uma cota de salário-família declarada por
+  `submit_operator_correction` na v31 (saída da pendência de admissão) continua
+  valendo sobre a cota proporcional da v32. Compare declarado e calculado em
+  `operator_corrections` e avise a operadora antes do aceite. Sobre cota
+  pendente, `calculated` vem `null`.
+- **Salário-família:** o limite usa a remuneração devida no mês (salário
+  cheio, adicionais proporcionais pelo mês cheio, demais verbas com INSS pelo
+  valor do mês; fora faltas, DSR, atrasos, férias com terço e 13º). Faltas não
+  reduzem a remuneração. Mês de admissão não é mais pendência: limite pelo mês
+  cheio e cota proporcional a `30 − dia + 1` dias (em confirmação com a DP).
+  `salario_familia_mes_admissao_pendente_regra` não aparece mais.
+- **Pendências novas de salário-família**, todas com saída por
+  `submit_operator_correction` (`target: "calculation"`,
+  `funcionarios.<matricula>.bases.salario_familia_cents`) depois da decisão
+  da DP: `salario_familia_mes_transferencia_pendente_regra` (transferência no
+  mês), `salario_familia_salario_do_mes_nao_identificado` (mapa sem rubrica de
+  salário reconhecível: registre o problema do mapa),
+  `salario_familia_adicional_mes_cheio_nao_identificado`,
+  `salario_familia_deducao_nao_classificada` (estorno ou falta lançada como
+  valor informado) e `salario_familia_medias_ferias_nao_classificadas`. As de
+  base zero não mudam.
+- **VT do admitido no mês:** percentual uma vez sobre o salário proporcional
+  (salário × dias do contrato / 30); declare `vigente_desde` igual à admissão
+  (não fica mais retido). Com concessão: admissão no dia 1 segue a fórmula de
+  sempre; proporção igual aos dias do contrato não é reaplicada; outra
+  proporção fica `vale_transporte_proporcao_concessao_admissao_ambigua`, com
+  saída por `submit_operator_correction` em
+  `funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents`.
+  Transferência: `vale_transporte_mes_transferencia_pendente_regra`.
+  Afastamento e desligamento no mês: sem mudança.
+- **Empresa nova no worker (`geral`).** `worker_not_authorized` com
+  `reason: "worker_company_grant_missing"`: a pessoa owner inclui a empresa na
+  conta do worker pelo comando aditivo `prepare_authorization_addition`
+  (`receive_case_data` com `case_id: "@connector"`) e aplica com
+  `aplicar_autorizacao`; depois repita o mesmo enqueue. Nunca use
+  `preparar_autorizacao` para isso: ele substitui a lista inteira.
+
 ## 2.9.3: folha v31 (salário-família e insalubridade) e simulação com o estado atual
+
+> Substituída em parte pela 2.9.4: o salário-família pela base do INSS, a
+> pendência do mês de admissão, os pontos "em consulta à DP" e o VT do
+> admitido retido não valem mais. A insalubridade e a simulação continuam.
 
 Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
 completo está em cada domínio de `loki_obter_instrucoes`. **Não exige Refresh

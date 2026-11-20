@@ -1,17 +1,20 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.3)
+## O que mudou nesta versão (2.9.4)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. A exceção é o
 recálculo da folha abaixo: avise antes de ela conferir ou entregar uma folha.
 
 > **Atenção: recalcular as folhas mensais não entregues.** O motor da folha
-> passou a `folha-v31` e isso deixa desatualizadas (`calculation_stale`)
+> passou a `folha-v32` e isso deixa desatualizadas (`calculation_stale`)
 > todas as folhas mensais não entregues: abertas, em revisão e aprovadas e
-> ainda não entregues. Cada uma precisa ser recalculada, conferida de novo e
-> receber novo aceite; a aprovação anterior não vale para o novo cálculo. As
-> folhas já entregues não mudam. Domínio `folha_mensal`.
+> ainda não entregues, inclusive as já recalculadas na `folha-v31`. Cada uma
+> precisa ser recalculada, conferida de novo e receber novo aceite; a
+> aprovação anterior não vale para o novo cálculo. As folhas já entregues não
+> mudam. Uma correção de salário-família registrada na v31 continua valendo e
+> prevalece sobre o cálculo novo: confira-a com a operadora. Domínio
+> `folha_mensal`.
 
 **Exige ação da operadora:** o recálculo acima e atualizar o plugin instalado
 (as skills mudaram). O plugin não bloqueia o uso: as instruções vêm do
@@ -19,16 +22,24 @@ servidor. As 96 ferramentas são as mesmas: **não exige Refresh do conector**.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Folha mensal (`folha-v31`): o limite do salário-família usa a base do INSS
-  do mês; pendências novas no mês de admissão e com base zero saem por
-  correção do operador depois da decisão da DP; insalubridade no mês de
-  admissão paga pelos dias; VT do admitido no mês continua retido. Domínio
-  `folha_mensal`.
-- Simulação de rescisão: com seleção desatualizada no caso real,
-  `payload.simulation.historical_state: "current"` simula com o estado
-  histórico atual, com ressalvas, sem mexer no caso real. Domínio `rescisao`.
-- As orientações da 2.9.2 e da 2.9.1 continuam valendo, cada uma no seu
-  domínio.
+- Salário-família (`folha-v32`, regra da DP de 19/11): o limite usa a
+  remuneração devida no mês (salário cheio, adicionais pelo mês cheio, sem
+  faltas, sem 13º e sem terço de férias). No mês de admissão a cota sai
+  proporcional aos dias do contrato, sem pendência. Pendências novas para
+  transferência, salário não identificado, adicional do mês cheio, dedução não
+  classificada e médias de férias, com saída pela correção do operador.
+  Domínio `folha_mensal`.
+- VT do admitido no mês: o percentual incide uma vez sobre o salário
+  proporcional; a regra vigente desde a admissão não fica mais retida; a
+  concessão com outra proporção fica pendente. Domínio `folha_mensal`.
+- Empresa nova: a pessoa owner inclui a empresa no worker de folha pelo
+  comando aditivo `prepare_authorization_addition`; a recusa
+  `worker_not_authorized` diz o que falta ("Empresa nova: acesso do worker e
+  da rotina", abaixo).
+- As orientações da 2.9.3 (simulação de rescisão com o estado histórico atual,
+  insalubridade no mês de admissão) e da 2.9.2 continuam valendo, cada uma no
+  seu domínio. As da 2.9.3 sobre salário-família e VT do admitido foram
+  substituídas pelas acima.
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), troca de código Domínio e revogação de
@@ -170,6 +181,39 @@ domínio `folha_mensal`; recusas de fatos históricos
 o corte e lote validado antes da atualização (`snapshot_desatualizado`:
 valide de novo e aplique com o `validation_hash` novo) estão no domínio
 `ferias`.
+
+## Empresa nova: acesso do worker e da rotina
+
+Liberar empresa nova não depende da engenharia nem de variável de ambiente. A
+pessoa owner (ou master) faz pelo conector, com confirmação humana. Toda empresa
+nova precisa estar em duas contas: na conta técnica da rotina, com os processos
+que ela opera, e na conta "Worker operacional de folhas do Loki", que calcula a
+folha pela fila (`enqueue_case_workflow`). Sem a empresa no worker, o enqueue
+recusa `worker_not_authorized` com `reason: "worker_company_grant_missing"`.
+
+1. `listar_solicitacoes_acesso`: localize a conta e anote `id` e `revision`.
+   A recusa do enqueue já traz `worker_account_id` e
+   `worker_account_revision` para owner/master
+   (`next_action: "listar_solicitacoes_acesso"`). Para os demais ela vem com
+   `next_action: "ask_administrator"`: peça à pessoa owner.
+2. Prepare só o acréscimo: `receive_case_data` com `case_id: "@connector"` e
+   `request: {schema_version: "loki.connector-command/1", operation:
+   "prepare_authorization_addition", account_id, expected_revision, grants}`.
+   Em `grants`, mande só as empresas novas. No worker, cada uma vai com
+   `processes: ["folha_mensal"]` e `capabilities: ["consultar",
+   "operar_casos"]`, exatamente; é o `required_grant` da recusa. O Loki
+   conserva papel, status e todas as concessões atuais.
+3. Mostre o antes/depois e aplique com `aplicar_autorizacao`, com a
+   confirmação literal da pessoa owner.
+4. Repita o enqueue. A recusa não grava job, então o mesmo `request_ref`
+   serve.
+
+`preparar_autorizacao` substitui a lista inteira de concessões. Use-o só para
+mudar processos ou capacidades de uma empresa que já está na conta, e nunca
+para incluir empresa no worker. Conta de automação não recebe `carga_historica`
+nem empresa `*` (`automacao_capacidade_proibida`,
+`automacao_empresa_explicita_obrigatoria`). Se houver janela de publicação
+avisada, espere ela terminar antes de alterar o worker.
 
 ## Conector: conexão fechada ou tempo esgotado
 

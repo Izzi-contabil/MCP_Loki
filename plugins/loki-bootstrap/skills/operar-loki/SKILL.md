@@ -97,6 +97,16 @@ pendências que saem por correção do operador depois da decisão da DP;
 insalubridade no mês de admissão é paga pelos dias; a simulação de rescisão
 aceita `historical_state: "current"` sem mexer no caso real. Não exigem
 Refresh; a operadora atualiza o plugin e recalcula as folhas.
+Na 2.9.4 (“2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova
+no worker”): **todas as folhas mensais não entregues precisam ser
+recalculadas, conferidas e aceitas de novo** por causa do motor `folha-v32`,
+inclusive as recalculadas na v31; o salário-família usa a remuneração devida
+no mês e paga a cota proporcional no mês de admissão; correções de
+salário-família da v31 prevalecem e devem ser conferidas; o VT do admitido
+incide uma vez sobre o salário proporcional; empresa nova entra no worker pelo
+comando aditivo `prepare_authorization_addition`. Substitui o salário-família e
+o VT do admitido da 2.9.3. Não exigem Refresh; a operadora atualiza o plugin e
+recalcula as folhas.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que
