@@ -10,8 +10,9 @@ backend pode chegar em partes, então cada texto novo vale só quando a resposta
 servida mostrar o sinal do tema, e a orientação anterior fica como caminho
 para o servidor que ainda não tem a parte:
 
-- #376: `carga_historica` numa empresa real em `meu_acesso` da conta técnica,
-  e `access_auto_granted` na trilha;
+- #376: `carga_historica` numa empresa real em `meu_acesso` da conta técnica
+  (a concessão automática não tem sinal na resposta; a recusa
+  `worker_company_grant_missing` continua com o mesmo recurso);
 - #379: `supersedes_case_id` na resposta do `create_case`;
 - #378: `historical_state.vacation_rules` em `get_company_onboarding_contract`
   e `data_calculo` no schema servido de `dados_ferias`;
@@ -60,8 +61,9 @@ Por domínio:
   com a reabertura, as recusas novas e o caminho do servidor anterior;
   recusas de matrícula eSocial no `create_case`.
 - `ferias`: seção "Data do cálculo, afastamento sem redução, gozo antecipado
-  e abono (historical-vacation-v2)"; o afastamento opaco e o gozo antes do
-  fim do aquisitivo passam a apontar a saída nova.
+  e abono (historical-vacation-v2)", com o caso já calculado pela v1 que
+  deixa de ser corrente sem o espelho nativo; o afastamento opaco e o gozo
+  antes do fim do aquisitivo (texto e tabela) passam a apontar a saída nova.
 - `afastamento`: `sem_reducao` por regra da operação e fato opaco só para
   férias.
 - `rescisao`: `rescisao_ferias_gozo_antecipado_pendente_regra` e

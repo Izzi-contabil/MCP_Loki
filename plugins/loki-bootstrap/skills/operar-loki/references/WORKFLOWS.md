@@ -721,7 +721,8 @@ domínio `ferias`.
   `historical_leave_payment_inverted`, `historical_coverage_inverted`).
   Corrija conforme a fonte. Gozo em que o fim do aquisitivo cai dentro do
   período é aceito (regra da DP de 18/11/2026); gozo que termina antes do fim
-  do aquisitivo continua recusado: pergunte à Rafa.
+  do aquisitivo continua recusado: pergunte à Rafa. Com `vacation_rules` (2.9.5), o
+  gozo antecipado registrado pelo Domínio sai por `vacation_use.advance`.
 - Lote validado antes da atualização pode recusar `snapshot_desatualizado`:
   valide de novo e aplique com o `validation_hash` novo, sem mudar os dados.
 - `leave_history_coverage_not_certified` e
@@ -932,7 +933,9 @@ precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
   `historical_vacation_calculation_date_future`), coberturas
   `vacation_movements` e `leave_occurrences` até ela, espelho das ocorrências
   do Loki (`historical_vacation_native_occurrence_not_mirrored`) e a ressalva
-  `sem_afastamento_conhecido_apos_calculo` para a operadora. Atestado e
+  `sem_afastamento_conhecido_apos_calculo` para a operadora. Caso já
+  calculado pela regra anterior deixa de ser corrente se faltar esse espelho:
+  lance-o e avise a operadora antes de ela entregar. Atestado e
   licença-maternidade: `leave.vacation_effect` `sem_reducao` com
   `operation_rule` (`atestado_e_licenca_maternidade_nao_sao_falta`,
   `CX-AB5EE178`); atestado com período do INSS e as demais categorias, só

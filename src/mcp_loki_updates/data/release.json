@@ -20,7 +20,7 @@
     },
     "ferias": {
       "metadata_sha256": "71d69a7e919e167b595f8f62529a2deef25b4358539e007c9b26cb58912a3f4d",
-      "content_sha256": "51a454015495bce776e825a085c46ffaa09e05947b4d2fb8aa87895dc3aa5efb"
+      "content_sha256": "9be1b222236d7bc986ac9da23dabdb91d50104b43e6bab1277c32019e64afe71"
     },
     "decimo_terceiro": {
       "metadata_sha256": "bbea4661e0e401b009021187d52386b7d2f6df935434435d4a0cbde57fc1fec1",
@@ -64,7 +64,7 @@
     },
     "folha_mensal": {
       "metadata_sha256": "01c037469b60f5694108ee5d32c7163e0f6cecc9bfe093937be6153864ae18e8",
-      "content_sha256": "275c2c30d788c3cb63406db02e957fc81aac548286633e66c6684cf6aabebcfc"
+      "content_sha256": "056e39dfe87643e45414c0f0d3a275f85fd85a8890bc71a0ea8e9963c56a031d"
     }
   },
   "changes": {

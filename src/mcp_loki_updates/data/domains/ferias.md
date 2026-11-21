@@ -50,8 +50,11 @@ Loki recusa `historical_vacation_calculation_date_required`. A operação
 calcula até 30 dias antes do gozo, e o pagamento sai dois dias antes. A data
 fica entre o fim do aquisitivo e o fim do gozo (`ferias_data_calculo_invalida`)
 e não pode ser futura (`historical_vacation_calculation_date_future`, também
-em simulação). Caso já calculado pela regra anterior não muda e recalcula pela
-regra gravada.
+em simulação). Caso já calculado pela regra anterior recalcula pela regra
+gravada, mas deixa de ser corrente (perde a elegibilidade de entrega) se o
+Loki tiver afastamento ou gozo desse funcionário entre o início do aquisitivo
+e a véspera do gozo sem espelho no histórico selecionado: lance o espelho
+(abaixo) e avise a operadora antes de ela entregar.
 
 Declare as coberturas até essa data, nunca até o fim do gozo:
 
@@ -138,7 +141,7 @@ data só para passar. As regras não mudaram; só a recusa ficou explícita.
 |---|---|---|
 | `historical_vacation_period_inverted` | fim do aquisitivo antes do início | rever `period_start`/`period_end` na fonte |
 | `historical_vacation_use_inverted` | fim do gozo antes do início | rever `start`/`end` do gozo |
-| `historical_vacation_use_period_incompatible` | o gozo termina antes do fim do próprio aquisitivo (`end < period_end`). Gozo em que o fim do aquisitivo cai dentro do período (`start <= period_end <= end`, inclusive no primeiro ou no último dia) é aceito, assim como gozo que começa depois | conferir se o aquisitivo atribuído ao gozo é o correto. Se a fonte mostra gozo inteiro antes do fim do aquisitivo, não grave: pergunte à Rafa |
+| `historical_vacation_use_period_incompatible` | o gozo termina antes do fim do próprio aquisitivo (`end < period_end`). Gozo em que o fim do aquisitivo cai dentro do período (`start <= period_end <= end`, inclusive no primeiro ou no último dia) é aceito, assim como gozo que começa depois | conferir se o aquisitivo atribuído ao gozo é o correto. Se a fonte mostra gozo inteiro antes do fim do aquisitivo, não grave: pergunte à Rafa; com `vacation_rules`, o gozo antecipado registrado pelo Domínio sai por `advance` |
 | `historical_vacation_use_days_incompatible` | `gozo_days_hundredths` diferente de (dias corridos de `start` a `end`) × 100 | rever `end` ou a quantidade de dias de gozo |
 | `historical_leave_return_incompatible` | `return_on` não é posterior a `start` | rever `start` e a data de retorno (primeiro dia de volta ao trabalho) |
 | `historical_leave_payment_outside_leave` | período de pagamento fora do afastamento (começa antes de `start` ou termina em `return_on` ou depois) | rever `start`, `return_on` e `payment_periods` |

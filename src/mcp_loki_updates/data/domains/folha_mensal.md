@@ -162,12 +162,12 @@ mudança" da `folha-v31`.
 
 ## Fila durável: um job pendente por empresa
 
-0. **Empresa nova sem o worker.** Quando a resposta servida mostrar a
-   concessão automática (`access_auto_granted`), empresa nova já entra no
-   worker sozinha (domínio `geral`, "Empresa nova e onboarding pela rotina").
-   `worker_not_authorized` com `reason: "worker_company_grant_missing"` ainda
-   aparece em empresa anterior à política sem backfill, worker suspenso ou
-   credencial vencida, e em servidor anterior. A pessoa owner (ou master)
+0. **Empresa nova sem o worker.** Com a concessão automática, empresa nova
+   já entra no worker sozinha (domínio `geral`, "Empresa nova e onboarding
+   pela rotina"). `worker_not_authorized` com
+   `reason: "worker_company_grant_missing"` ainda aparece em empresa anterior
+   à política sem backfill, worker suspenso ou credencial vencida, e em
+   servidor anterior; o caminho é o mesmo. A pessoa owner (ou master)
    inclui pelo conector, sem pedir à engenharia:
    1. `listar_solicitacoes_acesso`: localize a conta e anote `id` e
       `revision`. A recusa já traz `worker_account_id` e

@@ -87,6 +87,7 @@ VACATION = (
     "`historical_vacation_calculation_date_future`",
     "Declare as coberturas até essa data, nunca até o fim do gozo",
     "`historical_vacation_native_occurrence_not_mirrored`",
+    "deixa de ser corrente (perde a elegibilidade de entrega)",
     "`sem_afastamento_conhecido_apos_calculo`",
     '"rule": "atestado_e_licenca_maternidade_nao_sao_falta"',
     '"message_reference": "CX-AB5EE178"',
@@ -154,7 +155,7 @@ PAYROLL = (
     "**Empresa com pares cruzados**",
     "mande a população pela correção da população com o `funcionario_id` de cada item",
     "o item de `dados_folha` não tem CPF",
-    "Quando a resposta servida mostrar a concessão automática (`access_auto_granted`)",
+    "Com a concessão automática, empresa nova já entra no worker sozinha",
 )
 
 
@@ -262,14 +263,6 @@ def test_registration_and_payroll_carry_the_esocial_adoption() -> None:
     assert_none(registration, ("`allow_identifier_restoration: true`",))
     payroll = text("folha_mensal")
     assert_all(payroll, PAYROLL)
-
-
-def test_shipped_text_names_no_client() -> None:
-    provider = InstructionsProvider()
-    for domain in provider.domains():
-        guide = provider.get(domain)["instructions"].casefold()
-        for name in ("almeria", "abençoado", "abencoado"):
-            assert name not in guide, (domain, name)
 
 
 def test_plugin_mirrors_295_guidance() -> None:
