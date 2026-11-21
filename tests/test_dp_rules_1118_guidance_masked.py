@@ -75,8 +75,8 @@ AVERAGES = (
     "Não ligue `medias_por_bloco` sem conferência com a DP",
     "A opção continua disponível só se a DP pedir uma exceção",
 )
+# A 2.9.5 condiciona a guarda: vale enquanto o contrato não citar a adoção.
 REGISTRATION = (
-    "A matrícula do eSocial é o identificador oficial do vínculo",
     "não grave matrícula nova por worker `identifier_only`",
     "sem falar antes com a engenharia",
 )

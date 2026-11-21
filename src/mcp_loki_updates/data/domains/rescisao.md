@@ -128,6 +128,23 @@ Fontes `kind=document` conservam o significado de documento já arquivado no Lok
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
+## Gozo antecipado e matrícula do eSocial na rescisão
+
+Valem quando a resposta servida os apresentar.
+
+- `rescisao_ferias_gozo_antecipado_pendente_regra`: o vínculo tem gozo
+  antecipado (`vacation_use.advance`, confirmado ou programado) no aquisitivo
+  em curso. A regra das proporcionais nesse caso ainda não foi definida pela
+  DP, e o Loki recusa em vez de pagar as proporcionais cheias, com ou sem
+  histórico selecionado. É esperado: não remova o `advance`, não mude datas
+  nem contorne. Avise a operadora e pergunte à Rafa; o gozo antecipado está
+  no domínio `ferias`.
+- `termination_monthly_calculation_predates_registration_adoption`: a folha
+  mensal referenciada foi calculada antes da adoção da matrícula do eSocial
+  que mudou um identificador da população dela. Recalcule essa folha depois
+  da adoção e repita a rescisão (domínio `folha_mensal`, "Matrícula do eSocial
+  na população da folha").
+
 ## Complemento de identidade ausente
 
 `funcionario.nome` é identidade do caso, não um campo de `dados_rescisao` ou da

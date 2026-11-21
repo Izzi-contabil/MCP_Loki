@@ -36,6 +36,96 @@ Releia resultado e proveniência para demonstrar consumo real; seleção e
 contrato disponível são provas distintas. Não mova datas ou saldos para
 forçar aceitação de uma origem incompatível.
 
+## Data do cálculo, afastamento sem redução, gozo antecipado e abono (historical-vacation-v2)
+
+Vale quando `get_company_onboarding_contract` trouxer
+`historical_state.vacation_rules` (`rule_version: "historical-vacation-v2"`)
+e o schema servido de `dados_ferias` tiver `data_calculo`. Sem isso, siga as
+seções abaixo como estão e não envie os campos novos: o servidor anterior os
+recusa. Regras da operação (DP), recebidas pela Caixa em 19 e 20/11/2026.
+
+**Data do cálculo e cobertura.** Todo cálculo novo exige
+`dados_ferias.data_calculo`, a data em que você calcula as férias; sem ela, o
+Loki recusa `historical_vacation_calculation_date_required`. A operação
+calcula até 30 dias antes do gozo, e o pagamento sai dois dias antes. A data
+fica entre o fim do aquisitivo e o fim do gozo (`ferias_data_calculo_invalida`)
+e não pode ser futura (`historical_vacation_calculation_date_future`, também
+em simulação). Caso já calculado pela regra anterior não muda e recalcula pela
+regra gravada.
+
+Declare as coberturas até essa data, nunca até o fim do gozo:
+
+- `coverage` `vacation_movements` da abertura até a data do cálculo;
+- `coverage` `leave_occurrences` do início do aquisitivo até a data do
+  cálculo.
+
+Use `complete: true`, com `basis: declared` e a mensagem `CX-`, somente quando
+a fonte atesta que não houve outro gozo ou afastamento no intervalo. Se o
+Loki tem um afastamento ou outras férias do funcionário nesse intervalo,
+lance o espelho histórico confirmado: o afastamento como `leave`, com as
+mesmas datas, categoria, períodos e fontes; as férias como `vacation_use`, com
+o mesmo início e fim. Sem o espelho, a recusa é
+`historical_vacation_native_occurrence_not_mirrored`.
+
+O pacote traz a ressalva `sem_afastamento_conhecido_apos_calculo` ("sem
+afastamento conhecido até o cálculo (AAAA-MM-DD)") em
+`ressalvas.ferias_historico` da revisão: apresente-a à operadora. Afastamento
+descoberto depois do cálculo é retificação: corrija o histórico e faça um
+novo cálculo.
+
+**Afastamento que não reduz férias (`leave.vacation_effect`).** Para atestado
+ou licença-maternidade, a regra da operação basta:
+`"vacation_effect": {"kind": "sem_reducao", "source": {"kind":
+"operation_rule", "rule": "atestado_e_licenca_maternidade_nao_sao_falta",
+"message_reference": "CX-AB5EE178", "category": "atestado"}}` (`category`
+`atestado` ou `licenca_maternidade`). Lance cada atestado como um `leave`
+próprio, com as suas datas e o `return_on`. Afastamento com período pago pelo
+INSS (`payment_periods[].responsibility: "inss"`) é benefício, não atestado:
+exige a decisão do DP
+(`historical_leave_vacation_effect_benefit_requires_dp_decision`). Categoria
+declarada que contradiz um `category_code` tipado recusa
+`historical_leave_vacation_effect_category_incompatible`. Para qualquer outra
+categoria, só com a decisão do DP no caso: `{"kind": "dp_decision",
+"message_reference": "CX-…"}`. Nunca deduza `sem_reducao` sem uma dessas
+fontes. A ressalva `afastamento_aquisitivo_sem_reducao` vai para o aceite da
+operadora. Afastamento que se sobrepõe ao gozo continua recusado.
+
+**Afastamento documental opaco.** Se
+`historical_vacation_unqualified_documentary_facts` trouxer `blocking_facts`
+com `kind: afastamento`, lance um `leave` confirmado com a mesma fonte, que
+comece na data do fato (`effective_on` do `blocking_facts`), com
+`qualifies_legacy_fact_ids: ["<fact_id>"]` e `vacation_effect` pelas mesmas
+regras. Qualificador com outra data recusa
+`historical_leave_vacation_effect_target_incompatible`. Fato sem data
+(`effective_on: null`) só sai com a decisão do DP no caso, e a ressalva vai
+sempre para o aceite. Afastamento opaco que começou antes do aquisitivo
+(`reason: leave_started_before_window`) também bloqueia e sai pela mesma
+qualificação. Isso vale só para férias:
+o estado e o 13º continuam listando o fato.
+
+**Gozo antecipado (`vacation_use.advance`).** Quando o Domínio registra o gozo
+no aquisitivo de origem antes do fim dele, lance o `vacation_use` com
+`"advance": {"kind": "gozo_antecipado", "source": {"kind": "dominio_record",
+"document_id": "<id da ficha anexada>", "content_hash": "<hash>", "locator":
+"<linha>"}}` (ou a decisão do DP, `dp_decision`). A ficha tem de ser fonte do
+próprio fato (`historical_vacation_advance_source_incompatible`). Não há
+limite de antecedência, mas o gozo começa dentro do aquisitivo de origem;
+`advance` em gozo que não é antecipado recusa
+`historical_vacation_use_advance_incompatible`. O cálculo traz a ressalva
+`vacation_use_advanced`. O Loki não calcula férias antecipadas. Rescisão com
+gozo antecipado no aquisitivo em curso recusa
+`rescisao_ferias_gozo_antecipado_pendente_regra` (domínio `rescisao`).
+
+**Abono fora do prazo.** `data_pedido_abono` é a data em que o empregado pediu
+o abono. O prazo (CLT art. 143 §1º) é até quinze dias antes do fim do
+aquisitivo; pedido depois disso recusa `ferias_pedido_abono_fora_do_prazo`.
+Com a concordância do empregador (normalmente o pedido do cliente), declare
+`dados_ferias.abono_fora_do_prazo_source` (documento, harness ou declaração
+com `foundation`). Ela vira a ressalva `clt_143_1_abono_fora_do_prazo` em
+`declaracoes_dp`, para o aceite da operadora. Fonte sem pedido fora do prazo
+recusa `ferias_abono_fora_do_prazo_source_sem_uso`; sem fundamento,
+`ferias_abono_fora_do_prazo_source_sem_fundamento`.
+
 ## Recusas de fatos históricos do onboarding
 
 Os códigos valem somente quando a resposta servida os apresentar. Na recusa
@@ -67,7 +157,8 @@ reenvie nem altere os dados por causa disso.
 quita. O Loki aceita quando o fim do aquisitivo cai dentro do período de gozo,
 do primeiro ao último dia. Gozo que termina antes do fim do aquisitivo
 continua recusado (`historical_vacation_use_period_incompatible`): pergunte à
-Rafa. Isso vale só para as férias antigas do histórico de onboarding; o
+Rafa; quando o servidor tiver `vacation_rules`, o gozo antecipado registrado
+pelo Domínio sai por `advance` (seção acima). Isso vale só para as férias antigas do histórico de onboarding; o
 processo de férias (`ferias_gozo_antes_do_fim_do_aquisitivo`) segue a regra
 anterior.
 
@@ -116,9 +207,11 @@ nova seleção.
 **Afastamento antigo opaco.** Se o estado mostra um fato antigo `afastamento`
 sem semântica operacional (`unqualified_documentary_facts`,
 `operational_semantics_missing` ou `leave_observations_not_classified`),
-**não grave um `leave` novo para o mesmo afastamento**: a qualificação por id
-ainda não existe, e um `leave` paralelo duplicaria a ocorrência. Mantenha o gap
-pendente e informe a operadora.
+**não grave um `leave` novo para o mesmo afastamento**: um `leave` paralelo
+duplicaria a ocorrência. Mantenha o gap pendente e informe a operadora. A
+exceção é o cálculo de férias com `vacation_rules`: o `leave` que cita o fato
+em `qualifies_legacy_fact_ids` (seção "Data do cálculo…", acima) qualifica o
+fato só para férias.
 
 ## Pensão por finalidade
 

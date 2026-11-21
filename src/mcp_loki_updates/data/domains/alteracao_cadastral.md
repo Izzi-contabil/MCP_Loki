@@ -31,11 +31,14 @@ quando a recusa disser que não
 há caminho automático, registre o problema com `registrar_problema`. O roteiro
 do `create_case` está no domínio `geral` ("Matrícula no `create_case`").
 
-**Matrícula do eSocial (DP, 18/11/2026).** A matrícula do eSocial é o
-identificador oficial do vínculo. Enquanto a forma de uso não for confirmada,
-não grave matrícula nova por worker `identifier_only` (restauração, troca de
-código Domínio ou qualificação por onboarding comum, nas seções abaixo) sem
-falar antes com a engenharia.
+**Matrícula do eSocial.** A matrícula de cada vínculo no Loki é a do
+eSocial; o código do Domínio (ou de outro sistema de folha) é identificador
+auxiliar. Quando `get_company_onboarding_contract` citar o motivo
+`adocao_matricula_esocial`, adote a matrícula eSocial pela seção "Adotar a
+matrícula do eSocial", abaixo. Sem esse sinal no contrato, não grave matrícula
+nova por worker `identifier_only` (restauração, troca de código Domínio ou
+qualificação por onboarding comum, nas seções abaixo) sem falar antes com a
+engenharia. Restauração e troca continuam no namespace `dominio`.
 
 ## Restaurar uma matrícula sobrescrita
 
@@ -162,6 +165,94 @@ vínculo pelo `funcionario_id`, e o recibo da troca lista esses casos. Sem o
 histórico fechado (aprovação antiga), a folha impede a troca. Os demais casos
 aprovados ou publicados do vínculo, e qualquer folha em revisão com o código
 antigo, impedem a troca até serem revisados.
+
+## Adotar a matrícula do eSocial
+
+Vale quando `get_company_onboarding_contract` citar o motivo
+`adocao_matricula_esocial`; sem isso, o servidor ainda não tem a adoção. Vale
+para todo vínculo carregado com código Domínio (`matricula_namespace:
+"dominio"`). O deploy não muda nenhum caso: só a adoção muda. Usa o
+onboarding de sempre, com os campos da restauração (Refresh da 2.8.0, se
+ainda não feito). Exige pessoa com `corrigir_dados`: a automação com
+`carga_historica` não adota (a linha fica `pending` com
+`restauracao_matricula_exige_corrigir_dados`).
+
+Antes de adotar, para cada empresa:
+
+1. Liste as folhas não finais (`listar_casos`). Folha em revisão bloqueia a
+   adoção: combine com a operadora `restart_case` antes. Folha aberta que já
+   cita um valor que vai virar a matrícula eSocial de outro vínculo faz a
+   adoção recusar (`adocao_matricula_esocial_valor_citado_em_folha_aberta`,
+   com os `case_id`): combine com ela se a folha será cancelada ou terá a
+   população corrigida.
+2. Obtenha a matrícula eSocial de cada vínculo no eSocial (S-2200 ou consulta
+   de trabalhadores) e anexe o original ao lote (`attach_onboarding_source`
+   ou o envio autenticado). Pode ser o mesmo relatório que traz o código
+   Domínio. Nunca deduza a matrícula pelo formato ou pela igualdade com o
+   código.
+
+Adotar, com **um lote por empresa** (`reuse_registered_company: true`):
+
+3. Para cada vínculo com código Domínio, um worker com `existing_employee_id`,
+   CPF e admissão exatos; `identifier_only: true`; `matricula` = matrícula
+   eSocial e `matricula_namespace: "esocial"`; `matricula_source` apontando o
+   original anexado (`document_id`, `content_hash`, `locator`);
+   `expected_current_matricula` = código Domínio atual, literal, lido em
+   `get_company_employee_history`; e `restoration_declaration` com o
+   `human_message` literal da operadora, `message_reference` `CX-…` e
+   `motivo: "adocao_matricula_esocial"`. O valor eSocial pode ser igual ao
+   código.
+4. Vínculo ainda sem matrícula: só `matricula`, `matricula_namespace:
+   "esocial"` e a fonte, sem CAS nem motivo.
+5. `validate_company_onboarding` e mostre à operadora a prévia por vínculo:
+   prontos, recusas com `reason`/`diagnostic` e o que cada aplicação vai
+   deixar para refazer. Só depois do aceite dela, `apply_company_onboarding`
+   com o `validation_hash`. O Loki deriva a permissão de restaurar da
+   capacidade `corrigir_dados`; não há argumento para isso.
+
+Recusas:
+
+- `matricula_esocial_em_uso_no_empregador`: a mesma matrícula está em outro
+  vínculo da mesma raiz de CNPJ (o mesmo CPF em outro estabelecimento da raiz
+  conserva a matrícula). Confira a fonte com a operadora; não force.
+- `adocao_matricula_esocial_exige_codigo_dominio`: o valor atual já está
+  qualificado em outro namespace (inclusive o próprio eSocial). Leve à
+  engenharia.
+- `matricula_esocial_exige_adocao_auditada`: faltou o motivo ou o CAS sobre
+  um código Domínio.
+- `codigo_dominio_e_auxiliar_em_vinculo_esocial`: o vínculo já está no
+  eSocial; o código Domínio não volta a ser operacional.
+- `empresa_adotou_matricula_esocial`: código Domínio para vínculo sem
+  matrícula em empresa que já tem vínculo no eSocial. Declare a matrícula
+  eSocial.
+- `restauracao_matricula_exige_conciliacao_de_consumidores`: caso em revisão
+  ou folha fechada sem histórico fechado. Veja `diagnostic.consumers`.
+- Erro de validação `adocao_matricula_esocial_exige_message_reference_cx` ou
+  `adocao_matricula_esocial_exige_identifier_only_esocial`: falta a
+  referência `CX-` ou o worker não é `identifier_only` com
+  `matricula_namespace: "esocial"`.
+- `matricula_esperada_divergente` e `snapshot_desatualizado`: como na
+  restauração.
+
+Depois de adotar, leia `matricula_restoration.adoption_effects` de cada
+recibo e mostre à operadora:
+
+- `open_payrolls_citing_previous_code`: folhas abertas que citam o código
+  antigo e ficam `matricula_coincide_com_codigo_auxiliar` até reenviar a
+  população com as matrículas eSocial (domínio `folha_mensal`, "Matrícula do
+  eSocial na população da folha");
+- `stale_history_pins`: refaça o pin (`pin_company_employee_history`) com o
+  `history_hash` novo;
+- `transitional_collisions`: outro vínculo ainda usa o mesmo valor como
+  código Domínio; adote-o também.
+
+`released_closed_consumers` lista os casos fechados do vínculo, que não
+bloqueiam. O código antigo fica em `identifiers` com `status: "auxiliar"`,
+consultável e nunca operacional. Daqui em diante, população de folha, linha
+de reajuste e caso individual usam a matrícula eSocial; caso novo com o
+código Domínio recusa `matricula_funcionario_divergente`. Cliente novo
+declara a matrícula eSocial desde o onboarding. Casos fechados continuam com
+o código antigo impresso: não reabra nem recalcule por causa da adoção.
 
 ## Revogar desligamento gravado pelo onboarding
 

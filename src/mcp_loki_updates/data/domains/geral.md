@@ -1,50 +1,41 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.4)
+## O que mudou nesta versão (2.9.5)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
-vez, curto, e não interrompa o trabalho dela por causa dele. A exceção é o
-recálculo da folha abaixo: avise antes de ela conferir ou entregar uma folha.
+vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
+chegar em partes: cada item vale quando a resposta servida mostrar o sinal
+indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 
-> **Atenção: recalcular as folhas mensais não entregues.** Quando
-> `loki_verificar_versao` ou o cálculo da folha mostrar o motor `folha-v32`,
-> a troca de motor deixa desatualizadas (`calculation_stale`)
-> todas as folhas mensais não entregues: abertas, em revisão e aprovadas e
-> ainda não entregues, inclusive as já recalculadas na `folha-v31`. Cada uma
-> precisa ser recalculada, conferida de novo e receber novo aceite; a
-> aprovação anterior não vale para o novo cálculo. As folhas já entregues não
-> mudam. Uma correção de salário-família registrada na v31 continua valendo e
-> prevalece sobre o cálculo novo: confira-a com a operadora. Domínio
-> `folha_mensal`.
-
-**Exige ação da operadora:** o recálculo acima e atualizar o plugin instalado
-(as skills mudaram). O plugin não bloqueia o uso: as instruções vêm do
-servidor. As 96 ferramentas são as mesmas: **não exige Refresh do conector**.
+**Exige ação da operadora:** atualizar o plugin instalado (as skills mudaram).
+O plugin não bloqueia o uso: as instruções vêm do servidor. As 96 ferramentas
+são as mesmas: **não exige Refresh do conector**. Só a conta técnica da rotina
+que receber `carga_historica` passa a ver as ferramentas de onboarding; o
+Claude dessa conta pode precisar de Refresh ou conversa nova para vê-las.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Salário-família (`folha-v32`, regra da DP de 19/11): o limite usa a
-  remuneração devida no mês (salário cheio, adicionais pelo mês cheio, sem
-  faltas, sem 13º e sem terço de férias). No mês de admissão a cota sai
-  proporcional aos dias do contrato, sem pendência. Pendências novas para
-  transferência, salário não identificado, adicional do mês cheio, dedução não
-  classificada e médias de férias, com saída pela correção do operador.
-  Domínio `folha_mensal`.
-- VT do admitido no mês: o percentual incide uma vez sobre o salário
-  proporcional; a regra vigente desde a admissão não fica mais retida; a
-  concessão com outra proporção fica pendente. Domínio `folha_mensal`.
-- Empresa nova: a pessoa owner (ou master) inclui a empresa no worker de folha pelo
-  comando aditivo `prepare_authorization_addition`; a recusa
-  `worker_not_authorized` diz o que falta ("Empresa nova: acesso do worker e
-  da rotina", abaixo).
-- As orientações da 2.9.3 (simulação de rescisão com o estado histórico atual,
-  insalubridade no mês de admissão) e da 2.9.2 continuam valendo, cada uma no
-  seu domínio. As da 2.9.3 sobre salário-família e VT do admitido foram
-  substituídas pelas acima.
+- Empresa nova: o worker e as rotinas com o modelo `@empresas-novas` recebem a
+  empresa sozinhos; a rotina com `carga_historica` faz o onboarding dela
+  ("Empresa nova e onboarding pela rotina", abaixo).
+- Admissão (`admissao`): razão social do cadastro; admissão cancelada sem
+  rastro reabre por `create_case` (`supersedes_case_id`).
+- Férias sobre o histórico, quando o contrato de onboarding trouxer
+  `historical_state.vacation_rules`: `dados_ferias.data_calculo` obrigatória
+  em cálculo novo, `sem_reducao`, gozo antecipado e abono fora do prazo
+  (`ferias`, `afastamento`, `rescisao`).
+- Matrícula do eSocial, quando o contrato de onboarding citar
+  `adocao_matricula_esocial`: adoção por um lote por empresa, com aceite da
+  operadora, para todo vínculo com código Domínio (`alteracao_cadastral`,
+  `folha_mensal`, `admissao`).
+- Continua da 2.9.4: folha não entregue calculada antes da `folha-v32` é
+  recalculada e aceita de novo (`folha_mensal`). O que não foi substituído
+  continua, cada um no seu domínio.
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
-matrícula (`restoration_declaration`), troca de código Domínio e revogação de
-desligamento do onboarding (`preview_onboarding_termination_revocation`,
+matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os
+mesmos campos), troca de código Domínio e revogação de desligamento do
+onboarding (`preview_onboarding_termination_revocation`,
 `revoke_onboarding_termination`) exigem Refresh do conector e conversa nova
 (domínio `alteracao_cadastral`). Peça o Refresh só quando ela for usar um
 desses fluxos; antes dele, a revogação funciona pelo transporte
@@ -167,11 +158,17 @@ registrado não é código operacional.
 - `funcionario.matricula` vazio ou só com espaços é recusado na validação;
   espaços nas pontas são removidos.
 
-A matrícula do eSocial é o identificador oficial do vínculo, segundo a DP
-(18/11/2026). Enquanto a forma de uso não for confirmada, não grave matrícula
-nova por worker `identifier_only` no onboarding (inclusive restauração ou
-troca de código Domínio) sem falar antes com a engenharia: avise a operadora
-e use `registrar_problema` se o caso precisar da matrícula.
+**Matrícula do eSocial.** Quando `get_company_onboarding_contract` citar o
+motivo `adocao_matricula_esocial`, a matrícula operacional é a do eSocial e o
+código Domínio vira auxiliar (`identifiers`, `status: "auxiliar"`), adotado
+por empresa pelo onboarding (domínio `alteracao_cadastral`). Depois da adoção,
+o código Domínio no caso recusa `matricula_funcionario_divergente`.
+`matricula_esocial_em_uso_no_empregador` (já é a matrícula de outro vínculo da
+raiz do CNPJ) e `empresa_adotou_matricula_esocial` (vínculo sem matrícula em
+empresa adotada): reenvie omitindo `funcionario.matricula` e declare a
+matrícula eSocial pelo onboarding. Sem esse sinal, não grave matrícula nova
+por worker `identifier_only` (inclusive restauração ou troca de código
+Domínio) sem falar antes com a engenharia.
 
 Na criação, `occurrence_ref` sem cenário (ou cenário sem `occurrence_ref`)
 recusa com `occurrence_ref_requires_shadow_scenario` ou
@@ -183,38 +180,60 @@ o corte e lote validado antes da atualização (`snapshot_desatualizado`:
 valide de novo e aplique com o `validation_hash` novo) estão no domínio
 `ferias`.
 
-## Empresa nova: acesso do worker e da rotina
+## Empresa nova e onboarding pela rotina
 
-Liberar empresa nova não depende da engenharia nem de variável de ambiente. A
-pessoa owner (ou master) faz pelo conector, com confirmação humana. Toda empresa
-nova precisa estar em duas contas: na conta técnica da rotina, com os processos
-que ela opera, e na conta "Worker operacional de folhas do Loki", que calcula a
-folha pela fila (`enqueue_case_workflow`). Sem a empresa no worker, o enqueue
-recusa `worker_not_authorized` com `reason: "worker_company_grant_missing"`.
+Valem quando a resposta servida os apresentar. Empresa nova no Loki
+(`apply_client_config`, onboarding ou criação de caso) recebe sozinha, com
+auditoria (`access_auto_granted`): no worker de folha, `folha_mensal` com
+`consultar`/`operar_casos`; nas contas técnicas com o modelo
+`@empresas-novas`, os processos e as capacidades do modelo. Não é preciso
+fazer nada. Se o enqueue ainda recusar `worker_not_authorized` com
+`reason: "worker_company_grant_missing"` (empresa anterior à política sem
+backfill, worker suspenso ou credencial vencida), a pessoa owner (ou master)
+inclui a empresa pelo comando aditivo `prepare_authorization_addition` com o
+`required_grant` da recusa (domínio `folha_mensal`, fila durável, item 0).
+`preparar_autorizacao` substitui a lista inteira de concessões: nunca para
+incluir empresa no worker. Conta de automação não recebe empresa `*`
+(`automacao_empresa_explicita_obrigatoria`) nem `decidir_chat`,
+`corrigir_dados`, `confirmar_admissao`, `configurar_cliente` ou
+`operar_shadow` (`automacao_capacidade_proibida`). Pode receber
+`carga_historica`, sempre por empresa explícita, e com ela opera o onboarding
+só daquela empresa (servidor anterior recusa). O modelo `@empresas-novas`
+entra pelo `preparar_autorizacao` da pessoa owner e não dá acesso a nada: só
+é copiado para cada empresa nova. Com janela de publicação avisada, espere ela
+terminar antes de alterar o worker.
 
-1. `listar_solicitacoes_acesso`: localize a conta e anote `id` e `revision`.
-   A recusa do enqueue já traz `worker_account_id` e
-   `worker_account_revision` para owner/master
-   (`next_action: "listar_solicitacoes_acesso"`). Para os demais ela vem com
-   `next_action: "ask_administrator"`: peça à pessoa owner.
-2. Prepare só o acréscimo: `receive_case_data` com `case_id: "@connector"` e
-   `request: {schema_version: "loki.connector-command/1", operation:
-   "prepare_authorization_addition", account_id, expected_revision, grants}`.
-   Em `grants`, mande só as empresas novas. No worker, cada uma vai com
-   `processes: ["folha_mensal"]` e `capabilities: ["consultar",
-   "operar_casos"]`, exatamente; é o `required_grant` da recusa. O Loki
-   conserva papel, status e todas as concessões atuais.
-3. Mostre o antes/depois e aplique com `aplicar_autorizacao`, com a
-   confirmação literal da pessoa owner.
-4. Repita o enqueue. A recusa não grava job, então o mesmo `request_ref`
-   serve.
+**Onboarding pela rotina (conta técnica)**, só quando `meu_acesso` da conta
+mostrar `carga_historica` numa empresa e o catálogo trouxer as ferramentas de
+onboarding (sem elas, Refresh ou conversa nova nessa conta):
 
-`preparar_autorizacao` substitui a lista inteira de concessões. Use-o só para
-mudar processos ou capacidades de uma empresa que já está na conta, e nunca
-para incluir empresa no worker. Conta de automação não recebe `carga_historica`
-nem empresa `*` (`automacao_capacidade_proibida`,
-`automacao_empresa_explicita_obrigatoria`). Se houver janela de publicação
-avisada, espere ela terminar antes de alterar o worker.
+1. Só grants com `company_id` real contam. Empresa sem `carga_historica`:
+   pare e peça a concessão; não tente outra.
+2. `listar_empresas` dá `cliente_slug` e CNPJ. A rotina não cria cliente nem
+   empresa (uma pessoa cadastra antes); nunca envie `confirmar_novo_cliente`
+   (`automacao_nao_cria_cliente`). Só os argumentos de cada ferramenta
+   (`argumento_fora_do_contrato`).
+3. `create_company_onboarding(cliente_slug, empresa_cnpj, reference)` com
+   `reference` estável; fontes por `attach_onboarding_source` (bytes do
+   original) ou `register_onboarding_harness_source`; declarações por
+   `submit_company_onboarding_chunk` ou `submit_company_onboarding_csv`, com
+   referência e revisão idempotentes; retome por
+   `get_company_onboarding_status`, `get_company_onboarding_csv_status` e
+   `get_company_onboarding_declarations`.
+4. `validate_company_onboarding` e `apply_company_onboarding` com o
+   `validation_hash`. Declarações e fontes exigidas são as mesmas da pessoa.
+5. Linha `pending` com `cadastro_da_empresa_exige_configurar_cliente`,
+   `correcao_nominal_exige_corrigir_dados`,
+   `restauracao_matricula_exige_corrigir_dados` ou
+   `employment_entry_requires_human_authority` não é da rotina: avise a
+   operadora (Caixa) com o `onboarding_id` e a referência do vínculo, sem
+   reenviar nem contornar. Cadastro, adoção ou restauração de matrícula e
+   decisões exigem pessoa.
+6. Conciliação e revogação de rescisão do onboarding, reparo de identificador,
+   inventário do cliente e upload pelo navegador são da pessoa.
+   `onboarding_empresa_nao_autorizada`: o lote ou a empresa não está no seu
+   grant; não é erro de dados. Cadastro aplicado não é cálculo, prontidão,
+   aprovação nem paridade com o Domínio.
 
 ## Conector: conexão fechada ou tempo esgotado
 
@@ -454,8 +473,12 @@ Sem esse bloco/rota, preserve a pendência; plugin novo não publica a PR240.
 Cancelamento usa `cancellation` do contrato. Quando anunciado,
 `loki.case-cancellation/1` pode seguir em `receive_case_data`, com
 `expected_snapshot=correction_snapshot` e `human_message` específico.
-Releia estado e trilha; cancelamento não exclui registros nem libera a chave
-natural para criar outro caso. Automação não recebe autoridade humana.
+Releia estado e trilha. O cancelamento não exclui registros. Na admissão,
+quando o servidor oferecer a reabertura (`supersedes_case_id` no
+`create_case`), um caso cancelado sem efeito, sem documento entregue e sem
+matrícula libera a mesma pessoa e data para um `create_case` novo (domínio
+`admissao`). Nos demais processos, o cancelamento não libera a chave natural.
+Automação não recebe autoridade humana.
 
 Para publicação, smoke ou comparação de versões, não baixar o acervo nem
 rebaixar todos os documentos. Confira fatos, eventos, decisões e metadados/hashes

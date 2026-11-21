@@ -162,12 +162,33 @@ mudança" da `folha-v31`.
 
 ## Fila durável: um job pendente por empresa
 
-0. **Empresa nova sem o worker.** `worker_not_authorized` com
-   `reason: "worker_company_grant_missing"` quer dizer que falta a empresa na
-   conta do worker. A pessoa owner (ou master) inclui pelo conector, sem
-   pedir à engenharia (domínio `geral`, "Empresa nova: acesso do worker e da
-   rotina"). Depois repita o mesmo enqueue. Sem esse `reason`, é outro
-   problema: registre o problema e avise a engenharia pelo Caixa.
+0. **Empresa nova sem o worker.** Quando a resposta servida mostrar a
+   concessão automática (`access_auto_granted`), empresa nova já entra no
+   worker sozinha (domínio `geral`, "Empresa nova e onboarding pela rotina").
+   `worker_not_authorized` com `reason: "worker_company_grant_missing"` ainda
+   aparece em empresa anterior à política sem backfill, worker suspenso ou
+   credencial vencida, e em servidor anterior. A pessoa owner (ou master)
+   inclui pelo conector, sem pedir à engenharia:
+   1. `listar_solicitacoes_acesso`: localize a conta e anote `id` e
+      `revision`. A recusa já traz `worker_account_id` e
+      `worker_account_revision` para owner/master
+      (`next_action: "listar_solicitacoes_acesso"`); para os demais vem
+      `next_action: "ask_administrator"`: peça à pessoa owner.
+   2. Prepare só o acréscimo: `receive_case_data` com `case_id: "@connector"`
+      e `request: {schema_version: "loki.connector-command/1", operation:
+      "prepare_authorization_addition", account_id, expected_revision,
+      grants}`. Em `grants`, só as empresas que faltam, cada uma com o
+      `required_grant` da recusa (`processes: ["folha_mensal"]`,
+      `capabilities: ["consultar", "operar_casos"]`). O Loki conserva papel,
+      status e as concessões atuais. Nunca use `preparar_autorizacao` para
+      isso: ele substitui a lista inteira.
+   3. Mostre o antes/depois e aplique com `aplicar_autorizacao`, com a
+      confirmação literal da pessoa owner.
+   4. Repita o mesmo enqueue: a recusa não grava job, então o mesmo
+      `request_ref` serve.
+
+   Sem esse `reason`, é outro problema: registre o problema e avise a
+   engenharia pelo Caixa.
 1. **Uma folha por empresa na fila.** O Loki aceita um único job pendente
    (`queued` ou `running`) por empresa. O contrato anuncia isso em
    `durable_workflow.admission: "one_pending_job_per_company"`. Se outro caso
@@ -387,6 +408,42 @@ está no domínio `geral`. Depois de uma restauração ou troca auditada do
 código Domínio (domínio `alteracao_cadastral`), a folha aberta com o código
 antigo no payload fica `vinculo_nao_identificado_na_competencia` até você
 reenviar a população com o código novo.
+
+## Matrícula do eSocial na população da folha
+
+Vale quando `get_company_onboarding_contract` citar o motivo
+`adocao_matricula_esocial`; sem isso, a população segue a matrícula
+registrada de hoje. Depois que a empresa adotar a matrícula do eSocial
+(domínio `alteracao_cadastral`, "Adotar a matrícula do eSocial"), toda
+população de folha usa a matrícula eSocial. O código Domínio não é aceito
+como alias: traduza o extrato do Domínio pelo mapa de `identifiers`
+(`namespace: "dominio"`, `status: "auxiliar"`) de
+`get_company_employee_history`. O Loki não escolhe a pessoa.
+
+- Folha aberta que citava o código antigo (listada em
+  `adoption_effects.open_payrolls_citing_previous_code` do recibo): reenvie a
+  população com as matrículas eSocial pela substituição da população.
+- Pendência `matricula_coincide_com_codigo_auxiliar` (também em
+  `case_candidate_diagnostics`), com `next_action`
+  `resolve_payroll_employee_e_preview_payroll_population_correction_com_funcionario_id`:
+  o valor do item é o código Domínio antigo de **outro** vínculo. Troque pela
+  matrícula eSocial certa. A saída é `resolve_payroll_employee` com nome e CPF,
+  que devolve o `funcionario_id`, e o item reenviado por
+  `preview_payroll_population_correction` e a aplicação com
+  `{funcionario_id, matricula}`. A confirmação vale só naquele caso: outra
+  folha do mesmo mês precisa da sua.
+- **Empresa com pares cruzados** (o código Domínio de um vínculo é a matrícula
+  eSocial de outro): depois da adoção, mande a população pela correção da
+  população com o `funcionario_id` de cada item. É o identificador da pessoa
+  que o schema aceita; o item de `dados_folha` não tem CPF.
+- `transitional_collisions` no recibo: outro vínculo ainda usa o mesmo valor
+  como código Domínio. Adote esse vínculo também; até lá a folha recusa o
+  valor como ambíguo.
+- A rescisão que citar uma folha calculada antes da adoção recusa
+  `termination_monthly_calculation_predates_registration_adoption`:
+  recalcule essa folha.
+- Folhas entregues continuam com o código antigo impresso: não reabra nem
+  recalcule por causa da adoção.
 
 ## Regras comuns da operação
 

@@ -1,70 +1,70 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.9.4",
-  "contract_version": "2.9.4",
-  "plugin_version": "2.9.4",
+  "instructions_version": "2.9.5",
+  "contract_version": "2.9.5",
+  "plugin_version": "2.9.5",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-20",
+  "updated_at": "2026-11-21",
   "domains": {
     "geral": {
-      "metadata_sha256": "cc59ce88907cce0bfb2739334be353d7b466e0a8519f986654ed2d669a949c64",
-      "content_sha256": "5d0952c0e7e6a0e9077ea9f803ade7e3e65a9d4e08c4a5f5a87daf3ad394957b"
+      "metadata_sha256": "8f23ae32aac98da4ad412a8ecf40a93b4e40ed49109d2651ab8c54b5bd2e7941",
+      "content_sha256": "8fa28fa57323b92d30d7b1306cffb1ca467828e6218585bf90a2a8290cff7d65"
     },
     "admissao": {
-      "metadata_sha256": "0fb775504ea5221d8dcb643eb7d1c98d70135ba995b23c589d574abd9a279b82",
-      "content_sha256": "7a33a1202abba1318e2b81ffce7f760fa92a0aa9052c91b1600e51988588d70f"
+      "metadata_sha256": "cd220119d506d4979942401d983633839c7327a60160e425fe4ef260a51822a8",
+      "content_sha256": "28bda57e43f1ac6bd426d0e49a4f0485a6a0bd8c6a15c649145d02a37b20ceb1"
     },
     "rescisao": {
-      "metadata_sha256": "b45abb4bc12c9e82932e1ad7d678ea97cbd566c3031ebd3c4d77aa7d573f20f3",
-      "content_sha256": "b032bfc792e95cb52cfb1f1957de3b6f9b930cd26fd5aad6e428365b9b819c5d"
+      "metadata_sha256": "9edd6b9df1716663dedc3ca6a677cf931ba29fbc095b75d9d529870fb60c717d",
+      "content_sha256": "dca8f484bc500bfb327d890a5ef92b97512849349317f320532d690b0ebfd41b"
     },
     "ferias": {
-      "metadata_sha256": "f110e7703918bdf72c6ef5a1e60864849c99cd49e9386d56764f02649f7c123a",
-      "content_sha256": "48a04acbbc162fc0bde0d5d766f7a69295a1fe8ef09cc3900e2ec4c27d858b34"
+      "metadata_sha256": "71d69a7e919e167b595f8f62529a2deef25b4358539e007c9b26cb58912a3f4d",
+      "content_sha256": "51a454015495bce776e825a085c46ffaa09e05947b4d2fb8aa87895dc3aa5efb"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "0bbc0ef785e1967c7a36389fc498563115027e6a3f84d795b6a1560faee20a1e",
+      "metadata_sha256": "bbea4661e0e401b009021187d52386b7d2f6df935434435d4a0cbde57fc1fec1",
       "content_sha256": "8079f64eb1ad887de6cf3664aa4389108ace5ff157a730c79cf029539bad74be"
     },
     "afastamento": {
-      "metadata_sha256": "3834fbed153cebdfe56004bfb226c4fc1aa7e847acb50435b40d818914bbedff",
-      "content_sha256": "1e6d655f0db355266cbcd0a83a7b9d8e7f3c9606b18ee0e832854cbae5544e14"
+      "metadata_sha256": "6ac5dc768494f90e953b12bb63278e4f081b5f7f0c8ecf4375de5655341b68d7",
+      "content_sha256": "45ca70d95e016f2cc1ce57465baf0adba302c06c47f582a2b4febabd542ddfe2"
     },
     "documentos": {
-      "metadata_sha256": "51e78e1b57e74f3f4b2870bb05eb07cbfed04c0c8fd48e9a71a0027cd35b5ad4",
+      "metadata_sha256": "30960c702844a53bef88fb00500bc02f9a5f13ff73d2c1ef2c167d4b7e465fda",
       "content_sha256": "f3f3962a6e9f0b313517af6b3e99bf885d1bf4444d41486ba5b2e07c8f08e038"
     },
     "aprovacoes": {
-      "metadata_sha256": "cd22342ede320f419f1869a5f40ad6a9342f220e895aafeb054a8013a51ff801",
+      "metadata_sha256": "d7d5f3a6774d84cfffd5b9548671b9bbbc5f1f7ffe548cb0d5fc0a2be86d6962",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "f315d6faf218bf3b8d87e39c33e2659083ea242aba68088e941d7ec4965bc069",
-      "content_sha256": "7e2cc76ace7ed97dd0fe00655cec6f13e95ec4339fed91f31c3d0c960d2cc200"
+      "metadata_sha256": "fa915d9e244ad9b1516620043020d6474b7cf4911d35f30adc2f45846c25845b",
+      "content_sha256": "6bb9a61c24e3e44252c3deca2794795af763527e5c92f61ac2ac77287fd0f87d"
     },
     "ocorrencia": {
-      "metadata_sha256": "cef01aad831c380cbb7b816bd9b6d4fb66002ff64f9f916ae20408671e7506b2",
+      "metadata_sha256": "03a722d21f416bcac7431ec519fd2da2c3cdf24d1e96b79dd9278121a00088da",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "32bd57281c75007f202ed7830c1937ab76ce8a07ebf2dc420529fa8d2eefd858",
+      "metadata_sha256": "5ee211b3041dea1356d8d135ef6b865dbeae7d34a2a50a4e77e95f60f567aa17",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "7d80ef028d966f552dfccffd43a6662231f1a347705df40698f35654b775e22b",
+      "metadata_sha256": "343033be24e79f0d75f8a47a73f11d7c1e2a84f021bfdba573004fe013353924",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "a252f7012fddd099f660bcc07232daf5365c297d4fad8bd74e242aeff9ec17ea",
+      "metadata_sha256": "180f85427b19f91a22514f65af485b00c10264215efa62335b692f378db4945d",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     },
     "reajuste_salarial": {
-      "metadata_sha256": "37f2a87beb0f6e8200c7a4ed7d545657adb329099f959621603c64018b6967ce",
+      "metadata_sha256": "daea33efaaa17c48bd8bcb7af7b94e9a529b4297578824de6ad2c2ba3c00886b",
       "content_sha256": "05bcb71c41b357e3c6c01de0a10d89f4aeca17fc5a9697b3dd9e15dc555f4177"
     },
     "folha_mensal": {
-      "metadata_sha256": "3166c43405f136a7f97e5c8686d9f9431e64cc1ce5db8d25e07db0bb00d9bd1e",
-      "content_sha256": "51799ea4bd8a4c9af99e218e2823991d57de5d16fc9eeada7ad21d61a7f8c4bb"
+      "metadata_sha256": "01c037469b60f5694108ee5d32c7163e0f6cecc9bfe093937be6153864ae18e8",
+      "content_sha256": "275c2c30d788c3cb63406db02e957fc81aac548286633e66c6684cf6aabebcfc"
     }
   },
   "changes": {
@@ -84,7 +84,8 @@
       "Contrato2.9.1 aditivo (backend #363): só texto novo em loki.salary-adjustment/1 — rule.admitted_on_base_date (admitido no próprio dia da data-base fica sem_reajuste com motivo admitido_na_data_base_com_salario_novo; piso prevalece; salario_novo_cents maior diverge) e declared_origins.transport_discount (o VT não é revalorizado na diferença nem declarado no pago). Histórico de férias aceita gozo com o fim do aquisitivo dentro do período. Sem ferramenta nova, sem schema novo e sem mudança de argumento: as 96 ferramentas são as mesmas.",
       "Contrato2.9.2 aditivo (backend #366 e #367): envelope loki.company-termination-map-policy-patch/1 em alteracoes de validate_client_config e apply_client_config (política arredondamento_proporcionais inteira por empresa e seleção, várias empresas numa versão, sem parcelas_do_mes), chave de descoberta termination_map_policy_patch_transport em get_client_config, termination_policy_preview na prévia e recusa termination_policy_patch_remove_incompatible; a recusa historical_thirteenth_unqualified_documentary_facts passa de {erro} para BLOCKED/code com fields, next_action, blocking_facts (origin, kind, identificador, effective_on, reason, path, allowed_types) e blocking_facts_total. Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
       "Contrato2.9.3 aditivo (backend #368 e #370): marcador de simulação de rescisão com o opt-in payload.simulation.historical_state (selected padrão | current), publicado em get_process_contract(\"rescisao\").simulation.historical_state; historical_state_basis (loki.simulation-historical-state/1: state_hash, selected_state_hash, differs_from_selection, history_consumed, history_sources) e notices em simulation; pendente historical_qualification_context_incompatible em simulation.pending_qualifications; subreasons novos historical_state_source_incompatible e historical_settlement_bound_to_selection em operational_context_changed; fontes CPH-* de folha fechada nova ainda recusam com source_document_missing. Folha mensal folha-v31: pendências salario_familia_mes_admissao_pendente_regra, salario_familia_remuneracao_zero_sem_declaracao e salario_familia_base_inss_zero_com_proventos no diagnóstico, next_action qualificar_incidencia_inss_das_rubricas_do_mes e correção do operador em funcionarios.<matricula>.bases.salario_familia_cents; a troca de motor desatualiza todas as folhas mensais não entregues. Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
-      "Contrato2.9.4 aditivo (backend #374 e #375): folha mensal folha-v32 (regra da DP de 19/11): limite do salário-família pela remuneração devida no mês e cota proporcional no mês de admissão; pendências novas salario_familia_mes_transferencia_pendente_regra, salario_familia_salario_do_mes_nao_identificado, salario_familia_adicional_mes_cheio_nao_identificado, salario_familia_deducao_nao_classificada, salario_familia_medias_ferias_nao_classificadas, vale_transporte_mes_transferencia_pendente_regra e vale_transporte_proporcao_concessao_admissao_ambigua com as próximas ações; salario_familia_mes_admissao_pendente_regra deixa de ser emitida; correção do operador em funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents para o VT ambíguo; calculated null na memória de correção sobre valor pendente; a troca de motor desatualiza todas as folhas mensais não entregues. Recusa worker_not_authorized com reason worker_company_grant_missing, required_grant e next_action para o comando aditivo prepare_authorization_addition (#375). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas."
+      "Contrato2.9.4 aditivo (backend #374 e #375): folha mensal folha-v32 (regra da DP de 19/11): limite do salário-família pela remuneração devida no mês e cota proporcional no mês de admissão; pendências novas salario_familia_mes_transferencia_pendente_regra, salario_familia_salario_do_mes_nao_identificado, salario_familia_adicional_mes_cheio_nao_identificado, salario_familia_deducao_nao_classificada, salario_familia_medias_ferias_nao_classificadas, vale_transporte_mes_transferencia_pendente_regra e vale_transporte_proporcao_concessao_admissao_ambigua com as próximas ações; salario_familia_mes_admissao_pendente_regra deixa de ser emitida; correção do operador em funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents para o VT ambíguo; calculated null na memória de correção sobre valor pendente; a troca de motor desatualiza todas as folhas mensais não entregues. Recusa worker_not_authorized com reason worker_company_grant_missing, required_grant e next_action para o comando aditivo prepare_authorization_addition (#375). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
+      "Contrato2.9.5 aditivo (backend #376 e #379 em main; #378 e #372 aprovadas, ainda não mescladas): concessão automática do worker de folha e do modelo @empresas-novas em empresa nova (access_auto_granted) e carga_historica por empresa explícita em conta de automação, com as ferramentas de onboarding no catálogo dela e as recusas onboarding_empresa_nao_autorizada, argumento_fora_do_contrato, automacao_nao_cria_cliente e cadastro_da_empresa_exige_configurar_cliente (#376); razão social do cadastro (razao_social_normalizada_pelo_cadastro), reabertura da admissão cancelada sem rastro com supersedes_case_id e as recusas admission_cancelled_case_not_reusable, case_superseded_by_new_case e admission_reopening_chain_inconsistent (#379); historical-vacation-v2 com dados_ferias.data_calculo, leave.vacation_effect, vacation_use.advance, dados_ferias.abono_fora_do_prazo_source, historical_state.vacation_rules no contrato de onboarding, os códigos historical_* novos, ferias_data_calculo_invalida, ferias_abono_fora_do_prazo_source_sem_uso/_sem_fundamento e rescisao_ferias_gozo_antecipado_pendente_regra (#378); matrícula do eSocial operacional (migration 0066) com motivo adocao_matricula_esocial, adoption_effects, identificador auxiliar, pendência matricula_coincide_com_codigo_auxiliar e as recusas matricula_esocial_em_uso_no_empregador, empresa_adotou_matricula_esocial, matricula_esocial_exige_adocao_auditada, codigo_dominio_e_auxiliar_em_vinculo_esocial, adocao_matricula_esocial_exige_codigo_dominio, adocao_matricula_esocial_valor_citado_em_folha_aberta e termination_monthly_calculation_predates_registration_adoption (#372). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas."
     ],
     "instructions": [
       "Extensão aditiva2.2: intenção fiscal de administrador humano, prévia/hash/revisão e readback; assinatura, representação, fila e recibo verificados continuam pendentes.",
@@ -120,7 +121,8 @@
       "Instruções2.9.1 (regras da DP de18/11/2026): geral com aviso curto (só atualizar o plugin; sem Refresh), lembrete do Refresh da 2.8.0 e matrícula do eSocial como identificador oficial (sem gravar matrícula nova por identifier_only sem falar com a engenharia; ponteiro em alteracao_cadastral). reajuste_salarial: admitido no próprio dia da data-base sem reajuste (sai a orientação de deixar pendente), VT fora da diferença e do pago declarado, salário novo já registrado na data-base é o próprio reajuste; admitido no mesmo mês antes do dia fica pendente. ferias: gozo com o fim do aquisitivo dentro do período aceito no histórico; lote recusado antes volta ready e se aplica com o validation_hash novo. afastamento: um registro por atestado; licença-maternidade não é falta. rescisao/decimo_terceiro: o Domínio soma as médias das empresas; medias_por_bloco só com conferência da DP. Valem quando a resposta servida os apresentar.",
       "Instruções2.9.2: geral com aviso curto (só atualizar o plugin; sem Refresh) e lembrete do Refresh da 2.8.0. rescisao: patch só da política de arredondamento do mapa, várias empresas numa versão; a política declarada substitui a atual inteira (ler antes em get_client_config e repetir escopos, fonte e opções ligadas), seleções da mesma empresa recebem a mesma política, termination_policy_preview mostrado à operadora antes do apply, parcelas_do_mes não exigido, medias_por_bloco desligada sem conferência da DP; sem a chave de descoberta, avisar que o servidor ainda não tem o patch. decimo_terceiro: blocking_facts na recusa por fatos documentais; outro qualificado pelo reenvio da cobertura thirteenth_payments da mesma ficha com replaces_fact_id e qualifies_legacy_fact_ids; a qualificação muda o state_hash do empregado e desatualiza seleções de outros casos abertos (alinhar com a DP antes) e só vale em cortes a partir do fim da cobertura; final_average não qualifica fato do 13º; no_typed_exit e dp_rule_pending ficam pendentes. Valem quando a resposta servida os apresentar.",
       "Instruções2.9.3: geral com aviso destacado do recálculo obrigatório das folhas mensais não entregues (folha-v31: abertas, em revisão e aprovadas não entregues; as entregues não mudam), atualização do plugin sem Refresh e lembrete do Refresh da 2.8.0. folha_mensal: salário-família com o limite contra a base do INSS do mês; pendências salario_familia_mes_admissao_pendente_regra, salario_familia_remuneracao_zero_sem_declaracao e salario_familia_base_inss_zero_com_proventos com as próximas ações; saída por submit_operator_correction target calculation em funcionarios.<matricula>.bases.salario_familia_cents depois da decisão da DP; falta de filhos se resolve completando o cadastro; insalubridade só exige a rubrica_loki no mapa e é paga por dias no mês de admissão; VT do admitido no mês continua retido; em consulta à DP 1/3 de férias e faltas na base do limite, mês de admissão cheio ou parcial e transferência como entrada. alteracao_cadastral: exceção da insalubridade vigente desde a admissão. rescisao: simulação com historical_state current (simulation_ref nova, ressalvas, historical_state_basis, history_consumed, pending_qualifications com renovar seleção e qualificação no caso real, subreasons historical_state_source_incompatible e historical_settlement_bound_to_selection, limite das fontes CPH-*); sai a orientação de que seleção desatualizada não tem caminho sem reiniciar o caso real. Valem quando a resposta servida os apresentar.",
-      "Instruções2.9.4: geral com aviso destacado do recálculo obrigatório das folhas mensais não entregues (folha-v32, inclusive as recalculadas na v31) e da conferência das correções de salário-família da v31 que prevalecem; seção Empresa nova: acesso do worker e da rotina (prepare_authorization_addition aditivo pela pessoa owner, aplicar_autorizacao, repetir o enqueue; preparar_autorizacao nunca para incluir empresa no worker). folha_mensal: Motor folha-v32; salário-família pela remuneração devida no mês (salário cheio, adicionais pelo mês cheio, sem faltas, 13º e terço), cota proporcional no mês de admissão por 30 − dia + 1 em confirmação com a DP, pendências novas com próximas ações e saída por submit_operator_correction; VT do admitido com o percentual uma vez sobre o salário proporcional, os três casos da concessão e a pendência ambígua com saída pela correção da linha do VT; substitui o salário-família, os pontos em consulta à DP e o VT retido da 2.9.3; item 0 da fila durável para empresa nova sem o worker. Valem quando a resposta servida os apresentar."
+      "Instruções2.9.4: geral com aviso destacado do recálculo obrigatório das folhas mensais não entregues (folha-v32, inclusive as recalculadas na v31) e da conferência das correções de salário-família da v31 que prevalecem; seção Empresa nova: acesso do worker e da rotina (prepare_authorization_addition aditivo pela pessoa owner, aplicar_autorizacao, repetir o enqueue; preparar_autorizacao nunca para incluir empresa no worker). folha_mensal: Motor folha-v32; salário-família pela remuneração devida no mês (salário cheio, adicionais pelo mês cheio, sem faltas, 13º e terço), cota proporcional no mês de admissão por 30 − dia + 1 em confirmação com a DP, pendências novas com próximas ações e saída por submit_operator_correction; VT do admitido com o percentual uma vez sobre o salário proporcional, os três casos da concessão e a pendência ambígua com saída pela correção da linha do VT; substitui o salário-família, os pontos em consulta à DP e o VT retido da 2.9.3; item 0 da fila durável para empresa nova sem o worker. Valem quando a resposta servida os apresentar.",
+      "Instruções2.9.5: geral com aviso do que mudou (só atualizar o plugin; sem Refresh; a conta da rotina com carga_historica pode precisar de conversa nova), textos condicionais ao sinal servido de cada parte do backend e lembrete do Refresh da 2.8.0 estendido à adoção; seção Empresa nova e onboarding pela rotina (concessão automática, recursos para worker_company_grant_missing no item 0 da fila durável de folha_mensal, regras da automação, roteiro do onboarding pela rotina e o que continua com a pessoa); cancelamento libera a chave só na admissão sem rastro. admissao: razão social do cadastro, reabertura com supersedes_case_id e recusas, recusas de matrícula eSocial no create_case. ferias: data_calculo obrigatória, cobertura até ela, espelho nativo, sem_reducao, fato opaco, gozo antecipado e abono fora do prazo (historical-vacation-v2). afastamento: sem_reducao e fato opaco só para férias. rescisao: recusa com gozo antecipado e folha anterior à adoção. alteracao_cadastral: adoção da matrícula do eSocial (um lote por empresa, recusas, adoption_effects). folha_mensal: matrícula do eSocial na população, matricula_coincide_com_codigo_auxiliar e pares cruzados pela correção da população com funcionario_id. Valem quando a resposta servida os apresentar."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -158,7 +160,8 @@
       "Plugin2.9.1 espelha as regras da DP de18/11/2026 em WORKFLOWS (seção 2.9.1), CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.26 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.25 permanece imutável.",
       "Plugin2.9.2 espelha a política do mapa de rescisão e os fatos do 13º em WORKFLOWS (seção 2.9.2), CAPACIDADES_DP, operar-loki e registrar-problema-loki, com a nota do suporte no Slack (o bot só age quando mencionado ou na thread do próprio pedido); não exige Refresh do conector, só atualizar o plugin; wheel0.4.27 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.26 permanece imutável.",
       "Plugin2.9.3 espelha a folha v31 (recálculo obrigatório das folhas não entregues, salário-família pela base do INSS, insalubridade no mês de admissão, VT retido) e a simulação com o estado histórico atual em WORKFLOWS (seção 2.9.3), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.28 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.27 permanece imutável.",
-      "Plugin2.9.4 espelha a folha v32 (recálculo obrigatório, salário-família pela remuneração devida, VT do admitido, correções da v31 que prevalecem) e a empresa nova no worker em WORKFLOWS (seção 2.9.4, com nota de substituição na 2.9.3), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.29 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.28 permanece imutável."
+      "Plugin2.9.4 espelha a folha v32 (recálculo obrigatório, salário-família pela remuneração devida, VT do admitido, correções da v31 que prevalecem) e a empresa nova no worker em WORKFLOWS (seção 2.9.4, com nota de substituição na 2.9.3), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.29 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.28 permanece imutável.",
+      "Plugin2.9.5 espelha o onboarding pela rotina, a admissão (razão social e reabertura), as férias historical-vacation-v2 e a adoção da matrícula do eSocial em WORKFLOWS (seção 2.9.5, com notas de substituição na 2.9.0, 2.9.1 e 2.9.4), CAPACIDADES_DP (inclusive o cancelamento), operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.30 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.29 permanece imutável."
     ]
   }
 }

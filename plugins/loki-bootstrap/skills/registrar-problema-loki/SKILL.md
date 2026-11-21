@@ -122,7 +122,9 @@ são. Depois de uma janela, `job_build_changed` e
 é erro de preparação, não do Loki.
 Na 2.9.0: admissão cancelada por data de admissão errada cujo episódio antigo
 já recebeu matrícula é problema a relatar (empresa, processo e o fato, sem a
-matrícula, o CPF ou o nome); o `cancel_case` não libera a matrícula. Rescisão
+matrícula, o CPF ou o nome); o `cancel_case` não libera a matrícula. Com
+a reabertura da 2.9.5 (`supersedes_case_id`), só a recusa
+`admission_cancelled_case_not_reusable` é problema a relatar. Rescisão
 retida com `saldo_valor_dia_exige_mes_comercial` também é problema a relatar,
 sem alterar `dias_no_mes`. Não são defeito:
 `folha_do_lancamento_em_revisao_ou_fechada` (leia `folha_bloqueante`),
@@ -147,6 +149,23 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
+Na 2.9.5 não são defeito: `worker_company_grant_missing` em empresa
+anterior à política (a pessoa owner inclui a empresa no worker); linhas
+`pending` do onboarding pela rotina com
+`cadastro_da_empresa_exige_configurar_cliente`,
+`correcao_nominal_exige_corrigir_dados`,
+`restauracao_matricula_exige_corrigir_dados` ou
+`employment_entry_requires_human_authority` (vão à operadora);
+`onboarding_empresa_nao_autorizada` e `argumento_fora_do_contrato`;
+`case_superseded_by_new_case`; `historical_vacation_calculation_date_required`
+(falta `data_calculo`); `historical_vacation_native_occurrence_not_mirrored`
+(falta o espelho); `rescisao_ferias_gozo_antecipado_pendente_regra` (regra
+da DP, pergunte à Rafa); `matricula_coincide_com_codigo_auxiliar` e
+`termination_monthly_calculation_predates_registration_adoption` depois da
+adoção da matrícula do eSocial. `admission_cancelled_case_not_reusable` e
+`admission_reopening_chain_inconsistent` são problema a relatar (empresa,
+processo, `case_id` e o motivo, sem CPF, nome ou matrícula), assim como
+`adocao_matricula_esocial_exige_codigo_dominio`.
 Na 2.9.4 não são defeito: folha mensal não entregue com `calculation_stale`
 depois da troca para `folha-v32` (recalcule); as pendências
 `salario_familia_mes_transferencia_pendente_regra`,
