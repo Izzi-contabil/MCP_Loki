@@ -150,12 +150,13 @@ são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
 Na 2.9.5 não são defeito: `worker_company_grant_missing` em empresa
-anterior à política (a pessoa owner inclui a empresa no worker); linhas
-`pending` do onboarding pela rotina com
-`cadastro_da_empresa_exige_configurar_cliente`,
-`correcao_nominal_exige_corrigir_dados`,
+anterior à política (a pessoa owner inclui a empresa no worker); no
+onboarding pela rotina, a linha `pending` com
+`cadastro_da_empresa_exige_configurar_cliente` e a recusa do apply inteiro
+com `correcao_nominal_exige_corrigir_dados`,
 `restauracao_matricula_exige_corrigir_dados` ou
-`employment_entry_requires_human_authority` (vão à operadora);
+`employment_entry_requires_human_authority` (a rotina não repete o apply;
+passa o `onboarding_id` à operadora, e uma pessoa com a capacidade aplica);
 `onboarding_empresa_nao_autorizada` e `argumento_fora_do_contrato`;
 `case_superseded_by_new_case`; `historical_vacation_calculation_date_required`
 (falta `data_calculo`); `historical_vacation_native_occurrence_not_mirrored`

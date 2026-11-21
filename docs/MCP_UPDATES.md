@@ -76,7 +76,7 @@ Por domínio:
   população com `funcionario_id`); item 0 da fila com a concessão automática
   e os passos do recurso.
 
-Tamanho: `geral` com 65.195 bytes do limite de 65.536; os demais abaixo de
+Tamanho: `geral` com 65.216 bytes do limite de 65.536; os demais abaixo de
 39 KB.
 
 Plugin espelha em WORKFLOWS (seção "2.9.5: onboarding pela rotina, admissão,

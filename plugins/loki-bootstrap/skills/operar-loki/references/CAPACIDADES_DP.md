@@ -329,7 +329,12 @@ folha e das rotinas com o modelo `@empresas-novas`
 (`access_auto_granted`); `prepare_authorization_addition` fica para a recusa
 `worker_company_grant_missing`. A rotina com `carga_historica` numa empresa
 faz o onboarding dela; cadastro, adoção ou restauração de matrícula e
-decisões continuam exigindo pessoa. Na admissão, a razão social vem do
+decisões continuam exigindo pessoa. `cadastro_da_empresa_exige_configurar_cliente`
+deixa a linha `pending`; `correcao_nominal_exige_corrigir_dados`,
+`restauracao_matricula_exige_corrigir_dados` e
+`employment_entry_requires_human_authority` recusam o apply inteiro, sem
+aplicar nada: a rotina não repete o apply e passa o lote (`onboarding_id`) à
+operadora pela Caixa, para uma pessoa com a capacidade aplicar. Na admissão, a razão social vem do
 cadastro (`razao_social_normalizada_pelo_cadastro`) e uma admissão cancelada
 sem rastro reabre por `create_case` (`supersedes_case_id`;
 `admission_cancelled_case_not_reusable` quando há rastro). Nas férias com

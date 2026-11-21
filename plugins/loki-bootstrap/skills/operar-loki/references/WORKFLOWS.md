@@ -911,11 +911,13 @@ precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
   declarações, `validate_company_onboarding` e `apply_company_onboarding` só
   daquela empresa. Não cria cliente nem empresa
   (`automacao_nao_cria_cliente`), não manda argumento fora do schema
-  (`argumento_fora_do_contrato`). Linhas `pending` com
-  `cadastro_da_empresa_exige_configurar_cliente`,
+  (`argumento_fora_do_contrato`). Linha `pending` com
+  `cadastro_da_empresa_exige_configurar_cliente` vai à operadora.
   `correcao_nominal_exige_corrigir_dados`,
-  `restauracao_matricula_exige_corrigir_dados` ou
-  `employment_entry_requires_human_authority` vão à operadora pela Caixa.
+  `restauracao_matricula_exige_corrigir_dados` e
+  `employment_entry_requires_human_authority` recusam o apply inteiro, sem
+  aplicar nada: a rotina não repete o apply; passa o lote (`onboarding_id`) à
+  operadora pela Caixa, e uma pessoa com a capacidade aplica.
 - **Admissão (`admissao`).** Razão social cortada no PDF do Onvio vira o nome
   do cadastro (`razao_social_normalizada_pelo_cadastro`); não complete o nome
   à mão. Admissão cancelada sem efeito, documento entregue ou matrícula

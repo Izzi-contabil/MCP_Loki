@@ -51,7 +51,10 @@ ONBOARDING = (
     "`correcao_nominal_exige_corrigir_dados`",
     "`restauracao_matricula_exige_corrigir_dados`",
     "`employment_entry_requires_human_authority`",
-    "Cadastro, adoção ou restauração de matrícula e decisões exigem pessoa.",
+    "recusam o apply inteiro, sem aplicar nada: não repita o apply; passe o lote "
+    "(`onboarding_id`) à operadora pela Caixa, e uma pessoa com a capacidade aplica.",
+    "`slug` (o `cliente_slug`) e `cnpj`",
+    "não reenvie para forçar",
     "`onboarding_empresa_nao_autorizada`",
 )
 STALE_GENERAL = (
@@ -72,6 +75,10 @@ ADMISSION = (
     "`case_superseded_by_new_case`",
     "`admission_cancelled_case_not_reusable`",
     "`efeito_aplicado`, `documento_entregue` ou `matricula_atribuida`",
+    "leia o `get_case` do cancelado e concilie com a DP",
+    "com `documento_entregue`, trate a entrega existente",
+    "e ao menos 10 caracteres",
+    "Não reenvie para forçar.",
     "Não mude CPF, data ou protocolo para conseguir outra chave.",
     "`admission_reopening_chain_inconsistent`",
     "Servidor anterior (sem `supersedes_case_id`)",
@@ -91,6 +98,12 @@ VACATION = (
     "`sem_afastamento_conhecido_apos_calculo`",
     '"rule": "atestado_e_licenca_maternidade_nao_sao_falta"',
     '"message_reference": "CX-AB5EE178"',
+    "Atestado com período pago pelo INSS (`payment_periods[].responsibility: "
+    '"inss"`) exige `dp_decision`',
+    "atestado sem `return_on` recusa",
+    "a data real em que o cálculo foi feito",
+    "use a data do cálculo da equipe tirada da fonte (o recibo ou o pedido), não a data de hoje",
+    "não mova a data: deixe pendente e pergunte à operadora. Nunca invente uma data",
     "`historical_leave_vacation_effect_benefit_requires_dp_decision`",
     "`historical_leave_vacation_effect_category_incompatible`",
     '{"kind": "dp_decision", "message_reference": "CX-…"}',
@@ -152,6 +165,7 @@ PAYROLL = (
     "`matricula_coincide_com_codigo_auxiliar`",
     "`resolve_payroll_employee_e_preview_payroll_population_correction_com_funcionario_id`",
     "`{funcionario_id, matricula}`",
+    "nome completo (CPF e admissão só para homônimos)",
     "**Empresa com pares cruzados**",
     "mande a população pela correção da população com o `funcionario_id` de cada item",
     "o item de `dados_folha` não tem CPF",

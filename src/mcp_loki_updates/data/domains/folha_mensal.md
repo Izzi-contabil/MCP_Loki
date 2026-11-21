@@ -427,7 +427,7 @@ como alias: traduza o extrato do Domínio pelo mapa de `identifiers`
   `case_candidate_diagnostics`), com `next_action`
   `resolve_payroll_employee_e_preview_payroll_population_correction_com_funcionario_id`:
   o valor do item é o código Domínio antigo de **outro** vínculo. Troque pela
-  matrícula eSocial certa. A saída é `resolve_payroll_employee` com nome e CPF,
+  matrícula eSocial certa. A saída é `resolve_payroll_employee` com nome completo (CPF e admissão só para homônimos),
   que devolve o `funcionario_id`, e o item reenviado por
   `preview_payroll_population_correction` e a aplicação com
   `{funcionario_id, matricula}`. A confirmação vale só naquele caso: outra

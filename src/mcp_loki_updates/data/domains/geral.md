@@ -163,10 +163,10 @@ motivo `adocao_matricula_esocial`, a matrícula operacional é a do eSocial e o
 código Domínio vira auxiliar (`identifiers`, `status: "auxiliar"`), adotado
 por empresa pelo onboarding (domínio `alteracao_cadastral`). Depois da adoção,
 o código Domínio no caso recusa `matricula_funcionario_divergente`.
-`matricula_esocial_em_uso_no_empregador` (já é a matrícula de outro vínculo da
-raiz do CNPJ) e `empresa_adotou_matricula_esocial` (vínculo sem matrícula em
-empresa adotada): reenvie omitindo `funcionario.matricula` e declare a
-matrícula eSocial pelo onboarding. Sem esse sinal, não grave matrícula nova
+`matricula_esocial_em_uso_no_empregador` (matrícula de outro vínculo da raiz
+do CNPJ): confira com a operadora; fonte divergente vai a `registrar_problema`;
+não reenvie para forçar. `empresa_adotou_matricula_esocial`: reenvie sem
+`funcionario.matricula` e declare a matrícula eSocial pelo onboarding. Sem esse sinal, não grave matrícula nova
 por worker `identifier_only` (inclusive restauração ou troca de código
 Domínio) sem falar antes com a engenharia.
 
@@ -209,7 +209,7 @@ onboarding (sem elas, Refresh ou conversa nova nessa conta):
 
 1. Só grants com `company_id` real contam. Empresa sem `carga_historica`:
    pare e peça a concessão; não tente outra.
-2. `listar_empresas` dá `cliente_slug` e CNPJ. A rotina não cria cliente nem
+2. `listar_empresas` dá `slug` (o `cliente_slug`) e `cnpj`. A rotina não cria cliente nem
    empresa (uma pessoa cadastra antes); nunca envie `confirmar_novo_cliente`
    (`automacao_nao_cria_cliente`). Só os argumentos de cada ferramenta
    (`argumento_fora_do_contrato`).
@@ -222,13 +222,12 @@ onboarding (sem elas, Refresh ou conversa nova nessa conta):
    `get_company_onboarding_declarations`.
 4. `validate_company_onboarding` e `apply_company_onboarding` com o
    `validation_hash`. Declarações e fontes exigidas são as mesmas da pessoa.
-5. Linha `pending` com `cadastro_da_empresa_exige_configurar_cliente`,
-   `correcao_nominal_exige_corrigir_dados`,
-   `restauracao_matricula_exige_corrigir_dados` ou
-   `employment_entry_requires_human_authority` não é da rotina: avise a
-   operadora (Caixa) com o `onboarding_id` e a referência do vínculo, sem
-   reenviar nem contornar. Cadastro, adoção ou restauração de matrícula e
-   decisões exigem pessoa.
+5. Linha `pending` com `cadastro_da_empresa_exige_configurar_cliente` não é da
+   rotina. `employment_entry_requires_human_authority`,
+   `correcao_nominal_exige_corrigir_dados` e
+   `restauracao_matricula_exige_corrigir_dados` recusam o apply inteiro, sem
+   aplicar nada: não repita o apply; passe o lote (`onboarding_id`) à
+   operadora pela Caixa, e uma pessoa com a capacidade aplica.
 6. Conciliação e revogação de rescisão do onboarding, reparo de identificador,
    inventário do cliente e upload pelo navegador são da pessoa.
    `onboarding_empresa_nao_autorizada`: o lote ou a empresa não está no seu

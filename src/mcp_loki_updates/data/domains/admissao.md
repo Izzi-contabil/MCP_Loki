@@ -121,10 +121,12 @@ Quando `get_company_onboarding_contract` citar o motivo
 `adocao_matricula_esocial`, a matrícula operacional é a do eSocial: na
 admissão, não mande o código do Domínio como matrícula. `create_case` recusa
 `matricula_esocial_em_uso_no_empregador` (o valor já é a matrícula eSocial de
-outro vínculo da mesma raiz de CNPJ) e `empresa_adotou_matricula_esocial`
-(empresa que já adotou o eSocial, vínculo sem matrícula). Nas duas, reenvie
-omitindo `funcionario.matricula` e declare a matrícula eSocial pelo onboarding
-(domínio `alteracao_cadastral`, "Adotar a matrícula do eSocial").
+outro vínculo da mesma raiz de CNPJ): primeiro confira com a operadora a
+matrícula eSocial do vínculo; se a fonte divergir, use `registrar_problema`.
+Não reenvie para forçar. `empresa_adotou_matricula_esocial` (empresa que já
+adotou o eSocial, vínculo sem matrícula): reenvie omitindo
+`funcionario.matricula` e declare a matrícula eSocial pelo onboarding (domínio
+`alteracao_cadastral`, "Adotar a matrícula do eSocial").
 
 ## Razão social da empresa
 
@@ -133,7 +135,7 @@ documentos é a do cadastro da empresa no Loki, não a lida no original.
 Relatório em PDF do Onvio costuma cortar nome longo (por exemplo, "…
 ORGANIZAÇÃO DE" no lugar de "… ORGANIZAÇÃO DE EVENTOS LTDA"). Envie o valor
 como está na fonte. Quando ele for o nome do cadastro, ou o começo dele com
-pelo menos a primeira palavra inteira (ignorando caixa, acento, espaços e
+pelo menos a primeira palavra inteira e ao menos 10 caracteres (ignorando caixa, acento, espaços e
 pontuação final), o Loki grava o nome do cadastro e registra a troca na
 trilha (`razao_social_normalizada_pelo_cadastro`). Não complete nem corrija o
 nome à mão para coincidir. Nome que não é o do cadastro nem o começo dele
@@ -163,8 +165,10 @@ não volta por `restart_case` (`case_superseded_by_new_case`). Repetir o mesmo
 - `admission_cancelled_case_not_reusable`: o cancelado deixou rastro; o
   motivo vem no erro (`efeito_aplicado`, `documento_entregue` ou
   `matricula_atribuida`). Não mude CPF, data ou protocolo para conseguir outra
-  chave. Registre o problema com `registrar_problema`, sem CPF, nome ou
-  matrícula no texto, e avise a operadora. Reaproveitar a matrícula de uma
+  chave. Antes, leia o `get_case` do cancelado e concilie com a DP o efeito
+  aplicado ou a matrícula; com `documento_entregue`, trate a entrega
+  existente. Depois, registre o problema com `registrar_problema`, sem CPF,
+  nome ou matrícula no texto, e avise a operadora. Reaproveitar a matrícula de uma
   admissão cancelada depende de regra da DP.
 - `admission_reopening_chain_inconsistent`: a cadeia de reaberturas não
   confere. Registre o problema; não tente de novo.

@@ -174,8 +174,8 @@ para todo vínculo carregado com código Domínio (`matricula_namespace:
 "dominio"`). O deploy não muda nenhum caso: só a adoção muda. Usa o
 onboarding de sempre, com os campos da restauração (Refresh da 2.8.0, se
 ainda não feito). Exige pessoa com `corrigir_dados`: a automação com
-`carga_historica` não adota (a linha fica `pending` com
-`restauracao_matricula_exige_corrigir_dados`).
+`carga_historica` não adota: o apply dela é recusado inteiro com
+`restauracao_matricula_exige_corrigir_dados`, sem aplicar nada.
 
 Antes de adotar, para cada empresa:
 

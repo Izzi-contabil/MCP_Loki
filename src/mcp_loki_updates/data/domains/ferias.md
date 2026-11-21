@@ -45,12 +45,18 @@ seções abaixo como estão e não envie os campos novos: o servidor anterior os
 recusa. Regras da operação (DP), recebidas pela Caixa em 19 e 20/11/2026.
 
 **Data do cálculo e cobertura.** Todo cálculo novo exige
-`dados_ferias.data_calculo`, a data em que você calcula as férias; sem ela, o
-Loki recusa `historical_vacation_calculation_date_required`. A operação
-calcula até 30 dias antes do gozo, e o pagamento sai dois dias antes. A data
-fica entre o fim do aquisitivo e o fim do gozo (`ferias_data_calculo_invalida`)
-e não pode ser futura (`historical_vacation_calculation_date_future`, também
-em simulação). Caso já calculado pela regra anterior recalcula pela regra
+`dados_ferias.data_calculo`, a data real em que o cálculo foi feito, em
+`America/Sao_Paulo`; sem ela, o Loki recusa
+`historical_vacation_calculation_date_required`. A operação calcula até 30
+dias antes do gozo, e o pagamento sai dois dias antes. Para conferir férias
+que a equipe já calculou (como nos testes contra o Domínio), use a data do
+cálculo da equipe tirada da fonte (o recibo ou o pedido), não a data de hoje.
+A data fica entre o fim do aquisitivo e o fim do gozo
+(`ferias_data_calculo_invalida`) e não pode ser futura
+(`historical_vacation_calculation_date_future`, também em simulação). Se a
+data da fonte cair antes do fim do aquisitivo ou depois do fim do gozo, não
+mova a data: deixe pendente e pergunte à operadora. Nunca invente uma data
+para caber. Caso já calculado pela regra anterior recalcula pela regra
 gravada, mas deixa de ser corrente (perde a elegibilidade de entrega) se o
 Loki tiver afastamento ou gozo desse funcionário entre o início do aquisitivo
 e a véspera do gozo sem espelho no histórico selecionado: lance o espelho
@@ -82,9 +88,10 @@ ou licença-maternidade, a regra da operação basta:
 "operation_rule", "rule": "atestado_e_licenca_maternidade_nao_sao_falta",
 "message_reference": "CX-AB5EE178", "category": "atestado"}}` (`category`
 `atestado` ou `licenca_maternidade`). Lance cada atestado como um `leave`
-próprio, com as suas datas e o `return_on`. Afastamento com período pago pelo
-INSS (`payment_periods[].responsibility: "inss"`) é benefício, não atestado:
-exige a decisão do DP
+próprio, com as suas datas e o `return_on`; atestado sem `return_on` recusa
+`historical_leave_vacation_effect_category_incompatible`. Atestado com período
+pago pelo INSS (`payment_periods[].responsibility: "inss"`) exige
+`dp_decision`
 (`historical_leave_vacation_effect_benefit_requires_dp_decision`). Categoria
 declarada que contradiz um `category_code` tipado recusa
 `historical_leave_vacation_effect_category_incompatible`. Para qualquer outra
