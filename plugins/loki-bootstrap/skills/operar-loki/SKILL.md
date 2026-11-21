@@ -74,14 +74,16 @@ Na 2.9.0 (“2.9.0: reajuste, rescisão, simulação e admissão”): reajuste c
 Domínio opt-in na rescisão com médias de seis casas e por bloco, simulação com
 conferência do `state_hash` antes e `subreason` na recusa, e data de admissão
 errada (cancelar e abrir outro caso) não exigem Refresh; a operadora só
-atualiza o plugin.
+atualiza o plugin. Substituída em parte pela 2.9.5: reabertura da
+admissão cancelada.
 Na 2.9.1 (“2.9.1: regras da DP de 18/11/2026”): admitido no próprio dia da
 data-base sem reajuste, VT fora da diferença, gozo de férias antigas com o fim
 do aquisitivo dentro do período aceito (revalidar o lote recusado), um
 afastamento por atestado, médias somadas entre empresas sem
 `medias_por_bloco` e matrícula nova por `identifier_only` só depois de falar
 com a engenharia. Também não exigem Refresh; a operadora só atualiza o
-plugin.
+plugin. Substituída em parte pela 2.9.5: matrícula do
+eSocial.
 Na 2.9.2 (“2.9.2: política do mapa de rescisão e fatos do 13º”): troca-se só
 a política de arredondamento do mapa de rescisão, sem reenviar o mapa, em
 várias empresas numa versão, substituindo a atual inteira, com o `termination_policy_preview`
@@ -107,7 +109,16 @@ salário-família da v31 prevalecem e devem ser conferidas; o VT do admitido
 incide uma vez sobre o salário proporcional; empresa nova entra no worker pelo
 comando aditivo `prepare_authorization_addition`. Substitui o salário-família e
 o VT do admitido da 2.9.3. Não exigem Refresh; a operadora atualiza o plugin e
-recalcula as folhas.
+recalcula as folhas. Substituída em parte pela 2.9.5: empresa nova no worker.
+Na 2.9.5 (“2.9.5: onboarding pela rotina, admissão, férias e matrícula do
+eSocial”), cada item quando a resposta servida mostrar o sinal: empresa nova
+recebe sozinha o acesso do worker e das rotinas com o modelo; a rotina com
+`carga_historica` faz o onboarding da empresa; a razão social da admissão vem
+do cadastro e a admissão cancelada sem rastro reabre por `create_case`; nas
+férias, `dados_ferias.data_calculo` obrigatória em cálculo novo, `sem_reducao`,
+gozo antecipado e abono fora do prazo; a matrícula operacional passa a ser a
+do eSocial, adotada por um lote de onboarding por empresa. Não exigem Refresh;
+a operadora atualiza o plugin.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

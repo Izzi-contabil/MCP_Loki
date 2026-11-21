@@ -1,11 +1,11 @@
 {
   "dominio": "geral",
-  "version": "2.9.4",
-  "updated_at": "2026-11-20",
+  "version": "2.9.5",
+  "updated_at": "2026-11-21",
   "compatibility": {
-    "mcp_contract_version": "2.9.4",
+    "mcp_contract_version": "2.9.5",
     "minimum_plugin_version": "2.0.0",
-    "recommended_plugin_version": "2.9.4"
+    "recommended_plugin_version": "2.9.5"
   },
   "permissions": {
     "capabilities": [],

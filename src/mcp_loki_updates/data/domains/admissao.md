@@ -117,6 +117,32 @@ ou a troca auditada do código Domínio (domínio `alteracao_cadastral`); sem
 caminho automático, use `registrar_problema`. O roteiro está no domínio
 `geral` ("Matrícula no `create_case`").
 
+Quando `get_company_onboarding_contract` citar o motivo
+`adocao_matricula_esocial`, a matrícula operacional é a do eSocial: na
+admissão, não mande o código do Domínio como matrícula. `create_case` recusa
+`matricula_esocial_em_uso_no_empregador` (o valor já é a matrícula eSocial de
+outro vínculo da mesma raiz de CNPJ): primeiro confira com a operadora a
+matrícula eSocial do vínculo; se a fonte divergir, use `registrar_problema`.
+Não reenvie para forçar. `empresa_adotou_matricula_esocial` (empresa que já
+adotou o eSocial, vínculo sem matrícula): reenvie omitindo
+`funcionario.matricula` e declare a matrícula eSocial pelo onboarding (domínio
+`alteracao_cadastral`, "Adotar a matrícula do eSocial").
+
+## Razão social da empresa
+
+Vale quando a resposta servida o apresentar. A razão social que sai nos
+documentos é a do cadastro da empresa no Loki, não a lida no original.
+Relatório em PDF do Onvio costuma cortar nome longo (por exemplo, "…
+ORGANIZAÇÃO DE" no lugar de "… ORGANIZAÇÃO DE EVENTOS LTDA"). Envie o valor
+como está na fonte. Quando ele for o nome do cadastro, ou o começo dele com
+pelo menos a primeira palavra inteira e ao menos 10 caracteres (ignorando caixa, acento, espaços e
+pontuação final), o Loki grava o nome do cadastro e registra a troca na
+trilha (`razao_social_normalizada_pelo_cadastro`). Não complete nem corrija o
+nome à mão para coincidir. Nome que não é o do cadastro nem o começo dele
+continua recusado na conferência, porque pode ser a empresa errada: confira o
+CNPJ e a empresa escolhida antes de qualquer outra ação. Caso gravado antes
+com o nome cortado continua recusando: cancele e reabra (seção seguinte).
+
 ## Data de admissão errada no caso
 
 A data de admissão é identidade do caso e do episódio: não se troca no caso
@@ -125,13 +151,33 @@ A data de admissão é identidade do caso e do episódio: não se troca no caso
 informa a data certa, e abrir outro caso de admissão com a data correta.
 
 Antes de cancelar, confira se o episódio antigo já recebeu matrícula
-(`get_case` ou `get_employee_identifier_state`). O `cancel_case` não libera a
-matrícula: o episódio cancelado continua com ela e, na folha, aparece como
-mais um candidato para a mesma matrícula até `resolve_payroll_employee`
-escolher a pessoa certa. Se o episódio antigo recebeu matrícula, registre o
-problema com `registrar_problema` (sem CPF, nome ou matrícula no texto) e
-avise a operadora. Reaproveitar a matrícula de uma admissão cancelada
-depende de regra da DP.
+(`get_case` ou `get_employee_identifier_state`). O `cancel_case` não libera a matrícula: o
+episódio cancelado continua com ela.
+
+**Reabrir depois de cancelar** (quando a resposta do `create_case` trouxer
+`supersedes_case_id`). Abra a admissão certa com `create_case`, inclusive para
+a mesma pessoa na mesma data. Se o caso cancelado não teve efeito aplicado,
+documento entregue nem matrícula no episódio, o Loki cria um caso novo, com
+`supersedes_case_id` apontando o cancelado. O cancelado continua auditável e
+não volta por `restart_case` (`case_superseded_by_new_case`). Repetir o mesmo
+`create_case` devolve o caso novo. Recusas:
+
+- `admission_cancelled_case_not_reusable`: o cancelado deixou rastro; o
+  motivo vem no erro (`efeito_aplicado`, `documento_entregue` ou
+  `matricula_atribuida`). Não mude CPF, data ou protocolo para conseguir outra
+  chave. Antes, leia o `get_case` do cancelado e concilie com a DP o efeito
+  aplicado ou a matrícula; com `documento_entregue`, trate a entrega
+  existente. Depois, registre o problema com `registrar_problema`, sem CPF,
+  nome ou matrícula no texto, e avise a operadora. Reaproveitar a matrícula de uma
+  admissão cancelada depende de regra da DP.
+- `admission_reopening_chain_inconsistent`: a cadeia de reaberturas não
+  confere. Registre o problema; não tente de novo.
+
+Servidor anterior (sem `supersedes_case_id`) recusa o `create_case` depois do
+cancelamento (por exemplo, `case_preparation_only_state_blocked`): registre o
+problema com `registrar_problema` e avise a operadora. Se o episódio antigo recebeu matrícula, ela
+aparece na folha como mais um candidato até `resolve_payroll_employee`
+escolher a pessoa certa.
 
 ## Complemento de identidade ausente
 

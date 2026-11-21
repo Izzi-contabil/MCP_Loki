@@ -721,7 +721,8 @@ domínio `ferias`.
   `historical_leave_payment_inverted`, `historical_coverage_inverted`).
   Corrija conforme a fonte. Gozo em que o fim do aquisitivo cai dentro do
   período é aceito (regra da DP de 18/11/2026); gozo que termina antes do fim
-  do aquisitivo continua recusado: pergunte à Rafa.
+  do aquisitivo continua recusado: pergunte à Rafa. Com `vacation_rules` (2.9.5), o
+  gozo antecipado registrado pelo Domínio sai por `vacation_use.advance`.
 - Lote validado antes da atualização pode recusar `snapshot_desatualizado`:
   valide de novo e aplique com o `validation_hash` novo, sem mudar os dados.
 - `leave_history_coverage_not_certified` e
@@ -822,7 +823,9 @@ atualizar o plugin instalado.
 - Admissão (`admissao`): a data de admissão é identidade e não se troca.
   Cancele o caso com a mensagem do cliente em `human_message` e abra outro;
   antes, confira se o episódio antigo recebeu matrícula e, se recebeu,
-  registre o problema.
+  registre o problema. Substituído em parte pela 2.9.5: com
+  `supersedes_case_id`, a admissão cancelada sem rastro reabre pelo
+  `create_case` (seção 2.9.5).
 
 ## 2.9.1: regras da DP de 18/11/2026
 
@@ -856,6 +859,8 @@ atualizar o plugin instalado.
 - Matrícula (`geral`, `alteracao_cadastral`): a matrícula do eSocial é o
   identificador oficial. Enquanto a forma de uso não for confirmada, não grave
   matrícula nova por `identifier_only` sem falar com a engenharia.
+  Substituído pela 2.9.5 quando o contrato de onboarding citar
+  `adocao_matricula_esocial` (seção 2.9.5).
 
 ## 2.9.2: política do mapa de rescisão e fatos do 13º
 
@@ -885,7 +890,83 @@ atualizar o plugin instalado.
   `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
   problema.
 
+## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial
+
+O roteiro completo está em `geral`, `admissao`, `ferias`, `afastamento`,
+`rescisao`, `alteracao_cadastral` e `folha_mensal` de `loki_obter_instrucoes`.
+O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar
+o sinal indicado; sem ele, siga a orientação anterior. **Não exige Refresh do
+conector**: as 96 ferramentas são as mesmas. A operadora atualiza o plugin
+instalado. A conta técnica da rotina que receber `carga_historica` pode
+precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
+
+- **Empresa nova (`geral`).** Empresa criada no Loki recebe sozinha, com
+  auditoria (`access_auto_granted`), o grant do worker de folha e o modelo
+  `@empresas-novas` das rotinas. `worker_not_authorized` com
+  `worker_company_grant_missing` ainda pode aparecer (empresa anterior sem
+  backfill, worker suspenso): siga o `prepare_authorization_addition` do item
+  0 da fila durável em `folha_mensal`.
+- **Onboarding pela rotina (`geral`).** Com `carga_historica` numa empresa
+  em `meu_acesso`, a conta técnica faz `create_company_onboarding`, fontes,
+  declarações, `validate_company_onboarding` e `apply_company_onboarding` só
+  daquela empresa. Não cria cliente nem empresa
+  (`automacao_nao_cria_cliente`), não manda argumento fora do schema
+  (`argumento_fora_do_contrato`). Linha `pending` com
+  `cadastro_da_empresa_exige_configurar_cliente` vai à operadora.
+  `correcao_nominal_exige_corrigir_dados`,
+  `restauracao_matricula_exige_corrigir_dados` e
+  `employment_entry_requires_human_authority` recusam o apply inteiro, sem
+  aplicar nada: a rotina não repete o apply; passa o lote (`onboarding_id`) à
+  operadora pela Caixa, e uma pessoa com a capacidade aplica.
+- **Admissão (`admissao`).** Razão social cortada no PDF do Onvio vira o nome
+  do cadastro (`razao_social_normalizada_pelo_cadastro`); não complete o nome
+  à mão. Admissão cancelada sem efeito, documento entregue ou matrícula
+  reabre por `create_case` para a mesma pessoa e data, com
+  `supersedes_case_id`; o cancelado não volta por `restart_case`
+  (`case_superseded_by_new_case`). Com rastro,
+  `admission_cancelled_case_not_reusable` (`efeito_aplicado`,
+  `documento_entregue`, `matricula_atribuida`): registre o problema, sem
+  mudar CPF, data ou protocolo. `admission_reopening_chain_inconsistent`:
+  registre o problema.
+- **Férias (`ferias`, `afastamento`, `rescisao`)**, quando o contrato de
+  onboarding trouxer `historical_state.vacation_rules`:
+  `dados_ferias.data_calculo` obrigatória em cálculo novo
+  (`historical_vacation_calculation_date_required`; futura:
+  `historical_vacation_calculation_date_future`), coberturas
+  `vacation_movements` e `leave_occurrences` até ela, espelho das ocorrências
+  do Loki (`historical_vacation_native_occurrence_not_mirrored`) e a ressalva
+  `sem_afastamento_conhecido_apos_calculo` para a operadora. Caso já
+  calculado pela regra anterior deixa de ser corrente se faltar esse espelho:
+  lance-o e avise a operadora antes de ela entregar. Atestado e
+  licença-maternidade: `leave.vacation_effect` `sem_reducao` com
+  `operation_rule` (`atestado_e_licenca_maternidade_nao_sao_falta`,
+  `CX-AB5EE178`); atestado com período do INSS e as demais categorias, só
+  com `dp_decision`. Afastamento opaco: `leave` na data do fato com
+  `qualifies_legacy_fact_ids`. Gozo antecipado: `vacation_use.advance`
+  (`gozo_antecipado`, ficha do Domínio como fonte do fato); a rescisão com
+  gozo antecipado no aquisitivo em curso recusa
+  `rescisao_ferias_gozo_antecipado_pendente_regra` (esperado; pergunte à
+  Rafa). Abono: `data_pedido_abono` é a data do pedido do empregado; fora do
+  prazo, `abono_fora_do_prazo_source` com a concordância do empregador.
+- **Matrícula do eSocial (`alteracao_cadastral`, `folha_mensal`,
+  `admissao`)**, quando o contrato de onboarding citar
+  `adocao_matricula_esocial`: um lote por empresa, worker `identifier_only`
+  com `matricula_namespace: "esocial"`, `expected_current_matricula` (código
+  Domínio atual), `restoration_declaration` com `motivo:
+  "adocao_matricula_esocial"` e `message_reference` `CX-`, fonte própria e
+  `corrigir_dados`; prévia à operadora antes do apply. Depois, leia
+  `adoption_effects` (`open_payrolls_citing_previous_code`,
+  `stale_history_pins`, `transitional_collisions`). Na folha,
+  `matricula_coincide_com_codigo_auxiliar` sai por `resolve_payroll_employee`
+  e a correção da população com `funcionario_id`; nas empresas com pares
+  cruzados, mande toda a população assim. Vale para todo vínculo com código
+  Domínio, inclusive os que entraram como `dominio`.
+
 ## 2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova no worker
+
+> Substituída em parte pela 2.9.5: empresa nova entra no worker sozinha; o
+> `prepare_authorization_addition` fica para a recusa
+> `worker_company_grant_missing`.
 
 Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
 completo está em `folha_mensal` e `geral` de `loki_obter_instrucoes`. **Não

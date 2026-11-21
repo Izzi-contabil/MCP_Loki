@@ -1,4 +1,94 @@
-# Atualizações MCP Loki — contrato 2.9.4
+# Atualizações MCP Loki — contrato 2.9.5
+
+## Candidata 0.4.30 / contrato, instruções e plugin 2.9.5 — 21/11/2026
+
+Acompanha quatro PRs do backend. Duas já estão em `main` do Loki: #376
+(onboarding independente) e #379 (admissão). Duas estão aprovadas e ainda não
+mescladas, e o texto foi conferido contra estas cabeças: #378 (férias,
+`e6a9b851`) e #372 (matrícula do eSocial, migration 0066, `ff829a16`). O
+backend pode chegar em partes, então cada texto novo vale só quando a resposta
+servida mostrar o sinal do tema, e a orientação anterior fica como caminho
+para o servidor que ainda não tem a parte:
+
+- #376: `carga_historica` numa empresa real em `meu_acesso` da conta técnica
+  (a concessão automática não tem sinal na resposta; a recusa
+  `worker_company_grant_missing` continua com o mesmo recurso);
+- #379: `supersedes_case_id` na resposta do `create_case`;
+- #378: `historical_state.vacation_rules` em `get_company_onboarding_contract`
+  e `data_calculo` no schema servido de `dados_ferias`;
+- #372: o motivo `adocao_matricula_esocial` nas regras de
+  `get_company_onboarding_contract`.
+
+A mudança de interface é aditiva e sem ferramenta nova: campos novos dentro de
+payloads existentes (`dados_ferias.data_calculo`,
+`dados_ferias.abono_fora_do_prazo_source`, `leave.vacation_effect`,
+`vacation_use.advance`, `supersedes_case_id`, `adoption_effects`), o motivo
+`adocao_matricula_esocial` em `restoration_declaration.motivo` e códigos de
+recusa e pendência novos. Pela regra "mudou interface → novo contrato" e pelo
+precedente aditivo da 2.9.4, o contrato sobe de 2.9.4 para 2.9.5, um patch;
+instruções e plugin acompanham em 2.9.5; provider sobe um patch. Mínimo 2.0.0
+permanece. A lista `compatible_tools` não muda.
+
+Divergências entre o rascunho das PRs e o código, resolvidas pelo código:
+
+- #372: a recusa do valor já qualificado em outro namespace é
+  `adocao_matricula_esocial_exige_codigo_dominio` (o rascunho e a
+  documentação citam `_qualificado`). Valor sem recibo segue a restauração
+  comum, não vai à engenharia.
+- #372: `allow_identifier_restoration` não é argumento de
+  `apply_company_onboarding`; o servidor o deriva de `corrigir_dados`.
+- #378: as recusas da fonte do abono são
+  `ferias_abono_fora_do_prazo_source_sem_uso` e
+  `ferias_abono_fora_do_prazo_source_sem_fundamento`.
+- #376: não há domínio `onboarding`. O roteiro da rotina fica no `geral`, o
+  único domínio servido sem exigir processo.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.5)" (só atualizar o plugin,
+  sem Refresh; a conta da rotina que receber `carga_historica` pode precisar
+  de conversa nova para ver as ferramentas de onboarding; o recálculo da
+  folha-v32 da 2.9.4 fica como "Continua da 2.9.4"); lembrete do Refresh da
+  2.8.0 estendido à adoção, que usa os mesmos campos da restauração; a seção
+  "Empresa nova: acesso do worker e da rotina" vira "Empresa nova e
+  onboarding pela rotina" (concessão automática; os passos do
+  `prepare_authorization_addition` passam ao item 0 da fila durável de
+  `folha_mensal`, como recurso para `worker_company_grant_missing`; sai
+  "Conta de automação não recebe `carga_historica`"; roteiro do onboarding
+  pela rotina e o que continua com a pessoa); matrícula do eSocial no
+  `create_case`; cancelamento libera a chave só na admissão sem rastro.
+- `admissao`: "Razão social da empresa" e "Data de admissão errada no caso"
+  com a reabertura, as recusas novas e o caminho do servidor anterior;
+  recusas de matrícula eSocial no `create_case`.
+- `ferias`: seção "Data do cálculo, afastamento sem redução, gozo antecipado
+  e abono (historical-vacation-v2)", com o caso já calculado pela v1 que
+  deixa de ser corrente sem o espelho nativo; o afastamento opaco e o gozo
+  antes do fim do aquisitivo (texto e tabela) passam a apontar a saída nova.
+- `afastamento`: `sem_reducao` por regra da operação e fato opaco só para
+  férias.
+- `rescisao`: `rescisao_ferias_gozo_antecipado_pendente_regra` e
+  `termination_monthly_calculation_predates_registration_adoption`.
+- `alteracao_cadastral`: "Adotar a matrícula do eSocial" (um lote por
+  empresa, campos, recusas, `adoption_effects`); vale para todo vínculo
+  carregado com código Domínio.
+- `folha_mensal`: "Matrícula do eSocial na população da folha"
+  (`matricula_coincide_com_codigo_auxiliar`, pares cruzados pela correção da
+  população com `funcionario_id`); item 0 da fila com a concessão automática
+  e os passos do recurso.
+
+Tamanho: `geral` com 65.216 bytes do limite de 65.536; os demais abaixo de
+39 KB.
+
+Plugin espelha em WORKFLOWS (seção "2.9.5: onboarding pela rotina, admissão,
+férias e matrícula do eSocial", com notas de substituição na 2.9.0, 2.9.1 e
+2.9.4), CAPACIDADES_DP (seção 2.9.5 e o cancelamento), operar-loki e
+registrar-problema-loki.
+
+Não exige Refresh do conector: as 96 ferramentas são as mesmas (as quatro PRs
+declaram `build_server().list_tools()` idêntico, e nenhuma muda schema de
+ferramenta). Os textos chegam com o deploy do backend. Wheel 0.4.29 permanece
+imutável; fonte e wheel 0.4.30 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata 0.4.29 / contrato, instruções e plugin 2.9.4 — 20/11/2026
 

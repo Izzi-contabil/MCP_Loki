@@ -1,9 +1,11 @@
-"""Entrega das orientações da 2.9.4 (backend #374 e #375).
+"""Entrega das orientações da 2.9.4 (backend #374 e #375) que seguem na 2.9.5.
 
+O aviso, as versões e a seção do worker no `geral` passaram à 2.9.5
+(`test_onboarding_admission_vacation_esocial_guidance_masked.py`). Ficam aqui a
+folha v32, o item 0 da fila durável e a seção histórica do plugin.
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
 """
 
-import json
 from pathlib import Path
 
 from mcp_loki_updates import InstructionsProvider
@@ -13,25 +15,8 @@ SKILLS = ROOT / "plugins/loki-bootstrap/skills"
 OPERATOR = SKILLS / "operar-loki"
 WORKFLOWS = OPERATOR / "references/WORKFLOWS.md"
 CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
-DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
-RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 SECTION_294 = "## 2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova no worker"
 
-NOTICE = (
-    "## O que mudou nesta versão (2.9.4)",
-    "> **Atenção: recalcular as folhas mensais não entregues.**",
-    "Quando `loki_verificar_versao` ou o cálculo da folha mostrar o motor `folha-v32`",
-    "`calculation_stale`",
-    "inclusive as já recalculadas na `folha-v31`",
-    "Uma correção de salário-família registrada na v31 continua valendo e prevalece",
-    "**Exige ação da operadora:** o recálculo acima e atualizar o plugin instalado",
-    "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
-    "o limite usa a remuneração devida no mês",
-    "o percentual incide uma vez sobre o salário proporcional",
-    "Empresa nova: a pessoa owner (ou master) inclui a empresa no worker de folha pelo "
-    "comando aditivo `prepare_authorization_addition`; a recusa "
-    "`worker_not_authorized` diz o que falta",
-)
 RECALC = (
     "## Motor folha-v32: recalcular as folhas não entregues",
     "**todas as folhas mensais não entregues ficam desatualizadas** (`calculation_stale`)",
@@ -90,13 +75,6 @@ STALE_V31 = (
     "a transferência entre empresas do grupo hoje também conta como entrada",
     "## Motor folha-v31: recalcular as folhas não entregues",
 )
-WORKER = (
-    "## Empresa nova: acesso do worker e da rotina",
-    '`reason: "worker_company_grant_missing"`',
-    '"prepare_authorization_addition"',
-    "`aplicar_autorizacao`",
-    "`preparar_autorizacao` substitui a lista inteira de concessões",
-)
 
 
 def text(domain: str) -> str:
@@ -120,44 +98,6 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
         assert flat(item) not in body, item
 
 
-def test_versions_follow_the_additive_contract_patch() -> None:
-    provider = InstructionsProvider()
-    metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.29"
-    assert metadata["instructions_version"] == "2.9.4"
-    assert metadata["mcp_contract_version"] == "2.9.4"
-    assert metadata["recommended_plugin_version"] == "2.9.4"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.2", "2.9.3", "2.9.4"):
-        assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.9.4", "2.9.5")["compatible"] is False
-    release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["compatible_tools"] == [
-        "loki_obter_instrucoes",
-        "loki_verificar_versao",
-    ]
-    backend = release["changes"]["backend"][-1]
-    assert backend.startswith("Contrato2.9.4 aditivo")
-    assert "as 96 ferramentas são as mesmas" in backend
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.9.4")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.9.4")
-    for path in DOMAINS.glob("*.json"):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.9.4", path.name
-
-
-def test_general_notice_highlights_the_v32_recalculation_and_worker() -> None:
-    guide = text("geral")
-    end = guide.index("## Reaproveitar respostas e causas persistidas")
-    notice = guide[:end]
-    assert_all(notice, NOTICE)
-    current = notice[: notice.index("**Continua da 2.8.0**")]
-    assert current.index("recalcular as folhas mensais") < current.index("**Não exige nada**")
-    assert "## O que mudou nesta versão (2.9.3)" not in guide
-    assert_all(guide, WORKER)
-    assert len(guide.encode("utf-8")) <= 65536
-
-
 def test_payroll_domain_carries_v32_guidance() -> None:
     payroll = text("folha_mensal")
     assert_all(payroll, (*RECALC, *FAMILY, *TRANSPORT))
@@ -171,6 +111,9 @@ def test_payroll_domain_carries_v32_guidance() -> None:
             "A pessoa owner (ou master) inclui pelo conector",
             "registre o problema e avise a engenharia pelo Caixa",
             '`reason: "worker_company_grant_missing"`',
+            '"prepare_authorization_addition"',
+            "`aplicar_autorizacao`",
+            "Nunca use `preparar_autorizacao` para isso: ele substitui a lista inteira",
         ),
     )
 

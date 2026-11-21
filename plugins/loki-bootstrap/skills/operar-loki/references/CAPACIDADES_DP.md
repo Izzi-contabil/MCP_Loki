@@ -180,8 +180,12 @@ Sem esse bloco/rota, preserve a pendência; plugin novo não publica a PR240.
 Cancelamento usa `cancellation` do contrato. Quando anunciado,
 `loki.case-cancellation/1` pode seguir em `receive_case_data`, com
 `expected_snapshot=correction_snapshot` e `human_message` específico.
-Releia estado e trilha; cancelamento não exclui registros nem libera a chave
-natural para criar outro caso. Automação não recebe autoridade humana.
+Releia estado e trilha. O cancelamento não exclui registros. Na admissão,
+quando o servidor oferecer a reabertura (`supersedes_case_id` no
+`create_case`), um caso cancelado sem efeito, sem documento entregue e sem
+matrícula libera a mesma pessoa e data para um `create_case` novo (domínio
+`admissao`). Nos demais processos, o cancelamento não libera a chave natural.
+Automação não recebe autoridade humana.
 
 Para publicação, smoke ou comparação de versões, não baixar o acervo nem
 rebaixar todos os documentos. Confira fatos, eventos, decisões e metadados/hashes
@@ -299,7 +303,8 @@ grupo, em férias e no 13º, e `medias_por_bloco` não se liga sem conferência
 com a DP; a matrícula do eSocial é o identificador oficial, e matrícula nova
 por `identifier_only` só depois de falar com a engenharia. Nada disso exige
 Refresh; a operadora só atualiza o plugin. Roteiro em “2.9.1: regras da DP de
-18/11/2026” de [WORKFLOWS.md](WORKFLOWS.md).
+18/11/2026” de [WORKFLOWS.md](WORKFLOWS.md). Substituída em parte pela 2.9.5:
+matrícula do eSocial.
 
 ## 2.9.2: política do mapa de rescisão e fatos do 13º
 
@@ -315,6 +320,35 @@ o que muda o `state_hash` do empregado e desatualiza as seleções dos outros
 casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
+
+## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial
+
+Cada item vale quando a resposta servida mostrar o sinal indicado; o Loki
+pode chegar em partes. Empresa nova recebe sozinha o acesso do worker de
+folha e das rotinas com o modelo `@empresas-novas`
+(`access_auto_granted`); `prepare_authorization_addition` fica para a recusa
+`worker_company_grant_missing`. A rotina com `carga_historica` numa empresa
+faz o onboarding dela; cadastro, adoção ou restauração de matrícula e
+decisões continuam exigindo pessoa. `cadastro_da_empresa_exige_configurar_cliente`
+deixa a linha `pending`; `correcao_nominal_exige_corrigir_dados`,
+`restauracao_matricula_exige_corrigir_dados` e
+`employment_entry_requires_human_authority` recusam o apply inteiro, sem
+aplicar nada: a rotina não repete o apply e passa o lote (`onboarding_id`) à
+operadora pela Caixa, para uma pessoa com a capacidade aplicar. Na admissão, a razão social vem do
+cadastro (`razao_social_normalizada_pelo_cadastro`) e uma admissão cancelada
+sem rastro reabre por `create_case` (`supersedes_case_id`;
+`admission_cancelled_case_not_reusable` quando há rastro). Nas férias com
+`historical_state.vacation_rules`, `dados_ferias.data_calculo` é obrigatória
+em cálculo novo e as coberturas vão até ela; atestado e licença-maternidade
+saem por `vacation_effect` `sem_reducao`; gozo antecipado por
+`vacation_use.advance`; abono fora do prazo por `abono_fora_do_prazo_source`.
+Quando o contrato de onboarding citar `adocao_matricula_esocial`, a matrícula
+operacional passa a ser a do eSocial, adotada por um lote por empresa, e a
+pendência `matricula_coincide_com_codigo_auxiliar` sai pela correção da
+população com `funcionario_id`. Nada disso exige Refresh do conector; a
+operadora só atualiza o plugin. A conta da rotina pode precisar de conversa
+nova para ver as ferramentas de onboarding. Roteiro em “2.9.5: onboarding pela
+rotina, admissão, férias e matrícula do eSocial” de [WORKFLOWS.md](WORKFLOWS.md).
 
 ## 2.9.4: folha v32, VT do admitido e empresa nova no worker
 
@@ -337,7 +371,8 @@ concessão com outra proporção fica
 worker de folha pelo comando aditivo `prepare_authorization_addition`, feito
 pela pessoa owner (ou master). Nada disso exige Refresh; a operadora atualiza o plugin e
 recalcula as folhas. Roteiro em “2.9.4: folha v32 (salário-família, VT do
-admitido) e empresa nova no worker” de [WORKFLOWS.md](WORKFLOWS.md).
+admitido) e empresa nova no worker” de [WORKFLOWS.md](WORKFLOWS.md). Substituída em parte pela 2.9.5: empresa
+nova no worker.
 
 ## 2.9.3: folha v31 e simulação com o estado atual
 

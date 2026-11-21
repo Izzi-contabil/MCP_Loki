@@ -109,6 +109,17 @@ Regras da DP (18/11/2026):
   sobreposição.
 - Licença-maternidade não é falta e não reduz o aquisitivo de férias: use
   `categoria: licenca_maternidade` e não lance os dias como falta.
+- No histórico de onboarding usado pelas férias, quando
+  `get_company_onboarding_contract` trouxer `historical_state.vacation_rules`:
+  o `leave` de atestado ou licença-maternidade no aquisitivo leva
+  `vacation_effect: {"kind": "sem_reducao", "source": {"kind":
+  "operation_rule", "rule": "atestado_e_licenca_maternidade_nao_sao_falta",
+  "message_reference": "CX-AB5EE178", "category": "atestado" |
+  "licenca_maternidade"}}`. O atestado exige `return_on`. Atestado com período
+  pago pelo INSS é benefício e exige a decisão do DP (`dp_decision`), como
+  qualquer outra categoria. O roteiro completo e os códigos estão no domínio
+  `ferias` ("Data do cálculo, afastamento sem redução, gozo antecipado e
+  abono").
 
 ## Afastamento no histórico e no diagnóstico da folha
 
@@ -125,7 +136,11 @@ conforme a fonte; nunca ajuste a data só para passar.
 Afastamento antigo opaco (`unqualified_documentary_facts`,
 `operational_semantics_missing` ou `leave_observations_not_classified`): não
 grave um `leave` novo para o mesmo afastamento, porque duplicaria a ocorrência;
-mantenha o gap pendente e informe a operadora.
+mantenha o gap pendente e informe a operadora. A exceção é o cálculo de férias
+com `vacation_rules`: quando a recusa trouxer `blocking_facts` com
+`kind: afastamento`, o `leave` confirmado que começa na data do fato e o cita
+em `qualifies_legacy_fact_ids`, com `vacation_effect`, qualifica o fato só
+para férias (domínio `ferias`). O 13º e o estado não mudam.
 
 Quando o dossiê da folha apontar `leave_qualification.origins[*]` com
 `origin: "operational_effect"` e o `case_id` deste caso, complete categoria,
