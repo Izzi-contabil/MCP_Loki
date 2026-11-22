@@ -120,6 +120,14 @@ Regras da DP (18/11/2026):
   qualquer outra categoria. O roteiro completo e os códigos estão no domínio
   `ferias` ("Data do cálculo, afastamento sem redução, gozo antecipado e
   abono").
+- Quando o schema servido de `dados_ferias` tiver `gozo_antecipado_source`,
+  o Loki aplica a CLT (arts. 131 e 133) ao `leave` do aquisitivo sem
+  `vacation_effect`: basta `category_code` e `payment_periods` com
+  `responsibility` (`empregador`, `inss` ou `sem_remuneracao`) em todos os
+  dias. Lance também os afastamentos contíguos anteriores ao aquisitivo. Um
+  afastamento do INSS o mês inteiro, já qualificado e iniciado antes da
+  competência, qualifica sozinho o mês da folha (`folha-v33`). Roteiro e
+  códigos no domínio `ferias` ("Afastamento e fracionamento pela CLT").
 
 ## Afastamento no histórico e no diagnóstico da folha
 

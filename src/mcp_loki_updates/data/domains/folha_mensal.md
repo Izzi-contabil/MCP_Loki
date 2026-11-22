@@ -7,6 +7,195 @@ operar, consulte `meu_acesso`, `get_dp_capabilities` e
 anunciado. Os códigos e campos abaixo valem somente quando a resposta servida
 os apresentar.
 
+## Motor folha-v33: recalcular as folhas não entregues
+
+> **Atenção.** Quando o cálculo da folha mostrar o motor `folha-v33` (ou
+> `folha-v33-historical-vacation-v1`): **todas as folhas mensais não entregues
+> ficam desatualizadas**, inclusive as recalculadas na `folha-v32`. Cada uma
+> precisa ser recalculada, conferida de novo e receber novo aceite antes da
+> entrega, pelo mesmo procedimento da seção da `folha-v32` abaixo. As folhas
+> já entregues não mudam. Nada é recalculado ou decidido automaticamente.
+
+Sem `folha-v33` no cálculo, siga as seções da `folha-v32` como estão. As
+diferenças do recálculo vêm das regras abaixo; mostre-as à operadora.
+
+**VT do admitido no mês (v33).** Com admissão depois do dia 1, o percentual da
+regra individual incide sobre a **linha de salário calculada do mês** (o
+período remunerável enviado), não mais sobre o salário × `(30 − dia + 1)/30`.
+São linhas de salário: `remuneracao_periodo` sem fator,
+`salario_base_proporcional`, membros de partição e, para horista,
+`salario_horario` com fator 1.
+
+- Admissão no dia 1 é mês cheio: vale a fórmula da v32. Faltas ou 31 dias
+  enviados não mudam o VT.
+- Envie em `periodo_remuneravel` o período da fonte; ele não pode passar dos
+  dias de contrato: o maior entre os dias corridos desde a admissão e
+  `30 − dia + 1` (admissão em 02/02 dá 29, em 20/02 dá 11). A base também
+  nunca passa do salário cheio. Acima disso, o VT fica em
+  `vale_transporte_salario_do_mes_acima_do_contrato` (campo
+  `periodo_remuneravel`, próxima ação `confirmar_periodo_remuneravel_enviado`):
+  confira o período enviado com a fonte; não o reduza para destravar.
+- Linha de salário pendente deixa o VT pendente pela mesma causa. Sem linha
+  de salário identificável no mapa (salário em `salario_base` cheio ou em
+  valor informado), o VT fica em
+  `vale_transporte_salario_do_mes_nao_identificado` (campo `folha_rubricas`,
+  próxima ação
+  `qualificar_rubrica_do_salario_do_mes_no_mapa_ou_declarar_desconto_pela_dp`).
+  A saída normal é qualificar a rubrica de salário no mapa
+  (`salario_base_proporcional` ou `remuneracao_periodo`). Se não for possível,
+  com a decisão da DP, declare o desconto com `submit_operator_correction`,
+  `target: "calculation"`, no caminho
+  `funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents` (o caminho
+  exato vem em `operator_corrections` do cálculo). O limite informativo
+  mostra a regra antiga. Um mapa com salário em `salario_base` cheio que
+  calculava na v32 passa a ficar pendente.
+- A concessão segue os três ramos da v32, lidos pelo mês comercial: num mês
+  de 31 dias, a concessão 25/30 continua ambígua. Vigência parcial e
+  desligamento no mês: sem mudança.
+- Em `fontes_insumos` da linha de VT, `base_percentual`
+  (`linha_de_salario_do_mes` ou `desconto_declarado_pelo_operador`),
+  `linhas_de_salario` e `salario_do_mes_cents` mostram a base: apresente-os à
+  operadora.
+
+**Salário-família do admitido (v33).** Regra da DP: as faltas não reduzem a
+cota. No mês de admissão, a cota é proporcional aos dias de vínculo desde a
+admissão, na base de dias da linha de salário do mapa:
+
+- linha por mês civil (divisor igual aos dias do mês): dias desde a admissão
+  sobre os dias do mês. Admissão no dia 7 de um mês de 31 dias dá 25/31,
+  mesmo com faltas no período enviado;
+- linha comercial (divisor 30) ou sem linha do período: `30 − dia + 1`, como
+  na v32.
+
+O período enviado não muda a cota. Se o Domínio divergir, registre como
+divergência a confirmar, não como defeito.
+
+**Férias calculadas pelo Loki no contexto do mês.** Para o mês de gozo ou de
+pagamento, envie em `funcionarios[].ferias` o efeito do caso de férias do
+Loki, com o `case_id` e o `result_hash` do cálculo corrente dele. O Loki lê do
+próprio caso o gozo, o efeito e o pagamento; não anexe documento para isso. O
+caso precisa ser da mesma empresa e do mesmo vínculo, estar calculado e em
+`aguardando_revisao`, `aprovado` ou `publicado`. Pagamento observado e
+declarado em `pagamentos_ferias` prevalece; sem ele, conta a `data_pagamento`
+do caso até o fim do mês, e `vacation_loki_payments[].payment_basis` diz a
+evidência: `entrega_registrada`, `caso_publicado` ou
+`data_pagamento_programada`. Recusas:
+
+- `loki_vacation_case_not_found`: outro vínculo, outra empresa ou caso que
+  não é de férias;
+- `loki_vacation_case_cancelled` e `loki_vacation_case_state_unsupported`:
+  o caso não pode alimentar a folha nesse estado;
+- `loki_vacation_result_hash_incompatible`: as férias foram recalculadas; use
+  o hash novo;
+- `confirmed_vacation_calculation_stale`: o caso de férias não tem cálculo
+  corrente; recalcule as férias antes;
+- `vacation_effect_differs_from_loki_calculation`: copie o efeito exatamente
+  como o Loki calculou;
+- `loki_vacation_effect_reference_invalid`: falta `case_id` ou `result_hash`.
+
+Gozo no mês inteiro do vínculo dá também o período zero. Gozo parcial
+continua pedindo `periodos`, contados na mesma base de dias da linha de
+salário do mapa.
+
+**Afastamento do INSS no mês inteiro.** Um afastamento já qualificado
+(categoria, política e responsabilidade de cada período), com INSS o mês
+inteiro e iniciado antes da competência, qualifica sozinho o mês como
+`sem_remuneracao_empregador`, com período zero. Não anexe documento nem
+declare `mes_sem_remuneracao` para esse mês, e não envie lançamentos nele
+(`payroll_launches_in_inss_full_month`). Continua como antes: o mês em que o
+afastamento começa (a cota do mês é da empresa), o mês com retorno ou com
+dias do empregador, o acidentário, a maternidade, `outro_comprovado`,
+afastamento não qualificado, admissão ou desligamento no mês e afastamento de
+caso cancelado ou rejeitado.
+
+**Dossiê da folha.** `missing_fields` lista todas as causas do contexto do
+mês, e `context_fields` (com `context_fields_complete`) diz quais campos de
+entrada faltam, por exemplo `ferias`, `pagamentos_ferias` ou `periodos`.
+Motivos dos lançamentos não lidos:
+
+- `payroll_case_workflow_running`: o job do caso está na fila ou rodando;
+  aguarde o fim;
+- `payroll_effective_launches_case_not_in_preparation`: o caso saiu da
+  preparação (em revisão); use `restart_case` se precisar qualificar o
+  contexto;
+- `payroll_effective_launches_case_being_written`: outro processo grava o
+  caso; tente de novo.
+
+**Pensão alimentícia do admitido.** No mês de admissão, o contrato começa na
+admissão: declare a `pensao_alimenticia_regra` (ou "não beneficiário") com
+`vigente_desde` na data de admissão, ou antes, e sem fim no mês; assim o mês
+não fica pendente. Regra iniciada depois da admissão ou encerrada no mês, mês
+de transferência e mês sem admissão continuam em
+`pensao_vigencia_parcial_exige_regra`, que agora aponta os campos
+`pensao_alimenticia_regra.vigente_desde` e `pensao_alimenticia_regra.vigente_ate`:
+corrija o que a fonte mostrar. Em empresa cujo mapa tem a rubrica de pensão, todo vínculo precisa da
+declaração; a ausência não vale como não beneficiário
+(`pensao_regra_individual_pendente`).
+
+**Crédito do Trabalhador.** Em
+`credito_trabalhador_competencia.descontos_compulsorios_sem_incidencia`, liste
+só descontos sem incidência de INSS do mapa, pelo nome Loki ou pelo código do
+Domínio da rubrica. Não liste proventos (gorjeta estimada, adicional noturno e
+reflexos), o VT (é opção do empregado, não é compulsório), o próprio crédito
+nem INSS/IRRF. Desconto da lista sem linha no mês vale zero para aquele
+vínculo. Recusas: `credito_trabalhador_compulsorio_nao_identificado` (próxima
+ação `listar_somente_descontos_sem_incidencia_do_mapa`; o item está em
+`verbas`: corrija a lista) e `credito_trabalhador_tributos_do_mes_pendentes`
+(resolva antes a pendência de INSS/IRRF do mês). A consulta Dataprev não é
+exigida para a lista.
+
+## Correções calculadas atravessam o reinício da folha
+
+Vale quando a resposta do `restart_case` trouxer `corrections_carried`. Sem
+isso, as correções calculadas se perdem no reinício e precisam de nova
+declaração da DP, como antes.
+
+Ao reiniciar uma folha mensal com `restart_case` e
+`preparation.mode=replace_process_inputs`, as correções de valor calculado já
+declaradas pela DP (`submit_operator_correction`, `target=calculation`)
+continuam no caso. A resposta (e o replay idempotente) traz:
+
+- `corrections_carried`: correções levadas para o recálculo, com
+  `correction_id`, `path`, `declared` e o status
+  `reaplicada_no_proximo_calculo_se_caminho_e_natureza_iguais`. Não repita
+  essas correções e não peça à identidade técnica para refazê-las;
+- `corrections_not_carried`: correções que ficaram de fora já no reinício,
+  com o motivo: `funcionario_fora_da_populacao`,
+  `populacao_substituida_no_reinicio` (modo `replace_payroll_population`:
+  nada é levado), `caminho_posicional_de_verba` (verba calculada
+  `verbas.<verba>.<índice>`), `pendencia_indeterminada_no_reinicio` ou
+  `processo_sem_reaplicacao_automatica` (outro processo que não a folha).
+
+O recálculo só reaplica a correção sobre o mesmo valor que a DP viu: a mesma
+pessoa, o mesmo número calculado ou a mesma pendência com os mesmos operandos
+(no salário-família, a mesma quantidade de filhos; no VT do admitido, o mesmo
+salário, proporção e custo). Depois do reenvio e do recálculo, confira
+`operator_corrections` na memória do cálculo corrente: `carried` lista o que
+foi reaplicado; `not_carried` lista o que não foi, com o motivo
+`valor_calculado_mudou`, `pendencia_mudou`, `valor_calculado_mudou_de_natureza`,
+`caminho_inexistente_no_calculo` ou `funcionario_fora_da_populacao`.
+
+Correção declarada antes do registro de operandos (legado) só é levada quando
+o cadastro do cálculo corrente é o mesmo do cálculo da declaração; senão, e
+sempre no VT legado, fica `pendencia_indeterminada_no_reinicio`. Uma correção
+declarada na v31 sobre a pendência antiga do salário-família do admitido
+continua prevalecendo sem reinício; depois de um reinício, ela não volta se o
+motor calcular a cota e aparece em `operator_corrections.not_carried` ou, se o
+cadastro mudou, em `corrections_not_carried`
+(`pendencia_indeterminada_no_reinicio`).
+
+Na revisão, cada item de `ressalvas.correcoes_humanas` traz
+`estado_no_calculo_corrente`, com `estado` e `caminhos` (estado por caminho):
+`aplicada`, `levada_do_reinicio` (com o `preparation_id`; sem cálculo
+corrente, `reaplicacao: aguardando_calculo_corrente`), `nao_levada` (com o
+`motivo`), `aposentada` (`preparacao_anterior` ou
+`substituida_por_correcao_posterior`) ou `parcial`, quando os caminhos
+divergem. Mostre esse estado à operadora na conferência.
+
+Não há descarte: uma correção levada só é trocada por nova correção humana no
+mesmo caminho, que prevalece. Uma correção não levada só volta com nova
+declaração da DP; manter o valor do motor ou declarar de novo é decisão dela.
+
 ## Motor folha-v32: recalcular as folhas não entregues
 
 > **Atenção.** Quando o cálculo da folha mostrar o motor `folha-v32`: a versão
@@ -76,6 +265,8 @@ fica pendente.
   divergir, registre como divergência a confirmar, não como defeito. A
   pendência `salario_familia_mes_admissao_pendente_regra` não aparece mais em
   cálculos novos.
+  Com `folha-v33`, a contagem segue a base de dias da linha de salário
+  ("Salário-família do admitido (v33)", acima).
 
 **Pendências.** O vínculo fica parcial, sem total de proventos e sem líquido;
 INSS, FGTS e IRRF saem calculados. Não invente remuneração nem marque
@@ -103,7 +294,8 @@ INSS, FGTS e IRRF saem calculados. Não invente remuneração nem marque
 - `salario_familia_remuneracao_zero_sem_declaracao` e
   `salario_familia_base_inss_zero_com_proventos`: sem mudança. Continuam
   lendo a base do INSS efetiva do mês. Se for benefício do INSS ou afastamento
-  no mês inteiro, declare `mes_sem_remuneracao`; se forem faltas ou suspensão,
+  no mês inteiro, declare `mes_sem_remuneracao` (com `folha-v33`, o INSS já
+  qualificado e iniciado antes da competência qualifica o mês sozinho); se forem faltas ou suspensão,
   deixe pendente e avise. Com proventos sem incidência, confira a incidência
   das rubricas no mapa.
 
@@ -120,6 +312,8 @@ cadastro não usa essa rota: complete o cadastro dos dependentes.
 
 Regra da DP de 19/11/2026. Isto substitui o "VT do admitido no mês: sem
 mudança" da `folha-v31`.
+Com `folha-v33` no cálculo, a base e a saída sem linha de salário mudam
+("VT do admitido no mês (v33)", acima).
 
 - O desconto é o percentual da regra individual aplicado **uma vez** sobre o
   salário proporcional do mês: salário × dias do contrato no mês comercial /
@@ -354,7 +548,9 @@ tem `payroll_context`.
    qualifique primeiro o afastamento na origem. Depois recalcule e leia o
    dossiê de novo, porque o `context_hash` muda.
 3. Com o pacote em `aguardando_revisao`, os lançamentos saem
-   `payroll_effective_launches_not_read`. Com o aceite humano, faça
+   `payroll_effective_launches_not_read` (com `folha-v33`, também
+   `payroll_effective_launches_case_not_in_preparation` ou
+   `payroll_case_workflow_running`; veja "Dossiê da folha"). Com o aceite humano, faça
    `restart_case` e leia o dossiê de novo. Só o cálculo mais recente traz
    lançamentos.
 4. Use o `context_hash` só com `context_current=true`. Com `false` e

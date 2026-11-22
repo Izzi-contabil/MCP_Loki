@@ -8,5 +8,5 @@ malicious-content scanner and cannot replace that review.
 
 from .provider import InstructionsProvider, InstructionsUnavailable, InvalidDomain
 
-__version__ = "0.4.30"
+__version__ = "0.4.31"
 __all__ = ["InstructionsProvider", "InstructionsUnavailable", "InvalidDomain", "__version__"]

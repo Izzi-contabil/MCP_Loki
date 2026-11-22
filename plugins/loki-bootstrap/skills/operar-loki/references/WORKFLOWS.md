@@ -890,7 +890,60 @@ atualizar o plugin instalado.
   `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
   problema.
 
+## 2.9.6: correções no reinício, folha v33 e férias pela CLT
+
+O roteiro completo está em `geral`, `folha_mensal`, `ferias`, `afastamento`,
+`rescisao` e `alteracao_cadastral` de `loki_obter_instrucoes`. Chega junto com
+a 2.9.5. Cada item vale quando a resposta servida mostrar o sinal indicado;
+sem ele, siga a orientação anterior. **Não exige Refresh do conector**: as 96
+ferramentas são as mesmas. A operadora atualiza o plugin instalado.
+
+- **Motor `folha-v33` (`folha_mensal`).** Quando o cálculo mostrar
+  `folha-v33`, todas as folhas mensais não entregues precisam ser
+  recalculadas, conferidas e aceitas de novo, inclusive as recalculadas na
+  v32. VT do admitido sobre a linha de salário calculada do mês (dia 1 é mês
+  cheio; acima do salário cheio ou dos dias de contrato,
+  `vale_transporte_salario_do_mes_acima_do_contrato` →
+  `confirmar_periodo_remuneravel_enviado`; sem linha de salário,
+  `vale_transporte_salario_do_mes_nao_identificado`, saída pelo mapa ou pela
+  correção do operador na linha de VT). Salário-família: faltas não reduzem;
+  no mês de admissão, dias desde a admissão na base da linha de salário.
+  Férias do Loki no contexto por `case_id` e `result_hash`, inclusive caso
+  `publicado`, com `payment_basis`. INSS o mês inteiro, iniciado antes da
+  competência, qualifica o mês sozinho. Dossiê com `context_fields`.
+  Consignado: código do Domínio aceito na lista;
+  `credito_trabalhador_compulsorio_nao_identificado` para VT, proventos e
+  tributos listados. Pensão do admitido: `vigente_desde` na admissão; todo
+  vínculo precisa da declaração quando o mapa tem pensão.
+- **Correções no reinício (`folha_mensal`).** Com `corrections_carried` na
+  resposta do `restart_case` (`replace_process_inputs`), as correções
+  calculadas da DP seguem para o recálculo; `corrections_not_carried` e
+  `operator_corrections.not_carried` dão o motivo
+  (`valor_calculado_mudou`, `pendencia_mudou`,
+  `pendencia_indeterminada_no_reinicio`, `caminho_inexistente_no_calculo`,
+  entre outros). A revisão mostra `estado_no_calculo_corrente` de cada
+  correção. Revisão preparada antes da publicação que recusar
+  `pacote_mudou_desde_a_leitura`: prepare de novo.
+- **Férias pela CLT (`ferias`, `afastamento`, `rescisao`)**, quando o schema
+  de `dados_ferias` tiver `gozo_antecipado_source`: afastamento no
+  aquisitivo pelos arts. 130, 131 e 133 (`leave` com `payment_periods`;
+  códigos `historical_vacation_*`; ressalva
+  `afastamento_aquisitivo_sem_efeito_clt`); fracionamento pelo art. 134 §1º
+  (`ferias_fracionamento_*`, `ferias_saldo_insuficiente_com_casos_irmaos`,
+  `related_case_ids`; aprovado conta sempre, não aprovado só com cálculo
+  corrente, e quem já calculou não cai; a aprovação e a publicação conferem o
+  conjunto; `saldo_ferias_residual` em
+  `notas_informativas`); gozo antecipado calculado com
+  `gozo_antecipado_source`; rescisão com caso de férias antecipadas recusa
+  `rescisao_ferias_gozo_antecipado_pendente_regra`; divisor e arredondamento
+  do recibo por empresa em `empresas[].ferias_recibo`, pelo
+  `apply_client_config`, só quando a operadora pedir.
+
 ## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial
+
+> Substituída em parte pela 2.9.6: com `gozo_antecipado_source`, o gozo
+> antecipado é calculado no processo de férias e o afastamento no aquisitivo
+> segue a CLT.
 
 O roteiro completo está em `geral`, `admissao`, `ferias`, `afastamento`,
 `rescisao`, `alteracao_cadastral` e `folha_mensal` de `loki_obter_instrucoes`.
@@ -964,6 +1017,9 @@ precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
 
 ## 2.9.4: folha v32 (salário-família, VT do admitido) e empresa nova no worker
 
+> Substituída em parte pela 2.9.6: com `folha-v33`, VT e salário-família do
+> admitido seguem a seção 2.9.6.
+>
 > Substituída em parte pela 2.9.5: empresa nova entra no worker sozinha; o
 > `prepare_authorization_addition` fica para a recusa
 > `worker_company_grant_missing`.

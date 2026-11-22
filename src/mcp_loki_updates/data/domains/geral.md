@@ -1,36 +1,46 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.5)
+## O que mudou nesta versão (2.9.6)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
 chegar em partes: cada item vale quando a resposta servida mostrar o sinal
-indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
+indicado; sem o sinal, siga a orientação anterior do mesmo domínio. A 2.9.5 e
+a 2.9.6 chegam juntas: os itens das duas são novos para ela.
 
-**Exige ação da operadora:** atualizar o plugin instalado (as skills mudaram).
-O plugin não bloqueia o uso: as instruções vêm do servidor. As 96 ferramentas
-são as mesmas: **não exige Refresh do conector**. Só a conta técnica da rotina
-que receber `carga_historica` passa a ver as ferramentas de onboarding; o
-Claude dessa conta pode precisar de Refresh ou conversa nova para vê-las.
+**Exige ação da operadora:**
+
+- Atualizar o plugin instalado (as skills mudaram). O plugin não bloqueia o
+  uso: as instruções vêm do servidor. As 96 ferramentas são as mesmas: **não
+  exige Refresh do conector**. Só a conta técnica da rotina que receber
+  `carga_historica` passa a ver as ferramentas de onboarding; o Claude dessa
+  conta pode precisar de Refresh ou conversa nova para vê-las.
+- **Recalcular as folhas mensais não entregues** quando o cálculo mostrar o
+  motor `folha-v33`: conferir de novo e pedir novo aceite; o aceite anterior
+  não vale. Substitui o recálculo da `folha-v32` (`folha_mensal`).
+- **Preparar a revisão de novo** quando uma revisão preparada antes da
+  publicação recusar a decisão com `pacote_mudou_desde_a_leitura`: o recibo
+  ganhou `estado_no_calculo_corrente`. Chame `prepare_case_review`, mostre o
+  pacote e peça o aceite outra vez.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Empresa nova: o worker e as rotinas com o modelo `@empresas-novas` recebem a
-  empresa sozinhos; a rotina com `carga_historica` faz o onboarding dela
-  ("Empresa nova e onboarding pela rotina", abaixo).
-- Admissão (`admissao`): razão social do cadastro; admissão cancelada sem
-  rastro reabre por `create_case` (`supersedes_case_id`).
-- Férias sobre o histórico, quando o contrato de onboarding trouxer
-  `historical_state.vacation_rules`: `dados_ferias.data_calculo` obrigatória
-  em cálculo novo, `sem_reducao`, gozo antecipado e abono fora do prazo
-  (`ferias`, `afastamento`, `rescisao`).
-- Matrícula do eSocial, quando o contrato de onboarding citar
-  `adocao_matricula_esocial`: adoção por um lote por empresa, com aceite da
-  operadora, para todo vínculo com código Domínio (`alteracao_cadastral`,
+- Folha (`folha_mensal`): correções de valor calculado atravessam o reinício
+  com `replace_process_inputs` (`corrections_carried`); na `folha-v33`, VT e
+  salário-família do admitido, férias do Loki e INSS do mês inteiro no
+  contexto, consignado e pensão do admitido.
+- Férias, quando o schema servido de `dados_ferias` tiver
+  `gozo_antecipado_source`: afastamento no aquisitivo pela CLT, fracionamento
+  com casos irmãos, gozo antecipado calculado e divisor e arredondamento do
+  recibo por empresa (`ferias`, `afastamento`, `rescisao`).
+- Da 2.9.5: empresa nova recebida sozinha pelo worker e pelas rotinas com o
+  modelo `@empresas-novas`, e onboarding pela rotina com `carga_historica`
+  ("Empresa nova e onboarding pela rotina", abaixo); razão social do cadastro
+  e reabertura com `supersedes_case_id` (`admissao`); férias sobre o
+  histórico com `historical_state.vacation_rules` (`data_calculo`,
+  `sem_reducao`, gozo antecipado, abono fora do prazo); adoção da matrícula
+  do eSocial com `adocao_matricula_esocial` (`alteracao_cadastral`,
   `folha_mensal`, `admissao`).
-- Continua da 2.9.4: folha não entregue calculada antes da `folha-v32` é
-  recalculada e aceita de novo (`folha_mensal`). O que não foi substituído
-  continua, cada um no seu domínio.
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os
@@ -383,7 +393,9 @@ Recomeçar exige pessoa autorizada, intenção específica e
 `expected_snapshot=get_case.correction_snapshot`. Siga `preparation` do
 contrato; `loki.case-preparation-transport/1` em `receive_case_data` só é rota
 quando anunciada. `replace_process_inputs` abre nova preparação e exige novos
-dados financeiros; documentos, decisões e eventos anteriores permanecem.
+dados financeiros; documentos, decisões e eventos anteriores permanecem. Na
+folha, as correções calculadas da DP seguem quando a resposta trouxer
+`corrections_carried` (`folha_mensal`).
 Preservar imports de admissão/rescisão exige a prévia `preview_import_preservation`
 e o plano/hash/dependências correntes em `preserve_imports`; não escolha eventos
 de memória. Aprovação ou efeito pode exigir conciliação prévia.
@@ -688,67 +700,11 @@ Comentários Slack de terceiros ficam como contexto: não atribua identidade
 Slack a uma conta OAuth nem os use como resposta do relator. Procedimento já
 encaminhado à Rafa e hipótese já entregue seguem para humanos.
 
-## eSocial por empresa
+## eSocial por empresa e preparação fiscal
 
-Consulte `get_company_esocial_contract()` (`loki.company-esocial/1`) e
-`get_company_esocial_state(company_id)` antes de propor modo. Os destinos são
-`homologacao`/`tp_amb=2` e `operacao`/`tp_amb=1`. Sem decisão, o retorno
-conservador de homologação tem `persisted=false` e revisão0; não transmite.
-`preview_company_esocial_mode` exige administrador humano provisionado, empresa
-explícita, proposta e `expected_revision`. Apresente escopo/corte/pendências e
-`preview_hash`; somente a intenção humana específica autoriza chamar
-`apply_company_esocial_mode` com proposta e decisão (`expected_revision`,
-`preview_hash`, `reference`, `human_message`). Releia estado/recibo. Identidade
-vem do HTTPS; automação e documento aprovado não concedem essa autoridade.
-
-`production_activation_supported=false`: Operação fica PENDING e sua aplicação
-recusa `esocial_activation_pending` enquanto faltarem executor/fila fiscal,
-assinatura, representação/procuração e recibo de homologação verificados.
-Homologação persistida mantém `fiscal_events_sent=0`; ausência de modo também
-não transmite. Preparar XML/XSD S-1005 local não comprova transmissão nem
-assinatura/aceite/prontidão. Esta entrega não oferece ferramenta HTTPS de
-emissão, provisionamento ou envio fiscal. Importação histórica não cria saída;
-mudança de modo não redireciona filas nem retransmite histórico. Não invente
-ferramentas futuras, flag liberatória, DOC ou etapa de painel/SSH.
-
-Consulte `get_company_parameter_state(company_id, effective_on)` para selecionar
-parâmetros por estabelecimento e data. A orientação detalhada de cadastro e
-consumo está em `alteracao_cadastral`; modo fiscal e perfil empresarial são
-registros distintos e nenhum deles comprova transmissão.
-
-
-## Preparação fiscal persistida
-
-Consulte `get_company_esocial_candidate_contract()` (`loki.company-esocial-candidate/1`).
-`prepare_company_esocial_candidate` registra somente S-1005 por pedido explícito
-com empresa/estabelecimento, inclusão ou alteração, vigência fiscal, perfil/pin,
-revisão do modo e ambiente exatos. Siga o schema retornado; não deduza a operação
-ou os antecedentes pelo cadastro local. O servidor fixa ID e XML sem assinatura;
-`PREPARED_UNSIGNED` não é envio pronto. Consulte `get_company_esocial_candidate`
-para recuperar o mesmo candidato e preservar seus bytes/hash, referência e revisão.
-`cancel_company_esocial_candidate` usa CAS e motivo, preservando o histórico.
-
-`transmission_ready=false`: esta etapa não oferece assinatura, envio, claim nem
-provisionamento de autoridade fiscal. Importação histórica não cria candidatos;
-mudança do modo não redireciona os anteriores. Não use a autoridade do worker de
-suporte ou `operar_casos` como autorização fiscal. Assinatura, representação e
-recibo oficial de homologação continuam pendentes; não ative Operação.
-
-Em parâmetros empresariais, `valid_until` pode ser omitido ou null para
-fim não informado; não invente data final. Preserve `valid_from`, CNPJ, fontes
-opcionais e pendências, inclusive FAP ausente. Isso não confirma continuidade
-normativa, encargo ou ausência de alterações. Sobreposições continuam recusadas.
-
-Um relatório de movimentações pode qualificar CPF, matrícula, admissão e recibos
-para conciliar o episódio com XMLs já disponíveis. Verifique os originais e as
-retificações; o relatório não fornece o conteúdo completo do contrato ou da folha.
-Use o XML para seus valores e preserve a proveniência de cada fato. Não peça
-novamente S-2200 para provar a mesma identidade já conciliada por fontes suficientes.
-
-
-Referências diferentes podem preparar drafts distintos. O contrato declara
-`allowed_multiple_preparations=true` e `execution_deduplication_verified=false`;
-idempotência do pedido não é deduplicação fiscal para uma futura execução.
+O modo eSocial por empresa (`loki.company-esocial/1`), os parâmetros
+empresariais por estabelecimento e a preparação S-1005 persistida estão no
+domínio `alteracao_cadastral`. Nenhum deles transmite evento fiscal.
 
 ## Política contextual do FGTS mensal
 
