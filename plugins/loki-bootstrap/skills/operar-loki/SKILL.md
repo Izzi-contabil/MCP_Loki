@@ -110,6 +110,7 @@ incide uma vez sobre o salário proporcional; empresa nova entra no worker pelo
 comando aditivo `prepare_authorization_addition`. Substitui o salário-família e
 o VT do admitido da 2.9.3. Não exigem Refresh; a operadora atualiza o plugin e
 recalcula as folhas. Substituída em parte pela 2.9.5: empresa nova no worker.
+Substituída em parte pela 2.9.6: VT e salário-família do admitido.
 Na 2.9.5 (“2.9.5: onboarding pela rotina, admissão, férias e matrícula do
 eSocial”), cada item quando a resposta servida mostrar o sinal: empresa nova
 recebe sozinha o acesso do worker e das rotinas com o modelo; a rotina com
@@ -118,7 +119,8 @@ do cadastro e a admissão cancelada sem rastro reabre por `create_case`; nas
 férias, `dados_ferias.data_calculo` obrigatória em cálculo novo, `sem_reducao`,
 gozo antecipado e abono fora do prazo; a matrícula operacional passa a ser a
 do eSocial, adotada por um lote de onboarding por empresa. Não exigem Refresh;
-a operadora atualiza o plugin.
+a operadora atualiza o plugin. Substituída em parte pela 2.9.6: gozo
+antecipado e afastamento no aquisitivo.
 Na 2.9.6 (“2.9.6: correções no reinício, folha v33 e férias pela CLT”), que
 chega junto com a 2.9.5: com `folha-v33`, **as folhas mensais não entregues
 são recalculadas, conferidas e aceitas de novo** (VT e salário-família do

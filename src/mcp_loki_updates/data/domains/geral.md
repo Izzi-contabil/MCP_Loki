@@ -393,7 +393,9 @@ Recomeçar exige pessoa autorizada, intenção específica e
 `expected_snapshot=get_case.correction_snapshot`. Siga `preparation` do
 contrato; `loki.case-preparation-transport/1` em `receive_case_data` só é rota
 quando anunciada. `replace_process_inputs` abre nova preparação e exige novos
-dados financeiros; documentos, decisões e eventos anteriores permanecem.
+dados financeiros; documentos, decisões e eventos anteriores permanecem. Na
+folha, as correções calculadas da DP seguem quando a resposta trouxer
+`corrections_carried` (`folha_mensal`).
 Preservar imports de admissão/rescisão exige a prévia `preview_import_preservation`
 e o plano/hash/dependências correntes em `preserve_imports`; não escolha eventos
 de memória. Aprovação ou efeito pode exigir conciliação prévia.

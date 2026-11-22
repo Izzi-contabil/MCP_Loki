@@ -241,6 +241,11 @@ def test_payroll_domain_carries_v33_and_restart_carry() -> None:
             "qualifica o mês sozinho)",
         ),
     )
+    assert_all(payroll, ("`payroll_effective_launches_not_read` (com `folha-v33`, também",))
+    assert_all(
+        text("geral"),
+        ("Na folha, as correções calculadas da DP seguem quando a resposta trouxer",),
+    )
     # Nada de rubrica concreta de caso relatado.
     for code in ("418", "419", "854"):
         assert f"({code}" not in payroll and f" {code})" not in payroll

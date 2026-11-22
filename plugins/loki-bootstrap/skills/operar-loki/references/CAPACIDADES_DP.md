@@ -369,6 +369,7 @@ população com `funcionario_id`. Nada disso exige Refresh do conector; a
 operadora só atualiza o plugin. A conta da rotina pode precisar de conversa
 nova para ver as ferramentas de onboarding. Roteiro em “2.9.5: onboarding pela
 rotina, admissão, férias e matrícula do eSocial” de [WORKFLOWS.md](WORKFLOWS.md).
+Substituída em parte pela 2.9.6: gozo antecipado e afastamento no aquisitivo.
 
 ## 2.9.4: folha v32, VT do admitido e empresa nova no worker
 
@@ -392,7 +393,8 @@ worker de folha pelo comando aditivo `prepare_authorization_addition`, feito
 pela pessoa owner (ou master). Nada disso exige Refresh; a operadora atualiza o plugin e
 recalcula as folhas. Roteiro em “2.9.4: folha v32 (salário-família, VT do
 admitido) e empresa nova no worker” de [WORKFLOWS.md](WORKFLOWS.md). Substituída em parte pela 2.9.5: empresa
-nova no worker.
+nova no worker. Substituída em parte pela 2.9.6: VT e salário-família do
+admitido na `folha-v33`.
 
 ## 2.9.3: folha v31 e simulação com o estado atual
 

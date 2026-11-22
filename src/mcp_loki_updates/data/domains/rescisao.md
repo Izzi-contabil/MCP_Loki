@@ -140,11 +140,11 @@ Valem quando a resposta servida os apresentar.
   nem contorne. Avise a operadora e pergunte à Rafa; o gozo antecipado está
   no domínio `ferias`.
   Quando o schema servido de `dados_ferias` tiver `gozo_antecipado_source`, a
-  mesma recusa vale também quando houver, no aquisitivo em curso no
+  regra já está definida (dias antecipados abatidos do direito), mas ainda não
+  está no motor da rescisão, e a mesma recusa vale também quando houver, no aquisitivo em curso no
   desligamento, um caso de férias do Loki não cancelado com
-  `gozo_antecipado_source` e algum cálculo, em qualquer estado. A regra das
-  proporcionais (dias antecipados abatidos do direito) ainda não está no
-  motor da rescisão: leve à operadora.
+  `gozo_antecipado_source` e algum cálculo, em qualquer estado. Leve à
+  operadora.
 - `termination_monthly_calculation_predates_registration_adoption`: a folha
   mensal referenciada foi calculada antes da adoção da matrícula do eSocial
   que mudou um identificador da população dela. Recalcule essa folha depois

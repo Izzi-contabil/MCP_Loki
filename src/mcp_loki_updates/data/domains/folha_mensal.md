@@ -546,7 +546,9 @@ tem `payroll_context`.
    qualifique primeiro o afastamento na origem. Depois recalcule e leia o
    dossiê de novo, porque o `context_hash` muda.
 3. Com o pacote em `aguardando_revisao`, os lançamentos saem
-   `payroll_effective_launches_not_read`. Com o aceite humano, faça
+   `payroll_effective_launches_not_read` (com `folha-v33`, também
+   `payroll_effective_launches_case_not_in_preparation` ou
+   `payroll_case_workflow_running`; veja "Dossiê da folha"). Com o aceite humano, faça
    `restart_case` e leia o dossiê de novo. Só o cálculo mais recente traz
    lançamentos.
 4. Use o `context_hash` só com `context_current=true`. Com `false` e
