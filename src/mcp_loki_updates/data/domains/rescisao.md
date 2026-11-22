@@ -141,8 +141,8 @@ Valem quando a resposta servida os apresentar.
   no domínio `ferias`.
   Quando o schema servido de `dados_ferias` tiver `gozo_antecipado_source`, a
   regra já está definida (dias antecipados abatidos do direito), mas ainda não
-  está no motor da rescisão, e a mesma recusa vale também quando houver, no aquisitivo em curso no
-  desligamento, um caso de férias do Loki não cancelado com
+  está no motor da rescisão. A mesma recusa vale quando houver, no aquisitivo
+  em curso no desligamento, um caso de férias do Loki não cancelado com
   `gozo_antecipado_source` e algum cálculo, em qualquer estado. Leve à
   operadora.
 - `termination_monthly_calculation_predates_registration_adoption`: a folha

@@ -205,7 +205,8 @@ do Loki, não cancelados, do mesmo aquisitivo, em ordem de gozo, com gozo e
 abono. Quais irmãos contam:
 
 - **Aprovado ou publicado** (estado atual): conta sempre, com os valores
-  aprovados, e nunca cai por causa de irmãos. Caso que voltou à preparação
+  aprovados, e nunca perde o cálculo por causa de irmãos; a publicação
+  confere o conjunto de novo. Caso que voltou à preparação
   segue a regra dos não aprovados.
 - **Não aprovado:** conta só com cálculo corrente (as entradas atuais iguais
   às de um cálculo gravado), com os valores gravados. Rascunho e caso
@@ -219,7 +220,9 @@ abono. Quais irmãos contam:
 
 A aprovação e a publicação conferem o conjunto inteiro e recusam com
 `ferias_saldo_insuficiente_com_casos_irmaos` citando os casos; a decisão
-`aprovar` de versão também confere. Quando a recusa envolve irmãos, ela traz
+`aprovar` de versão também confere. A aprovação refaz a avaliação do caso e
+pode recusar também com outro código dessa reavaliação, que se trata como
+no cálculo. Quando a recusa envolve irmãos, ela traz
 `related_case_ids`: leve à operadora, porque mudar datas ou cancelar um caso
 é decisão humana. Saldo que sobra menor que 5 dias, ou depois do 3º período,
 vem como nota `saldo_ferias_residual` em `notas_informativas` da revisão (fora do hash da
@@ -322,7 +325,7 @@ continua recusado (`historical_vacation_use_period_incompatible`): pergunte à
 Rafa; quando o servidor tiver `vacation_rules`, o gozo antecipado registrado
 pelo Domínio sai por `advance` (seção acima). Isso vale só para as férias antigas do histórico de onboarding; o
 processo de férias (`ferias_gozo_antes_do_fim_do_aquisitivo`) segue a regra
-anterior, salvo com `gozo_antecipado_source` (seção 2.9.6, abaixo).
+anterior, salvo com `gozo_antecipado_source` (seção 2.9.6, acima).
 
 **Lote recusado antes por `historical_vacation_use_period_incompatible`.**
 Depois desta versão, a próxima validação pode devolver `ready`. Chame

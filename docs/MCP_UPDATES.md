@@ -81,8 +81,8 @@ Por domínio:
 - `rescisao`: recusa com caso de férias antecipadas do Loki.
 - `alteracao_cadastral`: `empresas[CODIGO_DOMINIO].ferias_recibo`.
 
-Tamanho (limite 65.536 bytes): `geral` 62.321, `folha_mensal` 42.856,
-`ferias` 42.688; os demais abaixo de 39 KB.
+Tamanho (limite 65.536 bytes): `geral` 62.321, `folha_mensal` 43.021,
+`ferias` 42.880; os demais abaixo de 39 KB.
 
 Plugin espelha em WORKFLOWS (seção "2.9.6: correções no reinício, folha v33 e
 férias pela CLT", com notas de substituição na 2.9.4 e 2.9.5),

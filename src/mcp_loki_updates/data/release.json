@@ -16,11 +16,11 @@
     },
     "rescisao": {
       "metadata_sha256": "dfb829dd7284488aefca05ad2b56b716e136eb1f6bce30d0e95e7530e622f823",
-      "content_sha256": "03750e134306d414c4f73978de72127c2ec8d0d68b36cc46ddd4d4d720012baa"
+      "content_sha256": "0dc7ce806bfcf989481a0f7dc045a5ae0ecc53c5e2ce693385b296af248df419"
     },
     "ferias": {
       "metadata_sha256": "24bddb3e0bd52a38eedb35b357e269d8163a5649bc1b62229231b3142c04cc5b",
-      "content_sha256": "d88921d29bce490af96bbc4e548ed7d2ac00117afbe8db496daf29e5174ccff3"
+      "content_sha256": "0738fcb31bac250f576ec8b318aafd1a0b3abcdfafccb1aedc5472c77e41f47b"
     },
     "decimo_terceiro": {
       "metadata_sha256": "0ece38226c06352f386446490bd3dea1f384d415002fb0865d2f8b5365b6b5ad",
@@ -64,7 +64,7 @@
     },
     "folha_mensal": {
       "metadata_sha256": "c610092b3d37ed42123551d0d621c2f99b4d85936295e943aa7a0be1f500c28c",
-      "content_sha256": "8b766b7a6364eb8e5598731d94c639277e646d4c8ba6a90b2b05abe5aaab7b5b"
+      "content_sha256": "b62392276efa537d343aee518041aceb17e35c88018bc37203a0584d54c5fc0c"
     }
   },
   "changes": {

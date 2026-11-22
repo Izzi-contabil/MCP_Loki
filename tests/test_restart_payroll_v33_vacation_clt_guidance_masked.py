@@ -265,7 +265,7 @@ def test_vacation_leave_termination_and_registration_carry_the_clt_rules() -> No
         vacation,
         (
             "Sem `gozo_antecipado_source` no schema, o Loki não calcula férias antecipadas",
-            "salvo com `gozo_antecipado_source` (seção 2.9.6, abaixo)",
+            "salvo com `gozo_antecipado_source` (seção 2.9.6, acima)",
             "Com `gozo_antecipado_source` no schema, a CLT se aplica sozinha",
         ),
     )

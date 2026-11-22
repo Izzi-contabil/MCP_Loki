@@ -28,10 +28,10 @@ São linhas de salário: `remuneracao_periodo` sem fator,
 
 - Admissão no dia 1 é mês cheio: vale a fórmula da v32. Faltas ou 31 dias
   enviados não mudam o VT.
-- Envie em `periodo_remuneravel` os dias do contrato no mês. A base nunca
-  passa do salário cheio nem dos dias de contrato: o maior entre os dias
-  corridos desde a admissão e `30 − dia + 1` (admissão em 02/02 dá 29, em
-  20/02 dá 11). Acima disso, o VT fica em
+- Envie em `periodo_remuneravel` o período da fonte; ele não pode passar dos
+  dias de contrato: o maior entre os dias corridos desde a admissão e
+  `30 − dia + 1` (admissão em 02/02 dá 29, em 20/02 dá 11). A base também
+  nunca passa do salário cheio. Acima disso, o VT fica em
   `vale_transporte_salario_do_mes_acima_do_contrato` (campo
   `periodo_remuneravel`, próxima ação `confirmar_periodo_remuneravel_enviado`):
   confira o período enviado com a fonte; não o reduza para destravar.
@@ -126,9 +126,9 @@ admissão: declare a `pensao_alimenticia_regra` (ou "não beneficiário") com
 `vigente_desde` na data de admissão, ou antes, e sem fim no mês; assim o mês
 não fica pendente. Regra iniciada depois da admissão ou encerrada no mês, mês
 de transferência e mês sem admissão continuam em
-`pensao_vigencia_parcial_exige_regra`, que agora aponta o campo
-(`pensao_alimenticia_regra.vigente_desde` ou `.vigente_ate`): corrija-o pela
-fonte. Em empresa cujo mapa tem a rubrica de pensão, todo vínculo precisa da
+`pensao_vigencia_parcial_exige_regra`, que agora aponta os campos
+`pensao_alimenticia_regra.vigente_desde` e `pensao_alimenticia_regra.vigente_ate`:
+corrija o que a fonte mostrar. Em empresa cujo mapa tem a rubrica de pensão, todo vínculo precisa da
 declaração; a ausência não vale como não beneficiário
 (`pensao_regra_individual_pendente`).
 
@@ -180,7 +180,9 @@ o cadastro do cálculo corrente é o mesmo do cálculo da declaração; senão, 
 sempre no VT legado, fica `pendencia_indeterminada_no_reinicio`. Uma correção
 declarada na v31 sobre a pendência antiga do salário-família do admitido
 continua prevalecendo sem reinício; depois de um reinício, ela não volta se o
-motor calcular a cota e aparece em `not_carried`.
+motor calcular a cota e aparece em `operator_corrections.not_carried` ou, se o
+cadastro mudou, em `corrections_not_carried`
+(`pendencia_indeterminada_no_reinicio`).
 
 Na revisão, cada item de `ressalvas.correcoes_humanas` traz
 `estado_no_calculo_corrente`, com `estado` e `caminhos` (estado por caminho):
