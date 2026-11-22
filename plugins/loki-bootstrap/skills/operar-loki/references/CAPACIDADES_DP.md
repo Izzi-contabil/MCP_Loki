@@ -333,8 +333,8 @@ qualifica o mês, e o consignado e a pensão do admitido têm recusas próprias.
 Com `corrections_carried` no reinício, as correções calculadas da DP seguem
 para o recálculo, e a revisão mostra `estado_no_calculo_corrente`. Com
 `gozo_antecipado_source` no schema de férias, o afastamento no aquisitivo
-segue a CLT, o fracionamento conta os casos irmãos (quem calcula primeiro
-vale), o gozo antecipado é calculado e o recibo pode usar o mês civil ou o
+segue a CLT, o fracionamento conta os casos irmãos (aprovados sempre, não aprovados só
+com cálculo corrente; a aprovação confere o conjunto), o gozo antecipado é calculado e o recibo pode usar o mês civil ou o
 arredondamento verba a verba por empresa (`ferias_recibo`). Nada disso exige
 Refresh do conector; a operadora atualiza o plugin, recalcula as folhas e
 prepara de novo a revisão que recusar `pacote_mudou_desde_a_leitura`. Roteiro

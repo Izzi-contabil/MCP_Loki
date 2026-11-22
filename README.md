@@ -1,7 +1,7 @@
 # MCP Loki — contrato operacional 2.9.6
 Candidata **provider 0.4.31 / contrato, instruções e plugin 2.9.6**, 22/11/2026
-(backend #382 e #385 em `main`; #384 aprovada no essencial, ainda não
-mesclada): contrato aditivo, sem ferramenta nova e sem Refresh do conector.
+(backend #382, #385 e #384 em `main`, `1e74e642`): contrato aditivo, sem
+ferramenta nova e sem Refresh do conector.
 Vai ao ar junto com a 2.9.5, no mesmo pacote do Loki. Correções calculadas da
 DP atravessam o reinício da folha com `replace_process_inputs` e a revisão
 mostra o estado de cada uma (`folha_mensal`); motor `folha-v33`, com todas as

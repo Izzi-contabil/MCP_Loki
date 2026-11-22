@@ -112,8 +112,12 @@ VACATION_CLT = (
     "`ferias_fracionamento_excede_tres_periodos`",
     "`ferias_fracionamento_sem_periodo_de_quatorze_dias`",
     "`ferias_saldo_insuficiente_com_casos_irmaos`",
-    "**Quem calcula primeiro vale:**",
-    "Um caso reiniciado ou com dados novos volta à fila",
+    "**Aprovado ou publicado** (estado atual): conta sempre, com os valores aprovados",
+    "conta só com cálculo corrente",
+    "**Quem já calculou não cai:**",
+    "`ferias_calculo_reancorado`",
+    "A aprovação e a publicação conferem o conjunto inteiro",
+    "retificação de nome ou de identidade não muda nada",
     "`related_case_ids`",
     "`saldo_ferias_residual` em `notas_informativas`",
     "`dados_ferias.gozo_antecipado_source`",
@@ -133,6 +137,7 @@ VACATION_CLT = (
 STALE_DRAFTS = (
     "ferias_saldo_reservado_por_ferias_posteriores",
     "em qualquer ordem de cálculo",
+    "Quem calcula primeiro vale",
     "docs/Componentes_Ferias.md",
 )
 
@@ -180,6 +185,7 @@ def test_versions_follow_the_additive_contract_patch() -> None:
     for number in ("#382", "#385", "#384"):
         assert number in backend
     assert "#383" not in backend
+    assert "1e74e642" in backend
     assert release["changes"]["instructions"][-1].startswith("Instruções2.9.6")
     assert release["changes"]["plugin"][-1].startswith("Plugin2.9.6")
     for path in DOMAINS.glob("*.json"):
@@ -303,7 +309,7 @@ def test_plugin_mirrors_296_guidance() -> None:
             "`estado_no_calculo_corrente`",
             "`pacote_mudou_desde_a_leitura`",
             "`ferias_saldo_insuficiente_com_casos_irmaos`",
-            "quem calcula primeiro vale",
+            "aprovado conta sempre, não aprovado só com cálculo corrente",
             "`empresas[].ferias_recibo`",
         ),
     )

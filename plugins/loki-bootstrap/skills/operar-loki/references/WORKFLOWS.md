@@ -930,7 +930,9 @@ ferramentas são as mesmas. A operadora atualiza o plugin instalado.
   códigos `historical_vacation_*`; ressalva
   `afastamento_aquisitivo_sem_efeito_clt`); fracionamento pelo art. 134 §1º
   (`ferias_fracionamento_*`, `ferias_saldo_insuficiente_com_casos_irmaos`,
-  `related_case_ids`; quem calcula primeiro vale; `saldo_ferias_residual` em
+  `related_case_ids`; aprovado conta sempre, não aprovado só com cálculo
+  corrente, e quem já calculou não cai; a aprovação e a publicação conferem o
+  conjunto; `saldo_ferias_residual` em
   `notas_informativas`); gozo antecipado calculado com
   `gozo_antecipado_source`; rescisão com caso de férias antecipadas recusa
   `rescisao_ferias_gozo_antecipado_pendente_regra`; divisor e arredondamento

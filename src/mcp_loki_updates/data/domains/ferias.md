@@ -202,14 +202,28 @@ comporta um período de 14. Recusas:
 
 Contam juntos os períodos já gozados no histórico e os outros casos de férias
 do Loki, não cancelados, do mesmo aquisitivo, em ordem de gozo, com gozo e
-abono. **Quem calcula primeiro vale:** cada caso conta só os irmãos calculados
-antes dele; rascunho sem cálculo não conta, e o cálculo gravado de um irmão
-não muda por causa de outro. Um caso reiniciado ou com dados novos volta à
-fila: passa a contar os irmãos já calculados e pode ser recusado por eles. Quando a recusa envolve irmãos, ela traz
+abono. Quais irmãos contam:
+
+- **Aprovado ou publicado** (estado atual): conta sempre, com os valores
+  aprovados, e nunca cai por causa de irmãos. Caso que voltou à preparação
+  segue a regra dos não aprovados.
+- **Não aprovado:** conta só com cálculo corrente (as entradas atuais iguais
+  às de um cálculo gravado), com os valores gravados. Rascunho e caso
+  alterado e ainda não recalculado não contam; retificação de nome ou de
+  identidade não muda nada.
+- **Quem já calculou não cai:** quem calcula com dados novos conta todos os
+  irmãos correntes e pode ser recusado por eles; um caso já calculado não cai
+  por irmão calculado depois. Caso que volta a entradas já calculadas é
+  reancorado (`ferias_calculo_reancorado`) e conta os irmãos calculados no
+  meio.
+
+A aprovação e a publicação conferem o conjunto inteiro e recusam com
+`ferias_saldo_insuficiente_com_casos_irmaos` citando os casos; a decisão
+`aprovar` de versão também confere. Quando a recusa envolve irmãos, ela traz
 `related_case_ids`: leve à operadora, porque mudar datas ou cancelar um caso
 é decisão humana. Saldo que sobra menor que 5 dias, ou depois do 3º período,
-vem como nota `saldo_ferias_residual` em `notas_informativas` da revisão:
-apresente-a; não é recusa.
+vem como nota `saldo_ferias_residual` em `notas_informativas` da revisão (fora do hash da
+revisão): apresente-a; não é recusa.
 
 **Gozo antecipado no processo de férias (CLT arts. 130 e 134).** Quando a
 operadora disser que o gozo começa antes do fim do aquisitivo (gozo

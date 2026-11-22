@@ -3,10 +3,10 @@
 ## Candidata 0.4.31 / contrato, instruções e plugin 2.9.6 — 22/11/2026
 
 Acompanha três PRs do backend, no mesmo pacote do Loki que leva a 2.9.5
-(mesclada e promovida, ainda não publicada). Duas estão em `main` do Loki
-(`d93a69cd`): #382 (correções do operador no reinício) e #385 (`folha-v33`).
-A #384 (férias pela CLT) está aprovada no essencial e ainda não mesclada; o
-texto foi conferido contra a cabeça `95827af6`. A #383 só mexe em testes e
+(mesclada e promovida, ainda não publicada). As três estão em `main` do Loki
+(`1e74e642`): #382 (correções do operador no reinício) e #385 (`folha-v33`).
+A #384 (férias pela CLT) foi mesclada (`1e74e642`, que completa o pacote de
+código); o texto foi conferido contra esse `main`. A #383 só mexe em testes e
 não entra. Cada texto novo vale quando a resposta servida mostrar o sinal do
 tema, e a orientação anterior fica como caminho sem ele:
 
@@ -33,9 +33,12 @@ Divergências entre os rascunhos das PRs e o código, resolvidas pelo código:
   não existe no código; a recusa do conjunto é
   `ferias_saldo_insuficiente_com_casos_irmaos`.
 - #384: o rascunho diz que os casos irmãos contam "em qualquer ordem de
-  cálculo"; o código (`counted_sibling`) conta só os irmãos calculados antes
-  (quem calcula primeiro vale). Na cabeça `95827af6`, o caso reiniciado ou
-  com dados novos ancora de novo no início da preparação corrente.
+  cálculo". No código final (`1e74e642`), o aprovado ou publicado conta
+  sempre, com os valores aprovados; o não aprovado só com cálculo corrente
+  estrito (âncora na linha corrente, `ferias_calculo_reancorado` quando volta);
+  quem já calculou não cai; aprovação e publicação conferem o conjunto. A
+  âncora pelo início da preparação, da cabeça intermediária `95827af6`, não
+  ficou.
 - #384: o rascunho manda seguir `docs/Componentes_Ferias.md`, que é do
   repositório do Loki e não chega à harness; o exemplo vai resumido no
   domínio `ferias`. `component_consumption_incomplete` aponta o campo
@@ -79,7 +82,7 @@ Por domínio:
 - `alteracao_cadastral`: `empresas[CODIGO_DOMINIO].ferias_recibo`.
 
 Tamanho (limite 65.536 bytes): `geral` 62.321, `folha_mensal` 42.856,
-`ferias` 41.996; os demais abaixo de 39 KB.
+`ferias` 42.688; os demais abaixo de 39 KB.
 
 Plugin espelha em WORKFLOWS (seção "2.9.6: correções no reinício, folha v33 e
 férias pela CLT", com notas de substituição na 2.9.4 e 2.9.5),
