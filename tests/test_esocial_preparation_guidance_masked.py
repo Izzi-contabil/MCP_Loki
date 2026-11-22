@@ -24,16 +24,17 @@ CANDIDATE_TOOLS = (
 def test_preparation_release_preserves_core_compatibility_and_unknown_discovery() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.30"
-    assert metadata["instructions_version"] == "2.9.5"
-    assert metadata["mcp_contract_version"] == "2.9.5"
+    assert metadata["provider_version"] == "0.4.31"
+    assert metadata["instructions_version"] == "2.9.6"
+    assert metadata["mcp_contract_version"] == "2.9.6"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in ("2.0.0", "2.1.0", "2.2.0", "2.3.0"):
         assert provider.check_version(version, version)["compatible"] is True
     assert provider.check_version()["refresh_tools_required"] is None
 
 
-@pytest.mark.parametrize("domain", ("geral", "alteracao_cadastral"))
+# Na 2.9.6 o texto saiu do `geral`, que remete a `alteracao_cadastral`.
+@pytest.mark.parametrize("domain", ("alteracao_cadastral",))
 def test_candidate_operations_and_limits_are_in_runtime_and_native_guidance(domain: str) -> None:
     runtime = InstructionsProvider().get(domain)["instructions"]
     native = GUIDE.read_text(encoding="utf-8")

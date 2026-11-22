@@ -82,7 +82,10 @@ afastamento conhecido até o cálculo (AAAA-MM-DD)") em
 descoberto depois do cálculo é retificação: corrija o histórico e faça um
 novo cálculo.
 
-**Afastamento que não reduz férias (`leave.vacation_effect`).** Para atestado
+**Afastamento que não reduz férias (`leave.vacation_effect`).** Com
+`gozo_antecipado_source` no schema, a CLT se aplica sozinha (seção
+"Afastamento e fracionamento pela CLT", abaixo) e `vacation_effect` fica para
+o que o DP decidir diferente. Para atestado
 ou licença-maternidade, a regra da operação basta:
 `"vacation_effect": {"kind": "sem_reducao", "source": {"kind":
 "operation_rule", "rule": "atestado_e_licenca_maternidade_nao_sao_falta",
@@ -122,7 +125,9 @@ próprio fato (`historical_vacation_advance_source_incompatible`). Não há
 limite de antecedência, mas o gozo começa dentro do aquisitivo de origem;
 `advance` em gozo que não é antecipado recusa
 `historical_vacation_use_advance_incompatible`. O cálculo traz a ressalva
-`vacation_use_advanced`. O Loki não calcula férias antecipadas. Rescisão com
+`vacation_use_advanced`. Sem `gozo_antecipado_source` no schema, o Loki não
+calcula férias antecipadas (com ele, veja "Gozo antecipado no processo de
+férias", abaixo). Rescisão com
 gozo antecipado no aquisitivo em curso recusa
 `rescisao_ferias_gozo_antecipado_pendente_regra` (domínio `rescisao`).
 
@@ -135,6 +140,139 @@ com `foundation`). Ela vira a ressalva `clt_143_1_abono_fora_do_prazo` em
 `declaracoes_dp`, para o aceite da operadora. Fonte sem pedido fora do prazo
 recusa `ferias_abono_fora_do_prazo_source_sem_uso`; sem fundamento,
 `ferias_abono_fora_do_prazo_source_sem_fundamento`.
+
+## Afastamento e fracionamento pela CLT, gozo antecipado e recibo por empresa (2.9.6)
+
+Vale quando o schema servido de `dados_ferias` tiver `gozo_antecipado_source`.
+Sem isso, siga as seções acima e abaixo como estão. Regras da operação (DP),
+resolvidas pela legislação vigente.
+
+**Afastamento no aquisitivo (CLT arts. 130, 131 e 133).** Lance cada
+afastamento como `leave` confirmado, com `category_code` e `payment_periods`
+cobrindo todos os dias, cada período com `responsibility` (`empregador`,
+`inss` ou `sem_remuneracao`). Com isso o Loki aplica a CLT sozinho, sem
+`vacation_effect`:
+
+- licença-maternidade (`category_code: licenca_maternidade`), licença
+  contínua do empregador até 30 dias e benefício contínuo do INSS até 180
+  dias não têm efeito. O pacote traz a ressalva
+  `afastamento_aquisitivo_sem_efeito_clt` em `ferias_historico.regras_clt`
+  (não é decisão do DP, fica fora de `qualificacoes_dp`), com `basis`
+  (`clt_131_ii`, `clt_131_iii` ou `clt_131_iv`), `inss_days` e
+  `continuous_periods`: apresente-a para o aceite da operadora;
+- lance também os afastamentos contíguos anteriores ao aquisitivo: períodos
+  contíguos da mesma responsabilidade formam uma licença só, contada inteira.
+  Atestados separados por dia trabalhado não se somam;
+- `historical_vacation_acquisition_restarts_after_inss_return`: INSS acima
+  de 180 dias, mesmo começado no aquisitivo anterior (art. 133 IV). O
+  aquisitivo se perdeu e o novo começa no retorno (§2º), que vem em
+  `return_on`. Use o período do histórico que começa no retorno; não force;
+- `historical_vacation_acquisition_lost_inss_over_180_days`: mais de 180
+  dias do INSS no aquisitivo, somando afastamentos descontínuos. Leve à
+  operadora;
+- `historical_vacation_leave_paid_licence_over_30_days`: licença contínua
+  paga pelo empregador acima de 30 dias (art. 133 II). Pergunte ao DP;
+- `historical_vacation_leave_maternity_payment_incoherent`:
+  licença-maternidade com período sem remuneração. Corrija o fato;
+- `historical_vacation_leave_unpaid_pending`: dia sem remuneração. Pergunte
+  ao DP;
+- `historical_vacation_leave_payment_not_qualified`: dia sem responsável de
+  pagamento. Complete `payment_periods` com a fonte;
+- `historical_vacation_leave_observation_requires_qualification`: intervalo
+  observado sem fato tipado. Lance o `leave` tipado.
+
+Essas recusas apontam `historical_state` (próxima ação
+`get_case_historical_state`): corrija o histórico e selecione de novo.
+Afastamento do próprio Loki no aquisitivo precisa do espelho `leave`
+conferido (`historical_vacation_native_occurrence_not_mirrored`). A
+qualificação manual `sem_reducao` continua valendo quando o DP decidir
+diferente; os dias do INSS dela entram na soma. Nunca deduza a
+responsabilidade de pagamento pela duração.
+
+**Fracionamento (CLT art. 134 §1º).** Até três períodos, um com ao menos 14
+dias corridos e os demais com ao menos 5 (`ferias_gozo_duracao_invalida`
+abaixo de 5). Uma primeira fração menor que 14 é aceita quando o saldo ainda
+comporta um período de 14. Recusas:
+
+- `ferias_fracionamento_excede_tres_periodos` (`dados_ferias.inicio`);
+- `ferias_fracionamento_sem_periodo_de_quatorze_dias` (`dados_ferias.fim`):
+  nenhum período de 14 e o saldo não comporta mais um;
+- `ferias_saldo_insuficiente_com_casos_irmaos` (`dados_ferias.fim`): o
+  conjunto do aquisitivo passa do direito.
+
+Contam juntos os períodos já gozados no histórico e os outros casos de férias
+do Loki, não cancelados, do mesmo aquisitivo, em ordem de gozo, com gozo e
+abono. **Quem calcula primeiro vale:** cada caso conta só os irmãos calculados
+antes dele; rascunho sem cálculo não conta, e o cálculo gravado de um irmão
+não muda por causa de outro. Um caso reiniciado ou com dados novos volta à
+fila: passa a contar os irmãos já calculados e pode ser recusado por eles. Quando a recusa envolve irmãos, ela traz
+`related_case_ids`: leve à operadora, porque mudar datas ou cancelar um caso
+é decisão humana. Saldo que sobra menor que 5 dias, ou depois do 3º período,
+vem como nota `saldo_ferias_residual` em `notas_informativas` da revisão:
+apresente-a; não é recusa.
+
+**Gozo antecipado no processo de férias (CLT arts. 130 e 134).** Quando a
+operadora disser que o gozo começa antes do fim do aquisitivo (gozo
+antecipado, como no controle de férias do Domínio), envie o aquisitivo em
+curso (o período cheio) e `dados_ferias.gozo_antecipado_source` com a fonte
+(documento do controle de férias, harness ou declaração com `foundation`). O
+saldo é o direito cheio (30 dias, ou a tabela de faltas do art. 130) menos os
+dias já gozados, não os avos; as datas do aquisitivo não mudam.
+`data_calculo` pode ser anterior ao fim do aquisitivo. A declaração vai para
+`declaracoes_dp` (`clt_134_gozo_antecipado_aquisitivo_em_curso`), para o
+aceite. Sem ela, a recusa continua `ferias_gozo_antes_do_fim_do_aquisitivo`.
+Recusas: `ferias_gozo_antecipado_source_sem_uso` (o gozo não começa antes do
+fim do aquisitivo), `ferias_gozo_antecipado_source_sem_fundamento`,
+`ferias_gozo_antecipado_antes_do_aquisitivo` (o gozo começa antes do
+aquisitivo em curso) e, na simulação, `ferias_gozo_antecipado_exige_historico`.
+No histórico, o gozo antecipado continua como `vacation_use` com `advance`.
+
+**Divisor e arredondamento do recibo (por empresa).** Só quando a operadora
+disser que a empresa usa o mês civil ou arredonda verba a verba, grave pelo
+`validate_client_config` → `apply_client_config` o campo `ferias_recibo` da
+empresa (`empresas[<código>].ferias_recibo`), que aparece no schema do
+cadastro:
+
+```json
+[{"id": "recibo-mes-civil", "valid_from": "AAAA-MM-DD",
+  "divisor_dias": "dias_mes_civil", "arredondamento": "verba_a_verba",
+  "fonte": {"reference": "CX-…"}}]
+```
+
+`divisor_dias` é `"30"` ou `"dias_mes_civil"`; `arredondamento` é `"total"`
+ou `"verba_a_verba"`; `valid_until` é opcional. A política vigente no início
+do gozo vale para o recibo inteiro. No mês civil, salário e cada média valem
+`valor / dias do mês × dias no mês` em cada competência do gozo; o abono fica
+em /30. Verba a verba, cada verba é arredondada e o 1/3 sai da soma. O
+cálculo sai em `ferias-v8` (`ferias-v9` com acumulação tributária) e traz
+`recibo_ferias`. Sem política, ou com os dois valores padrão, nada muda.
+Gravar a política muda o cadastro da empresa: os pacotes dos casos abertos
+dela envelhecem; recalcule e gere de novo.
+
+**Componentes de médias.** Para média em valor, média em horas e vantagem
+num mês, envie `componentes_medias` (`policy_version:
+"componentes-ferias-v1"`) e `consumo_componentes` (`version:
+"loki.vacation-component-consumption/1"`, `inicio` e `fim` iguais aos do
+gozo, um `destinos[]` com `destino: "MEDIA_MENSAL"` por componente). Cada
+componente tem `reference`, `origem_codigo`, `especie`, `unidade`, `source`
+e um ramo por competência do gozo (`competencia` no 1º dia do mês), com
+`etapas` que terminam em `ARREDONDAMENTO` (`casas_decimais: 0`):
+
+- média em valor (`MEDIA_MONETARIA`, `MOEDA`): `janela` dos 12 meses,
+  `historico` com `valor_cents` por competência e `divisor_media` 12;
+  etapa terminal sobre `media_historica`;
+- média em horas (`MEDIA_QUANTITATIVA`, `HORA`): `historico` em horas,
+  `divisor_media` 12 e `parametros` `base_monetaria`, `divisor_quantidade`
+  e `fator` (por exemplo 1,5); etapas `QUOCIENTE` (valor-hora), `PRODUTO`
+  (com o fator), `PRODUTO` com `media_historica` e `ARREDONDAMENTO`;
+- vantagem (`VANTAGEM`, `MOEDA`): `parametros` `base_monetaria` e etapa
+  terminal sobre ela.
+
+`component_consumption_incomplete` (campo `componentes_medias`) diz que algum
+componente não saiu `RECOMPUTADO`. Confira: etapa final `ARREDONDAMENTO`;
+ramo com `etapas`; `historico`, `janela` e `divisor_media` quando o programa
+usa `media_historica`; cada parâmetro citado declarado em `parametros`; ramo
+da competência presente.
 
 ## Recusas de fatos históricos do onboarding
 
@@ -170,7 +308,7 @@ continua recusado (`historical_vacation_use_period_incompatible`): pergunte à
 Rafa; quando o servidor tiver `vacation_rules`, o gozo antecipado registrado
 pelo Domínio sai por `advance` (seção acima). Isso vale só para as férias antigas do histórico de onboarding; o
 processo de férias (`ferias_gozo_antes_do_fim_do_aquisitivo`) segue a regra
-anterior.
+anterior, salvo com `gozo_antecipado_source` (seção 2.9.6, abaixo).
 
 **Lote recusado antes por `historical_vacation_use_period_incompatible`.**
 Depois desta versão, a próxima validação pode devolver `ready`. Chame
@@ -311,7 +449,8 @@ Códigos de férias:
 - `ferias_gozo_duracao_invalida`: o gozo precisa de início antes do fim e de
   cinco a trinta dias.
 - `ferias_gozo_antes_do_fim_do_aquisitivo`: o gozo começa antes de o
-  aquisitivo terminar.
+  aquisitivo terminar. Se for gozo antecipado e o schema tiver
+  `gozo_antecipado_source`, declare-o (seção 2.9.6).
 - `ferias_gozo_fora_do_concessivo`: gozo fora do concessivo exige o tratamento
   de dobra.
 - `ferias_aviso_fora_do_prazo` e `ferias_pagamento_fora_do_prazo`: aviso ou

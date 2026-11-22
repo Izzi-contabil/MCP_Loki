@@ -1,4 +1,6 @@
-"""Entrega das orientações da 2.9.4 (backend #374 e #375) que seguem na 2.9.5.
+"""Entrega das orientações da 2.9.4 (backend #374 e #375) que seguem na 2.9.6.
+
+Na 2.9.6 a `folha-v33` vem primeiro; a v32 fica como caminho sem o sinal.
 
 O aviso, as versões e a seção do worker no `geral` passaram à 2.9.5
 (`test_onboarding_admission_vacation_esocial_guidance_masked.py`). Ficam aqui a
@@ -103,7 +105,8 @@ def test_payroll_domain_carries_v32_guidance() -> None:
     assert_all(payroll, (*RECALC, *FAMILY, *TRANSPORT))
     assert_none(payroll, STALE_V31)
     first = payroll.index("\n## ")
-    assert payroll[first:].startswith("\n## Motor folha-v32")
+    assert payroll[first:].startswith("\n## Motor folha-v33")
+    assert "\n## Motor folha-v32: recalcular as folhas não entregues" in payroll
     assert_all(
         payroll,
         (

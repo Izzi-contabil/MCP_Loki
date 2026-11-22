@@ -167,6 +167,17 @@ adoção da matrícula do eSocial. `admission_cancelled_case_not_reusable` e
 `admission_reopening_chain_inconsistent` são problema a relatar (empresa,
 processo, `case_id` e o motivo, sem CPF, nome ou matrícula), assim como
 `adocao_matricula_esocial_exige_codigo_dominio`.
+Na 2.9.6 não são defeito: `calculation_stale` depois da troca para
+`folha-v33` (recalcule); `vale_transporte_salario_do_mes_acima_do_contrato`
+(confira o período enviado) e `vale_transporte_salario_do_mes_nao_identificado`
+(problema do mapa); `corrections_not_carried` e
+`operator_corrections.not_carried` com motivo (decisão da DP, não falha);
+`pacote_mudou_desde_a_leitura` em revisão preparada antes da publicação
+(prepare de novo); `credito_trabalhador_compulsorio_nao_identificado` (lista
+a corrigir); `pensao_vigencia_parcial_exige_regra` com o campo; e, com
+`gozo_antecipado_source`, os `historical_vacation_*` da CLT, os
+`ferias_fracionamento_*` e `ferias_saldo_insuficiente_com_casos_irmaos` (leve
+à operadora com os `related_case_ids`).
 Na 2.9.4 não são defeito: folha mensal não entregue com `calculation_stale`
 depois da troca para `folha-v32` (recalcule); as pendências
 `salario_familia_mes_transferencia_pendente_regra`,

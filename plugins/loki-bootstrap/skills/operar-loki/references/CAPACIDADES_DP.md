@@ -321,6 +321,26 @@ casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.6: correções no reinício, folha v33 e férias pela CLT
+
+Chega junto com a 2.9.5; cada item vale quando a resposta servida mostrar o
+sinal. Com `folha-v33` no cálculo, **todas as folhas mensais não entregues
+precisam ser recalculadas, conferidas e aceitas de novo**; o VT do admitido
+incide sobre a linha de salário calculada do mês, o salário-família não cai
+com faltas e conta os dias desde a admissão na base da linha, as férias do
+Loki entram no contexto do mês pelo próprio caso, o INSS o mês inteiro
+qualifica o mês, e o consignado e a pensão do admitido têm recusas próprias.
+Com `corrections_carried` no reinício, as correções calculadas da DP seguem
+para o recálculo, e a revisão mostra `estado_no_calculo_corrente`. Com
+`gozo_antecipado_source` no schema de férias, o afastamento no aquisitivo
+segue a CLT, o fracionamento conta os casos irmãos (quem calcula primeiro
+vale), o gozo antecipado é calculado e o recibo pode usar o mês civil ou o
+arredondamento verba a verba por empresa (`ferias_recibo`). Nada disso exige
+Refresh do conector; a operadora atualiza o plugin, recalcula as folhas e
+prepara de novo a revisão que recusar `pacote_mudou_desde_a_leitura`. Roteiro
+em “2.9.6: correções no reinício, folha v33 e férias pela CLT” de
+[WORKFLOWS.md](WORKFLOWS.md).
+
 ## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial
 
 Cada item vale quando a resposta servida mostrar o sinal indicado; o Loki

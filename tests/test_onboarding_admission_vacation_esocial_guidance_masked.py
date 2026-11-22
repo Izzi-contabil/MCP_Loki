@@ -1,9 +1,12 @@
-"""Entrega das orientações da 2.9.5 (backend #376, #379, #378 e #372).
+"""Entrega das orientações da 2.9.5 (backend #376, #379, #378 e #372) que seguem na 2.9.6.
+
+O aviso, as versões e o limite de tamanho passaram à 2.9.6
+(`test_restart_payroll_v33_vacation_clt_guidance_masked.py`); os itens da 2.9.5
+continuam no aviso da 2.9.6, porque as duas chegam juntas.
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
 """
 
-import json
 from pathlib import Path
 
 from mcp_loki_updates import InstructionsProvider
@@ -14,24 +17,17 @@ OPERATOR = SKILLS / "operar-loki"
 WORKFLOWS = OPERATOR / "references/WORKFLOWS.md"
 CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
 DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
-RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 SECTION_295 = "## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial"
-LIMIT = 65536
 
 NOTICE = (
-    "## O que mudou nesta versão (2.9.5)",
-    "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
-    "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
-    "**Exige ação da operadora:** atualizar o plugin instalado",
-    "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
+    "Da 2.9.5:",
+    "`supersedes_case_id`",
+    "`historical_state.vacation_rules`",
+    "`adocao_matricula_esocial`",
+    "adoção da matrícula eSocial (usa os mesmos campos)",
     "Só a conta técnica da rotina que receber `carga_historica` passa a ver as "
     "ferramentas de onboarding; o Claude dessa conta pode precisar de Refresh ou "
     "conversa nova para vê-las.",
-    "`historical_state.vacation_rules`",
-    "`adocao_matricula_esocial`",
-    "`supersedes_case_id`",
-    "Continua da 2.9.4",
-    "adoção da matrícula eSocial (usa os mesmos campos)",
 )
 ONBOARDING = (
     "## Empresa nova e onboarding pela rotina",
@@ -194,48 +190,10 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
         assert flat(item) not in body, item
 
 
-def test_versions_follow_the_additive_contract_patch() -> None:
-    provider = InstructionsProvider()
-    metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.30"
-    assert metadata["instructions_version"] == "2.9.5"
-    assert metadata["mcp_contract_version"] == "2.9.5"
-    assert metadata["recommended_plugin_version"] == "2.9.5"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.3", "2.9.4", "2.9.5"):
-        assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.9.5", "2.9.6")["compatible"] is False
-    release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["compatible_tools"] == [
-        "loki_obter_instrucoes",
-        "loki_verificar_versao",
-    ]
-    backend = release["changes"]["backend"][-1]
-    assert backend.startswith("Contrato2.9.5 aditivo")
-    assert "as 96 ferramentas são as mesmas" in backend
-    for number in ("#376", "#379", "#378", "#372"):
-        assert number in backend
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.9.5")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.9.5")
-    for path in DOMAINS.glob("*.json"):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.9.5", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.9.5", path.name
-
-
-def test_every_domain_stays_within_the_size_limit() -> None:
-    provider = InstructionsProvider()
-    for domain in provider.domains():
-        size = len(provider.get(domain)["instructions"].encode("utf-8"))
-        assert size <= LIMIT, (domain, size)
-
-
-def test_general_notice_is_conditional_and_needs_no_refresh() -> None:
+def test_general_notice_keeps_the_295_items() -> None:
     guide = text("geral")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
-    current = notice[: notice.index("**Continua da 2.8.0**")]
-    assert current.index("**Exige ação da operadora:**") < current.index("**Não exige nada**")
     assert_all(guide, (*ONBOARDING, *CANCELLATION))
     assert_none(guide, STALE_GENERAL)
     assert_all(

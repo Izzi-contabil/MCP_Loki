@@ -1,4 +1,94 @@
-# Atualizações MCP Loki — contrato 2.9.5
+# Atualizações MCP Loki — contrato 2.9.6
+
+## Candidata 0.4.31 / contrato, instruções e plugin 2.9.6 — 22/11/2026
+
+Acompanha três PRs do backend, no mesmo pacote do Loki que leva a 2.9.5
+(mesclada e promovida, ainda não publicada). Duas estão em `main` do Loki
+(`d93a69cd`): #382 (correções do operador no reinício) e #385 (`folha-v33`).
+A #384 (férias pela CLT) está aprovada no essencial e ainda não mesclada; o
+texto foi conferido contra a cabeça `95827af6`. A #383 só mexe em testes e
+não entra. Cada texto novo vale quando a resposta servida mostrar o sinal do
+tema, e a orientação anterior fica como caminho sem ele:
+
+- #382: `corrections_carried` na resposta do `restart_case`;
+- #385: o motor `folha-v33` no cálculo da folha;
+- #384: `gozo_antecipado_source` no schema servido de `dados_ferias` (e
+  `ferias_recibo` no schema do cadastro).
+
+A mudança de interface é aditiva e sem ferramenta nova: campos novos na
+resposta do reinício (`corrections_carried`, `corrections_not_carried`), na
+memória do cálculo (`operator_corrections.carried`/`not_carried`), na revisão
+(`estado_no_calculo_corrente`, `notas_informativas`, `regras_clt`), no
+dossiê (`context_fields`), no contexto da folha (`payment_basis`), em
+`dados_ferias.gozo_antecipado_source` e em `empresas[].ferias_recibo`, além
+de códigos de recusa e pendência novos. As três PRs declaram
+`build_server().list_tools()` idêntico (96 ferramentas). Pela regra "mudou
+interface → novo contrato", o contrato sobe de 2.9.5 para 2.9.6, um patch;
+instruções e plugin acompanham em 2.9.6; provider sobe um patch. Mínimo 2.0.0
+permanece. A lista `compatible_tools` não muda.
+
+Divergências entre os rascunhos das PRs e o código, resolvidas pelo código:
+
+- #384: o rascunho cita `ferias_saldo_reservado_por_ferias_posteriores`, que
+  não existe no código; a recusa do conjunto é
+  `ferias_saldo_insuficiente_com_casos_irmaos`.
+- #384: o rascunho diz que os casos irmãos contam "em qualquer ordem de
+  cálculo"; o código (`counted_sibling`) conta só os irmãos calculados antes
+  (quem calcula primeiro vale). Na cabeça `95827af6`, o caso reiniciado ou
+  com dados novos ancora de novo no início da preparação corrente.
+- #384: o rascunho manda seguir `docs/Componentes_Ferias.md`, que é do
+  repositório do Loki e não chega à harness; o exemplo vai resumido no
+  domínio `ferias`. `component_consumption_incomplete` aponta o campo
+  `componentes_medias`; a leitura de `pendencias` em `get_case` não foi
+  confirmada e saiu do texto.
+- #384: as recusas da CLT apontam `historical_state` com a próxima ação
+  `get_case_historical_state`.
+- #385: o código também recusa `confirmed_vacation_calculation_stale` (caso
+  de férias sem cálculo corrente) e `loki_vacation_effect_reference_invalid`
+  (sem `case_id` ou `result_hash`), que o rascunho não lista.
+- #385: a declaração do Crédito do Trabalhador "com fonte da harness
+  (`EXTSRC-…`) e contratos com versão confirmada" não foi confirmada no
+  código e saiu; os códigos de rubrica do caso relatado também saíram (o
+  texto fala em código do Domínio da rubrica).
+- #385: a memória do VT fica em `fontes_insumos` da linha
+  (`base_percentual`, `linhas_de_salario`, `salario_do_mes_cents`).
+- #382: o rascunho não traz o estado `parcial`, a forma `{estado,
+  caminhos}`, `reaplicacao: aguardando_calculo_corrente`, os motivos de
+  `aposentada`, a regra do legado nem a revisão a preparar de novo; o texto
+  inclui todos.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.6)", que leva também os itens
+  da 2.9.5 (as duas chegam juntas): atualizar o plugin, recalcular as folhas
+  não entregues com `folha-v33` e preparar de novo a revisão que recusar
+  `pacote_mudou_desde_a_leitura`; sem Refresh. Sai "Continua da 2.9.4" (o
+  recálculo da v33 cobre o da v32). As seções "eSocial por empresa" e
+  "Preparação fiscal persistida" saem do `geral` (o mesmo texto já estava em
+  `alteracao_cadastral`) e ficam como uma remissão.
+- `folha_mensal`: "Motor folha-v33: recalcular as folhas não entregues" (VT
+  e salário-família do admitido, férias do Loki e INSS do mês inteiro no
+  contexto, dossiê, pensão do admitido, Crédito do Trabalhador) e "Correções
+  calculadas atravessam o reinício da folha"; remissões nas seções da v32,
+  que ficam como caminho sem o sinal.
+- `ferias`: "Afastamento e fracionamento pela CLT, gozo antecipado e recibo
+  por empresa (2.9.6)"; remissões no afastamento que não reduz férias, no
+  gozo antecipado do histórico e na tabela de recusas.
+- `afastamento`: CLT no aquisitivo e INSS do mês inteiro na folha.
+- `rescisao`: recusa com caso de férias antecipadas do Loki.
+- `alteracao_cadastral`: `empresas[CODIGO_DOMINIO].ferias_recibo`.
+
+Tamanho (limite 65.536 bytes): `geral` 62.206, `folha_mensal` 42.710,
+`ferias` 41.996; os demais abaixo de 39 KB.
+
+Plugin espelha em WORKFLOWS (seção "2.9.6: correções no reinício, folha v33 e
+férias pela CLT", com notas de substituição na 2.9.4 e 2.9.5),
+CAPACIDADES_DP, operar-loki e registrar-problema-loki.
+
+Não exige Refresh do conector: as 96 ferramentas são as mesmas. Os textos
+chegam com o deploy do backend. Wheel 0.4.30 permanece imutável; fonte e
+wheel 0.4.31 locais não comprovam promoção, publicação, atualização do plugin
+instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata 0.4.30 / contrato, instruções e plugin 2.9.5 — 21/11/2026
 

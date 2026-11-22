@@ -467,6 +467,12 @@ e seleção não comprovam consumo financeiro nem transmissão. Use somente a
 referência corrente quando o contrato consumidor a aceitar e confira seu resultado;
 não afirme cobertura de processos sem prova própria.
 
+Quando o schema do cadastro trouxer `empresas[].ferias_recibo`, a política do
+recibo de férias da empresa (divisor do mês civil e arredondamento verba a
+verba) segue o mesmo caminho, em `empresas[CODIGO_DOMINIO].ferias_recibo`, só
+quando a operadora disser que a empresa usa essa regra. Campos, vigência e
+efeitos no domínio `ferias` ("Divisor e arredondamento do recibo").
+
 
 ## Preparação fiscal persistida
 
