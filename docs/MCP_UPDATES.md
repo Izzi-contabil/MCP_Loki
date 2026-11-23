@@ -2,12 +2,12 @@
 
 ## Candidata 0.4.32 / contrato, instruções e plugin 2.9.7 — 23/11/2026
 
-Acompanha duas PRs do backend. A #387 (worker de cálculo sem concessão por
-empresa e teto de 5000 concessões) está em `main` do Loki e publicada
-(`5b8de2b3`). A #392 (pendências da diferença retroativa no dossiê) está
-aberta, ainda não mesclada; o texto foi conferido contra a cabeça `60160952`
-da branch `fix/dossie-pendencias-reajuste`. A #391 (holerite do consignado)
-não muda texto: nenhum domínio cita o `OverflowDeCelula` da verba do Crédito
+Acompanha PRs do backend, todas em `main` do Loki. A #387 (worker de cálculo
+sem concessão por empresa e teto de 5000 concessões) está publicada
+(`5b8de2b3`). A #392 (pendências da diferença retroativa no dossiê,
+`70709d1a`) e a #393 (pago declarado com várias `remuneracao_periodo`,
+`cefea294`) foram mescladas; o texto foi conferido contra `cefea294`. A #391
+(holerite do consignado, `0d2df471`) não muda texto: nenhum domínio cita o `OverflowDeCelula` da verba do Crédito
 do Trabalhador, e a operadora não envia a descrição. Cada texto novo vale
 quando a resposta servida mostrar o sinal:
 
@@ -48,13 +48,14 @@ Conferido no código:
   falha registrada (`salary_adjustment_reopen_invalid`). As regras de
   `quantidade` do pago declarado já valiam em `main`; a #392 só acrescenta o
   detalhe.
-- #393 (`fix/pago-declarado-varios-periodos`, empilhada sobre a #392, ainda
-  não mesclada, conferida na cabeça `a51d5b80`): várias verbas
+- #393 (`cefea294`): várias verbas
   `remuneracao_periodo` no mesmo mês do pago declarado são aceitas quando
   trazem a mesma quantidade e unidade (um só `periodo_remuneravel`); a regra
   `remuneracao_periodo_repetida` passa a
-  `remuneracao_periodo_quantidades_divergentes`. O texto vale quando o
-  `retroactive_detail` mostrar a regra nova; sem ela, uma por mês.
+  `remuneracao_periodo_quantidades_divergentes`, com `codigo_origem` (a verba
+  que diverge) e `codigo_periodo` (a que fixou o período). Códigos iguais
+  depois de `normalizar_codigo` (`8` e `008`) são repetidos. O texto vale
+  quando o `retroactive_detail` mostrar a regra nova; sem ela, uma por mês.
 
 Por domínio:
 
@@ -71,14 +72,14 @@ Por domínio:
   vigência nova e "Pendências da diferença no dossiê da folha".
 
 Tamanho (limite 65.536 bytes): `geral` 62.371, `folha_mensal` 42.403,
-`reajuste_salarial` 34.616; os demais não mudam.
+`reajuste_salarial` 34.808; os demais não mudam.
 
 Plugin espelha em WORKFLOWS (seção "2.9.7: worker sem concessão por empresa e
 pendências do reajuste no dossiê", com notas de substituição na 2.9.4 e 2.9.5),
 REAJUSTE_SALARIAL, CAPACIDADES_DP, operar-loki e registrar-problema-loki.
 
-Não exige Refresh do conector. Os textos chegam com o deploy do backend; a
-promoção ao Loki fica para depois da janela do worker. Wheel 0.4.31 permanece
+Não exige Refresh do conector. Os textos chegam com o deploy do backend,
+depois da promoção do wheel ao Loki. Wheel 0.4.31 permanece
 imutável; fonte e wheel 0.4.32 locais não comprovam promoção, publicação,
 atualização do plugin instalado, uso pela operadora ou aceite de DP.
 

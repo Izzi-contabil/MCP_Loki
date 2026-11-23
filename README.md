@@ -1,6 +1,7 @@
 # MCP Loki — contrato operacional 2.9.7
 Candidata **provider 0.4.32 / contrato, instruções e plugin 2.9.7**, 23/11/2026
-(backend #387 publicado em `5b8de2b3`; #392 e #393 abertas, ainda não mescladas):
+(backend #387 publicado em `5b8de2b3`; #392 `70709d1a`, #393 `cefea294` e
+#391 `0d2df471` em `main`):
 contrato aditivo, sem ferramenta nova e sem Refresh do conector. O worker de
 folha não precisa mais de concessão por empresa e ninguém o inclui; as recusas
 do worker vão à engenharia, e as rotinas com `@empresas-novas` seguem por

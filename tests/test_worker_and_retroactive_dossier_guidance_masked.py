@@ -1,4 +1,4 @@
-"""Entrega das orientações da 2.9.7 (backend #387 publicado e #392 aberta).
+"""Entrega das orientações da 2.9.7 (backend #387 publicado; #392 e #393 em main).
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
 """
@@ -69,6 +69,7 @@ DECLARED = (
     "Usar essa referência, ou quantidades ou unidades diferentes no mesmo mês, dá "
     "`diferenca_origem_invalida`",
     'mesmo com zeros à esquerda (por exemplo, "8" e "008")',
+    "em `codigo_periodo` a que fixou o período",
     "Sem esse sinal (servidor anterior, regra `remuneracao_periodo_repetida`), declare "
     "uma única por mês",
     "`formula_exige_quantidade`",
@@ -150,7 +151,7 @@ def test_versions_follow_the_additive_contract_patch() -> None:
     backend = release["changes"]["backend"][-1]
     assert backend.startswith("Contrato2.9.7 aditivo")
     assert "as 96 ferramentas são as mesmas" in backend
-    for marker in ("#387", "5b8de2b3", "#392", "60160952", "#393", "a51d5b80"):
+    for marker in ("#387", "5b8de2b3", "#392", "70709d1a", "#393", "cefea294"):
         assert marker in backend
     assert release["changes"]["instructions"][-1].startswith("Instruções2.9.7")
     assert release["changes"]["plugin"][-1].startswith("Plugin2.9.7")

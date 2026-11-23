@@ -236,8 +236,10 @@ holerite:
   mostra para a produtividade (por exemplo, "5,00"). Usar essa referência, ou
   quantidades ou unidades diferentes no mesmo mês, dá
   `diferenca_origem_invalida` (`remuneracao_periodo_quantidades_divergentes`).
-  Código de verba repetido no mesmo mês é recusado, mesmo com zeros à
-  esquerda (por exemplo, "8" e "008").
+  O detalhe traz em `codigo_origem` a verba que diverge e em `codigo_periodo`
+  a que fixou o período (a primeira declarada); a ordem não diz qual está
+  errada: confira as duas no holerite. Código de verba repetido no mesmo mês
+  é recusado, mesmo com zeros à esquerda (por exemplo, "8" e "008").
   Sem esse sinal (servidor anterior, regra `remuneracao_periodo_repetida`),
   declare uma única por mês.
 - Verbas proporcionais (as demais fórmulas que dependem de dias ou horas):
