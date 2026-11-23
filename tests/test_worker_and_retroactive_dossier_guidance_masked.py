@@ -61,8 +61,12 @@ DECLARED = (
     "**`quantidade` segue a fórmula do mapa da competência de origem**",
     "nunca envie `quantidade`, mesmo que o holerite mostre 30 dias",
     "`salario_base_nao_aceita_quantidade`",
+    "Quando o `retroactive_detail` mostrar a regra "
+    "`remuneracao_periodo_quantidades_divergentes`, pode haver mais de uma no mesmo mês",
+    "todas com a mesma `quantidade`, a do período pago no holerite",
+    "Quantidades ou unidades diferentes no mesmo mês dão `diferenca_origem_invalida`",
+    "Sem esse sinal (servidor anterior, regra `remuneracao_periodo_repetida`), declare "
     "uma única por mês",
-    "`remuneracao_periodo_repetida`",
     "`formula_exige_quantidade`",
     "`verba_proporcional_automatica`",
 )
@@ -142,7 +146,7 @@ def test_versions_follow_the_additive_contract_patch() -> None:
     backend = release["changes"]["backend"][-1]
     assert backend.startswith("Contrato2.9.7 aditivo")
     assert "as 96 ferramentas são as mesmas" in backend
-    for marker in ("#387", "5b8de2b3", "#392", "60160952", "ainda não mesclada"):
+    for marker in ("#387", "5b8de2b3", "#392", "60160952", "#393", "a51d5b80"):
         assert marker in backend
     assert release["changes"]["instructions"][-1].startswith("Instruções2.9.7")
     assert release["changes"]["plugin"][-1].startswith("Plugin2.9.7")

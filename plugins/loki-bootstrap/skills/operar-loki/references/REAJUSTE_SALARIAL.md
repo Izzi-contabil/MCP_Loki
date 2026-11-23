@@ -228,9 +228,15 @@ holerite:
   holerite mostre 30 dias. Com `quantidade`, o mês fica
   `diferenca_origem_invalida` (regra `salario_base_nao_aceita_quantidade`).
 - Verba com fórmula `remuneracao_periodo` (salário pelos dias do período):
-  `quantidade` obrigatória, na unidade do mapa, e uma única por mês. Duas no
-  mesmo mês dão `diferenca_origem_invalida`
-  (`remuneracao_periodo_repetida`).
+  `quantidade` obrigatória, na unidade do mapa. Quando o `retroactive_detail`
+  mostrar a regra `remuneracao_periodo_quantidades_divergentes`, pode haver
+  mais de uma no mesmo mês (o salário do período e uma produtividade ou
+  adicional com fator sobre ele): todas com a mesma `quantidade`, a do
+  período pago no holerite, porque o Loki revaloriza todas sobre o mesmo
+  período. Quantidades ou unidades diferentes no mesmo mês dão
+  `diferenca_origem_invalida` (`remuneracao_periodo_quantidades_divergentes`).
+  Sem esse sinal (servidor anterior, regra `remuneracao_periodo_repetida`),
+  declare uma única por mês.
 - Verbas proporcionais (as demais fórmulas que dependem de dias ou horas):
   `quantidade` obrigatória (`formula_exige_quantidade`). Verba proporcional
   automática do mapa não é revalorizada no pago declarado
@@ -431,7 +437,7 @@ quer dizer que o valor não tem a forma esperada e não foi copiado. No pago
 declarado, todas as verbas que falham são listadas, não só a primeira.
 
 - Regra de declaração (`salario_base_nao_aceita_quantidade`,
-  `formula_exige_quantidade`, `remuneracao_periodo_repetida`,
+  `formula_exige_quantidade`, `remuneracao_periodo_quantidades_divergentes`,
   `pago_declarado_fora_do_schema`, `pago_declarado_com_folha_do_loki`,
   `verba_proporcional_automatica`, as falhas de verba com `origem:
   declarada`): `retirar_efeito_no_caso_filho_e_relancar_reajuste_com_origem_corrigida`,

@@ -595,8 +595,10 @@ Valem somente quando `get_process_contract("reajuste_salarial")` servir
   instrumento e outra `reference` e envie só as linhas corrigidas em
   `linhas.<matricula>.origens_declaradas.<AAAA-MM>`.
 - Pago declarado: `quantidade` segue a fórmula do mapa da competência de
-  origem; nunca em `salario_base`, mesmo com 30 dias no holerite; uma única
-  `remuneracao_periodo` por mês; obrigatória nas proporcionais.
+  origem; nunca em `salario_base`, mesmo com 30 dias no holerite; obrigatória
+  nas proporcionais; várias `remuneracao_periodo` no mês só com a mesma
+  `quantidade` quando o detalhe mostrar
+  `remuneracao_periodo_quantidades_divergentes` (sem esse sinal, uma por mês).
 - Na folha X: `reajuste_coletivo_em_execucao` enquanto o lote não fecha,
   pendências `diferenca_*` por matrícula e a ressalva
   `diferenca_rescisao_complementar_pendente`, decidida pela DP no aceite das
@@ -933,8 +935,10 @@ instalado.
   `diferenca_retroativa` aparece no `envelope_schema` de
   `get_client_config.payroll_map_patch_transport`.
 - **Pago declarado (`reajuste_salarial`).** `quantidade` pela fórmula do mapa
-  da competência de origem; nunca em `salario_base`; uma única
-  `remuneracao_periodo` por mês; obrigatória nas proporcionais. Lote já
+  da competência de origem; nunca em `salario_base`; obrigatória nas
+  proporcionais; várias `remuneracao_periodo` no mês com a mesma `quantidade`
+  quando o detalhe mostrar `remuneracao_periodo_quantidades_divergentes` (sem
+  esse sinal, uma por mês). Lote já
   `APPLIED`: retirada no caso filho (`corrigir_dados`), novo
   `reajuste_salarial` com o mesmo instrumento e outra `reference`, só as
   linhas corrigidas.

@@ -48,6 +48,13 @@ Conferido no código:
   falha registrada (`salary_adjustment_reopen_invalid`). As regras de
   `quantidade` do pago declarado já valiam em `main`; a #392 só acrescenta o
   detalhe.
+- #393 (`fix/pago-declarado-varios-periodos`, empilhada sobre a #392, ainda
+  não mesclada, conferida na cabeça `a51d5b80`): várias verbas
+  `remuneracao_periodo` no mesmo mês do pago declarado são aceitas quando
+  trazem a mesma quantidade e unidade (um só `periodo_remuneravel`); a regra
+  `remuneracao_periodo_repetida` passa a
+  `remuneracao_periodo_quantidades_divergentes`. O texto vale quando o
+  `retroactive_detail` mostrar a regra nova; sem ela, uma por mês.
 
 Por domínio:
 
@@ -64,7 +71,7 @@ Por domínio:
   vigência nova e "Pendências da diferença no dossiê da folha".
 
 Tamanho (limite 65.536 bytes): `geral` 62.371, `folha_mensal` 42.403,
-`reajuste_salarial` 33.802; os demais não mudam.
+`reajuste_salarial` 34.282; os demais não mudam.
 
 Plugin espelha em WORKFLOWS (seção "2.9.7: worker sem concessão por empresa e
 pendências do reajuste no dossiê", com notas de substituição na 2.9.4 e 2.9.5),
