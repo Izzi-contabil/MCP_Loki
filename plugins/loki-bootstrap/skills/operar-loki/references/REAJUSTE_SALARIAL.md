@@ -233,8 +233,13 @@ holerite:
   mais de uma no mesmo mês (o salário do período e uma produtividade ou
   adicional com fator sobre ele): todas com a mesma `quantidade`, a do
   período pago no holerite, porque o Loki revaloriza todas sobre o mesmo
-  período. Quantidades ou unidades diferentes no mesmo mês dão
+  período. A `quantidade` é a do período em dias, a mesma para todas as
+  verbas do período (por exemplo, 30); não é a referência que o holerite
+  mostra para a produtividade (por exemplo, "5,00"). Usar essa referência, ou
+  quantidades ou unidades diferentes no mesmo mês, dá
   `diferenca_origem_invalida` (`remuneracao_periodo_quantidades_divergentes`).
+  Código de verba repetido no mesmo mês é recusado, mesmo com zeros à
+  esquerda (por exemplo, "8" e "008").
   Sem esse sinal (servidor anterior, regra `remuneracao_periodo_repetida`),
   declare uma única por mês.
 - Verbas proporcionais (as demais fórmulas que dependem de dias ou horas):

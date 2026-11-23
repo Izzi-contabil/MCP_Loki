@@ -71,7 +71,7 @@ Por domínio:
   vigência nova e "Pendências da diferença no dossiê da folha".
 
 Tamanho (limite 65.536 bytes): `geral` 62.371, `folha_mensal` 42.403,
-`reajuste_salarial` 34.282; os demais não mudam.
+`reajuste_salarial` 34.616; os demais não mudam.
 
 Plugin espelha em WORKFLOWS (seção "2.9.7: worker sem concessão por empresa e
 pendências do reajuste no dossiê", com notas de substituição na 2.9.4 e 2.9.5),

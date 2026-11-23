@@ -64,7 +64,11 @@ DECLARED = (
     "Quando o `retroactive_detail` mostrar a regra "
     "`remuneracao_periodo_quantidades_divergentes`, pode haver mais de uma no mesmo mês",
     "todas com a mesma `quantidade`, a do período pago no holerite",
-    "Quantidades ou unidades diferentes no mesmo mês dão `diferenca_origem_invalida`",
+    "A `quantidade` é a do período em dias, a mesma para todas as verbas do período "
+    "(por exemplo, 30); não é a referência que o holerite mostra para a produtividade",
+    "Usar essa referência, ou quantidades ou unidades diferentes no mesmo mês, dá "
+    "`diferenca_origem_invalida`",
+    'mesmo com zeros à esquerda (por exemplo, "8" e "008")',
     "Sem esse sinal (servidor anterior, regra `remuneracao_periodo_repetida`), declare "
     "uma única por mês",
     "`formula_exige_quantidade`",
