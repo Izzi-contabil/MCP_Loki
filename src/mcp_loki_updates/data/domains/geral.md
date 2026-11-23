@@ -1,46 +1,34 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.6)
+## O que mudou nesta versão (2.9.7)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
 chegar em partes: cada item vale quando a resposta servida mostrar o sinal
-indicado; sem o sinal, siga a orientação anterior do mesmo domínio. A 2.9.5 e
-a 2.9.6 chegam juntas: os itens das duas são novos para ela.
+indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 
 **Exige ação da operadora:**
 
 - Atualizar o plugin instalado (as skills mudaram). O plugin não bloqueia o
   uso: as instruções vêm do servidor. As 96 ferramentas são as mesmas: **não
-  exige Refresh do conector**. Só a conta técnica da rotina que receber
-  `carga_historica` passa a ver as ferramentas de onboarding; o Claude dessa
-  conta pode precisar de Refresh ou conversa nova para vê-las.
-- **Recalcular as folhas mensais não entregues** quando o cálculo mostrar o
-  motor `folha-v33`: conferir de novo e pedir novo aceite; o aceite anterior
-  não vale. Substitui o recálculo da `folha-v32` (`folha_mensal`).
-- **Preparar a revisão de novo** quando uma revisão preparada antes da
-  publicação recusar a decisão com `pacote_mudou_desde_a_leitura`: o recibo
-  ganhou `estado_no_calculo_corrente`. Chame `prepare_case_review`, mostre o
-  pacote e peça o aceite outra vez.
+  exige Refresh do conector**.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- Folha (`folha_mensal`): correções de valor calculado atravessam o reinício
-  com `replace_process_inputs` (`corrections_carried`); na `folha-v33`, VT e
-  salário-família do admitido, férias do Loki e INSS do mês inteiro no
-  contexto, consignado e pensão do admitido.
-- Férias, quando o schema servido de `dados_ferias` tiver
-  `gozo_antecipado_source`: afastamento no aquisitivo pela CLT, fracionamento
-  com casos irmãos, gozo antecipado calculado e divisor e arredondamento do
-  recibo por empresa (`ferias`, `afastamento`, `rescisao`).
-- Da 2.9.5: empresa nova recebida sozinha pelo worker e pelas rotinas com o
-  modelo `@empresas-novas`, e onboarding pela rotina com `carga_historica`
-  ("Empresa nova e onboarding pela rotina", abaixo); razão social do cadastro
-  e reabertura com `supersedes_case_id` (`admissao`); férias sobre o
-  histórico com `historical_state.vacation_rules` (`data_calculo`,
-  `sem_reducao`, gozo antecipado, abono fora do prazo); adoção da matrícula
-  do eSocial com `adocao_matricula_esocial` (`alteracao_cadastral`,
-  `folha_mensal`, `admissao`).
+- O worker de folha não precisa mais de concessão por empresa: ninguém inclui
+  empresa nele ("Empresa nova e onboarding pela rotina", abaixo). As rotinas
+  com o modelo `@empresas-novas` continuam recebendo a empresa nova sozinhas.
+- Reajuste (`reajuste_salarial`, `folha_mensal`): quando o dossiê da folha
+  trouxer `retroactive_actions`, as pendências `diferenca_*` aparecem em
+  `missing_fields` com a ação de cada código e o detalhe da regra
+  (`retroactive_detail`); a política `diferenca_retroativa` aparece no
+  `envelope_schema` do patch do mapa. Regras do pago declarado e da correção
+  de lote já aplicado no domínio `reajuste_salarial`.
+
+**Continua da 2.9.6**, se ainda não foi feito: recalcular, conferir e pedir
+novo aceite das folhas mensais não entregues calculadas antes da `folha-v33`
+(`folha_mensal`); preparar de novo a revisão que recusar
+`pacote_mudou_desde_a_leitura` (`prepare_case_review`).
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os
@@ -193,25 +181,44 @@ valide de novo e aplique com o `validation_hash` novo) estão no domínio
 ## Empresa nova e onboarding pela rotina
 
 Valem quando a resposta servida os apresentar. Empresa nova no Loki
-(`apply_client_config`, onboarding ou criação de caso) recebe sozinha, com
-auditoria (`access_auto_granted`): no worker de folha, `folha_mensal` com
-`consultar`/`operar_casos`; nas contas técnicas com o modelo
-`@empresas-novas`, os processos e as capacidades do modelo. Não é preciso
-fazer nada. Se o enqueue ainda recusar `worker_not_authorized` com
-`reason: "worker_company_grant_missing"` (empresa anterior à política sem
-backfill, worker suspenso ou credencial vencida), a pessoa owner (ou master)
-inclui a empresa pelo comando aditivo `prepare_authorization_addition` com o
-`required_grant` da recusa (domínio `folha_mensal`, fila durável, item 0).
-`preparar_autorizacao` substitui a lista inteira de concessões: nunca para
-incluir empresa no worker. Conta de automação não recebe empresa `*`
+(`apply_client_config`, onboarding ou criação de caso) é copiada sozinha, com
+auditoria (`access_auto_granted`), para as contas técnicas com o modelo
+`@empresas-novas`, com os processos e as capacidades do modelo. Não é preciso
+fazer nada.
+
+**Worker de folha.** O worker não precisa de concessão por empresa: ele só
+executa o job que uma pessoa ou rotina autorizada enfileirou, e o escopo de
+quem enfileirou é conferido no enqueue e em cada fase. Empresa nova não entra
+na conta do worker e ninguém a inclui: não use `prepare_authorization_addition`
+nem `preparar_autorizacao` para o worker. As concessões antigas dele continuam
+gravadas e não mudam nada. As recusas do worker não são da operadora nem da
+pessoa owner, e não gravam job (o mesmo `request_ref` serve depois):
+
+- `worker_not_authorized`: conta do worker suspensa ou com papel ou tipo
+  errado;
+- `worker_service_not_authorized`: credencial do worker revogada, vencida ou
+  conta diferente da configurada;
+- `worker_not_authorized` com `reason: "worker_company_grant_missing"`:
+  servidor anterior a esta regra. Não inclua a empresa no worker (o servidor
+  anterior recusa acima de 500 concessões).
+
+Nos três casos, registre o problema e avise a engenharia pelo Caixa. Com
+janela de publicação avisada, ninguém altera a conta do worker.
+
+**Rotinas (contas técnicas).** A conta da rotina continua precisando de
+concessão por empresa explícita. Conta de automação não recebe empresa `*`
 (`automacao_empresa_explicita_obrigatoria`) nem `decidir_chat`,
 `corrigir_dados`, `confirmar_admissao`, `configurar_cliente` ou
 `operar_shadow` (`automacao_capacidade_proibida`). Pode receber
 `carga_historica`, sempre por empresa explícita, e com ela opera o onboarding
 só daquela empresa (servidor anterior recusa). O modelo `@empresas-novas`
 entra pelo `preparar_autorizacao` da pessoa owner e não dá acesso a nada: só
-é copiado para cada empresa nova. Com janela de publicação avisada, espere ela
-terminar antes de alterar o worker.
+é copiado para cada empresa nova. Uma conta pode ter até 5000 concessões; o
+`preparar_autorizacao` substitui a lista inteira e aceita até 500 por pedido.
+Para acrescentar empresa a uma conta que já passou de 500, use o comando
+aditivo `prepare_authorization_addition` (`receive_case_data` com
+`case_id: "@connector"`), que conserva papel, status e as concessões atuais,
+e aplique com `aplicar_autorizacao`.
 
 **Onboarding pela rotina (conta técnica)**, só quando `meu_acesso` da conta
 mostrar `carga_historica` numa empresa e o catálogo trouxer as ferramentas de

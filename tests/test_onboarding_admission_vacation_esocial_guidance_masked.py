@@ -1,8 +1,9 @@
-"""Entrega das orientações da 2.9.5 (backend #376, #379, #378 e #372) que seguem na 2.9.6.
+"""Entrega das orientações da 2.9.5 (backend #376, #379, #378 e #372) que seguem na 2.9.7.
 
-O aviso, as versões e o limite de tamanho passaram à 2.9.6
-(`test_restart_payroll_v33_vacation_clt_guidance_masked.py`); os itens da 2.9.5
-continuam no aviso da 2.9.6, porque as duas chegam juntas.
+O aviso, as versões e o limite de tamanho passaram à 2.9.7
+(`test_worker_and_retroactive_dossier_guidance_masked.py`). A 2.9.5 já foi
+publicada: os itens dela saem do aviso. O worker de folha deixou de precisar de
+concessão por empresa na 2.9.7; aqui fica só o que segue valendo da rotina.
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
 """
@@ -19,23 +20,14 @@ CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
 DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
 SECTION_295 = "## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial"
 
-NOTICE = (
-    "Da 2.9.5:",
-    "`supersedes_case_id`",
-    "`historical_state.vacation_rules`",
-    "`adocao_matricula_esocial`",
-    "adoção da matrícula eSocial (usa os mesmos campos)",
-    "Só a conta técnica da rotina que receber `carga_historica` passa a ver as "
-    "ferramentas de onboarding; o Claude dessa conta pode precisar de Refresh ou "
-    "conversa nova para vê-las.",
-)
+NOTICE = ("adoção da matrícula eSocial (usa os mesmos campos)",)
 ONBOARDING = (
     "## Empresa nova e onboarding pela rotina",
     "`access_auto_granted`",
     "`@empresas-novas`",
     '`reason: "worker_company_grant_missing"`',
     "`prepare_authorization_addition`",
-    "`preparar_autorizacao` substitui a lista inteira de concessões",
+    "o `preparar_autorizacao` substitui a lista inteira e aceita até 500 por pedido",
     "`automacao_empresa_explicita_obrigatoria`",
     "`automacao_capacidade_proibida`",
     "Pode receber `carga_historica`, sempre por empresa explícita",
@@ -165,7 +157,6 @@ PAYROLL = (
     "**Empresa com pares cruzados**",
     "mande a população pela correção da população com o `funcionario_id` de cada item",
     "o item de `dados_folha` não tem CPF",
-    "Com a concessão automática, empresa nova já entra no worker sozinha",
 )
 
 
@@ -263,7 +254,7 @@ def test_plugin_mirrors_295_guidance() -> None:
     assert_all(
         workflows,
         (
-            "> Substituída em parte pela 2.9.5: empresa nova entra no worker sozinha",
+            "> Substituída em parte pela 2.9.5 e pela 2.9.7: o worker de folha não precisa",
             "Substituído pela 2.9.5 quando o contrato de onboarding citar",
             "Substituído em parte pela 2.9.5: com `supersedes_case_id`",
         ),

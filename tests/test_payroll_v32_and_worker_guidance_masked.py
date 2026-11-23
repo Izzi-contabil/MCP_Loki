@@ -110,13 +110,10 @@ def test_payroll_domain_carries_v32_guidance() -> None:
     assert_all(
         payroll,
         (
-            "**Empresa nova sem o worker.**",
-            "A pessoa owner (ou master) inclui pelo conector",
+            "**Worker de folha sem concessão por empresa.**",
             "registre o problema e avise a engenharia pelo Caixa",
             '`reason: "worker_company_grant_missing"`',
-            '"prepare_authorization_addition"',
-            "`aplicar_autorizacao`",
-            "Nunca use `preparar_autorizacao` para isso: ele substitui a lista inteira",
+            "Não use `prepare_authorization_addition` nem `preparar_autorizacao` para o worker",
         ),
     )
 
@@ -135,13 +132,12 @@ def test_plugin_mirrors_294_guidance() -> None:
             "só vale com decisão explícita da DP sobre a cota daquele caso",
             "Não ajuste `vigente_desde` para destravar",
             "o caminho exato da linha de VT vem em `operator_corrections` do cálculo",
-            "a pessoa owner (ou master) inclui a empresa",
+            "Substituído pela 2.9.7: o worker não precisa de concessão por empresa",
             "**Correção da v31 prevalece.**",
             "`salario_familia_mes_admissao_pendente_regra` não aparece mais",
             "`salario_familia_mes_transferencia_pendente_regra`",
             "`salario_familia_deducao_nao_classificada`",
             "`vale_transporte_proporcao_concessao_admissao_ambigua`",
-            "`prepare_authorization_addition`",
         ),
     )
     assert_all(

@@ -111,6 +111,7 @@ comando aditivo `prepare_authorization_addition`. Substitui o salário-família 
 o VT do admitido da 2.9.3. Não exigem Refresh; a operadora atualiza o plugin e
 recalcula as folhas. Substituída em parte pela 2.9.5: empresa nova no worker.
 Substituída em parte pela 2.9.6: VT e salário-família do admitido.
+Substituída em parte pela 2.9.7: o worker não precisa de concessão por empresa.
 Na 2.9.5 (“2.9.5: onboarding pela rotina, admissão, férias e matrícula do
 eSocial”), cada item quando a resposta servida mostrar o sinal: empresa nova
 recebe sozinha o acesso do worker e das rotinas com o modelo; a rotina com
@@ -120,7 +121,8 @@ férias, `dados_ferias.data_calculo` obrigatória em cálculo novo, `sem_reducao
 gozo antecipado e abono fora do prazo; a matrícula operacional passa a ser a
 do eSocial, adotada por um lote de onboarding por empresa. Não exigem Refresh;
 a operadora atualiza o plugin. Substituída em parte pela 2.9.6: gozo
-antecipado e afastamento no aquisitivo.
+antecipado e afastamento no aquisitivo. Substituída em parte pela 2.9.7:
+worker de folha.
 Na 2.9.6 (“2.9.6: correções no reinício, folha v33 e férias pela CLT”), que
 chega junto com a 2.9.5: com `folha-v33`, **as folhas mensais não entregues
 são recalculadas, conferidas e aceitas de novo** (VT e salário-família do
@@ -130,6 +132,18 @@ admitido); correções calculadas da DP atravessam o reinício
 preparada de novo; com `gozo_antecipado_source`, férias pela CLT
 (afastamento, fracionamento com casos irmãos, gozo antecipado) e recibo por
 empresa. Não exigem Refresh; a operadora atualiza o plugin.
+Na 2.9.7 (“2.9.7: worker sem concessão por empresa e pendências do reajuste
+no dossiê”), cada item quando a resposta servida mostrar o sinal: o worker de
+folha não precisa de concessão por empresa e ninguém o inclui em empresa
+(`worker_not_authorized`, `worker_company_grant_missing` e
+`worker_service_not_authorized` vão à engenharia pelo Caixa); as rotinas com
+`@empresas-novas` seguem recebendo a empresa nova, e a conta da rotina
+continua precisando de concessão por empresa; com `retroactive_actions` no
+dossiê, as pendências `diferenca_*` do reajuste trazem a ação por código e o
+detalhe por regra; no pago declarado, `quantidade` segue a fórmula do mapa da
+origem, e o lote já aplicado se corrige pela retirada no caso filho e um novo
+`reajuste_salarial` com outra `reference`. Não exigem Refresh; a operadora
+atualiza o plugin.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

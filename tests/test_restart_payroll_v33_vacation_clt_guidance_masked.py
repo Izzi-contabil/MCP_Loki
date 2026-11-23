@@ -1,9 +1,12 @@
-"""Entrega das orientações da 2.9.6 (backend #382, #385 e #384).
+"""Entrega das orientações da 2.9.6 (backend #382, #385 e #384) que seguem na 2.9.7.
+
+O aviso, as versões e o limite de tamanho por versão passaram à 2.9.7
+(`test_worker_and_retroactive_dossier_guidance_masked.py`); as ações da 2.9.6
+seguem em "Continua da 2.9.6".
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
 """
 
-import json
 from pathlib import Path
 
 from mcp_loki_updates import InstructionsProvider
@@ -18,20 +21,6 @@ RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 SECTION_296 = "## 2.9.6: correções no reinício, folha v33 e férias pela CLT"
 LIMIT = 65536
 
-NOTICE = (
-    "## O que mudou nesta versão (2.9.6)",
-    "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
-    "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
-    "A 2.9.5 e a 2.9.6 chegam juntas",
-    "Atualizar o plugin instalado",
-    "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
-    "**Recalcular as folhas mensais não entregues** quando o cálculo mostrar o motor `folha-v33`",
-    "**Preparar a revisão de novo**",
-    "`pacote_mudou_desde_a_leitura`",
-    "`prepare_case_review`",
-    "`corrections_carried`",
-    "`gozo_antecipado_source`",
-)
 STALE_GENERAL = (
     "## O que mudou nesta versão (2.9.5)",
     "Continua da 2.9.4",
@@ -163,38 +152,6 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
         assert flat(item) not in body, item
 
 
-def test_versions_follow_the_additive_contract_patch() -> None:
-    provider = InstructionsProvider()
-    metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.31"
-    assert metadata["instructions_version"] == "2.9.6"
-    assert metadata["mcp_contract_version"] == "2.9.6"
-    assert metadata["recommended_plugin_version"] == "2.9.6"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.4", "2.9.5", "2.9.6"):
-        assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.9.6", "2.9.7")["compatible"] is False
-    release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["compatible_tools"] == [
-        "loki_obter_instrucoes",
-        "loki_verificar_versao",
-    ]
-    backend = release["changes"]["backend"][-1]
-    assert backend.startswith("Contrato2.9.6 aditivo")
-    assert "as 96 ferramentas são as mesmas" in backend
-    for number in ("#382", "#385", "#384"):
-        assert number in backend
-    assert "#383" not in backend
-    assert "1e74e642" in backend
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.9.6")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.9.6")
-    for path in DOMAINS.glob("*.json"):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.9.6", path.name
-        assert data["updated_at"] == "2026-11-22", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.9.6", path.name
-
-
 def test_every_domain_stays_within_the_size_limit() -> None:
     provider = InstructionsProvider()
     for domain in provider.domains():
@@ -202,14 +159,18 @@ def test_every_domain_stays_within_the_size_limit() -> None:
         assert size <= LIMIT, (domain, size)
 
 
-def test_general_notice_is_conditional_and_needs_no_refresh() -> None:
+def test_general_notice_keeps_the_296_actions() -> None:
     guide = text("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.9.6)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
-    assert_all(notice, NOTICE)
-    current = notice[: notice.index("**Continua da 2.8.0**")]
-    assert current.index("**Exige ação da operadora:**") < current.index("**Não exige nada**")
-    assert current.index("**Não exige nada**") < current.index("Da 2.9.5:")
+    assert_all(
+        notice,
+        (
+            "**Continua da 2.9.6**",
+            "calculadas antes da `folha-v33`",
+            "`pacote_mudou_desde_a_leitura`",
+            "`prepare_case_review`",
+        ),
+    )
     assert_none(guide, STALE_GENERAL)
     assert_all(
         guide,

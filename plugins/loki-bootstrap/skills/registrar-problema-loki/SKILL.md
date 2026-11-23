@@ -149,9 +149,21 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
-Na 2.9.5 não são defeito: `worker_company_grant_missing` em empresa
-anterior à política (a pessoa owner inclui a empresa no worker); no
-onboarding pela rotina, a linha `pending` com
+Na 2.9.7, `worker_not_authorized` (com ou sem
+`worker_company_grant_missing`) e `worker_service_not_authorized` são problema
+a registrar e avisar à engenharia pelo Caixa: o worker de folha não precisa
+de concessão por empresa e ninguém o inclui; não peça à pessoa owner que
+inclua a empresa no worker. Não são defeito, quando o dossiê trouxer
+`retroactive_actions`: as pendências `diferenca_*` do reajuste com ação por
+código (siga a ação); `retroactive_detail` com
+`retroactive_detail_case_not_in_preparation` ou `retroactive_detail_busy`;
+`salary_adjustment_reopen_invalid` e `salary_adjustment_exclusion_invalid`
+em linha aplicada (corrija pela retirada no caso filho e novo lote).
+`registrar_problema` como ação da regra (origem fechada que não se reproduz,
+histórico inválido, folha de origem ilegível) e
+`retroactive_proof_not_recognized` são problema a relatar, com empresa,
+competência, `case_id` e o código, sem nome, CPF ou valores.
+Na 2.9.5 não são defeito: no onboarding pela rotina, a linha `pending` com
 `cadastro_da_empresa_exige_configurar_cliente` e a recusa do apply inteiro
 com `correcao_nominal_exige_corrigir_dados`,
 `restauracao_matricula_exige_corrigir_dados` ou
@@ -189,9 +201,8 @@ depois da troca para `folha-v32` (recalcule); as pendências
 pergunte à Rafa); divergência da equipe na contagem `30 − dia + 1` do mês de
 admissão (em confirmação com a DP); correção da v31 que prevalece sobre a cota
 nova (confira com a operadora). `salario_familia_salario_do_mes_nao_identificado`
-é problema do mapa da empresa: registre. `worker_not_authorized` com
-`worker_company_grant_missing` não é defeito: a pessoa owner inclui a empresa
-no worker.
+é problema do mapa da empresa: registre. `worker_not_authorized` segue a
+2.9.7.
 Na 2.9.3 não são defeito (o salário-família e o VT do admitido valem pela 2.9.4): folha mensal não entregue com `calculation_stale`
 depois da troca para `folha-v31` (recalcule); as pendências
 `salario_familia_mes_admissao_pendente_regra` (regra da DP, pergunte à Rafa),

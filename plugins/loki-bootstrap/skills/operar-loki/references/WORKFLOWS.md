@@ -589,11 +589,22 @@ Valem somente quando `get_process_contract("reajuste_salarial")` servir
   Linha com falha registrada sai pela reabertura
   (`loki.salary-adjustment-reopen/1`) ou pela exclusão
   (`loki.salary-adjustment-exclusion/1`); linha já aplicada sai pela
-  retirada no caso filho (`withdraw:true`).
+  retirada no caso filho (`withdraw:true`). Reabertura e exclusão não
+  corrigem linha `APPLIED`: para corrigir o pago declarado, retire o efeito
+  no caso filho (`corrigir_dados`), abra novo `reajuste_salarial` com o mesmo
+  instrumento e outra `reference` e envie só as linhas corrigidas em
+  `linhas.<matricula>.origens_declaradas.<AAAA-MM>`.
+- Pago declarado: `quantidade` segue a fórmula do mapa da competência de
+  origem; nunca em `salario_base`, mesmo com 30 dias no holerite; uma única
+  `remuneracao_periodo` por mês; obrigatória nas proporcionais.
 - Na folha X: `reajuste_coletivo_em_execucao` enquanto o lote não fecha,
   pendências `diferenca_*` por matrícula e a ressalva
   `diferenca_rescisao_complementar_pendente`, decidida pela DP no aceite das
-  ressalvas. Nunca zere uma pendência nem informe a diferença à mão.
+  ressalvas. Nunca zere uma pendência nem informe a diferença à mão. Com
+  `retroactive_actions` no dossiê, siga a ação de cada código e o
+  `retroactive_detail` (só com a folha em preparação). Política ausente:
+  `add` de vigência nova a partir da competência de lançamento, nunca
+  `replace` numa vigência que cubra mês de origem fechado.
 
 ## Fila da folha: um job pendente por empresa
 
@@ -652,6 +663,10 @@ domínio `folha_mensal`.
 - Um `EXTSRC` de outro caso não serve como fonte da folha.
 - `salario_base_ausente`: siga `next_action`; `code_next_action:
   "qualify_payroll_salary"` é a alternativa do código.
+- Com `retroactive_actions` na issue, `missing_fields` lista também as
+  pendências `diferenca_*` do reajuste, com a ação por código e o detalhe por
+  regra em `retroactive_detail`, `matches_calculation` e `retroactive_proof`
+  (domínio `reajuste_salarial`).
 - Restart com `replace_payroll_population`: o recibo traz `population_count` e
   `population_hash`; compare com o `population_hash` da prévia.
 - `payroll_population_dependencies_busy` (`retryable: true`, `dependency`):
@@ -890,6 +905,40 @@ atualizar o plugin instalado.
   `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
   problema.
 
+## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê
+
+O roteiro completo está em `geral`, `folha_mensal` e `reajuste_salarial` de
+`loki_obter_instrucoes`. Cada item vale quando a resposta servida mostrar o
+sinal indicado; sem ele, siga a orientação anterior. **Não exige Refresh do
+conector**: as 96 ferramentas são as mesmas. A operadora atualiza o plugin
+instalado.
+
+- **Worker de folha (`geral`, `folha_mensal`).** O worker não precisa de
+  concessão por empresa e ninguém o inclui em empresa: não use
+  `prepare_authorization_addition` nem `preparar_autorizacao` para ele.
+  `worker_not_authorized` (inclusive com `worker_company_grant_missing`, de
+  servidor anterior) e `worker_service_not_authorized` vão à engenharia pelo
+  Caixa; o mesmo `request_ref` serve depois. As rotinas com o modelo
+  `@empresas-novas` continuam recebendo a empresa nova, e a conta da rotina
+  (`carga_historica`) continua precisando de concessão por empresa. Teto de
+  5000 concessões por conta; `preparar_autorizacao` aceita até 500 e
+  substitui a lista inteira.
+- **Pendências do reajuste no dossiê (`reajuste_salarial`,
+  `folha_mensal`)**, quando a issue trouxer `retroactive_actions`: os
+  códigos `diferenca_*` em `missing_fields`, a ação por código
+  (`escolher_pela_regra_em_retroactive_detail` quando a regra decide) e
+  `retroactive_detail` (regra, `competencia`, `codigo_origem`, `origem`,
+  ação da regra, `matches_calculation`), lido só com a folha em preparação
+  (`retroactive_detail_case_not_in_preparation`). A política
+  `diferenca_retroativa` aparece no `envelope_schema` de
+  `get_client_config.payroll_map_patch_transport`.
+- **Pago declarado (`reajuste_salarial`).** `quantidade` pela fórmula do mapa
+  da competência de origem; nunca em `salario_base`; uma única
+  `remuneracao_periodo` por mês; obrigatória nas proporcionais. Lote já
+  `APPLIED`: retirada no caso filho (`corrigir_dados`), novo
+  `reajuste_salarial` com o mesmo instrumento e outra `reference`, só as
+  linhas corrigidas.
+
 ## 2.9.6: correções no reinício, folha v33 e férias pela CLT
 
 O roteiro completo está em `geral`, `folha_mensal`, `ferias`, `afastamento`,
@@ -941,6 +990,9 @@ ferramentas são as mesmas. A operadora atualiza o plugin instalado.
 
 ## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial
 
+> Substituída em parte pela 2.9.7: o worker de folha não recebe empresa nem
+> precisa de concessão; `worker_company_grant_missing` vai à engenharia.
+>
 > Substituída em parte pela 2.9.6: com `gozo_antecipado_source`, o gozo
 > antecipado é calculado no processo de férias e o afastamento no aquisitivo
 > segue a CLT.
@@ -953,12 +1005,9 @@ conector**: as 96 ferramentas são as mesmas. A operadora atualiza o plugin
 instalado. A conta técnica da rotina que receber `carga_historica` pode
 precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
 
-- **Empresa nova (`geral`).** Empresa criada no Loki recebe sozinha, com
-  auditoria (`access_auto_granted`), o grant do worker de folha e o modelo
-  `@empresas-novas` das rotinas. `worker_not_authorized` com
-  `worker_company_grant_missing` ainda pode aparecer (empresa anterior sem
-  backfill, worker suspenso): siga o `prepare_authorization_addition` do item
-  0 da fila durável em `folha_mensal`.
+- **Empresa nova (`geral`).** Empresa criada no Loki é copiada sozinha, com
+  auditoria (`access_auto_granted`), para as rotinas com o modelo
+  `@empresas-novas`. O worker de folha segue a seção 2.9.7.
 - **Onboarding pela rotina (`geral`).** Com `carga_historica` numa empresa
   em `meu_acesso`, a conta técnica faz `create_company_onboarding`, fontes,
   declarações, `validate_company_onboarding` e `apply_company_onboarding` só
@@ -1020,9 +1069,9 @@ precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
 > Substituída em parte pela 2.9.6: com `folha-v33`, VT e salário-família do
 > admitido seguem a seção 2.9.6.
 >
-> Substituída em parte pela 2.9.5: empresa nova entra no worker sozinha; o
-> `prepare_authorization_addition` fica para a recusa
-> `worker_company_grant_missing`.
+> Substituída em parte pela 2.9.5 e pela 2.9.7: o worker de folha não precisa
+> de concessão por empresa e ninguém o inclui; a recusa
+> `worker_company_grant_missing` vai à engenharia (seção 2.9.7).
 
 Vale somente quando a resposta servida e o contrato o apresentarem; o roteiro
 completo está em `folha_mensal` e `geral` de `loki_obter_instrucoes`. **Não
@@ -1063,12 +1112,9 @@ de salário-família e de VT do admitido da 2.9.3.
   `funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents` (o caminho exato da linha de VT vem em `operator_corrections` do cálculo).
   Transferência: `vale_transporte_mes_transferencia_pendente_regra`.
   Afastamento e desligamento no mês: sem mudança.
-- **Empresa nova no worker (`geral`).** `worker_not_authorized` com
-  `reason: "worker_company_grant_missing"`: a pessoa owner (ou master) inclui a empresa na
-  conta do worker pelo comando aditivo `prepare_authorization_addition`
-  (`receive_case_data` com `case_id: "@connector"`) e aplica com
-  `aplicar_autorizacao`; depois repita o mesmo enqueue. Nunca use
-  `preparar_autorizacao` para isso: ele substitui a lista inteira.
+- **Empresa nova no worker (`geral`).** Substituído pela 2.9.7: o worker não
+  precisa de concessão por empresa; `worker_not_authorized` com
+  `reason: "worker_company_grant_missing"` vai à engenharia pelo Caixa.
 
 ## 2.9.3: folha v31 (salário-família e insalubridade) e simulação com o estado atual
 

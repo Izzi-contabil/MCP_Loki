@@ -321,6 +321,24 @@ casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê
+
+Cada item vale quando a resposta servida mostrar o sinal. O worker de folha
+não precisa de concessão por empresa: ninguém o inclui em empresa, e as
+recusas `worker_not_authorized` (inclusive `worker_company_grant_missing`, de
+servidor anterior) e `worker_service_not_authorized` vão à engenharia pelo
+Caixa. As rotinas com o modelo `@empresas-novas` continuam recebendo a
+empresa nova, e a conta da rotina continua precisando de concessão por
+empresa; o teto é de 5000 concessões por conta. Com `retroactive_actions` no
+dossiê da folha, as pendências `diferenca_*` do reajuste aparecem em
+`missing_fields` com a ação por código e o detalhe por regra
+(`retroactive_detail`, só com a folha em preparação). No pago declarado,
+`quantidade` segue a fórmula do mapa da competência de origem; o lote já
+aplicado se corrige pela retirada no caso filho e um novo `reajuste_salarial`
+com outra `reference`. Nada disso exige Refresh do conector; a operadora
+atualiza o plugin. Roteiro em “2.9.7: worker sem concessão por empresa e
+pendências do reajuste no dossiê” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## 2.9.6: correções no reinício, folha v33 e férias pela CLT
 
 Chega junto com a 2.9.5; cada item vale quando a resposta servida mostrar o
@@ -346,8 +364,8 @@ em “2.9.6: correções no reinício, folha v33 e férias pela CLT” de
 Cada item vale quando a resposta servida mostrar o sinal indicado; o Loki
 pode chegar em partes. Empresa nova recebe sozinha o acesso do worker de
 folha e das rotinas com o modelo `@empresas-novas`
-(`access_auto_granted`); `prepare_authorization_addition` fica para a recusa
-`worker_company_grant_missing`. A rotina com `carga_historica` numa empresa
+(`access_auto_granted`); na 2.9.7 o worker deixa de precisar de concessão por
+empresa (seção 2.9.7). A rotina com `carga_historica` numa empresa
 faz o onboarding dela; cadastro, adoção ou restauração de matrícula e
 decisões continuam exigindo pessoa. `cadastro_da_empresa_exige_configurar_cliente`
 deixa a linha `pending`; `correcao_nominal_exige_corrigir_dados`,
@@ -370,6 +388,7 @@ operadora só atualiza o plugin. A conta da rotina pode precisar de conversa
 nova para ver as ferramentas de onboarding. Roteiro em “2.9.5: onboarding pela
 rotina, admissão, férias e matrícula do eSocial” de [WORKFLOWS.md](WORKFLOWS.md).
 Substituída em parte pela 2.9.6: gozo antecipado e afastamento no aquisitivo.
+Substituída em parte pela 2.9.7: worker de folha.
 
 ## 2.9.4: folha v32, VT do admitido e empresa nova no worker
 
@@ -394,7 +413,8 @@ pela pessoa owner (ou master). Nada disso exige Refresh; a operadora atualiza o 
 recalcula as folhas. Roteiro em “2.9.4: folha v32 (salário-família, VT do
 admitido) e empresa nova no worker” de [WORKFLOWS.md](WORKFLOWS.md). Substituída em parte pela 2.9.5: empresa
 nova no worker. Substituída em parte pela 2.9.6: VT e salário-família do
-admitido na `folha-v33`.
+admitido na `folha-v33`. Substituída em parte pela 2.9.7: o worker não
+precisa de concessão por empresa.
 
 ## 2.9.3: folha v31 e simulação com o estado atual
 

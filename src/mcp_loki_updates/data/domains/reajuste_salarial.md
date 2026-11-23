@@ -150,10 +150,12 @@ nele, casos filhos e marcadores de conferência sem efeito podem existir
     de `alteracao_cadastral`.
 - Linha já aplicada sai pela retirada no caso filho: `apply_case_effects` no
   caso filho com `withdraw:true`. No caso coletivo, a retirada é recusada
-  (`salary_adjustment_withdraw_per_employee`). Para corrigir uma pessoa já
-  aplicada, retire o efeito no caso filho e abra um caso coletivo com nova
-  referência do instrumento; o mesmo instrumento não é reaplicado à pessoa
-  (`reajuste_retroativo_ja_lancado_na_competencia`).
+  (`salary_adjustment_withdraw_per_employee`). A reabertura vale só para
+  linha com falha registrada (`salary_adjustment_reopen_invalid`) e a
+  exclusão recusa linha aplicada (`salary_adjustment_exclusion_invalid`):
+  nenhuma das duas corrige linha `APPLIED`. Para corrigir uma pessoa já
+  aplicada (por exemplo, o pago declarado de um mês), veja "Corrigir o pago
+  declarado de lote já aplicado".
 - `caso_filho_cancelado`: o caso filho foi cancelado e não é reaproveitado;
   exclua a linha ou declare outro instrumento.
 - Os casos filhos são `alteracao_cadastral` com `occurrence_ref` iniciado por
@@ -216,6 +218,47 @@ fica de fora; veja abaixo).
 - Mês com folha do Loki não leva declaração (`origem_declarada_com_folha_do_loki`;
   na folha, `diferenca_origem_invalida`). Mês fora do intervalo da pessoa
   recusa a linha (`origem_declarada_fora_do_intervalo`).
+
+**`quantidade` segue a fórmula do mapa da competência de origem**, não o
+holerite:
+
+- Verba com fórmula `salario_base`: nunca envie `quantidade`, mesmo que o
+  holerite mostre 30 dias. Com `quantidade`, o mês fica
+  `diferenca_origem_invalida` (regra `salario_base_nao_aceita_quantidade`).
+- Verba com fórmula `remuneracao_periodo` (salário pelos dias do período):
+  `quantidade` obrigatória, na unidade do mapa, e uma única por mês. Duas no
+  mesmo mês dão `diferenca_origem_invalida`
+  (`remuneracao_periodo_repetida`).
+- Verbas proporcionais (as demais fórmulas que dependem de dias ou horas):
+  `quantidade` obrigatória (`formula_exige_quantidade`). Verba proporcional
+  automática do mapa não é revalorizada no pago declarado
+  (`diferenca_revalorizacao_pendente`, `verba_proporcional_automatica`).
+- Na dúvida sobre a fórmula de uma verba, leia o mapa da competência de
+  origem em `get_client_config`; não deduza pelo holerite.
+
+## Corrigir o pago declarado de lote já aplicado
+
+Depois de `APPLIED`, a seção do lote não muda
+(`salary_adjustment_input_changed_after_decision`), a reabertura só vale para
+linha com falha e a exclusão recusa linha aplicada. Para corrigir o pago
+declarado (ou a linha) de quem já tem o efeito aplicado, com a confirmação da
+operadora:
+
+1. Retire o efeito: `apply_case_effects` no caso filho `alteracao_cadastral`
+   da matrícula (`occurrence_ref` iniciado por `reajuste:`), com
+   `withdraw: true` e `supersedes_effect_id`; exige `corrigir_dados`.
+2. Abra um novo caso `reajuste_salarial` com o mesmo instrumento (mesmo tipo,
+   data-base, regra e competência de lançamento) e outra `reference`, em
+   `occurrence_ref` e em `dados_reajuste_salarial.instrumento.reference`. A
+   mesma referência recusa a pessoa
+   (`reajuste_retroativo_ja_lancado_na_competencia`).
+3. Envie só as linhas corrigidas, com o pago em
+   `linhas.<matricula>.origens_declaradas.<AAAA-MM>`, e siga o passo a passo
+   (prévia, aceite, `apply_case_effects`). A folha X não pode estar em
+   `aguardando_revisao`, `aprovado` ou `publicado`
+   (`preview.blocking_payroll`).
+
+Depois, recalcule a folha X e releia o dossiê.
 
 ## Salário fora da regra: motivos fechados
 
@@ -344,13 +387,69 @@ a folha X mostra a ressalva `diferenca_rescisao_complementar_pendente`.
   `diferenca_reajustes_sobrepostos` e `diferenca_retroativa_nao_positiva`;
   também `politica_diferenca_retroativa_ausente` e
   `instrumento_reajuste_divergente`. A diferença dessas pessoas não entra.
-  Leve as pendências à DP; nunca as zere nem informe a diferença à mão em
-  `dados_folha` (recusa `retroactive_difference_informed`).
+  Siga a ação de cada código no dossiê ("Pendências da diferença no dossiê
+  da folha"); o que for decisão leve à DP, e nunca as zere nem informe a
+  diferença à mão em `dados_folha` (recusa `retroactive_difference_informed`).
 - A verba 19 e a política `diferenca_retroativa` do mapa (INSS, FGTS e IRRF
   em `competencia_pagamento`) entram numa vigência nova do mapa a partir de
   X. Editar a vigência que cobre um mês já fechado muda o hash e deixa a
   diferença em `diferenca_mapa_origem_divergente`. A verba 19 fica fora das
-  médias de férias e 13º.
+  médias de férias e 13º. Com a política ausente
+  (`politica_diferenca_retroativa_ausente`), faça um `add` de vigência nova
+  com `vigente_desde` no dia 1 da competência de lançamento, pelo
+  `loki.company-payroll-map-patch/1` (`validate_client_config` e
+  `apply_client_config`, em `entry.mapa.diferenca_retroativa` e
+  `entry.mapa.mappings`); nunca um `replace` numa vigência que cubra mês de
+  origem fechado. Quando o `envelope_schema` de
+  `get_client_config.payroll_map_patch_transport` trouxer
+  `diferenca_retroativa` em `MapaFolha`, monte a política por ele.
+
+## Pendências da diferença no dossiê da folha
+
+Vale quando a issue `contexto_operacional_pendente` de
+`get_case_dossier(case_id)` (`calculations[].diagnostics`) trouxer
+`retroactive_actions`. Os códigos acima aparecem em `missing_fields`, e
+`retroactive_actions` traz uma ação por código: `code`, `next_action` e,
+quando há, `next_operation`, `fields`, `steps` ou `alternatives`.
+`diferenca_funcionario_fora_da_folha` não tem ação própria: inclua a pessoa
+na folha ou registre o desligamento. Quando a ação é
+`escolher_pela_regra_em_retroactive_detail` (`diferenca_origem_invalida`,
+`diferenca_revalorizacao_pendente`, `diferenca_pago_divergente`), a regra do
+detalhe decide.
+
+`retroactive_detail` é uma leitura atual, sem valores, e só é feita com a
+folha em preparação. Fora dela vem `available: false` com
+`retroactive_detail_case_not_in_preparation`; com o caso ocupado,
+`retroactive_detail_busy` (tente de novo); sem leitura possível,
+`retroactive_detail_unavailable`. Com `available: true`, cada item traz
+`codigo`, `regra`, `competencia`, `origem` (`declarada` ou
+`folha_loki_fechada`), `codigo_origem` e `formula` quando há, e a ação da
+regra. `codigo_origem_available: false` (ou outro `*_available: false`)
+quer dizer que o valor não tem a forma esperada e não foi copiado. No pago
+declarado, todas as verbas que falham são listadas, não só a primeira.
+
+- Regra de declaração (`salario_base_nao_aceita_quantidade`,
+  `formula_exige_quantidade`, `remuneracao_periodo_repetida`,
+  `pago_declarado_fora_do_schema`, `pago_declarado_com_folha_do_loki`,
+  `verba_proporcional_automatica`, as falhas de verba com `origem:
+  declarada`): `retirar_efeito_no_caso_filho_e_relancar_reajuste_com_origem_corrigida`,
+  com os três passos de "Corrigir o pago declarado de lote já aplicado".
+- `verba_fora_do_mapa_da_competencia` com `origem: declarada`: o mesmo
+  relançamento, ou incluir a verba na vigência do mapa da origem, só para
+  mês sem folha do Loki fechada.
+- Origem fechada no Loki que não se reproduz, histórico inválido ou folha de
+  origem ilegível: `registrar_problema`. Nunca edite o mapa de um mês
+  fechado.
+- Política ausente: o `add` de vigência nova descrito acima, nunca `replace`.
+- Mapa da origem divergente: restaurar a vigência original ou abrir uma
+  vigência que comece depois dos meses de origem.
+
+`retroactive_proof` traz o hash da prova gravada de cada efeito no cálculo,
+e `matches_calculation` diz se a leitura atual ainda bate com ela. Com
+`matches_calculation: false`, o detalhe já não descreve o cálculo gravado
+(efeito, mapa ou origem mudaram depois): recalcule a folha antes de agir.
+`retroactive_proof_not_recognized`: registre o problema. O detalhe não muda
+o cálculo nem o hash da folha.
 - O reajuste é por competência: o mês da vigência inteiro leva o salário
   novo, qualquer que seja o dia da data-base. Competências de ano anterior a
   X entram na verba 19 de X e são tributadas em X, como as demais (sem RRA).
