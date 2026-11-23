@@ -111,6 +111,12 @@ caso cancelado ou rejeitado.
 **Dossiê da folha.** `missing_fields` lista todas as causas do contexto do
 mês, e `context_fields` (com `context_fields_complete`) diz quais campos de
 entrada faltam, por exemplo `ferias`, `pagamentos_ferias` ou `periodos`.
+Quando a issue trouxer `retroactive_actions`, `missing_fields` também lista
+as pendências da diferença retroativa do reajuste (`diferenca_*`,
+`politica_diferenca_retroativa_ausente`, `instrumento_reajuste_divergente`),
+que não tornam `context_fields_complete` falso. A ação de cada código e o
+detalhe por regra (`retroactive_detail`) estão no domínio `reajuste_salarial`,
+"Pendências da diferença no dossiê da folha".
 Motivos dos lançamentos não lidos:
 
 - `payroll_case_workflow_running`: o job do caso está na fila ou rodando;
@@ -356,33 +362,15 @@ Com `folha-v33` no cálculo, a base e a saída sem linha de salário mudam
 
 ## Fila durável: um job pendente por empresa
 
-0. **Empresa nova sem o worker.** Com a concessão automática, empresa nova
-   já entra no worker sozinha (domínio `geral`, "Empresa nova e onboarding
-   pela rotina"). `worker_not_authorized` com
-   `reason: "worker_company_grant_missing"` ainda aparece em empresa anterior
-   à política sem backfill, worker suspenso ou credencial vencida, e em
-   servidor anterior; o caminho é o mesmo. A pessoa owner (ou master)
-   inclui pelo conector, sem pedir à engenharia:
-   1. `listar_solicitacoes_acesso`: localize a conta e anote `id` e
-      `revision`. A recusa já traz `worker_account_id` e
-      `worker_account_revision` para owner/master
-      (`next_action: "listar_solicitacoes_acesso"`); para os demais vem
-      `next_action: "ask_administrator"`: peça à pessoa owner.
-   2. Prepare só o acréscimo: `receive_case_data` com `case_id: "@connector"`
-      e `request: {schema_version: "loki.connector-command/1", operation:
-      "prepare_authorization_addition", account_id, expected_revision,
-      grants}`. Em `grants`, só as empresas que faltam, cada uma com o
-      `required_grant` da recusa (`processes: ["folha_mensal"]`,
-      `capabilities: ["consultar", "operar_casos"]`). O Loki conserva papel,
-      status e as concessões atuais. Nunca use `preparar_autorizacao` para
-      isso: ele substitui a lista inteira.
-   3. Mostre o antes/depois e aplique com `aplicar_autorizacao`, com a
-      confirmação literal da pessoa owner.
-   4. Repita o mesmo enqueue: a recusa não grava job, então o mesmo
-      `request_ref` serve.
-
-   Sem esse `reason`, é outro problema: registre o problema e avise a
-   engenharia pelo Caixa.
+0. **Worker de folha sem concessão por empresa.** O worker não precisa de
+   concessão na empresa da folha e ninguém o inclui nela (domínio `geral`,
+   "Empresa nova e onboarding pela rotina"). Não use
+   `prepare_authorization_addition` nem `preparar_autorizacao` para o worker.
+   `worker_not_authorized` (com ou sem `reason:
+   "worker_company_grant_missing"`, este de servidor anterior) e
+   `worker_service_not_authorized` não gravam job e não são da operadora:
+   registre o problema e avise a engenharia pelo Caixa. Depois da correção,
+   repita o mesmo enqueue com o mesmo `request_ref`.
 1. **Uma folha por empresa na fila.** O Loki aceita um único job pendente
    (`queued` ou `running`) por empresa. O contrato anuncia isso em
    `durable_workflow.admission: "one_pending_job_per_company"`. Se outro caso

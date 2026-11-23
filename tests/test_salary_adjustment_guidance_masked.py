@@ -138,16 +138,16 @@ def domain() -> str:
 def test_collective_domain_is_served_with_the_new_contract() -> None:
     provider = InstructionsProvider()
     guide = provider.get("reajuste_salarial")
-    assert guide["version"] == "2.9.6"
-    assert guide["compatibility"]["mcp_contract_version"] == "2.9.6"
+    assert guide["version"] == "2.9.7"
+    assert guide["compatibility"]["mcp_contract_version"] == "2.9.7"
     assert guide["permissions"] == {
         "capabilities": ["consultar"],
         "processes": ["reajuste_salarial"],
     }
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.31"
-    assert metadata["instructions_version"] == "2.9.6"
-    assert metadata["mcp_contract_version"] == "2.9.6"
+    assert metadata["provider_version"] == "0.4.32"
+    assert metadata["instructions_version"] == "2.9.7"
+    assert metadata["mcp_contract_version"] == "2.9.7"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -162,6 +162,7 @@ def test_collective_domain_is_served_with_the_new_contract() -> None:
         "2.9.4",
         "2.9.5",
         "2.9.6",
+        "2.9.7",
     ):
         assert provider.check_version(version, version)["compatible"] is True
 
@@ -202,7 +203,8 @@ def test_domain_explains_flow_authority_exits_and_pending_decisions() -> None:
         "não peça nova decisão",
         "`tentativas_transitorias_esgotadas`",
         "`reajuste_retroativo_ja_lancado_na_competencia`",
-        "nova referência do instrumento",
+        "com o mesmo instrumento (mesmo tipo,",
+        "outra `reference`",
         "`enqueue_case_workflow`",
         "verba 19",
     ):

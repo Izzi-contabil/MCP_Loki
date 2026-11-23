@@ -1,4 +1,87 @@
-# Atualizações MCP Loki — contrato 2.9.6
+# Atualizações MCP Loki — contrato 2.9.7
+
+## Candidata 0.4.32 / contrato, instruções e plugin 2.9.7 — 23/11/2026
+
+Acompanha PRs do backend, todas em `main` do Loki. A #387 (worker de cálculo
+sem concessão por empresa e teto de 5000 concessões) está publicada
+(`5b8de2b3`). A #392 (pendências da diferença retroativa no dossiê,
+`70709d1a`) e a #393 (pago declarado com várias `remuneracao_periodo`,
+`cefea294`) foram mescladas; o texto foi conferido contra `cefea294`. A #391
+(holerite do consignado, `0d2df471`) não muda texto: nenhum domínio cita o `OverflowDeCelula` da verba do Crédito
+do Trabalhador, e a operadora não envia a descrição. Cada texto novo vale
+quando a resposta servida mostrar o sinal:
+
+- #387: não há sinal positivo; a recusa `worker_not_authorized` deixa de
+  trazer `reason: "worker_company_grant_missing"`. Com o servidor anterior, a
+  recusa com esse `reason` vai à engenharia: o servidor anterior recusa
+  incluir a empresa no worker acima de 500 concessões, e o worker já está
+  nesse teto.
+- #392: `retroactive_actions` na issue `contexto_operacional_pendente` do
+  dossiê; `diferenca_retroativa` em `MapaFolha` do `envelope_schema` de
+  `get_client_config.payroll_map_patch_transport`.
+
+A mudança de interface é aditiva e sem ferramenta nova: campos que saem da
+recusa do worker (`required_grant`, `authorization_addition`,
+`worker_account_id`, `worker_account_revision`), o teto de
+`prepare_authorization_addition` (`access.Proposal`, 5000) e, na #392, campos
+novos no dossiê (`retroactive_actions`, `retroactive_proof`,
+`retroactive_detail`) e a política no schema servido do patch do mapa. As duas
+PRs não tocam `src/loki/mcp_server`: as 96 ferramentas são as mesmas. Pela
+regra "mudou interface → novo contrato", o contrato sobe de 2.9.6 para 2.9.7,
+um patch; instruções e plugin acompanham em 2.9.7; provider sobe um patch.
+Mínimo 2.0.0 permanece. A lista `compatible_tools` não muda.
+
+Conferido no código:
+
+- #387: o worker exige só identidade (conta `automacao` ativa, papel
+  operator, igual a `CASE_JOB_WORKER_ID`); `worker_service_not_authorized`
+  para cliente revogado, vencido ou conta diferente. O escopo de empresa e
+  processo é o de quem enfileirou. `legacy_authorization.Proposal`
+  (`preparar_autorizacao`) e `service_auth` seguem com 500 por pedido; o
+  texto só cita 5000 para a conta e o `prepare_authorization_addition`.
+- #392: `diferenca_funcionario_fora_da_folha` entra em `missing_fields`, mas
+  não tem ação em `CODE_ACTIONS`; o texto dá a saída que já existia.
+- Correção de lote aplicado: `instrument_id` é empresa, tipo e `reference`,
+  então outra `reference` é outro instrumento e não cai em
+  `reajuste_retroativo_ja_lancado_na_competencia`; a exclusão recusa linha
+  `APPLIED` (`salary_adjustment_exclusion_invalid`) e a reabertura exige
+  falha registrada (`salary_adjustment_reopen_invalid`). As regras de
+  `quantidade` do pago declarado já valiam em `main`; a #392 só acrescenta o
+  detalhe.
+- #393 (`cefea294`): várias verbas
+  `remuneracao_periodo` no mesmo mês do pago declarado são aceitas quando
+  trazem a mesma quantidade e unidade (um só `periodo_remuneravel`); a regra
+  `remuneracao_periodo_repetida` passa a
+  `remuneracao_periodo_quantidades_divergentes`, com `codigo_origem` (a verba
+  que diverge) e `codigo_periodo` (a que fixou o período). Códigos iguais
+  depois de `normalizar_codigo` (`8` e `008`) são repetidos. O texto vale
+  quando o `retroactive_detail` mostrar a regra nova; sem ela, uma por mês.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.7)" (só atualizar o plugin;
+  sem Refresh) e "Continua da 2.9.6" (recálculo das folhas anteriores à
+  `folha-v33` e revisão preparada de novo); os itens da 2.9.5, já publicada,
+  saem do aviso. "Empresa nova e onboarding pela rotina" reescrita: worker
+  sem concessão, recusas do worker à engenharia, rotina por empresa
+  explícita, teto de 5000.
+- `folha_mensal`: item 0 da fila durável reescrito; o dossiê remete às
+  pendências da diferença.
+- `reajuste_salarial`: `quantidade` pela fórmula do mapa da origem, "Corrigir
+  o pago declarado de lote já aplicado", política ausente por `add` de
+  vigência nova e "Pendências da diferença no dossiê da folha".
+
+Tamanho (limite 65.536 bytes): `geral` 62.371, `folha_mensal` 42.403,
+`reajuste_salarial` 34.808; os demais não mudam.
+
+Plugin espelha em WORKFLOWS (seção "2.9.7: worker sem concessão por empresa e
+pendências do reajuste no dossiê", com notas de substituição na 2.9.4 e 2.9.5),
+REAJUSTE_SALARIAL, CAPACIDADES_DP, operar-loki e registrar-problema-loki.
+
+Não exige Refresh do conector. Os textos chegam com o deploy do backend,
+depois da promoção do wheel ao Loki. Wheel 0.4.31 permanece
+imutável; fonte e wheel 0.4.32 locais não comprovam promoção, publicação,
+atualização do plugin instalado, uso pela operadora ou aceite de DP.
 
 ## Candidata 0.4.31 / contrato, instruções e plugin 2.9.6 — 22/11/2026
 
