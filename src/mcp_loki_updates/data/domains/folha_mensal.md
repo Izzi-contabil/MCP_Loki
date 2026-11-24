@@ -233,7 +233,7 @@ para isso.
   `restart_case` não está no `execute_operational_batch`; são uma chamada por
   caso e um enqueue por empresa. Enquanto o servidor aceitava o enqueue em
   revisão, o job nascia e terminava em `job_preparation_failed`. Com a
-  correção do backend (#410, aberta), o
+  correção do backend (#410, mesclada), o
   enqueue recusa na hora, sem criar job, com `case_in_review_requires_restart`
   e `next_action=restart_case`; ao ver esse código, faça o reinício simples
   acima. Não tente contornar com novo `request_ref`, cancelamento ou outro

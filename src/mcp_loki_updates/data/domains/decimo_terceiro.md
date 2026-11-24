@@ -95,7 +95,7 @@ consumidor indicado que feche cada lacuna, selecione o estado de novo e
 recalcule. **As janelas vêm só na resposta imediata** do
 `run_prepared_case_workflow` (ou de `calculate_case`). `get_case` e o dossiê só
 passam a trazê-las quando o backend publicar a correção "13º 1ª parcela já
-paga" (#409, ainda não mesclada); até lá, o
+paga" (#409, mesclada em main 3b4d3b11; vale desde a publicação); até lá, o
 registro gravado mostra a recusa sem `required_windows` nem
 `missing_intervals`. Por isso, **releia a resposta imediata antes de concluir**
 que a admissão é posterior: recusa sem janelas só significa admissão
@@ -106,7 +106,7 @@ porque falta cobertura.
 
 **13º já adiantado no ano.** Vale quando a resposta servida trouxer
 `historical_thirteenth_first_installment_already_paid` (backend #409,
-aberta). Na etapa `primeira`, o estado
+mesclada). Na etapa `primeira`, o estado
 selecionado tem um `thirteenth_payment` confirmado do ano para o vínculo, pago
 até a `data_pagamento` (por exemplo, o adiantamento pago em julho com as
 férias). A recusa traz `fields: ["historical_state"]`,
@@ -117,6 +117,13 @@ parcela compensa o adiantamento. Cancele o caso da 1ª parcela e siga para a
 2ª na data dela. Não apague nem reclassifique o pagamento para passar. Sem a
 recusa no servidor, confira `thirteenth_payments` do ano no estado antes de
 calcular a 1ª parcela.
+
+**Homologação da 1ª parcela contra o Domínio.** O histórico importado não pode
+conter a própria 1ª parcela em teste como fato `thirteenth_payment` com a mesma
+data e parcela 1: se contiver, o Loki recusa com
+`historical_thirteenth_first_installment_already_paid`. O `next_action` é
+`cancel_case`, porque o 13º é um caso por pessoa e cancelar é retirá-la. Para
+homologar, mantenha fora do histórico o pagamento que o teste quer reproduzir.
 
 ## Fatos documentais não qualificados
 
@@ -300,7 +307,7 @@ valores recebidos, não há horas: a média segue pelos valores.
   ambígua vai à DP, não ao silêncio presumido.
 
 **Política `horas` da empresa** (backend #408,
-aberta; vale quando `empresas[].decimo_terceiro_medias` mostrar o campo
+aberta, ainda não mesclada; vale quando `empresas[].decimo_terceiro_medias` mostrar o campo
 `horas` no schema servido de `get_client_config`/`validate_client_config`).
 Declare no mesmo cadastro da janela (um `validate_client_config` e depois
 `apply_client_config`), com vigência e fonte:
@@ -319,8 +326,16 @@ Declare no mesmo cadastro da janela (um `validate_client_config` e depois
 - Com `valores` vigente na referência salarial da etapa, enviar horas recusa
   com `decimo_horas_vedado_pela_norma_coletiva`: `fields` aponta
   `dados_decimo_terceiro.meses` e/ou `dados_decimo_terceiro.dezembro_anterior`,
-  a resposta traz `politica_id` e a `fonte` da política, e a próxima ação é
-  enviar só os valores. Reenvie a seção sem `horas`, com `variavel_cents`.
+  a resposta traz `politica_id` e a `fonte` da política, `next_action` é
+  `receive_case_data` e o `guidance` diz "enviar só os valores". Reenvie a seção
+  sem `horas`, com `variavel_cents`.
+- `quantidade_347` não entra na evidência da política (os hashes existentes
+  não mudam). **Mudar uma política vigente para `valores` exige uma vigência
+  nova** (`valid_from` novo), não a edição da vigente. O contrato de onboarding
+  (`thirteenth_rules.average_window`) anuncia `hours_field` (`horas`),
+  `hours_policies` (`valores`, `quantidade_347`) e `hours_values_refusal`
+  (`decimo_horas_vedado_pela_norma_coletiva`): o campo vale quando esses
+  sinais vierem.
 - A política só entra por declaração com fonte; nenhuma empresa a tem por
   padrão. Sem a política, o Loki aceita as horas e **não** descobre a cláusula:
   a conferência com a norma é da harness.

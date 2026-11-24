@@ -775,7 +775,7 @@ completo está em cada domínio de `loki_obter_instrucoes`.
   `calculate_case`, geração e nova conferência. Reinício com `restart_case` e
   `replace_process_inputs`, sem `corrigir_dados`.
   `historical_thirteenth_coverage_incomplete` traz `missing_intervals` na resposta
-  imediata (em `get_case` e no dossiê, só com o backend #409; seção 2.9.9).
+  imediata (em `get_case` e no dossiê, com o backend #409 (mesclado); seção 2.9.9).
 - Rescisão (`rescisao`): `loki.company-termination-map-patch/1` com `add` ou
   `replace` de uma parcela, quando `get_client_config` trouxer
   `termination_map_patch_transport`.
@@ -930,18 +930,18 @@ atualiza o plugin. Cada item vale quando a resposta servida mostrar o sinal.
   (`required_windows`, `missing_intervals`) vêm só na resposta imediata; `get_case`
   e o dossiê só as trazem com o backend "13º 1ª parcela já paga". Releia a
   resposta imediata antes de concluir que a admissão é posterior.
-- **13º, 1ª parcela já paga** (backend #409, aberta): recusa
+- **13º, 1ª parcela já paga** (backend #409, mesclada): recusa
   `historical_thirteenth_first_installment_already_paid` (`next_action=cancel_case`,
   `year`, `installment`): já houve adiantamento no ano; não pague de novo, a 2ª
   parcela compensa.
 - **13º, horas.** `meses[].horas` e `dezembro_anterior.horas` (Súmula 347) só
   onde a norma coletiva é silente; onde ela manda somar valores, envie só
   `variavel_cents`. Com a política `horas: "valores"` em
-  `empresas[].decimo_terceiro_medias` (backend #408, aberta), enviar horas recusa
+  `empresas[].decimo_terceiro_medias` (backend #408, aberta), enviar horas recusa (`next_action` `receive_case_data`, `guidance` “enviar só os valores”; mudar para `valores` exige vigência nova)
   com `decimo_horas_vedado_pela_norma_coletiva`.
 - **Folha em revisão.** Recalcular é `restart_case` simples (sem `preparation`,
   com `expected_snapshot=correction_snapshot` e `human_message`) e depois
-  `enqueue_case_workflow`. Com o backend #410 (aberta), o enqueue em revisão recusa
+  `enqueue_case_workflow`. Com o backend #410 (mesclada), o enqueue em revisão recusa
   com `case_in_review_requires_restart`.
 - **Folha pelo mês civil** (`folha_divisor_mes`, #405): por empresa, com fonte;
   liga com `folha_divisor_mes`, `ferias_recibo.divisor_dias: dias_mes_civil` e

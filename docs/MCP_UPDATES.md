@@ -14,17 +14,17 @@ mudaram: a operadora atualiza o plugin); o provider sobe um patch. Mínimo 2.0.0
 permanece. A lista `compatible_tools` não muda. Wheel 0.4.33 permanece imutável.
 
 Backend, conferido no código: #404 (média por quantidade das horas) e #405
-(`folha_divisor_mes`) em `main` do Loki (`00cba4e9`). **Dependem de PRs abertas
-do backend** (cada texto diz "vale quando a resposta servida mostrar o sinal"):
+(`folha_divisor_mes`) em `main` do Loki (`00cba4e9`). **#409 e #410 já estão mescladas; depende da PR aberta
+#408** (cada texto diz "vale quando a resposta servida mostrar o sinal"):
 
-- #409 (`fix/13-primeira-parcela-ja-paga`, `9a39e468`): recusa
+- #409 (mesclada, `3b4d3b11`): recusa
   `historical_thirteenth_first_installment_already_paid` e as janelas
   `required_windows`/`missing_intervals` em `get_case` e no dossiê (hoje só na
   resposta imediata);
-- #408 (`feat/13-politica-media-horas`, `93f1a878`): campo `horas` (`valores` |
+- #408 (aberta, `dbd7c765`; `next_action` `receive_case_data` com `guidance`; mudar para `valores` exige vigência nova; onboarding anuncia `hours_field`, `hours_policies` e `hours_values_refusal`): campo `horas` (`valores` |
   `quantidade_347`) em `empresas[].decimo_terceiro_medias` e recusa
   `decimo_horas_vedado_pela_norma_coletiva`;
-- #410 (`fix/enqueue-recusa-folha-em-revisao`, `19e9e915`):
+- #410 (mesclada):
   `case_in_review_requires_restart` no `enqueue_case_workflow`.
 
 Domínios:

@@ -3,7 +3,7 @@ Candidata **provider 0.4.34 / contrato, instruções e plugin 2.9.9**, 24/11/202
 contrato aditivo, sem ferramenta nova e sem Refresh. 13º (cobertura que o cálculo exige, 1ª parcela já paga,
 horas só onde a norma coletiva é silente) e folha (recálculo em revisão por
 `restart_case` simples, mês civil `folha_divisor_mes`, fórmulas do mapa).
-Parte depende das PRs abertas do backend (#408, #409 e #410); cada texto vale quando a resposta
+Parte depende do backend (#409 e #410 mesclados; #408 aberta); cada texto vale quando a resposta
 servida mostrar o sinal. A operadora atualiza o plugin.
 
 Edição anterior **provider 0.4.33 / contrato, instruções e plugin 2.9.8**, 24/11/2026
