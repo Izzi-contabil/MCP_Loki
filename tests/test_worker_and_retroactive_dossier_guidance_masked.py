@@ -21,8 +21,8 @@ DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
 SECTION_297 = "## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê"
 
 NOTICE = (
-    "**Continua da 2.9.7**, se ainda não publicada",
-    "o worker de folha não precisa de concessão por empresa",
+    "**Continua da 2.9.7**",
+    "worker sem concessão por empresa",
     "`retroactive_actions`",
     "`diferenca_*`",
 )

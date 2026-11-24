@@ -1,7 +1,7 @@
 # MCP Loki — contrato operacional 2.9.8
 Candidata **provider 0.4.33 / contrato, instruções e plugin 2.9.8**, 24/11/2026
-(backend #395, #396, #397, #399 e #401 em `main` do Loki; #398 não muda texto;
-#400, consignado e afastamento, fora desta versão):
+(backend #395, #396, #397, #399, #400, #401 e #402 em `main` do Loki; #398 e
+#403 não mudam texto):
 contrato aditivo com uma ferramenta nova, `rectify_case_admission_date`. O
 Refresh do conector só é necessário para essa ferramenta nominal; a mesma
 retificação da data de admissão sai por `receive_case_data` sem Refresh. Os

@@ -629,6 +629,44 @@ como alias: traduza o extrato do Domínio pelo mapa de `identifiers`
 - Folhas entregues continuam com o código antigo impresso: não reabra nem
   recalcule por causa da adoção.
 
+## Afastamento pago pela empresa: rubrica marcada no mapa (2.9.8)
+
+Vale quando o mapa da empresa tiver uma rubrica com `afastamento_empregador` e
+o cálculo mostrar o sufixo `-employer-leave-v1`. Sem a rubrica, o mês de
+afastamento segue como antes.
+
+- **Marcar a rubrica** (patch completo do mapa, `loki.company-payroll-map-patch/1`):
+  `afastamento_empregador` é `doenca` (atestado de até 15 dias e os 15 primeiros
+  dias do auxílio previdenciário) ou `acidente_trabalho` (15 primeiros dias do
+  acidentário). A rubrica tem de ser provento comparável com código do Domínio,
+  fórmula `salario_base_proporcional` em dias com divisor 30, INSS, FGTS e IRRF
+  `adicionar`, sem `automatica` nem `parametro_individual`; senão recusa com
+  `afastamento_empregador_mapeamento_incompativel`. Uma rubrica por natureza.
+- Marcar muda o hash do mapa e desatualiza as folhas abertas da empresa:
+  marque antes de calcular o mês.
+- O Loki deriva os dias da empresa do afastamento qualificado e os lança na
+  rubrica marcada; a linha de salário paga só os dias trabalhados. Envie
+  `periodo_remuneravel` ausente, 30 ou o derivado. Se vier 30, a troca fica
+  registrada em `afastamento_mes.periodo_enviado`; outro valor fica com
+  `payroll_salary_periods_not_qualified`. **Não lance a rubrica marcada nem
+  outra rubrica de dias para o mesmo atestado.**
+- Pendências (os dias não voltam em silêncio ao salário):
+  - `afastamento_empregador_rubrica_nao_mapeada` (próxima ação
+    `mapear_rubrica_de_afastamento_pago_pela_empresa`): a natureza do mês não
+    tem rubrica;
+  - `afastamento_empregador_lancamento_conflitante`
+    (`retirar_lancamento_da_rubrica_de_afastamento_derivada_do_contexto`): a
+    rubrica marcada também veio como lançamento;
+  - `afastamento_empregador_lancamento_em_rubrica_sem_marca`
+    (`conferir_se_o_lancamento_e_o_mesmo_atestado_e_retira_lo_ou_qualificar_os_periodos`):
+    dias lançados em outra rubrica, que podem ser o mesmo atestado;
+  - `afastamento_mes_exige_salario_pelo_mes_comercial`
+    (`qualificar_periodos_do_mes_de_afastamento_pelo_historico`): a linha de
+    salário não lê o período pelo mês de 30 dias.
+- Regras individuais que leem `rubricas_base=["salario_base"]` passam a ler só
+  os dias trabalhados: inclua a rubrica de afastamento em `rubricas_base` das
+  regras que devem cobrir esses dias; o Loki não a acrescenta.
+
 ## Regras da DP para declarar o cadastro e os descontos (2.9.8)
 
 São regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O

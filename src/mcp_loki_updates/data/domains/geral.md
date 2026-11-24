@@ -35,14 +35,20 @@ indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
   da data de admissão; troca de `parametrizacao` e do aquisitivo de
   `vacation_balance` por `replaces_fact_id`; admitido no mês da data-base fica
   `sem_reajuste`.
-- `folha_mensal` e lote de políticas do mapa: arredondamento do centavo por
-  empresa (`truncar_centavos`, `valor_dia_arredondado`, VT) e regras da DP de
-  salário-família, DSR e VT.
+- `folha_mensal`, `alteracao_cadastral` e lote de políticas do mapa:
+  arredondamento do centavo por empresa, regras da DP de salário-família, DSR e
+  VT, consignado alocado pela `data_inicio_contrato` e afastamento pago pela
+  empresa por rubrica marcada no mapa. Campos opcionais novos dos contratos
+  servidos (crédito e mapa) não exigem Refresh: os argumentos são dict livres.
 
-**Continua da 2.9.7**, se ainda não publicada: o worker de folha não precisa
-de concessão por empresa e, quando o dossiê da folha trouxer
-`retroactive_actions`, as pendências `diferenca_*` vêm com ação e detalhe
-(`folha_mensal`, `reajuste_salarial`).
+**Recalcular:** a folha com pessoa de 2 ou mais contratos de consignado
+confirmados no mês (`-worker-credit-allocation-v1`) ou com mês de afastamento
+derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e novo
+cálculo, mesmo se o valor não mudar. Marcar a rubrica de afastamento no mapa
+desatualiza as folhas abertas da empresa: marque antes de calcular.
+
+**Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem
+concessão por empresa; `diferenca_*` com `retroactive_actions`.
 
 **Continua da 2.9.6**, se ainda não foi feito: recalcular, conferir e pedir
 novo aceite das folhas mensais não entregues calculadas antes da `folha-v33`

@@ -153,7 +153,9 @@ aceite da DP, `decimo-v5`) e fatos opacos qualificados pelo id; retificação da
 data de admissão antes da confirmação; `replaces_fact_id` em `parametrizacao`
 e na troca do aquisitivo de `vacation_balance`; admitido no mês da data-base
 sem reajuste; arredondamento do centavo por empresa (cinco métodos e VT);
-regras da DP de salário-família, DSR e VT. **Refresh só para a ferramenta
+regras da DP de salário-família, DSR e VT; consignado alocado pela
+`data_inicio_contrato` e afastamento pago pela empresa por rubrica marcada no
+mapa (folhas afetadas: `restart_case` e recálculo). **Refresh só para a ferramenta
 nominal `rectify_case_admission_date`**; por `receive_case_data` não exige. A
 operadora atualiza o plugin.
 

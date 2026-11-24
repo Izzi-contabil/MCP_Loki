@@ -2,12 +2,14 @@
 
 ## Candidata 0.4.33 / contrato, instruções e plugin 2.9.8 — 24/11/2026
 
-Acompanha cinco PRs do backend, todas em `main` do Loki (`82f1497c`): #395
+Acompanha sete PRs do backend, todas em `main` do Loki (`2f866fdf`): #400
+(alocação do consignado pela data do contrato e afastamento pago pela empresa,
+`2f866fdf`), #402 (crédito ignora revisões substituídas por correção auditada,
+`14a3f506`), #395
 (aviso da norma coletiva e cumprimento parcial, `31e62b3c`), #396 (13º,
 `4a9f84f2`), #397 (correções auditadas, `82f1497c`), #399 (saldo de salário na
 rescisão, `6a14607d`) e #401 (arredondamento por empresa, `942ebaee`). A #398
-(executor de publicação, `d60d07fe`) não muda texto da operadora. A #400
-(consignado e afastamento) não está mesclada e fica fora desta versão. O texto
+(executor de publicação, `d60d07fe`) não muda texto da operadora. O texto
 foi conferido contra o código mesclado, não contra os resumos das PRs. Cada
 texto novo vale quando a resposta servida mostrar o sinal:
 
@@ -23,6 +25,11 @@ texto novo vale quando a resposta servida mostrar o sinal:
   onboarding; `rule.admitted_on_base_date` por competência no contrato do
   reajuste.
 - #399: `rescisao-v45` ou `rescisao-v46` no cálculo da rescisão.
+- #400: `data_inicio_contrato` em `credito_trabalhador_contratos`;
+  `afastamento_empregador` na rubrica do mapa; sufixos condicionais
+  `-worker-credit-allocation-v1` e `-employer-leave-v1` no motor `folha-v33`.
+- #402: sem sinal novo (a revisão do contrato deixa de ser travada pela correção
+  auditada).
 - #401: `policies.arredondamento_vale_transporte` e `accepted_formulas` em
   `payroll_map_policy_patch_transport`.
 
@@ -41,7 +48,9 @@ plugin acompanham em 2.9.8; provider sobe um patch. Mínimo 2.0.0 permanece. A
 lista `compatible_tools` não muda.
 
 **Refresh do conector.** É necessário só para a ferramenta nominal nova
-`rectify_case_admission_date`. Sem Refresh, a mesma retificação funciona por
+`rectify_case_admission_date`. Os campos opcionais novos do contrato de crédito
+e da rubrica do mapa (#400) entram por `dict` livre e não exigem Refresh: a #400
+não toca `mcp_server` nem `connector`. Sem Refresh, a mesma retificação funciona por
 `receive_case_data`. Os schemas de dados das #395, #396, #397 e #401 não
 exigem Refresh. O aviso do domínio `geral` diz isso.
 
@@ -91,10 +100,11 @@ Por domínio:
 - `alteracao_cadastral`: "Corrigir parâmetro já aplicado no onboarding".
 - `ferias`: troca do aquisitivo de `vacation_balance`.
 - `reajuste_salarial`: admitido no mês da data-base por competência.
-- `folha_mensal`: "Regras da DP para declarar o cadastro e os descontos".
+- `alteracao_cadastral`: também "Alocação entre contratos (2.9.8)".
+- `folha_mensal`: "Afastamento pago pela empresa: rubrica marcada no mapa" e "Regras da DP para declarar o cadastro e os descontos".
 
-Tamanho (limite 65.536 bytes): `geral` 64.879, `ferias` 43.820,
-`folha_mensal` 43.611, `rescisao` 43.084; os demais ficam abaixo.
+Tamanho (limite 65.536 bytes): `geral` 65.332, `ferias` 43.820,
+`folha_mensal` 46.003, `rescisao` 43.084; os demais ficam abaixo.
 
 Plugin espelha em WORKFLOWS (seção "2.9.8: rescisão, 13º, correções
 auditadas e arredondamento", e notas nas seções antigas), CAPACIDADES_DP,

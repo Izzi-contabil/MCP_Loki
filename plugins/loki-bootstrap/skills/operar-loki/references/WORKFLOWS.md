@@ -973,6 +973,27 @@ contratos servidos e não exigem Refresh. A operadora atualiza o plugin.
   a programação antes.
 - **Reajuste (`reajuste_salarial`).** Admitido em qualquer dia do mês da
   data-base fica `sem_reajuste` (regra da DP de 18/11).
+- **Consignado (`alteracao_cadastral`).** Com `data_inicio_contrato` no
+  contrato servido: registre o `dataInicioContrato` da Dataprev numa nova
+  revisão de cada contrato. Com 2 ou mais contratos confirmados no mês, o
+  desconto vai no teto de 35% do mais antigo ao mais recente (Portaria MTE
+  435/2025, art. 49-C) e o resto vira saldo não descontado. Acima do teto,
+  `credito_trabalhador_data_inicio_contrato_pendente` ou
+  `credito_trabalhador_contratos_com_mesma_data_de_inicio` (leve à DP);
+  `credito_trabalhador_desconto_fora_dos_contratos`. Folha com 2 ou mais
+  contratos (`-worker-credit-allocation-v1`): `restart_case` e recálculo. A
+  correção auditada de `parametrizacao` não trava mais a revisão do contrato.
+- **Afastamento pago pela empresa (`folha_mensal`).** Com rubrica
+  `afastamento_empregador` (`doenca` ou `acidente_trabalho`) no mapa
+  (`-employer-leave-v1`): o Loki deriva os dias da empresa;
+  `periodo_remuneravel` ausente, 30 (troca registrada) ou o derivado; não lance
+  a rubrica marcada nem outra de dias para o mesmo atestado. Pendências
+  `afastamento_empregador_rubrica_nao_mapeada`,
+  `afastamento_empregador_lancamento_conflitante`,
+  `afastamento_mes_exige_salario_pelo_mes_comercial` e
+  `afastamento_empregador_lancamento_em_rubrica_sem_marca`. Inclua a rubrica em
+  `rubricas_base` das regras que cobrem esses dias. Marcar a rubrica muda o
+  hash do mapa e desatualiza as folhas abertas: marque antes de calcular.
 - **Folha (`folha_mensal`, `geral`).** `policy.arredondamento_monetario`
   aceita `half_up`, `half_even`, `exigir_qualificacao`, `truncar_centavos` e
   `valor_dia_arredondado`, nas fórmulas de `accepted_formulas`;

@@ -365,6 +365,32 @@ número como string, instituição, vigência, parcela em centavos e
 `rubrica_loki` explícita. Encerramento/cancelamento é outra revisão;
 não altere revisões antigas nem presuma rubrica por código numérico global.
 
+**Alocação entre contratos (2.9.8).** Vale quando o contrato servido de
+onboarding mostrar `data_inicio_contrato` em `credito_trabalhador_contratos`.
+Registre nesse campo o `dataInicioContrato` da Dataprev (o dia exato, diferente
+de `inicio`, a competência do primeiro desconto) numa **nova revisão** de cada
+contrato: revisão gravada não se altera. Uma data diferente da `dataInicioContrato` da
+consulta Dataprev fica com `mapping_contract_mismatch`.
+
+- Com **2 ou mais contratos confirmados no mês**, a soma respeita o teto de 35%
+  e o Loki desconta do contrato mais antigo para o mais recente pela data de
+  início (Portaria MTE 435/2025, art. 49-C). O que não couber vira saldo não
+  descontado, na memória (`saldo_nao_descontado_cents`) e no holerite. Com 1
+  contrato, nada muda.
+- Acima do teto, o caso fica pendente sem a data
+  (`credito_trabalhador_data_inicio_contrato_pendente`) ou com datas iguais
+  (`credito_trabalhador_contratos_com_mesma_data_de_inicio`: leve à DP; o Loki
+  não desempata). Dentro do teto a ordem não importa e a data não é exigida.
+- `credito_trabalhador_desconto_fora_dos_contratos`: lançamento numa rubrica de
+  crédito que algum contrato da empresa nomeia, sem contrato desta pessoa nela.
+  Registre o contrato ou retire o lançamento. `credito_trabalhador_alocacao_pendente`
+  deixa de ser emitido.
+- A folha com alguém de 2 ou mais contratos confirmados ganha o sufixo
+  `-worker-credit-allocation-v1` e precisa de `restart_case` e novo cálculo,
+  mesmo se o valor não mudar.
+- A correção auditada de `parametrizacao` (seção acima) não trava mais a
+  revisão do contrato: o ato substituído deixa de contar nela.
+
 Na folha, `credito_trabalhador_competencia` identifica os contratos/versões
 confirmados no mês e as qualificações exigidas pelo schema. Declaração atribuída
 pode ser aceita, sem documento/hash universal. Cronograma não comprova desconto

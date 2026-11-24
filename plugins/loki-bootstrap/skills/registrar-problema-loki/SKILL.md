@@ -160,7 +160,11 @@ origem) e `historical_thirteenth_transfer_entry_unproven`;
 `admission_date_rectification_*` (depois da confirmação o caminho é a
 solicitação de alteração); `parameter_replacement_*` e
 `historical_vacation_balance_period_*` (retifique ou cancele a programação
-antes da troca do aquisitivo); `particao_membro_arredondamento_use_arredondamento_total`.
+antes da troca do aquisitivo); `particao_membro_arredondamento_use_arredondamento_total`;
+`credito_trabalhador_data_inicio_contrato_pendente`,
+`credito_trabalhador_contratos_com_mesma_data_de_inicio` (leve à DP),
+`credito_trabalhador_desconto_fora_dos_contratos` e as pendências
+`afastamento_empregador_*` e `afastamento_mes_exige_salario_pelo_mes_comercial`.
 Na 2.9.7, `worker_not_authorized` (com ou sem
 `worker_company_grant_missing`) e `worker_service_not_authorized` são problema
 a registrar e avisar à engenharia pelo Caixa: o worker de folha não precisa

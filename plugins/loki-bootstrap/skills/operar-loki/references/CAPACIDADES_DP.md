@@ -335,7 +335,9 @@ empresa (`decimo-v5`) e fatos opacos do 13º qualificados pelo id;
 retificação da data de admissão antes da confirmação; troca de
 `parametrizacao` e do aquisitivo de `vacation_balance` por `replaces_fact_id`;
 admitido no mês da data-base sem reajuste; arredondamento do centavo por
-empresa; regras da DP de salário-família, DSR e VT. Roteiro em “2.9.8:
+empresa; regras da DP de salário-família, DSR e VT. Consignado alocado pela `data_inicio_contrato` e afastamento pago pela empresa por
+rubrica `afastamento_empregador` no mapa (folhas afetadas: `restart_case` e
+recálculo). Roteiro em “2.9.8:
 rescisão, 13º, correções auditadas e arredondamento” de
 [WORKFLOWS.md](WORKFLOWS.md).
 

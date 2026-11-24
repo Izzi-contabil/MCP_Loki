@@ -1,7 +1,6 @@
 """Entrega das orientações da 2.9.8 (backend #395, #396, #397, #399 e #401 em main).
 
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
-A #400 (consignado e afastamento) não está mesclada e não entra.
 """
 
 import json
@@ -183,7 +182,7 @@ def test_versions_follow_the_additive_contract_patch() -> None:
     ]
     backend = release["changes"]["backend"][-1]
     assert backend.startswith("Contrato2.9.8 aditivo")
-    markers = ("#395", "#396", "#397", "#399", "#401", "#400 fora")
+    markers = ("#395", "#396", "#397", "#399", "#401", "#400", "#402")
     for marker in (*markers, "rectify_case_admission_date"):
         assert marker in backend
     assert "Refresh do conector só para a ferramenta nominal" in backend
@@ -321,3 +320,35 @@ def test_plugin_mirrors_298_guidance() -> None:
         ),
     )
     assert_none(report, ("é pergunta à Rafa, não problema do Loki",))
+
+
+def test_consignado_allocation_and_employer_leave_are_carried() -> None:
+    assert_all(
+        text("alteracao_cadastral"),
+        (
+            "`data_inicio_contrato`",
+            "nova revisão",
+            "`credito_trabalhador_data_inicio_contrato_pendente`",
+            "`credito_trabalhador_contratos_com_mesma_data_de_inicio`",
+            "`credito_trabalhador_desconto_fora_dos_contratos`",
+            "`-worker-credit-allocation-v1`",
+            "art. 49-C",
+        ),
+    )
+    assert_all(
+        text("folha_mensal"),
+        (
+            "`afastamento_empregador`",
+            "`afastamento_empregador_rubrica_nao_mapeada`",
+            "`afastamento_empregador_lancamento_conflitante`",
+            "`afastamento_mes_exige_salario_pelo_mes_comercial`",
+            "`afastamento_empregador_lancamento_em_rubrica_sem_marca`",
+            "`rubricas_base`",
+            "desatualiza as folhas abertas da empresa",
+            "Não lance a rubrica marcada",
+        ),
+    )
+    assert_all(
+        text("geral"),
+        ("`-worker-credit-allocation-v1`", "`restart_case`", "dict livre"),
+    )
