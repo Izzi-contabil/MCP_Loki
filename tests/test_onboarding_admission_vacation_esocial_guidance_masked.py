@@ -285,7 +285,8 @@ def test_plugin_mirrors_295_guidance() -> None:
         (SKILLS / "registrar-problema-loki/SKILL.md").read_text(encoding="utf-8"),
         (
             "Na 2.9.5 não são defeito",
-            "`rescisao_ferias_gozo_antecipado_pendente_regra` (regra da DP, pergunte à Rafa)",
+            "`rescisao_ferias_gozo_antecipado_pendente_regra` (regra da DP já decidida, "
+            "mas o motor da rescisão ainda não a aplica: avise a operadora)",
             "`admission_cancelled_case_not_reusable` e "
             "`admission_reopening_chain_inconsistent` são problema a relatar",
         ),

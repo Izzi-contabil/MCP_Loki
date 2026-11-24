@@ -81,7 +81,6 @@ PAYROLL = (
 PENDING_DP = (
     "## Pendente até a DP decidir",
     "O cálculo da rescisão complementar dos desligados abrangidos (`sim`) ainda não existe",
-    "Admitido no mesmo mês da data-base, mas depois do dia 1 e antes do dia da data-base",
 )
 # Regras da DP de 17/11/2026 (backend #346 e #349), na 2.8.0.
 DP_RULES = (
@@ -138,16 +137,16 @@ def domain() -> str:
 def test_collective_domain_is_served_with_the_new_contract() -> None:
     provider = InstructionsProvider()
     guide = provider.get("reajuste_salarial")
-    assert guide["version"] == "2.9.7"
-    assert guide["compatibility"]["mcp_contract_version"] == "2.9.7"
+    assert guide["version"] == "2.9.8"
+    assert guide["compatibility"]["mcp_contract_version"] == "2.9.8"
     assert guide["permissions"] == {
         "capabilities": ["consultar"],
         "processes": ["reajuste_salarial"],
     }
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.32"
-    assert metadata["instructions_version"] == "2.9.7"
-    assert metadata["mcp_contract_version"] == "2.9.7"
+    assert metadata["provider_version"] == "0.4.33"
+    assert metadata["instructions_version"] == "2.9.8"
+    assert metadata["mcp_contract_version"] == "2.9.8"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -163,6 +162,7 @@ def test_collective_domain_is_served_with_the_new_contract() -> None:
         "2.9.5",
         "2.9.6",
         "2.9.7",
+        "2.9.8",
     ):
         assert provider.check_version(version, version)["compatible"] is True
 

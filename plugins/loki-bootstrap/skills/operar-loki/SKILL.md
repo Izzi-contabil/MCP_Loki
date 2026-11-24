@@ -144,6 +144,20 @@ detalhe por regra; no pago declarado, `quantidade` segue a fórmula do mapa da
 origem, e o lote já aplicado se corrige pela retirada no caso filho e um novo
 `reajuste_salarial` com outra `reference`. Não exigem Refresh; a operadora
 atualiza o plugin.
+Na 2.9.8 (“2.9.8: rescisão, 13º, correções auditadas e arredondamento”), cada
+item quando a resposta servida mostrar o sinal: aviso da norma coletiva e
+cumprimento parcial do aviso na rescisão (`+aviso-declarado-v1`, ramo sem
+documento fica pendente); saldo de salário pelos dias efetivos
+(`rescisao-v45`/`v46`); janela da média do 13º por empresa (`dez_nov_12` só com
+aceite da DP, `decimo-v5`) e fatos opacos qualificados pelo id; retificação da
+data de admissão antes da confirmação; `replaces_fact_id` em `parametrizacao`
+e na troca do aquisitivo de `vacation_balance`; admitido no mês da data-base
+sem reajuste; arredondamento do centavo por empresa (cinco métodos e VT);
+regras da DP de salário-família, DSR e VT; consignado alocado pela
+`data_inicio_contrato` e afastamento pago pela empresa por rubrica marcada no
+mapa (folhas afetadas: `restart_case` e recálculo). **Refresh só para a ferramenta
+nominal `rectify_case_admission_date`**; por `receive_case_data` não exige. A
+operadora atualiza o plugin.
 
 O operador fornece documentos e pedidos na conversa. Você lê, interpreta,
 confere, prepara e envia pela conexão MCP existente, sem pedir ao operador que

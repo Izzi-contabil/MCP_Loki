@@ -629,6 +629,65 @@ como alias: traduza o extrato do Domínio pelo mapa de `identifiers`
 - Folhas entregues continuam com o código antigo impresso: não reabra nem
   recalcule por causa da adoção.
 
+## Afastamento pago pela empresa: rubrica marcada no mapa (2.9.8)
+
+Vale quando o mapa da empresa tiver uma rubrica com `afastamento_empregador` e
+o cálculo mostrar o sufixo `-employer-leave-v1`. Sem a rubrica, o mês de
+afastamento segue como antes.
+
+- **Marcar a rubrica** (patch completo do mapa, `loki.company-payroll-map-patch/1`):
+  `afastamento_empregador` é `doenca` (atestado de até 15 dias e os 15 primeiros
+  dias do auxílio previdenciário) ou `acidente_trabalho` (15 primeiros dias do
+  acidentário). A rubrica tem de ser provento comparável com código do Domínio,
+  fórmula `salario_base_proporcional` em dias com divisor 30, INSS, FGTS e IRRF
+  `adicionar`, sem `automatica` nem `parametro_individual`; senão recusa com
+  `afastamento_empregador_mapeamento_incompativel`. Uma rubrica por natureza.
+- Marcar muda o hash do mapa e desatualiza as folhas abertas da empresa:
+  marque antes de calcular o mês.
+- O Loki deriva os dias da empresa do afastamento qualificado e os lança na
+  rubrica marcada; a linha de salário paga só os dias trabalhados. Envie
+  `periodo_remuneravel` ausente, 30 ou o derivado. Se vier 30, a troca fica
+  registrada em `afastamento_mes.periodo_enviado`; outro valor fica com
+  `payroll_salary_periods_not_qualified`. **Não lance a rubrica marcada nem
+  outra rubrica de dias para o mesmo atestado.**
+- Pendências (os dias não voltam em silêncio ao salário):
+  - `afastamento_empregador_rubrica_nao_mapeada` (próxima ação
+    `mapear_rubrica_de_afastamento_pago_pela_empresa`): a natureza do mês não
+    tem rubrica;
+  - `afastamento_empregador_lancamento_conflitante`
+    (`retirar_lancamento_da_rubrica_de_afastamento_derivada_do_contexto`): a
+    rubrica marcada também veio como lançamento;
+  - `afastamento_empregador_lancamento_em_rubrica_sem_marca`
+    (`conferir_se_o_lancamento_e_o_mesmo_atestado_e_retira_lo_ou_qualificar_os_periodos`):
+    dias lançados em outra rubrica, que podem ser o mesmo atestado;
+  - `afastamento_mes_exige_salario_pelo_mes_comercial`
+    (`qualificar_periodos_do_mes_de_afastamento_pelo_historico`): a linha de
+    salário não lê o período pelo mês de 30 dias.
+- Regras individuais que leem `rubricas_base=["salario_base"]` passam a ler só
+  os dias trabalhados: inclua a rubrica de afastamento em `rubricas_base` das
+  regras que devem cobrir esses dias; o Loki não a acrescenta.
+
+## Regras da DP para declarar o cadastro e os descontos (2.9.8)
+
+São regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O
+Loki não as deriva sozinho: ele recebe a quantidade declarada por pessoa e a
+valida com a coerência interna.
+
+- **Salário-família.** Depende da flag no cadastro do Domínio. Com a flag
+  desmarcada, a quantidade de filhos para o salário-família é 0, mesmo que o
+  empregado tenha dependente cadastrado. Declare 0 no campo `salario_familia`
+  do cadastro em vez de contar os dependentes; o dependente de IRRF é outro
+  dado.
+  Ausência da quantidade continua pendência, nunca zero presumido.
+- **DSR das faltas.** Faltas em semanas distintas descontam 2 DSR. O período
+  corrido já engloba o DSR: não acrescente desconto de DSR por cima dele. Não crie falta nem desconto de DSR
+  para fazer o total coincidir com o Domínio.
+- **VT.** O percentual vem da escala da pessoa: 3% na 12x36 e 6% na 6x1. A
+  harness declara o percentual por pessoa em `vale_transporte_regra`
+  (`percentual_basis_points`: 300 ou 600). O Loki não deduz a taxa da escala,
+  do sindicato nem de referência livre: sem a regra declarada, o Loki não
+  aplica taxa pela escala.
+
 ## Regras comuns da operação
 
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.

@@ -145,9 +145,54 @@ com o nome cortado continua recusando: cancele e reabra (seção seguinte).
 
 ## Data de admissão errada no caso
 
-A data de admissão é identidade do caso e do episódio: não se troca no caso
-(nem por correção, nem por reinício). O caminho é cancelar o caso com
-`cancel_case`, transcrevendo em `human_message` a mensagem do cliente que
+A data de admissão é identidade do caso e do episódio e não se troca por
+`restart_case` nem pela correção comum.
+
+**Antes da confirmação** (regra da DP: data trocada pelo cliente antes do
+envio é alteração do processo em andamento, e a mensagem do cliente basta).
+Vale quando `get_process_contract("admissao")` apresentar
+`admission_date_rectification`. A ferramenta nominal
+`rectify_case_admission_date(case_id, request)` exige o Refresh do conector;
+sem ele, envie o mesmo pedido por `receive_case_data` com
+`request.schema_version = "loki.case-admission-date-rectification/1"`, que não
+exige Refresh. O contrato lista as capacidades `decidir_chat` e
+`corrigir_dados`.
+
+1. Leia `get_case` e copie `correction_snapshot`. O caso tem de estar `aberto`
+   ou `em_preparacao`; caso em revisão (`aguardando_revisao` ou `rejeitado`)
+   precisa de `restart_case` antes (`admission_date_rectification_requires_preparation`).
+2. Envie `request_ref`, `intent: "rectify_admission_date_before_confirmation"`,
+   `expected_snapshot`, `expected_admission_date` (a data atual do caso),
+   `corrected_admission_date` (ISO ou dd/mm/aaaa), `client_message` (a
+   transcrição literal da mensagem do cliente com a data certa),
+   `message_reference` (`CX-…`, quando a mensagem veio pela Caixa) e `reason`.
+3. O recibo `RECTIFIED` troca a data no caso, no episódio e na chave natural,
+   regenera a data por extenso, a `fgts_opcao_em` quando ela era a admissão e
+   as datas do contrato de experiência (deslocadas pelo mesmo número de dias),
+   descarta a última geração e não envia nada ao eSocial. Siga o `next_action`
+   do recibo (`run_prepared_case_workflow`, ou `restart_case` em caso de
+   processamento anterior). Confira em `review_text_fields` os textos e as
+   datas sem regra de derivação (`cidade_data_assinatura`,
+   `acordo_prorrogacao.*`, `acordo_compensacao.cidade_data`,
+   `data_emissao_docs`): o Loki não os reescreve. Repetir o mesmo `request_ref`
+   devolve o mesmo recibo.
+4. Recusas: `admission_date_rectification_after_confirmation` (confirmação,
+   aprovação, efeito ou entrega já existem: abra uma solicitação de alteração
+   com reenvio dos documentos, `next_action=solicitar_alteracao_com_reenvio_dos_documentos`),
+   `admission_date_rectification_episode_has_history` (o episódio tem histórico
+   ou outro caso), `admission_date_rectification_target_episode_exists` e
+   `admission_date_rectification_target_case_exists` (a data nova já existe em
+   outro episódio ou caso), `admission_date_rectification_minimum_age` (idade
+   mínima na data nova), `admission_date_rectification_experience_limit` (teto
+   do contrato de experiência na data nova), `case_snapshot_changed`
+   (releia o `get_case`) e `admission_date_rectification_identity_changed`.
+
+**Admissão reaberta** (com `supersedes_case_id`) divide o episódio com o caso
+cancelado e recusa com `admission_date_rectification_episode_has_history`: não
+é retificada. Cancele e reabra. **Depois da confirmação**, a troca é a
+solicitação de alteração com reenvio, nunca esta retificação. Sem o sinal
+`admission_date_rectification` (servidor anterior), o caminho é cancelar o caso
+com `cancel_case`, transcrevendo em `human_message` a mensagem do cliente que
 informa a data certa, e abrir outro caso de admissão com a data correta.
 
 Antes de cancelar, confira se o episódio antigo já recebeu matrícula

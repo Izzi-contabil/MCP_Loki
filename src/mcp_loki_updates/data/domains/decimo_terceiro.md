@@ -98,8 +98,10 @@ anterior devolve só `{"erro": "<código>"}`, sem a lista. Cada linha tem
 da ficha. Não recalcule, não reinicie o caso e não troque o fato por zero ou
 "irrelevante" por conta própria.
 
-- `path=qualify_legacy_fact` (`outro` ou `decimo_terceiro`): releia a ficha
-  original. Se a ficha mostrar o que o fato é para o 13º, envie pela carga da
+- `path=qualify_legacy_fact` (`outro` ou `decimo_terceiro`; com a 2.9.8 e o
+  sinal servido, também `afastamento` e `transferencia`, cujos `allowed_types`
+  trazem `thirteenth_fact_assessment`, seção "Fatos opacos do 13º qualificados
+  pelo id"): releia a ficha original. Se a ficha mostrar o que o fato é para o 13º, envie pela carga da
   empresa um `historico_operacional` de um dos `allowed_types` da linha (só
   esses; o escritor aceita outros tipos, como férias e `final_average`, que
   também retiram o fato da lista, mas não dizem nada sobre o 13º), com a
@@ -119,16 +121,21 @@ da ficha. Não recalcule, não reinicie o caso e não troque o fato por zero ou
   qualifique quem tem outros casos abertos sem alinhar com a DP.** A
   qualificação só vale em cortes a partir do `effective_on` da cobertura, que
   é o fim dela.
-- `path=no_typed_exit` (afastamento opaco da carga): o afastamento pode afetar
-  avos e continua pendente. Hoje não existe qualificação que o retire, e
-  reenviar a ficha estruturada não remove o fato opaco. Registre a pendência
+- `path=no_typed_exit` (afastamento opaco da carga, servidor anterior à
+  2.9.8): o afastamento pode afetar avos e continua pendente, e reenviar a
+  ficha estruturada não remove o fato opaco. Registre a pendência
   (`registrar_problema`) com o `fact_id` e as datas que a ficha mostrar. Não
-  invente datas.
-- `path=dp_rule_pending` (rescisão ou transferência da carga): não existe
-  qualificação tipada que valha para o 13º. `final_average` com
-  `qualifies_legacy_fact_ids` tira a rescisão da lista, mas **não deve ser
-  usado para qualificar fato do 13º**: média final não diz nada sobre o 13º do
-  ano. Registre a pendência e leve o caso à DP (Rafa).
+  invente datas. Com `thirteenth_rules.fact_assessment` servido, o afastamento
+  opaco vem como `path=qualify_legacy_fact` e sai por
+  `thirteenth_fact_assessment`.
+- `path=dp_rule_pending` (rescisão da carga; antes da 2.9.8, também a
+  transferência): não existe qualificação tipada que valha para o 13º.
+  `final_average` com `qualifies_legacy_fact_ids` tira a rescisão da lista, mas
+  **não deve ser usado para qualificar fato do 13º**: média final não diz nada
+  sobre o 13º do ano. Registre a pendência. A transferência da carga tem
+  caminho próprio quando o contrato servido apresentar
+  `thirteenth_rules.fact_assessment` (`path=qualify_legacy_fact`, seção "Fatos
+  opacos do 13º qualificados pelo id", abaixo).
 - `path=episode_reconciliation`: concilie o evento ou o caso do vínculo
   indicado.
 - `reason=effective_date_missing`: o fato não tem data e por isso não pode ser
@@ -142,8 +149,7 @@ da ficha. Não recalcule, não reinicie o caso e não troque o fato por zero ou
 Para bater com o Domínio, use `medias_importadas` (média final do Domínio,
 finalidade `decimo_terceiro`). Ela é exclusiva com `variavel_cents` mensal:
 com ela, nenhum mês leva valor. A média por quantidade × valor atual e a
-produtividade ainda dependem de confirmação da DP; até lá, use a média
-importada.
+produtividade não são calculadas pelo Loki: use a média importada.
 
 **`final_average` é a média mensal integral do Domínio.** Envie essa média
 inteira, como veio, em `medias_importadas={fact_id}`, sem `variavel_cents`
@@ -202,6 +208,75 @@ pagamento na 1ª (pagamento em novembro → 31/10) e 31/12 na 2ª e no ajuste. O
 dependente precisa estar vigente nessa data. A 1ª parcela dispensa
 dependentes, salvo pensão `interdependente` no 13º; a 2ª e o ajuste exigem
 (`thirteenth_irrf_dependents_required` quando o valor é necessário).
+
+## Janela da média por empresa (decimo-v5)
+
+Vale quando o schema servido do cadastro da empresa apresentar
+`empresas[].decimo_terceiro_medias` (`get_company_onboarding_contract`:
+`thirteenth_rules.average_window`). O padrão é `jan_nov_11`: a 2ª parcela usa
+janeiro a novembro ÷ 11 e o ajuste de janeiro usa janeiro a dezembro ÷ 12.
+`dez_nov_12` usa dezembro do ano anterior a novembro ÷ 12 na 2ª parcela e no
+ajuste; a 1ª parcela segue a regra de sempre nas duas janelas, e a média
+importada não usa janela.
+
+- A política é por empresa, com `id`, `valid_from`, `janela` e `fonte`. Vale a
+  vigência que contém a referência salarial da etapa; vigências sobrepostas
+  recusam (`decimo_terceiro_medias_vigencias_sobrepostas`). `jan_nov_11`
+  declarado equivale a não declarar.
+- `dez_nov_12` é configuração do cliente: não tem base no art. 77 do Decreto
+  10.854/2021. Só aplique com a decisão da DP registrada na `fonte` (CX-…) e o
+  aceite dela para os efeitos: quem entrou no meio do ano divide por 12 em vez
+  de 11, e o primeiro ano da troca pode contar dezembro duas vezes se o ano
+  anterior foi apurado no padrão. Não ative por conta própria nem presuma a
+  janela de outro cliente.
+- Com `dez_nov_12`, a 2ª parcela e o ajuste exigem
+  `dados_decimo_terceiro.dezembro_anterior` (`variavel_cents` e `source`) para
+  quem já tinha vínculo em dezembro (`thirteenth_prior_december_variable_required`).
+  O campo é recusado quando a admissão é posterior
+  (`thirteenth_prior_december_before_hire`), na janela padrão
+  (`thirteenth_prior_december_outside_window`), junto com `medias_importadas`
+  (`thirteenth_prior_december_exclusive`) e na 1ª parcela
+  (`thirteenth_prior_december_stage_incompatible`).
+- O motor vira `decimo-v5` só com `dez_nov_12` ativa; sem ela segue
+  `decimo-v3`/`decimo-v4`. Caso aprovado ou publicado conserva o cálculo que
+  gerou o pacote; em preparação ou revisão, o caso passa a exigir
+  `dezembro_anterior` e novo cálculo. A simulação continua no padrão.
+
+## Fatos opacos do 13º qualificados pelo id
+
+Vale quando o contrato servido apresentar `thirteenth_rules.fact_assessment`.
+O fato opaco da carga (`outro`, afastamento ou transferência) é qualificado
+por um `historico_operacional` confirmado `thirteenth_fact_assessment`, da
+mesma fonte do fato, citando o id em `qualifies_legacy_fact_ids`. A avaliação
+vale só para o 13º; o fato continua no estado para os outros consumidores.
+
+| `effect` | alvos | fonte |
+|---|---|---|
+| `sem_efeito` | `outro`, `afastamento` | `dp_decision` (CX-…) |
+| `afastamento_tipado` | `afastamento` sem data, junto com o `leave` tipado que também o cita | `dp_decision` |
+| `transferencia_mesmo_grupo` | `transferencia` | `legal_rule` (`transferencia_grupo_economico_continuidade`) ou `dp_decision` |
+
+- `decided_on` é o `effective_on` e nada retroage: a avaliação só vale em
+  cortes a partir dessa data. Uma decisão posterior ao fim da janela da etapa
+  não entra no estado daquele corte.
+- Afastamento opaco com data também sai por um `leave` tipado confirmado que
+  comece na data do fato; sem data, só sai com a decisão da DP.
+- `transferencia_mesmo_grupo` declara `direction`. Na `saida`, exige
+  `destination_company_cnpj`: o 13º do ano é da empresa de destino, e a origem
+  recusa com `historical_thirteenth_transfer_out_destination_company`
+  (`next_action=cancel_case`): cancele o caso da origem. Na `entrada`, exige a
+  `qualificacao_vinculo` aplicada, com `current_company_entry` igual à data da
+  transferência e `original_admission` igual à admissão do estado; sem ela, a
+  recusa é `historical_thirteenth_transfer_entry_unproven`. Os avos contam o
+  contrato todo e as médias somam as empresas (envie a soma). As coberturas
+  `thirteenth_payments` e `leave_occurrences` continuam exigidas.
+- O escritor recusa alvo de outro tipo
+  (`historical_legacy_qualification_kind_incompatible`), outra fonte
+  (`historical_legacy_qualification_source_incompatible`), avaliação sem alvo
+  (`historical_thirteenth_assessment_target_required`) e `legal_rule` fora da
+  transferência (`historical_thirteenth_assessment_requires_dp_decision`).
+- Antes de qualificar, valem os mesmos cuidados da seção anterior: outros
+  casos abertos do empregado ficam com a seleção histórica desatualizada.
 
 ## Recusas
 

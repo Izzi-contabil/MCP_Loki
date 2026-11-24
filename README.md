@@ -1,17 +1,22 @@
-# MCP Loki — contrato operacional 2.9.7
-Candidata **provider 0.4.32 / contrato, instruções e plugin 2.9.7**, 23/11/2026
+# MCP Loki — contrato operacional 2.9.8
+Candidata **provider 0.4.33 / contrato, instruções e plugin 2.9.8**, 24/11/2026
+(backend #395, #396, #397, #399, #400, #401 e #402 em `main` do Loki; #398 e
+#403 não mudam texto):
+contrato aditivo com uma ferramenta nova, `rectify_case_admission_date`. O
+Refresh do conector só é necessário para essa ferramenta nominal; a mesma
+retificação da data de admissão sai por `receive_case_data` sem Refresh. Os
+schemas de dados novos chegam pelos contratos servidos. A rescisão ganha o
+aviso da norma coletiva, o cumprimento parcial do aviso e o saldo pelos dias
+efetivos; o 13º, a janela da média por empresa e os fatos opacos qualificados
+pelo id; o cadastro, a troca de `parametrizacao` e do aquisitivo de saldo de
+férias; a folha, o arredondamento do centavo por empresa. Cada texto vale
+quando a resposta servida mostrar o sinal indicado. A operadora atualiza o
+plugin. Wheel preparado não comprova publicação do backend, instalação ou uso.
+
+Edição anterior **provider 0.4.32 / contrato, instruções e plugin 2.9.7**, 23/11/2026
 (backend #387 publicado em `5b8de2b3`; #392 `70709d1a`, #393 `cefea294` e
-#391 `0d2df471` em `main`):
-contrato aditivo, sem ferramenta nova e sem Refresh do conector. O worker de
-folha não precisa mais de concessão por empresa e ninguém o inclui; as recusas
-do worker vão à engenharia, e as rotinas com `@empresas-novas` seguem por
-empresa explícita, com teto de 5000 concessões (`geral`, `folha_mensal`). No
-reajuste, o dossiê da folha mostra as pendências `diferenca_*` com a ação de
-cada código e o detalhe por regra, o pago declarado segue a fórmula do mapa da
-origem e o lote já aplicado se corrige pela retirada no caso filho e um novo
-lote com outra `reference` (`reajuste_salarial`). Cada texto vale quando a
-resposta servida mostrar o sinal indicado. A operadora só atualiza o plugin.
-Wheel preparado não comprova publicação do backend, instalação ou uso.
+#391 `0d2df471` em `main`): sem ferramenta nova e sem Refresh. Worker de folha
+sem concessão por empresa e pendências `diferenca_*` do reajuste no dossiê.
 
 Edição anterior **provider 0.4.31 / contrato, instruções e plugin 2.9.6**, 22/11/2026
 (backend #382, #385 e #384 em `main`, `1e74e642`): contrato aditivo, sem
@@ -234,11 +239,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.32** entrega instruções **2.9.7** ao backend.
+O pacote `mcp-loki-updates` **0.4.33** entrega instruções **2.9.8** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.9.7** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.9.8** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 
@@ -253,7 +258,7 @@ nova preparação e parâmetros recentes. A seleção da folha da PR240 só se a
 quando o contrato servido oferecer a rota. A edição orienta a nova preparação
 de afastamento e o alcance salarial qualificado de mês civil30/divisor30 quando
 o backend os oferecer; o pacote de instruções não publica essas capacidades.
-O contrato atual é 2.9.7, aditivo; o mínimo2.0.0 permanece. Acurácia exige coorte e medição reais;
+O contrato atual é 2.9.8, aditivo; o mínimo2.0.0 permanece. Acurácia exige coorte e medição reais;
 esta candidata local não atualiza conta, instalação ou agenda da Ana.
 
 O Loki recebe dados estruturados, valida, calcula, gera documentos, registra e

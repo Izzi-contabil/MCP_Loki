@@ -299,12 +299,18 @@ operadora antes do aceite.
 
 ## Admitidos depois da data-base
 
+O reajuste é por competência (regra da DP de 18/11/2026). Vale quando
+`rule.admitted_after_base_date` do contrato servido disser
+`applies_to_admission: "competencia posterior a da data-base"`; sem esse
+sinal, admitido no mesmo mês depois do dia da data-base ainda é tratado como
+posterior.
+
 Com regra percentual, declare o salário-base em
 `regra.salario_base_anterior_cents` (só com `percentual_bp`) ou em
-`linhas.<matricula>.salario_base_anterior_cents`. Quem foi admitido depois de
-Y no salário-base da categoria recebe o reajuste integral desde a admissão.
-Quem foi admitido acima do salário-base não tem reajuste: a prévia mostra
-`sem_reajuste` com
+`linhas.<matricula>.salario_base_anterior_cents`. Quem foi admitido em
+competência posterior à da data-base, no salário-base da categoria, recebe o
+reajuste integral desde a admissão. Quem foi admitido acima do salário-base não
+tem reajuste: a prévia mostra `sem_reajuste` com
 `motivo_sem_reajuste = admitido_apos_data_base_acima_do_salario_base`, e o
 piso novo ainda prevalece. Sem salário-base declarado, a linha recusa com
 `salario_base_nao_declarado_para_admitido_apos_data_base`. Salário anterior
@@ -312,13 +318,16 @@ abaixo do salário-base recusa com `salario_anterior_abaixo_do_salario_base`.
 Nos dois casos, confira o original e pergunte à DP. Não declare o reajuste
 por linha para contornar.
 
-## Admitido no próprio dia da data-base
+## Admitido no mês da data-base
 
-Regra da DP (18/11/2026), em `rule.admitted_on_base_date` do contrato:
+Regra da DP (18/11/2026: quem entrou no mês da data-base já deve entrar com o
+salário correto), em `rule.admitted_on_base_date` do contrato. Quando o
+contrato servido descrever "admitido na competência da data-base", vale para
+qualquer dia do mês, antes, no dia ou depois do dia da data-base:
 
-- Admitido no próprio dia da data-base: o salário de admissão já é o salário
-  novo. Envie a linha com `salario_anterior_esperado_cents` igual ao salário
-  de admissão e sem `salario_novo_cents`. O Loki devolve `sem_reajuste` com
+- O salário de admissão já é o salário novo. Envie a linha com
+  `salario_anterior_esperado_cents` igual ao salário de admissão e sem
+  `salario_novo_cents`. O Loki devolve `sem_reajuste` com
   `motivo_sem_reajuste = admitido_na_data_base_com_salario_novo`, e isso não
   é divergência. Se o piso novo for maior, vale o piso.
 - Não informe percentual nem salário novo para essa pessoa:
@@ -326,8 +335,10 @@ Regra da DP (18/11/2026), em `rule.admitted_on_base_date` do contrato:
   (`salario_novo_diverge_da_regra`).
 - Linha desse tipo aplicada antes desta regra continua `aplicada` e a prévia
   mostra o salário gravado no efeito.
-- Admitido no mesmo mês da data-base, mas depois do dia 1 e antes do dia da
-  data-base: ainda sem regra da DP. Não envie a linha; pergunte à Rafa.
+- Sem o sinal (servidor anterior), só o próprio dia da data-base tem essa
+  regra: o admitido no mês antes desse dia não entra na linha, e o admitido
+  depois dele segue "Admitidos depois da data-base". A regra da DP já existe e
+  só falta a publicação; avise a operadora em vez de perguntar à DP.
 
 ## Salário novo já registrado no cadastro
 
@@ -337,7 +348,7 @@ Regra da DP (18/11/2026), em `rule.admitted_on_base_date` do contrato:
   véspera). `salario_novo_cents` é o reajustado, ou fica vazio para a regra
   calcular. Não tente corrigir o fato de onboarding, não declare o anterior
   igual ao novo (quem tem véspera no vínculo) e não exclua a pessoa por
-  isso. Admitido no próprio dia da data-base segue a seção anterior.
+  isso. Admitido no mês da data-base segue a seção anterior.
 - **Na prévia.** A linha pode trazer
   `salario_novo_provavelmente_registrado: a_confirmar_na_aplicacao`. É só um
   aviso: a conferência é feita na aplicação.
@@ -506,15 +517,12 @@ decisão da DP.
 
 A DP respondeu em 17/11/2026 a vigência fora do dia 1, o RRA, a abrangência
 de desligados, os admitidos depois de Y e o arredondamento, e em 18/11/2026 o
-admitido no próprio dia da data-base, o VT e o salário novo já registrado
-(regras acima).
+admitido na data-base (pelo mês inteiro, com o sinal da seção "Admitido no
+mês da data-base"), o VT e o salário novo já registrado (regras acima).
 Fica pendente:
 
 - O cálculo da rescisão complementar dos desligados abrangidos (`sim`) ainda
   não existe: a ressalva continua exigindo a decisão da DP no aceite.
-- Admitido no mesmo mês da data-base, mas depois do dia 1 e antes do dia da
-  data-base (seção "Admitido no próprio dia da data-base"): não envie a
-  linha; pergunte à Rafa.
 
 Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 

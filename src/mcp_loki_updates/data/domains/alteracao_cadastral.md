@@ -331,6 +331,32 @@ fatos, eventos, pins ou casos. `reconciled_count` não é `applied_count`.
 automação não ganha autoridade. Transporte alternativo somente no
 `compatibility_transport` servido, com os mesmos gates do escritor.
 
+## Corrigir parâmetro já aplicado no onboarding (2.9.8)
+
+Vale quando `get_company_onboarding_contract` apresentar a regra de
+`replaces_fact_id` para `parametrizacao` (a pensão com vigência ou valor
+errados, por exemplo). Envie um novo fato `parametrizacao` com
+`replaces_fact_id` do fato aplicado, pelo mesmo vínculo
+(`existing_employee_id`), com os mesmos campos, a data certa, fonte própria e
+sem `missing_fields`. O fato antigo continua arquivado e deixa de valer em todos
+os cortes; o evento dele recebe `evento_revertido` e o substituto grava o seu.
+Encerrar um parâmetro continua sendo um fato novo datado com o valor de fim
+(por exemplo `pensao_alimenticia_regra: null` a partir do fim), sem
+substituição. Casos abertos do vínculo ficam com a seleção histórica
+desatualizada e releem o estado na próxima preparação.
+
+Recusas `parameter_replacement_*`: `requires_dated_complete_fact` (falta data,
+campo ou fonte), `target_outside_employee`, `target_not_parameter`,
+`target_already_replaced` (corrija o substituto vigente),
+`fields_incompatible` (campo diferente é outro fato), `no_change`,
+`multiple_candidates` e `requires_consumer_reconciliation` (há caso em revisão,
+aprovado ou publicado do vínculo desde a menor das duas vigências: o
+diagnóstico lista os casos e o CAS de cada um; concilie antes, sem reiniciar
+nem recalcular por conta própria). Caso protegido sem competência é datado
+pelo fato do processo (desligamento, início do gozo, admissão); sem essa data a
+recusa é `parameter_replacement_consumer_reference_date_unknown`, com o caso no
+diagnóstico: leve à engenharia.
+
 ## Consignado: contrato, competência e rescisão
 
 Consulte `get_company_onboarding_contract` e os parâmetros efetivamente
@@ -338,6 +364,32 @@ oferecidos. `credito_trabalhador_contratos` registra revisões de contrato,
 número como string, instituição, vigência, parcela em centavos e
 `rubrica_loki` explícita. Encerramento/cancelamento é outra revisão;
 não altere revisões antigas nem presuma rubrica por código numérico global.
+
+**Alocação entre contratos (2.9.8).** Vale quando o contrato servido de
+onboarding mostrar `data_inicio_contrato` em `credito_trabalhador_contratos`.
+Registre nesse campo o `dataInicioContrato` da Dataprev (o dia exato, diferente
+de `inicio`, a competência do primeiro desconto) numa **nova revisão** de cada
+contrato: revisão gravada não se altera. Uma data diferente da `dataInicioContrato` da
+consulta Dataprev fica com `mapping_contract_mismatch`.
+
+- Com **2 ou mais contratos confirmados no mês**, a soma respeita o teto de 35%
+  e o Loki desconta do contrato mais antigo para o mais recente pela data de
+  início (Portaria MTE 435/2025, art. 49-C). O que não couber vira saldo não
+  descontado, na memória (`saldo_nao_descontado_cents`) e no holerite. Com 1
+  contrato, nada muda.
+- Acima do teto, o caso fica pendente sem a data
+  (`credito_trabalhador_data_inicio_contrato_pendente`) ou com datas iguais
+  (`credito_trabalhador_contratos_com_mesma_data_de_inicio`: leve à DP; o Loki
+  não desempata). Dentro do teto a ordem não importa e a data não é exigida.
+- `credito_trabalhador_desconto_fora_dos_contratos`: lançamento numa rubrica de
+  crédito que algum contrato da empresa nomeia, sem contrato desta pessoa nela.
+  Registre o contrato ou retire o lançamento. `credito_trabalhador_alocacao_pendente`
+  deixa de ser emitido.
+- A folha com alguém de 2 ou mais contratos confirmados ganha o sufixo
+  `-worker-credit-allocation-v1` e precisa de `restart_case` e novo cálculo,
+  mesmo se o valor não mudar.
+- A correção auditada de `parametrizacao` (seção acima) não trava mais a
+  revisão do contrato: o ato substituído deixa de contar nela.
 
 Na folha, `credito_trabalhador_competencia` identifica os contratos/versões
 confirmados no mês e as qualificações exigidas pelo schema. Declaração atribuída
