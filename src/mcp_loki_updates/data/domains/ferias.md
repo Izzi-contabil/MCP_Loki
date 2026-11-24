@@ -333,6 +333,20 @@ Depois desta versão, a próxima validação pode devolver `ready`. Chame
 Repetir `apply_company_onboarding` com o `validation_hash` antigo é recusado
 com `snapshot_desatualizado`. Não altere as datas do gozo por causa disso.
 
+**Trocar o aquisitivo de um `vacation_balance` já aplicado.** Quando o
+contrato servido de onboarding apresentar essa troca, `replaces_fact_id` pode
+mudar `period_start` e `period_end` do saldo de abertura mantendo o mesmo
+`effective_on` (o corte). O período novo não pode sobrepor outro saldo ativo
+(`historical_vacation_balance_period_overlap`; o mesmo aquisitivo em outro
+corte não é sobreposição), e todo `vacation_use` ativo do aquisitivo antigo
+vai no mesmo lote, cada um com o seu `replaces_fact_id`
+(`historical_vacation_balance_period_movements_pending`). Programação de férias
+vigente no aquisitivo antigo recusa a troca com
+`historical_vacation_balance_period_schedule_pending`: retifique ou cancele a
+programação com `record_vacation_schedule` antes, porque o Loki não a move
+sozinho. O fato errado continua arquivado, e a seleção histórica do caso fica
+desatualizada e é refeita com `apply_historical_state`.
+
 ## Cobertura desde a admissão até o corte
 
 `leave_history_coverage_not_certified` (e

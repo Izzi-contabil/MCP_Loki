@@ -321,6 +321,24 @@ casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
+
+Cada item vale quando a resposta servida mostrar o sinal. **Refresh do
+conector só para a ferramenta nominal `rectify_case_admission_date`**; a mesma
+retificação sai por `receive_case_data` com
+`request.schema_version = "loki.case-admission-date-rectification/1"` sem
+Refresh. Os schemas de dados novos chegam pelos contratos servidos e não
+exigem Refresh. A operadora atualiza o plugin. Aviso da norma coletiva e
+cumprimento parcial do aviso na rescisão (`+aviso-declarado-v1`); saldo de
+salário pelos dias efetivos (`rescisao-v45`/`v46`); janela da média do 13º por
+empresa (`decimo-v5`) e fatos opacos do 13º qualificados pelo id;
+retificação da data de admissão antes da confirmação; troca de
+`parametrizacao` e do aquisitivo de `vacation_balance` por `replaces_fact_id`;
+admitido no mês da data-base sem reajuste; arredondamento do centavo por
+empresa; regras da DP de salário-família, DSR e VT. Roteiro em “2.9.8:
+rescisão, 13º, correções auditadas e arredondamento” de
+[WORKFLOWS.md](WORKFLOWS.md).
+
 ## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê
 
 Cada item vale quando a resposta servida mostrar o sinal. O worker de folha
@@ -496,10 +514,10 @@ por padrão (`excluidas_automaticamente`), admitidos depois da data-base pelo
 (`reajuste_proporcional_nao_praticado`) e arredondamento meio centavo para
 cima. Salário novo já registrado no cadastro vira a ressalva
 `salario_novo_ja_registrado_no_cadastro`. Regras da DP de 18/11/2026:
-admitido no próprio dia da data-base fica `sem_reajuste`, o VT não entra na
-diferença e o salário novo já registrado na data-base é o próprio reajuste.
-A rescisão complementar dos desligados abrangidos e o admitido no mesmo mês,
-antes do dia da data-base, ficam pendentes até a DP decidir.
+admitido na competência da data-base (qualquer dia do mês, com o sinal
+servido) fica `sem_reajuste`, o VT não entra na diferença e o salário novo já
+registrado na data-base é o próprio reajuste. A rescisão complementar dos
+desligados abrangidos fica pendente até a DP decidir.
 
 ## Consignado: contrato, competência e rescisão
 
@@ -583,11 +601,24 @@ apresentar (`rescisao-v43`/`rescisao-v44`): os dias do saldo são calculados
 pelo Loki; não informe dias nem troque o divisor. Desligamento em fevereiro ou
 no dia 31 agora calcula; mês inteiro trabalhado conta 30 dias; admissão no mesmo
 mês conta os dias corridos desde a admissão, incluindo atestado pago pela
-empresa. Continuam `regra_nao_medida:saldo_admissao_no_mes` até a DP responder:
-admissão no mês (depois do dia 1) com saída no dia 31 ou no último dia de
-fevereiro; afastamento pelo INSS ou licença-maternidade no mês da saída; empresa
-com divisor pelo calendário. Nesses casos não altere datas nem divisor;
-registre a dúvida com a DP. Cálculo novo exige gerar o pacote de novo e nova
+empresa. Dias efetivos e convenção do calendário (regra da DP de 18/11/2026), quando
+a resposta servida apresentar `rescisao-v45` (ou `rescisao-v46` com
+`faixa_pagador`): com divisor 30, admissão no mês (depois do dia 1) com saída
+no dia 31 ou no último dia de fevereiro paga os dias efetivos, sem completar o
+mês comercial (10/07 a 31/07 = 22 dias; 10/02 a 28/02 = 19). Com
+`convencoes.dias_do_mes: calendario` (da empresa ou, na falta, do cliente), o
+saldo divide pelos dias do mês civil, inclusive em fevereiro e na admissão no
+mês. A convenção vale só para o saldo da rescisão: folha mensal e férias não a
+leem. Continua `regra_nao_medida:saldo_afastamento_no_mes` o afastamento por
+INSS ou licença-maternidade no mês da saída, e
+`regra_nao_medida:saldo_divisor_sem_convencao` o divisor que não é 30 fixo nem
+os dias do mês. Nesses casos não altere datas nem divisor. Sem o sinal
+(servidor anterior), admissão no mês com saída no dia 31 ou no fim de
+fevereiro e o divisor pelo calendário seguem como
+`regra_nao_medida:saldo_admissao_no_mes`, `saldo_fevereiro` ou
+`saldo_dia_31_trinta_fixo`: a regra já é da DP e só falta a publicação, então
+avise a operadora em vez de perguntar à DP. Cálculo novo
+exige gerar o pacote de novo e uma nova
 revisão; versões congeladas antigas desses cenários passam a exigir nova versão.
 Atualização de instruções não corrige o calculador publicado nem certifica o
 caso completo.
@@ -722,8 +753,17 @@ Lote de políticas de mapa: quando `get_client_config` anunciar
 `apply_client_config`, argumento `alteracoes`) aplica `fgts_mensal` e, se
 `payroll_map_policy_patch_transport.policies.arredondamento_monetario.accepted`
 aparecer, `arredondamento_monetario` (`verbas` do `rounding_context`, `metodo`
-`half_up`/`half_even`/`exigir_qualificacao`, `fonte` obrigatória) a todos os
-mapas selecionados, sem reenviar `mapa` nem `mappings`, com seletores exatos e
-`expected_hash` atual. Uma única versão; verba ausente ou sem fórmula
-`remuneracao_periodo` recusa o lote inteiro. Método é decisão humana/DP.
+`half_up`/`half_even`/`exigir_qualificacao`/`truncar_centavos`/
+`valor_dia_arredondado`, `fonte` obrigatória) e, se
+`policies.arredondamento_vale_transporte` aparecer,
+`arredondamento_vale_transporte` (`policy_version:
+loki.vale-transporte-arredondamento/1`, `metodo` `half_up`/`half_even`/
+`truncar_centavos`, `fonte`) a todos os mapas selecionados, sem reenviar `mapa`
+nem `mappings`, com seletores exatos e `expected_hash` atual. As fórmulas
+aceitas vêm em `accepted_formulas` (`remuneracao_periodo`,
+`salario_base_proporcional`, `base_composta_proporcional`), não em
+`requires_formula`. Uma única versão; verba ausente ou sem fórmula aceita
+recusa o lote inteiro. Na partição, o centavo é o `arredondamento_total` do
+patch completo do mapa. Método é decisão humana/DP (se a DP disser que a
+empresa trunca, `truncar_centavos`); recalcule e confira a memória.
 Roteiro completo no domínio `geral`.

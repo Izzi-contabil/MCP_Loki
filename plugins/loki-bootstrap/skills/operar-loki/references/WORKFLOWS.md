@@ -383,9 +383,10 @@ nos domínios `geral`, `rescisao` e `ferias`.
 - Rescisão em mês comercial (divisor 30, `trinta_fixo`): o Loki calcula os
   dias do saldo; não informe dias nem troque divisor. Fevereiro e dia 31
   calculam; admissão no mês com saída no dia 31 ou no último dia de
-  fevereiro, INSS/licença-maternidade no mês da saída e divisor pelo
-  calendário continuam `regra_nao_medida` até a DP responder. Cálculo novo
-  (`rescisao-v43`/`rescisao-v44`) exige gerar o pacote de novo e nova revisão.
+  fevereiro e o divisor pelo calendário seguem a 2.9.8 (`rescisao-v45`/`v46`,
+  dias efetivos); INSS/licença-maternidade no mês da saída continuam
+  `regra_nao_medida`. Cálculo novo (`rescisao-v43` a `v46`) exige gerar o
+  pacote de novo e nova revisão.
 - Férias, segunda ocorrência: outra competência, com `competencia` = mês de
   início do gozo. `created: false` devolve o caso existente: não continue
   nele. Duas frações na mesma competência sem suporte; nunca cancele o
@@ -842,7 +843,9 @@ atualizar o plugin instalado.
   antes, confira se o episódio antigo recebeu matrícula e, se recebeu,
   registre o problema. Substituído em parte pela 2.9.5: com
   `supersedes_case_id`, a admissão cancelada sem rastro reabre pelo
-  `create_case` (seção 2.9.5).
+  `create_case` (seção 2.9.5). Substituído em parte pela 2.9.8: antes da
+  confirmação, com `admission_date_rectification` no contrato, a data se
+  retifica sem cancelar (seção 2.9.8).
 
 ## 2.9.1: regras da DP de 18/11/2026
 
@@ -856,7 +859,7 @@ atualizar o plugin instalado.
   admissão e sem `salario_novo_cents`; o Loki devolve `sem_reajuste`
   (`admitido_na_data_base_com_salario_novo`, `rule.admitted_on_base_date`),
   sem divergência, e o piso novo prevalece. Admitido no mesmo mês, antes do
-  dia da data-base: não envie a linha; pergunte à Rafa. O VT não entra na
+  dia da data-base: segue a 2.9.8 (mês inteiro, com o sinal servido). O VT não entra na
   diferença nem no pago declarado (`declared_origins.transport_discount`):
   não declare VT nas verbas, e ele não impede
   `sem_outras_verbas_dependentes_do_salario`. Salário novo já registrado com
@@ -905,7 +908,80 @@ atualizar o plugin instalado.
   houver outros casos abertos. A qualificação só vale em cortes a partir do
   fim da cobertura. Não use `final_average` para qualificar fato do 13º.
   `no_typed_exit` e `dp_rule_pending` continuam pendentes: registre o
-  problema.
+  problema. Substituída em parte pela 2.9.8: afastamento opaco e transferência
+  vêm como `path=qualify_legacy_fact` e saem por `thirteenth_fact_assessment`
+  quando o contrato servido o apresentar; `dp_rule_pending` fica só para a
+  rescisão da carga.
+
+## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
+
+O roteiro completo está em `rescisao`, `decimo_terceiro`, `admissao`,
+`alteracao_cadastral`, `ferias`, `reajuste_salarial`, `folha_mensal` e `geral`
+de `loki_obter_instrucoes`. Cada item vale quando a resposta servida mostrar o
+sinal indicado; sem ele, siga a orientação anterior. **Refresh do conector só
+para a ferramenta nominal nova** `rectify_case_admission_date`: a mesma
+retificação sai por `receive_case_data` com
+`request.schema_version = "loki.case-admission-date-rectification/1"`, sem
+Refresh. Os schemas de dados novos (`dados_rescisao`, `dados_decimo_terceiro`,
+`empresas[].decimo_terceiro_medias`, `thirteenth_fact_assessment`,
+`replaces_fact_id` em `parametrizacao`, `policy.arredondamento_*`) chegam pelos
+contratos servidos e não exigem Refresh. A operadora atualiza o plugin.
+
+- **Aviso prévio (`rescisao`).** Quando `dados_rescisao` mostrar
+  `aviso_norma_coletiva` `{dias_base 31 a 90, soma_lei_12506, fonte}`: só na
+  dispensa sem justa causa; o trabalhado cumpre 30 dias e o excedente é
+  indenizado; projeção e avos pelo total. `data_projecao_aviso` = desligamento
+  + dias indenizados, senão `aviso_projecao_incoerente`.
+  `aviso_cumprimento_parcial.ramo` (`empregador_dispensou_restante`,
+  `empregado_comunicou_desistencia`, `empregado_faltou_sem_comunicacao`, com
+  `fonte`). Sem documento que mostre o ramo, fica
+  `aviso_trabalhado_nao_cumprido`; dispensa a pedido com novo emprego
+  (Súmula 276) também fica pendente. Motor com `+aviso-declarado-v1`.
+- **Saldo de salário (`rescisao`).** `rescisao-v45` (`v46` com
+  `faixa_pagador`): admissão no mês com saída no dia 31 ou no último dia de
+  fevereiro paga os dias efetivos (10/07 a 31/07 = 22; 10/02 a 28/02 = 19);
+  `convencoes.dias_do_mes: calendario` divide pelos dias do mês civil, só na
+  rescisão. Continua `regra_nao_medida:saldo_afastamento_no_mes` (INSS ou
+  licença-maternidade no mês da saída).
+- **13º (`decimo_terceiro`).** `empresas[].decimo_terceiro_medias`
+  (`jan_nov_11` padrão; `dez_nov_12` é configuração do cliente, sem base no
+  art. 77 do Decreto 10.854, só com aceite da DP); com `dez_nov_12`, a 2ª
+  parcela e o ajuste exigem `dados_decimo_terceiro.dezembro_anterior`
+  (`decimo-v5`). `thirteenth_fact_assessment`: `sem_efeito` (`outro` e
+  afastamento, `dp_decision`), `afastamento_tipado`,
+  `transferencia_mesmo_grupo` com `direction`: `saida` exige
+  `destination_company_cnpj` e a origem recusa com
+  `historical_thirteenth_transfer_out_destination_company` (cancele o caso);
+  `entrada` exige a `qualificacao_vinculo`
+  (`historical_thirteenth_transfer_entry_unproven`). `decided_on` = `effective_on`,
+  sem retroação. Média por quantidade e produtividade: média importada.
+- **Admissão (`admissao`).** Com `admission_date_rectification` no contrato:
+  `rectify_case_admission_date` (ou o transporte) antes da confirmação, com
+  `client_message` literal, `expected_snapshot` e `expected_admission_date`;
+  caso em revisão precisa de `restart_case`. Recusas
+  `admission_date_rectification_after_confirmation` (solicitação de alteração
+  com reenvio), `..._episode_has_history`, `..._target_*`, `..._minimum_age` e
+  `..._experience_limit`; `review_text_fields` volta no recibo. Admissão
+  reaberta: cancelar e reabrir.
+- **Onboarding e férias históricas (`alteracao_cadastral`, `ferias`).**
+  `parametrizacao` com `replaces_fact_id` (mesmos campos, data e fonte;
+  recusas `parameter_replacement_*`, inclusive
+  `..._consumer_reference_date_unknown`). Troca do aquisitivo de
+  `vacation_balance` no mesmo `effective_on`, com os `vacation_use` do
+  aquisitivo antigo no mesmo lote; programação vigente recusa com
+  `historical_vacation_balance_period_schedule_pending`: retifique ou cancele
+  a programação antes.
+- **Reajuste (`reajuste_salarial`).** Admitido em qualquer dia do mês da
+  data-base fica `sem_reajuste` (regra da DP de 18/11).
+- **Folha (`folha_mensal`, `geral`).** `policy.arredondamento_monetario`
+  aceita `half_up`, `half_even`, `exigir_qualificacao`, `truncar_centavos` e
+  `valor_dia_arredondado`, nas fórmulas de `accepted_formulas`;
+  `policy.arredondamento_vale_transporte`; partição pelo
+  `arredondamento_total`. Recalcule e confira a memória. Regras da DP:
+  salário-família depende da flag do cadastro do Domínio (desmarcada = 0
+  filhos); faltas em semanas distintas descontam 2 DSR e o período corrido já
+  engloba o DSR; o percentual do VT vem da escala (3% na 12x36, 6% na 6x1),
+  declarado por pessoa.
 
 ## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê
 
@@ -1051,8 +1127,8 @@ precisar de Refresh ou conversa nova para ver as ferramentas de onboarding.
   `qualifies_legacy_fact_ids`. Gozo antecipado: `vacation_use.advance`
   (`gozo_antecipado`, ficha do Domínio como fonte do fato); a rescisão com
   gozo antecipado no aquisitivo em curso recusa
-  `rescisao_ferias_gozo_antecipado_pendente_regra` (esperado; pergunte à
-  Rafa). Abono: `data_pedido_abono` é a data do pedido do empregado; fora do
+  `rescisao_ferias_gozo_antecipado_pendente_regra` (esperado: a regra já está
+  decidida e o motor da rescisão ainda não a aplica; avise a operadora). Abono: `data_pedido_abono` é a data do pedido do empregado; fora do
   prazo, `abono_fora_do_prazo_source` com a concordância do empregador.
 - **Matrícula do eSocial (`alteracao_cadastral`, `folha_mensal`,
   `admissao`)**, quando o contrato de onboarding citar

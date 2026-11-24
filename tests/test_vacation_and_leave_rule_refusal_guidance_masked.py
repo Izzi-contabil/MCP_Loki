@@ -126,7 +126,7 @@ def test_general_points_to_vacation_and_leave_domains() -> None:
         "domínios `ferias` e `afastamento`",
     ):
         assert required in general, required
-    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.7"
+    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.8"
 
 
 def test_plugin_mirrors_268_guidance() -> None:
@@ -167,7 +167,7 @@ def test_vacation_domain_explains_rest_declaration_and_obsolete_receipts() -> No
     termination = flat(InstructionsProvider().get("rescisao")["instructions"])
     for required in ("`medias_rescisao_obsoletas`", "`OBSOLETO`", "nova consolidação"):
         assert required in termination, required
-    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.7"
+    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.8"
 
 
 def test_plugin_mirrors_2611_guidance() -> None:
@@ -213,7 +213,7 @@ def test_vacation_domain_explains_client_decision_before_holiday() -> None:
         assert stale not in text, stale
     termination = flat(InstructionsProvider().get("rescisao")["instructions"])
     assert "inclusive os emitidos depois da mudança anterior (2.6.11)" in termination
-    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.7"
+    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.8"
 
 
 def test_plugin_mirrors_2612_guidance() -> None:

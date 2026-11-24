@@ -1,4 +1,108 @@
-# Atualizações MCP Loki — contrato 2.9.7
+# Atualizações MCP Loki — contrato 2.9.8
+
+## Candidata 0.4.33 / contrato, instruções e plugin 2.9.8 — 24/11/2026
+
+Acompanha cinco PRs do backend, todas em `main` do Loki (`82f1497c`): #395
+(aviso da norma coletiva e cumprimento parcial, `31e62b3c`), #396 (13º,
+`4a9f84f2`), #397 (correções auditadas, `82f1497c`), #399 (saldo de salário na
+rescisão, `6a14607d`) e #401 (arredondamento por empresa, `942ebaee`). A #398
+(executor de publicação, `d60d07fe`) não muda texto da operadora. A #400
+(consignado e afastamento) não está mesclada e fica fora desta versão. O texto
+foi conferido contra o código mesclado, não contra os resumos das PRs. Cada
+texto novo vale quando a resposta servida mostrar o sinal:
+
+- #395: `aviso_norma_coletiva` e `aviso_cumprimento_parcial` no schema servido
+  de `dados_rescisao`; versão do motor com `+aviso-declarado-v1`.
+- #396: `empresas[].decimo_terceiro_medias` e
+  `dados_decimo_terceiro.dezembro_anterior`; `thirteenth_rules.fact_assessment`
+  e `thirteenth_rules.average_window` em `get_company_onboarding_contract`;
+  motor `decimo-v5` com `dez_nov_12`.
+- #397: `admission_date_rectification` em `get_process_contract("admissao")`
+  (e a ferramenta `rectify_case_admission_date`); `replaces_fact_id` para
+  `parametrizacao` e para o aquisitivo de `vacation_balance` no contrato de
+  onboarding; `rule.admitted_on_base_date` por competência no contrato do
+  reajuste.
+- #399: `rescisao-v45` ou `rescisao-v46` no cálculo da rescisão.
+- #401: `policies.arredondamento_vale_transporte` e `accepted_formulas` em
+  `payroll_map_policy_patch_transport`.
+
+A mudança de interface é aditiva. Há uma ferramenta nova
+(`rectify_case_admission_date`, #397: `build_server().list_tools()` ganha uma
+ferramenta a mais) e a rota equivalente em `receive_case_data`
+(`request.schema_version = loki.case-admission-date-rectification/1`, listada
+em `compatibility_transport`). As demais mudanças de schema são de dados:
+`dados_rescisao`, `dados_decimo_terceiro`, o cadastro da empresa, os fatos
+`historico_operacional` e `parametrizacao`, e a política do mapa. Nenhuma delas
+passa pelo catálogo de ferramentas: `receive_case_data`, `apply_client_config`,
+`validate_client_config` e `submit_company_onboarding_chunk` recebem JSON livre
+(`dict`) e o schema vem dos contratos servidos. Pela regra "mudou interface →
+novo contrato", o contrato sobe de 2.9.7 para 2.9.8, um patch; instruções e
+plugin acompanham em 2.9.8; provider sobe um patch. Mínimo 2.0.0 permanece. A
+lista `compatible_tools` não muda.
+
+**Refresh do conector.** É necessário só para a ferramenta nominal nova
+`rectify_case_admission_date`. Sem Refresh, a mesma retificação funciona por
+`receive_case_data`. Os schemas de dados das #395, #396, #397 e #401 não
+exigem Refresh. O aviso do domínio `geral` diz isso.
+
+Conferido no código (divergências com os rascunhos, resolvidas pelo código):
+
+- #395: `dias_base` vai de 31 a 90; a guarda `aviso_projecao_incoerente` só vale
+  com norma ou com `empregador_dispensou_restante` (o aviso legal sem
+  declaração fica fora dela). `empregado_faltou_sem_comunicacao` é a leitura
+  adotada pela engenharia; a alternativa é decisão da DP.
+- #396: `sem_efeito` tem como alvos `outro` e `afastamento` (não só `outro`);
+  `afastamento_tipado` tem alvo `afastamento` sem data. A transferência não
+  sai do estado: a qualificação é do consumidor do 13º. O texto da carga
+  `dp_rule_pending` passa a tratar só a rescisão.
+- #397: o contrato servido lista as capacidades `decidir_chat` e `corrigir_dados`
+  para a retificação; a política da ferramenta (`principal.py`) só exige
+  `corrigir_dados`. O texto cita as do contrato. Os estados gravados que
+  recusam são `aguardando_revisao` e `rejeitado` (precisam de `restart_case`);
+  o contrato descreve `allowed_states` como `aberto` e `em_preparacao`.
+  `admission_date_rectification_case_cancelled` existe no código (próxima ação
+  `create_case`) e fica fora do texto.
+- #399: os dias efetivos valem com divisor 30 e com a convenção `calendario`;
+  `regra_nao_medida:saldo_divisor_sem_convencao` continua para divisor que não
+  é nenhuma das duas.
+- #401: `requires_formula` guarda o texto da versão `/1`; as fórmulas aceitas
+  estão em `accepted_formulas`. A partição não aceita política no membro
+  (`particao_membro_arredondamento_use_arredondamento_total`).
+- Salário-família (flag do cadastro do Domínio), DSR das faltas e percentual do
+  VT pela escala são regras da DP informadas pelo solicitante; o código só
+  recebe a quantidade de filhos (`salario_familia`) e a regra individual de VT
+  (`vale_transporte_regra.percentual_basis_points`) declaradas por pessoa e não
+  as deriva. O texto diz isso e não promete cálculo pelo Loki.
+
+Por domínio:
+
+- `geral`: aviso "O que mudou nesta versão (2.9.8)" (atualizar o plugin; Refresh
+  só da ferramenta nominal) e "Continua da 2.9.7"; seção do lote de políticas
+  do mapa com os cinco métodos, `accepted_formulas`, VT e partição.
+- `rescisao`: saldo de salário pelos dias efetivos e convenção `calendario`
+  (sem o "até a DP responder"); seção "Aviso prévio: norma coletiva e
+  cumprimento parcial (2.9.8)"; gozo antecipado sem "pergunte à Rafa".
+- `decimo_terceiro`: seções "Janela da média por empresa (decimo-v5)" e "Fatos
+  opacos do 13º qualificados pelo id"; "Médias" sem "dependem de confirmação da
+  DP"; `dp_rule_pending` sem "leve à Rafa" para a transferência.
+- `admissao`: "Data de admissão errada no caso" com a retificação antes da
+  confirmação; cancelar e reabrir só para admissão reaberta, depois da
+  confirmação (alteração com reenvio) ou sem o sinal.
+- `alteracao_cadastral`: "Corrigir parâmetro já aplicado no onboarding".
+- `ferias`: troca do aquisitivo de `vacation_balance`.
+- `reajuste_salarial`: admitido no mês da data-base por competência.
+- `folha_mensal`: "Regras da DP para declarar o cadastro e os descontos".
+
+Tamanho (limite 65.536 bytes): `geral` 64.879, `ferias` 43.820,
+`folha_mensal` 43.611, `rescisao` 43.084; os demais ficam abaixo.
+
+Plugin espelha em WORKFLOWS (seção "2.9.8: rescisão, 13º, correções
+auditadas e arredondamento", e notas nas seções antigas), CAPACIDADES_DP,
+REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki.
+
+Wheel 0.4.32 permanece imutável; fonte e wheel 0.4.33 locais não comprovam
+promoção, publicação, atualização do plugin instalado, Refresh do conector, uso
+pela operadora ou aceite de DP.
 
 ## Candidata 0.4.32 / contrato, instruções e plugin 2.9.7 — 23/11/2026
 

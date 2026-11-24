@@ -1,9 +1,12 @@
 """Entrega das orientações da 2.9.7 (backend #387 publicado; #392 e #393 em main).
 
+As versões, o aviso e o limite de tamanho passaram à 2.9.8
+(`test_rescision_thirteenth_corrections_guidance_masked.py`); aqui ficam os textos que
+segue valendo (worker, reajuste e dossiê) e o aviso em "Continua da 2.9.7".
+
 Prova só que os textos chegam aos domínios e ao plugin; não mede obediência.
 """
 
-import json
 from pathlib import Path
 
 from mcp_loki_updates import InstructionsProvider
@@ -15,20 +18,13 @@ WORKFLOWS = OPERATOR / "references/WORKFLOWS.md"
 CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
 GUIDE = OPERATOR / "references/REAJUSTE_SALARIAL.md"
 DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
-RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 SECTION_297 = "## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê"
-LIMIT = 65536
 
 NOTICE = (
-    "## O que mudou nesta versão (2.9.7)",
-    "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
-    "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
-    "Atualizar o plugin instalado",
-    "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
-    "O worker de folha não precisa mais de concessão por empresa",
+    "**Continua da 2.9.7**, se ainda não publicada",
+    "o worker de folha não precisa de concessão por empresa",
     "`retroactive_actions`",
-    "`envelope_schema`",
-    "**Continua da 2.9.6**",
+    "`diferenca_*`",
 )
 STALE_NOTICE = (
     "## O que mudou nesta versão (2.9.6)",
@@ -132,51 +128,13 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
         assert flat(item) not in body, item
 
 
-def test_versions_follow_the_additive_contract_patch() -> None:
-    provider = InstructionsProvider()
-    metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.32"
-    assert metadata["instructions_version"] == "2.9.7"
-    assert metadata["mcp_contract_version"] == "2.9.7"
-    assert metadata["recommended_plugin_version"] == "2.9.7"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.5", "2.9.6", "2.9.7"):
-        assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.9.7", "2.9.8")["compatible"] is False
-    release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["compatible_tools"] == [
-        "loki_obter_instrucoes",
-        "loki_verificar_versao",
-    ]
-    backend = release["changes"]["backend"][-1]
-    assert backend.startswith("Contrato2.9.7 aditivo")
-    assert "as 96 ferramentas são as mesmas" in backend
-    for marker in ("#387", "5b8de2b3", "#392", "70709d1a", "#393", "cefea294"):
-        assert marker in backend
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.9.7")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.9.7")
-    for path in DOMAINS.glob("*.json"):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.9.7", path.name
-        assert data["updated_at"] == "2026-11-23", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.9.7", path.name
-
-
-def test_every_domain_stays_within_the_size_limit() -> None:
-    provider = InstructionsProvider()
-    for domain in provider.domains():
-        size = len(provider.get(domain)["instructions"].encode("utf-8"))
-        assert size <= LIMIT, (domain, size)
-
-
-def test_general_notice_is_conditional_and_needs_no_refresh() -> None:
+def test_general_notice_keeps_the_297_items_as_continuation() -> None:
     guide = text("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.9.7)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
-    assert notice.index("**Exige ação da operadora:**") < notice.index("**Não exige nada**")
-    assert notice.index("**Não exige nada**") < notice.index("**Continua da 2.9.6**")
+    assert notice.index("**Não exige nada**") < notice.index("**Continua da 2.9.7**")
+    assert notice.index("**Continua da 2.9.7**") < notice.index("**Continua da 2.9.6**")
     assert notice.index("**Continua da 2.9.6**") < notice.index("**Continua da 2.8.0**")
 
 

@@ -1,70 +1,70 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.9.7",
-  "contract_version": "2.9.7",
-  "plugin_version": "2.9.7",
+  "instructions_version": "2.9.8",
+  "contract_version": "2.9.8",
+  "plugin_version": "2.9.8",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-23",
+  "updated_at": "2026-11-24",
   "domains": {
     "geral": {
-      "metadata_sha256": "0e3be0be9c9bd39a148ee38324c2e2e907779c8b2e603fa867ac9ed96981e467",
-      "content_sha256": "d04e090dc02e1a39487fb0f6a855e85e473f9aa95f74b6f636168bea7ad4d385"
+      "metadata_sha256": "23d690e178232ad617bf3b986d79eed3f78427b5a8acce4a318005c4233f55fa",
+      "content_sha256": "34a8e1957ec6fb0c681b02da1843ad7a4d1298cb223597ac8e5e088fbba056ec"
     },
     "admissao": {
-      "metadata_sha256": "bfd492608ed52dfed6843aa409b0c8bf55465ad324d0f4bfbd8a0441ea03b671",
-      "content_sha256": "abedbb14f8ff431160ac16120ac981badb08ee5ca40995b5cc685f6bd706b8fb"
+      "metadata_sha256": "0f0d49b11e29775754d594b7f3247b1a70961987b52e24548181133969eb30d7",
+      "content_sha256": "a18304443339d5c2a0bd85dc90cf657ff15d62e0285df0e587cb5442b9f23489"
     },
     "rescisao": {
-      "metadata_sha256": "d6cf237a0ca51cd7e58e1fa0e2695bc9a15ecd6552051dcb95b40b9d3f954fc8",
-      "content_sha256": "0dc7ce806bfcf989481a0f7dc045a5ae0ecc53c5e2ce693385b296af248df419"
+      "metadata_sha256": "30c82e167b09a358442a3218516e75a1c4c71eb82672a4217340d7ebc18a83ee",
+      "content_sha256": "01ecb8133eae054146a0a220759c13b1ebdff000e8b44ac6bb37e09cc89dd0d9"
     },
     "ferias": {
-      "metadata_sha256": "6f85d9ab565965e13f0d45ab2743b8e339d64c19921d138108cecda2cc6916f0",
-      "content_sha256": "0738fcb31bac250f576ec8b318aafd1a0b3abcdfafccb1aedc5472c77e41f47b"
+      "metadata_sha256": "bdf6bdfc57e15b64684c2ada914c3ec757fb112d7e534b19915612171b98f117",
+      "content_sha256": "bd52ed94aa35a38bb2c23fafcabd5143fe116d3ea6c73412f363e8f83c1ded54"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "04a325087ff5f1c3aedaa50a890faf7ff7ee0f84e3f2bba5223821c1ca46c8fa",
-      "content_sha256": "8079f64eb1ad887de6cf3664aa4389108ace5ff157a730c79cf029539bad74be"
+      "metadata_sha256": "091a138132a8f3aee811806e6b3a630663750faff2809ae8004e258d708c3f4a",
+      "content_sha256": "768a082d8b3a6962bd248be703057cd5dc8aaa88cb71b2ef03fcd4868fd501fa"
     },
     "afastamento": {
-      "metadata_sha256": "d0e59d1307917b6753b44d15ebead6688f59b33420b9b46ca1dab934ae7f3ea1",
+      "metadata_sha256": "ca8530fa5e0f3865eb5a3ffcde633eb26f2b53893bcaa14e2cbd6aa0dfaf355f",
       "content_sha256": "9ce44c6a78414907dcb236c5907a5295a59ef17a9200c12601d48261b9e1cafd"
     },
     "documentos": {
-      "metadata_sha256": "1381beae9ebea9e5bd5df0d88064babe159d6c0b86c54712176486e7c1b18191",
+      "metadata_sha256": "6436e9dd5789b067e2e09e409a5fbaa51033092a02cb153b0162f18a7f3f050f",
       "content_sha256": "f3f3962a6e9f0b313517af6b3e99bf885d1bf4444d41486ba5b2e07c8f08e038"
     },
     "aprovacoes": {
-      "metadata_sha256": "fe14e9b46e37dfc9d5817f6479b52035e3d4aa3b925c9a567be343a8989eb4d3",
+      "metadata_sha256": "8a2f3618bb54b57f74175c48a89c4a8080751d8ff09a4ab68210c2ef70a158b1",
       "content_sha256": "19a189b935a117bcfe760bfcd33a0543ab9ba17cb89ce3ea9e5c04cdc1776c5f"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "c875aab3553eaecaaf9079489c4b1aa8c01dc4c3e04d8b3a619c498590f3264a",
-      "content_sha256": "47528e398a4166aef9c1ff2c67e57d9c33e20aec8fb962face5554be65aba346"
+      "metadata_sha256": "040ab4e92f88030f0dde4a75c17427aeb6d22ef1c2a7e37cbca1c91ac67649a3",
+      "content_sha256": "fd307f9b05502d6fea160c4d2e6f7e0d54ed7bff9d06d6dee99c64b168096c0b"
     },
     "ocorrencia": {
-      "metadata_sha256": "86cf3548c0e8e31bf2082b25f112e1b0d3e8d8a709c65da7bc99e14b64597402",
+      "metadata_sha256": "6bddbb0bc4c75c92da9d49cbb21739bcc86e2548634f0a3b190a1301b73757cf",
       "content_sha256": "3114c154962c4480875efb5d46c36aabd288486c8f88879b2dfee413d0f0db1c"
     },
     "adiantamento": {
-      "metadata_sha256": "f1f0aa154226ce1ea4d6325a8d424993f4898ce67ea46a7962853d4596e0dfb6",
+      "metadata_sha256": "5309c65aff47c01fcd5e882a0e594508d11c5cf0e13bfad10143f9795ff1c462",
       "content_sha256": "0d73398daf84025f99073a69f90f79ea79caa6e573757f8e58ca607f0201ca54"
     },
     "aviso_ferias": {
-      "metadata_sha256": "37f08a234bc6285f5781156d97855557495d046ad351387a9d98733558d15d1f",
+      "metadata_sha256": "f064e59254001b4258c969b9ec44e264faff5c3ebbbb763ced7f9f7042df6fa0",
       "content_sha256": "f5a3bda76fd7b798c13676bc1ff653c7eab2e3f050b53f82f60f1f71f8114cc1"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "a873ef0dbf1e43523a26151a91c9fbfe70ff5f15aa3f29f532f7a5fe1cb96655",
+      "metadata_sha256": "b65e0e3477d4fd8e82392f9ea767881ed627ac26e5a304ceb4f50174139a7dbc",
       "content_sha256": "ccd26352c92d176fe697ab833cb3f66b69eb2c54ccfbf88063f784055fc9c41a"
     },
     "reajuste_salarial": {
-      "metadata_sha256": "5cb50952540c9af3d8dfd20d7087b3d7ceef8619b0780f95e18c5a312bc0bd62",
-      "content_sha256": "138643b9f3d3a65f45534be3daa6f68f5bdd77a683edc153b9d5f3501087363e"
+      "metadata_sha256": "5df7ddf6bbbc53e5a4d0167c1324f52494793076cd50c1e9f81c3eb0308ceb7c",
+      "content_sha256": "cad2df194abe1c302453cb35dd72f03e2a8a4e84953cfd95cb55413e63e96bed"
     },
     "folha_mensal": {
-      "metadata_sha256": "8fc090d139d956d863888b562f0fa80223a485a55cf65bba13e5c927d2d2e2ab",
-      "content_sha256": "82db407ad55690c8718d8fa3b14347081ac2b66f2d7ff7cbfbae454fa3013002"
+      "metadata_sha256": "e52d05bf37b97d7e71a0c1b5cca7847ec1ee0a3c96c7ee7a81cbb7a2d7b09091",
+      "content_sha256": "94122a8d2abc9c49c9eef004e6da1d724aed59e8068db4e16c27dcaa80a7533c"
     }
   },
   "changes": {
@@ -87,7 +87,8 @@
       "Contrato2.9.4 aditivo (backend #374 e #375): folha mensal folha-v32 (regra da DP de 19/11): limite do salário-família pela remuneração devida no mês e cota proporcional no mês de admissão; pendências novas salario_familia_mes_transferencia_pendente_regra, salario_familia_salario_do_mes_nao_identificado, salario_familia_adicional_mes_cheio_nao_identificado, salario_familia_deducao_nao_classificada, salario_familia_medias_ferias_nao_classificadas, vale_transporte_mes_transferencia_pendente_regra e vale_transporte_proporcao_concessao_admissao_ambigua com as próximas ações; salario_familia_mes_admissao_pendente_regra deixa de ser emitida; correção do operador em funcionarios.<matricula>.verbas.<rubrica de VT>.0.valor_cents para o VT ambíguo; calculated null na memória de correção sobre valor pendente; a troca de motor desatualiza todas as folhas mensais não entregues. Recusa worker_not_authorized com reason worker_company_grant_missing, required_grant e next_action para o comando aditivo prepare_authorization_addition (#375). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
       "Contrato2.9.5 aditivo (backend #376 e #379 em main; #378 e #372 aprovadas, ainda não mescladas): concessão automática do worker de folha e do modelo @empresas-novas em empresa nova (access_auto_granted) e carga_historica por empresa explícita em conta de automação, com as ferramentas de onboarding no catálogo dela e as recusas onboarding_empresa_nao_autorizada, argumento_fora_do_contrato, automacao_nao_cria_cliente e cadastro_da_empresa_exige_configurar_cliente (#376); razão social do cadastro (razao_social_normalizada_pelo_cadastro), reabertura da admissão cancelada sem rastro com supersedes_case_id e as recusas admission_cancelled_case_not_reusable, case_superseded_by_new_case e admission_reopening_chain_inconsistent (#379); historical-vacation-v2 com dados_ferias.data_calculo, leave.vacation_effect, vacation_use.advance, dados_ferias.abono_fora_do_prazo_source, historical_state.vacation_rules no contrato de onboarding, os códigos historical_* novos, ferias_data_calculo_invalida, ferias_abono_fora_do_prazo_source_sem_uso/_sem_fundamento e rescisao_ferias_gozo_antecipado_pendente_regra (#378); matrícula do eSocial operacional (migration 0066) com motivo adocao_matricula_esocial, adoption_effects, identificador auxiliar, pendência matricula_coincide_com_codigo_auxiliar e as recusas matricula_esocial_em_uso_no_empregador, empresa_adotou_matricula_esocial, matricula_esocial_exige_adocao_auditada, codigo_dominio_e_auxiliar_em_vinculo_esocial, adocao_matricula_esocial_exige_codigo_dominio, adocao_matricula_esocial_valor_citado_em_folha_aberta e termination_monthly_calculation_predates_registration_adoption (#372). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
       "Contrato2.9.6 aditivo (backend #382, #385 e #384 em main 1e74e642): correções calculadas do operador atravessam o restart_case com replace_process_inputs (corrections_carried, corrections_not_carried e operator_corrections.carried/not_carried com os motivos; estado_no_calculo_corrente em ressalvas.correcoes_humanas, que muda o hash do recibo de revisão: pacote_mudou_desde_a_leitura na revisão preparada antes da publicação) (#382); motor folha-v33, que desatualiza as folhas mensais não entregues: VT do admitido sobre a linha de salário (vale_transporte_salario_do_mes_acima_do_contrato, vale_transporte_salario_do_mes_nao_identificado), salário-família do admitido pela base da linha, férias do Loki no contexto (payment_basis, loki_vacation_*), INSS o mês inteiro (sem_remuneracao_empregador, payroll_launches_in_inss_full_month), context_fields, credito_trabalhador_compulsorio_nao_identificado, credito_trabalhador_tributos_do_mes_pendentes e pensão do admitido desde a admissão (#385); férias pela CLT: afastamento no aquisitivo (historical_vacation_*, afastamento_aquisitivo_sem_efeito_clt), fracionamento (ferias_fracionamento_*, ferias_saldo_insuficiente_com_casos_irmaos também na aprovação e publicação, related_case_ids, saldo_ferias_residual), empresas[].ferias_recibo (ferias-v8/v9), dados_ferias.gozo_antecipado_source (ferias_gozo_antecipado_*) e rescisão pendente com férias antecipadas do Loki (#384). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
-      "Contrato2.9.7 aditivo (backend #387 publicado em 5b8de2b3; #392 em main 70709d1a; #393 em main cefea294; #391 em main 0d2df471, sem mudança de texto): o worker de folha deixa de exigir concessão por empresa e a recusa worker_not_authorized perde reason worker_company_grant_missing, required_grant e authorization_addition; worker suspenso ou com papel ou tipo errado recusa worker_not_authorized e credencial revogada, vencida ou conta diferente recusa worker_service_not_authorized; empresa nova não entra mais na conta do worker; teto de concessões por conta de 500 para 5000 no prepare_authorization_addition (preparar_autorizacao segue com até 500 por pedido) (#387). Dossiê da folha com os códigos diferenca_*, politica_diferenca_retroativa_ausente e instrumento_reajuste_divergente em missing_fields, retroactive_actions por código, retroactive_proof e retroactive_detail (codigo, regra, competencia, origem, codigo_origem, formula, ação da regra, matches_calculation; available false com retroactive_detail_case_not_in_preparation, retroactive_detail_busy ou retroactive_detail_unavailable) e a política diferenca_retroativa no envelope_schema de get_client_config.payroll_map_patch_transport (#392). Pago declarado com várias verbas remuneracao_periodo no mesmo mês aceito quando todas trazem a mesma quantidade; a regra remuneracao_periodo_repetida passa a remuneracao_periodo_quantidades_divergentes, com codigo_origem e codigo_periodo no detalhe, e códigos iguais depois de normalizados (8 e 008) são repetidos (#393). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas."
+      "Contrato2.9.7 aditivo (backend #387 publicado em 5b8de2b3; #392 em main 70709d1a; #393 em main cefea294; #391 em main 0d2df471, sem mudança de texto): o worker de folha deixa de exigir concessão por empresa e a recusa worker_not_authorized perde reason worker_company_grant_missing, required_grant e authorization_addition; worker suspenso ou com papel ou tipo errado recusa worker_not_authorized e credencial revogada, vencida ou conta diferente recusa worker_service_not_authorized; empresa nova não entra mais na conta do worker; teto de concessões por conta de 500 para 5000 no prepare_authorization_addition (preparar_autorizacao segue com até 500 por pedido) (#387). Dossiê da folha com os códigos diferenca_*, politica_diferenca_retroativa_ausente e instrumento_reajuste_divergente em missing_fields, retroactive_actions por código, retroactive_proof e retroactive_detail (codigo, regra, competencia, origem, codigo_origem, formula, ação da regra, matches_calculation; available false com retroactive_detail_case_not_in_preparation, retroactive_detail_busy ou retroactive_detail_unavailable) e a política diferenca_retroativa no envelope_schema de get_client_config.payroll_map_patch_transport (#392). Pago declarado com várias verbas remuneracao_periodo no mesmo mês aceito quando todas trazem a mesma quantidade; a regra remuneracao_periodo_repetida passa a remuneracao_periodo_quantidades_divergentes, com codigo_origem e codigo_periodo no detalhe, e códigos iguais depois de normalizados (8 e 008) são repetidos (#393). Sem ferramenta nova, sem schema de ferramenta alterado e sem mudança de argumento: as 96 ferramentas são as mesmas.",
+      "Contrato2.9.8 aditivo (backend #395, #396, #397, #399 e #401 em main 82f1497c; #398 sem mudança de texto; #400 fora): uma ferramenta nova, rectify_case_admission_date (a mesma retificação sai por receive_case_data com request.schema_version loki.case-admission-date-rectification/1, sem Refresh; admission_date_rectification em get_process_contract(\"admissao\")); dados_rescisao.aviso_norma_coletiva e aviso_cumprimento_parcial (motor +aviso-declarado-v1, aviso_projecao_incoerente); empresas[].decimo_terceiro_medias e dados_decimo_terceiro.dezembro_anterior (decimo-v5 com dez_nov_12), thirteenth_fact_assessment (sem_efeito, afastamento_tipado, transferencia_mesmo_grupo com direction); replaces_fact_id em parametrizacao (parameter_replacement_*) e na troca do aquisitivo de vacation_balance (historical_vacation_balance_period_*); reajuste por competência em rule.admitted_on_base_date; saldo de salário pelos dias efetivos (rescisao-v45 e v46, convenção calendario); policy.arredondamento_monetario com truncar_centavos e valor_dia_arredondado, accepted_formulas e policy.arredondamento_vale_transporte. Refresh do conector só para a ferramenta nominal; schemas de dados chegam pelos contratos servidos."
     ],
     "instructions": [
       "Extensão aditiva2.2: intenção fiscal de administrador humano, prévia/hash/revisão e readback; assinatura, representação, fila e recibo verificados continuam pendentes.",
@@ -126,7 +127,8 @@
       "Instruções2.9.4: geral com aviso destacado do recálculo obrigatório das folhas mensais não entregues (folha-v32, inclusive as recalculadas na v31) e da conferência das correções de salário-família da v31 que prevalecem; seção Empresa nova: acesso do worker e da rotina (prepare_authorization_addition aditivo pela pessoa owner, aplicar_autorizacao, repetir o enqueue; preparar_autorizacao nunca para incluir empresa no worker). folha_mensal: Motor folha-v32; salário-família pela remuneração devida no mês (salário cheio, adicionais pelo mês cheio, sem faltas, 13º e terço), cota proporcional no mês de admissão por 30 − dia + 1 em confirmação com a DP, pendências novas com próximas ações e saída por submit_operator_correction; VT do admitido com o percentual uma vez sobre o salário proporcional, os três casos da concessão e a pendência ambígua com saída pela correção da linha do VT; substitui o salário-família, os pontos em consulta à DP e o VT retido da 2.9.3; item 0 da fila durável para empresa nova sem o worker. Valem quando a resposta servida os apresentar.",
       "Instruções2.9.5: geral com aviso do que mudou (só atualizar o plugin; sem Refresh; a conta da rotina com carga_historica pode precisar de conversa nova), textos condicionais ao sinal servido de cada parte do backend e lembrete do Refresh da 2.8.0 estendido à adoção; seção Empresa nova e onboarding pela rotina (concessão automática, recursos para worker_company_grant_missing no item 0 da fila durável de folha_mensal, regras da automação, roteiro do onboarding pela rotina e o que continua com a pessoa); cancelamento libera a chave só na admissão sem rastro. admissao: razão social do cadastro, reabertura com supersedes_case_id e recusas, recusas de matrícula eSocial no create_case. ferias: data_calculo obrigatória, cobertura até ela, espelho nativo, sem_reducao, fato opaco, gozo antecipado e abono fora do prazo (historical-vacation-v2). afastamento: sem_reducao e fato opaco só para férias. rescisao: recusa com gozo antecipado e folha anterior à adoção. alteracao_cadastral: adoção da matrícula do eSocial (um lote por empresa, recusas, adoption_effects). folha_mensal: matrícula do eSocial na população, matricula_coincide_com_codigo_auxiliar e pares cruzados pela correção da população com funcionario_id. Valem quando a resposta servida os apresentar.",
       "Instruções2.9.6: geral com o aviso O que mudou nesta versão (2.9.6), que leva também os itens da 2.9.5 (as duas chegam juntas): atualizar o plugin, recalcular as folhas não entregues com folha-v33 e preparar de novo a revisão que recusar pacote_mudou_desde_a_leitura, sem Refresh; as seções eSocial por empresa e Preparação fiscal persistida saem do geral (o texto segue em alteracao_cadastral) e ficam como remissão. folha_mensal: Motor folha-v33 (VT e salário-família do admitido, férias do Loki e INSS do mês inteiro no contexto, dossiê, pensão do admitido, Crédito do Trabalhador) e Correções calculadas atravessam o reinício da folha, com remissões nas seções da v32. ferias: Afastamento e fracionamento pela CLT, gozo antecipado e recibo por empresa (2.9.6), com remissões no afastamento que não reduz férias, no gozo antecipado do histórico e na tabela de recusas. afastamento: CLT no aquisitivo e INSS do mês inteiro. rescisao: gozo antecipado do processo de férias. alteracao_cadastral: ferias_recibo. Valem quando a resposta servida mostrar o sinal (folha-v33, corrections_carried, gozo_antecipado_source).",
-      "Instruções2.9.7: geral com o aviso O que mudou nesta versão (2.9.7) (só atualizar o plugin; sem Refresh) e Continua da 2.9.6 (recalcular as folhas anteriores à folha-v33 e preparar de novo a revisão que recusar pacote_mudou_desde_a_leitura); os itens da 2.9.5 saem do aviso; seção Empresa nova e onboarding pela rotina: o worker de folha não precisa de concessão por empresa e ninguém o inclui (sem prepare_authorization_addition nem preparar_autorizacao para ele), as recusas worker_not_authorized, worker_company_grant_missing (servidor anterior) e worker_service_not_authorized vão à engenharia pelo Caixa, a rotina com @empresas-novas e carga_historica continua por empresa explícita, teto de 5000 concessões e prepare_authorization_addition para conta acima de 500. folha_mensal: item 0 da fila durável reescrito para o worker sem concessão; dossiê remete às pendências da diferença. reajuste_salarial: quantidade pela fórmula do mapa da competência de origem (nunca em salario_base, obrigatória nas proporcionais, várias remuneracao_periodo no mês com a mesma quantidade quando o detalhe mostrar remuneracao_periodo_quantidades_divergentes, #393), Corrigir o pago declarado de lote já aplicado (retirada no caso filho, novo reajuste_salarial com o mesmo instrumento e outra reference, só as linhas corrigidas; reabertura só para linha com falha e exclusão recusa linha aplicada), política ausente por add de vigência nova e nunca replace, e Pendências da diferença no dossiê da folha (retroactive_actions, retroactive_detail só com a folha em preparação, matches_calculation, retroactive_proof). Valem quando a resposta servida os apresentar."
+      "Instruções2.9.7: geral com o aviso O que mudou nesta versão (2.9.7) (só atualizar o plugin; sem Refresh) e Continua da 2.9.6 (recalcular as folhas anteriores à folha-v33 e preparar de novo a revisão que recusar pacote_mudou_desde_a_leitura); os itens da 2.9.5 saem do aviso; seção Empresa nova e onboarding pela rotina: o worker de folha não precisa de concessão por empresa e ninguém o inclui (sem prepare_authorization_addition nem preparar_autorizacao para ele), as recusas worker_not_authorized, worker_company_grant_missing (servidor anterior) e worker_service_not_authorized vão à engenharia pelo Caixa, a rotina com @empresas-novas e carga_historica continua por empresa explícita, teto de 5000 concessões e prepare_authorization_addition para conta acima de 500. folha_mensal: item 0 da fila durável reescrito para o worker sem concessão; dossiê remete às pendências da diferença. reajuste_salarial: quantidade pela fórmula do mapa da competência de origem (nunca em salario_base, obrigatória nas proporcionais, várias remuneracao_periodo no mês com a mesma quantidade quando o detalhe mostrar remuneracao_periodo_quantidades_divergentes, #393), Corrigir o pago declarado de lote já aplicado (retirada no caso filho, novo reajuste_salarial com o mesmo instrumento e outra reference, só as linhas corrigidas; reabertura só para linha com falha e exclusão recusa linha aplicada), política ausente por add de vigência nova e nunca replace, e Pendências da diferença no dossiê da folha (retroactive_actions, retroactive_detail só com a folha em preparação, matches_calculation, retroactive_proof). Valem quando a resposta servida os apresentar.",
+      "Instruções2.9.8: geral com o aviso O que mudou nesta versão (2.9.8) (atualizar o plugin; Refresh só da ferramenta nominal rectify_case_admission_date) e Continua da 2.9.7, e o lote de políticas do mapa com os cinco métodos de arredondamento, accepted_formulas, VT e partição. rescisao: aviso da norma coletiva e cumprimento parcial, saldo pelos dias efetivos e convenção calendario, sem o até a DP responder. decimo_terceiro: janela da média por empresa e fatos opacos qualificados pelo id; média por quantidade só pela importada. admissao: retificação da data antes da confirmação. alteracao_cadastral e ferias: troca de parametrizacao e do aquisitivo de vacation_balance. reajuste_salarial: admitido no mês da data-base. folha_mensal: regras da DP de salário-família, DSR e VT. Textos condicionados ao sinal servido."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -167,7 +169,8 @@
       "Plugin2.9.4 espelha a folha v32 (recálculo obrigatório, salário-família pela remuneração devida, VT do admitido, correções da v31 que prevalecem) e a empresa nova no worker em WORKFLOWS (seção 2.9.4, com nota de substituição na 2.9.3), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.29 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.28 permanece imutável.",
       "Plugin2.9.5 espelha o onboarding pela rotina, a admissão (razão social e reabertura), as férias historical-vacation-v2 e a adoção da matrícula do eSocial em WORKFLOWS (seção 2.9.5, com notas de substituição na 2.9.0, 2.9.1 e 2.9.4), CAPACIDADES_DP (inclusive o cancelamento), operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.30 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.29 permanece imutável.",
       "Plugin2.9.6 espelha as correções no reinício, a folha v33 e as férias pela CLT em WORKFLOWS (seção 2.9.6, com notas de substituição na 2.9.4 e 2.9.5), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.31 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.30 permanece imutável.",
-      "Plugin2.9.7 espelha o worker sem concessão por empresa e as pendências do reajuste no dossiê em WORKFLOWS (seção 2.9.7, com notas de substituição na 2.9.4 e 2.9.5, e as seções Reajuste coletivo e Diagnóstico da folha no dossiê), REAJUSTE_SALARIAL (mesmo texto do domínio), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.32 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.31 permanece imutável."
+      "Plugin2.9.7 espelha o worker sem concessão por empresa e as pendências do reajuste no dossiê em WORKFLOWS (seção 2.9.7, com notas de substituição na 2.9.4 e 2.9.5, e as seções Reajuste coletivo e Diagnóstico da folha no dossiê), REAJUSTE_SALARIAL (mesmo texto do domínio), CAPACIDADES_DP, operar-loki e registrar-problema-loki; não exige Refresh do conector, só atualizar o plugin; wheel0.4.32 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.31 permanece imutável.",
+      "Plugin2.9.8 espelha a 2.9.8 em WORKFLOWS (seção 2.9.8, com notas de substituição na 2.9.2), CAPACIDADES_DP, REAJUSTE_SALARIAL, operar-loki e registrar-problema-loki; Refresh do conector só para a ferramenta nominal rectify_case_admission_date, e a operadora atualiza o plugin; wheel0.4.33 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.32 permanece imutável."
     ]
   }
 }

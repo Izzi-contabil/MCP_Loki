@@ -19,14 +19,14 @@ GUIDE = OPERATOR / "references/REAJUSTE_SALARIAL.md"
 RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 
 ADMITTED_ON_BASE_DATE = (
-    "## Admitido no próprio dia da data-base",
+    "## Admitido no mês da data-base",
     "`rule.admitted_on_base_date`",
     "`salario_anterior_esperado_cents` igual ao salário de admissão e sem `salario_novo_cents`",
     "`motivo_sem_reajuste = admitido_na_data_base_com_salario_novo`",
     "isso não é divergência",
     "Se o piso novo for maior, vale o piso",
     "`salario_novo_cents` maior sem motivo diverge da regra",
-    "depois do dia 1 e antes do dia da data-base: ainda sem regra da DP",
+    "Sem o sinal (servidor anterior), só o próprio dia da data-base tem essa regra",
 )
 TRANSPORT = (
     "Descontos que dependem do salário, como o VT (6%), não entram na diferença",

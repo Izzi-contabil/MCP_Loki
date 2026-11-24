@@ -629,6 +629,27 @@ como alias: traduza o extrato do Domínio pelo mapa de `identifiers`
 - Folhas entregues continuam com o código antigo impresso: não reabra nem
   recalcule por causa da adoção.
 
+## Regras da DP para declarar o cadastro e os descontos (2.9.8)
+
+São regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O
+Loki não as deriva sozinho: ele recebe a quantidade declarada por pessoa e a
+valida com a coerência interna.
+
+- **Salário-família.** Depende da flag no cadastro do Domínio. Com a flag
+  desmarcada, a quantidade de filhos para o salário-família é 0, mesmo que o
+  empregado tenha dependente cadastrado. Declare 0 no campo `salario_familia`
+  do cadastro em vez de contar os dependentes; o dependente de IRRF é outro
+  dado.
+  Ausência da quantidade continua pendência, nunca zero presumido.
+- **DSR das faltas.** Faltas em semanas distintas descontam 2 DSR. O período
+  corrido já engloba o DSR: não acrescente desconto de DSR por cima dele. Não crie falta nem desconto de DSR
+  para fazer o total coincidir com o Domínio.
+- **VT.** O percentual vem da escala da pessoa: 3% na 12x36 e 6% na 6x1. A
+  harness declara o percentual por pessoa em `vale_transporte_regra`
+  (`percentual_basis_points`: 300 ou 600). O Loki não deduz a taxa da escala,
+  do sindicato nem de referência livre: sem a regra declarada, o Loki não
+  aplica taxa pela escala.
+
 ## Regras comuns da operação
 
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.

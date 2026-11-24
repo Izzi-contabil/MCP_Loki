@@ -331,6 +331,32 @@ fatos, eventos, pins ou casos. `reconciled_count` não é `applied_count`.
 automação não ganha autoridade. Transporte alternativo somente no
 `compatibility_transport` servido, com os mesmos gates do escritor.
 
+## Corrigir parâmetro já aplicado no onboarding (2.9.8)
+
+Vale quando `get_company_onboarding_contract` apresentar a regra de
+`replaces_fact_id` para `parametrizacao` (a pensão com vigência ou valor
+errados, por exemplo). Envie um novo fato `parametrizacao` com
+`replaces_fact_id` do fato aplicado, pelo mesmo vínculo
+(`existing_employee_id`), com os mesmos campos, a data certa, fonte própria e
+sem `missing_fields`. O fato antigo continua arquivado e deixa de valer em todos
+os cortes; o evento dele recebe `evento_revertido` e o substituto grava o seu.
+Encerrar um parâmetro continua sendo um fato novo datado com o valor de fim
+(por exemplo `pensao_alimenticia_regra: null` a partir do fim), sem
+substituição. Casos abertos do vínculo ficam com a seleção histórica
+desatualizada e releem o estado na próxima preparação.
+
+Recusas `parameter_replacement_*`: `requires_dated_complete_fact` (falta data,
+campo ou fonte), `target_outside_employee`, `target_not_parameter`,
+`target_already_replaced` (corrija o substituto vigente),
+`fields_incompatible` (campo diferente é outro fato), `no_change`,
+`multiple_candidates` e `requires_consumer_reconciliation` (há caso em revisão,
+aprovado ou publicado do vínculo desde a menor das duas vigências: o
+diagnóstico lista os casos e o CAS de cada um; concilie antes, sem reiniciar
+nem recalcular por conta própria). Caso protegido sem competência é datado
+pelo fato do processo (desligamento, início do gozo, admissão); sem essa data a
+recusa é `parameter_replacement_consumer_reference_date_unknown`, com o caso no
+diagnóstico: leve à engenharia.
+
 ## Consignado: contrato, competência e rescisão
 
 Consulte `get_company_onboarding_contract` e os parâmetros efetivamente

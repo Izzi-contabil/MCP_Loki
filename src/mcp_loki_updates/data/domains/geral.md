@@ -1,6 +1,6 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.7)
+## O que mudou nesta versão (2.9.8)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
@@ -10,20 +10,39 @@ indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 **Exige ação da operadora:**
 
 - Atualizar o plugin instalado (as skills mudaram). O plugin não bloqueia o
-  uso: as instruções vêm do servidor. As 96 ferramentas são as mesmas: **não
-  exige Refresh do conector**.
+  uso: as instruções vêm do servidor.
+- **Refresh do conector só para a ferramenta nominal nova**
+  `rectify_case_admission_date` (retificar a data de admissão antes da
+  confirmação, domínio `admissao`). Sem o Refresh, a mesma retificação sai por
+  `receive_case_data` com `request.schema_version =
+  "loki.case-admission-date-rectification/1"`, sem outra ação. Peça o Refresh
+  (e conversa nova) só quando ela for usar a ferramenta nominal. Os schemas de
+  dados novos abaixo chegam pelos contratos servidos (`get_process_contract`,
+  `get_company_onboarding_contract`, `get_client_config`) e **não exigem
+  Refresh**.
 
 **Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
 
-- O worker de folha não precisa mais de concessão por empresa: ninguém inclui
-  empresa nele ("Empresa nova e onboarding pela rotina", abaixo). As rotinas
-  com o modelo `@empresas-novas` continuam recebendo a empresa nova sozinhas.
-- Reajuste (`reajuste_salarial`, `folha_mensal`): quando o dossiê da folha
-  trouxer `retroactive_actions`, as pendências `diferenca_*` aparecem em
-  `missing_fields` com a ação de cada código e o detalhe da regra
-  (`retroactive_detail`); a política `diferenca_retroativa` aparece no
-  `envelope_schema` do patch do mapa. Regras do pago declarado e da correção
-  de lote já aplicado no domínio `reajuste_salarial`.
+- `rescisao`: aviso da norma coletiva e cumprimento parcial
+  (`dados_rescisao.aviso_norma_coletiva` e `aviso_cumprimento_parcial`, motor
+  com `+aviso-declarado-v1`) e saldo de salário pelos dias efetivos
+  (`rescisao-v45`/`v46`, convenção `calendario`).
+- `decimo_terceiro`: janela da média por empresa
+  (`empresas[].decimo_terceiro_medias`, `decimo-v5`,
+  `dados_decimo_terceiro.dezembro_anterior`) e fatos opacos qualificados pelo
+  id (`thirteenth_fact_assessment`).
+- `admissao`, `alteracao_cadastral`, `ferias`, `reajuste_salarial`: retificação
+  da data de admissão; troca de `parametrizacao` e do aquisitivo de
+  `vacation_balance` por `replaces_fact_id`; admitido no mês da data-base fica
+  `sem_reajuste`.
+- `folha_mensal` e lote de políticas do mapa: arredondamento do centavo por
+  empresa (`truncar_centavos`, `valor_dia_arredondado`, VT) e regras da DP de
+  salário-família, DSR e VT.
+
+**Continua da 2.9.7**, se ainda não publicada: o worker de folha não precisa
+de concessão por empresa e, quando o dossiê da folha trouxer
+`retroactive_actions`, as pendências `diferenca_*` vêm com ação e detalhe
+(`folha_mensal`, `reajuste_salarial`).
 
 **Continua da 2.9.6**, se ainda não foi feito: recalcular, conferir e pedir
 novo aceite das folhas mensais não entregues calculadas antes da `folha-v33`
@@ -743,16 +762,38 @@ mapas de uma empresa sem reenviar `mapa` nem `mappings`: `company_code`,
 - `arredondamento_monetario`, sozinho ou junto com `fgts_mensal`, quando
   `payroll_map_policy_patch_transport.policies.arredondamento_monetario.accepted`
   aparecer: `{"verbas": ["<verba_loki do rounding_context da pendência>"],
-  "metodo": "half_up" | "half_even" | "exigir_qualificacao", "fonte": "<origem
-  da escolha: documento, regra ou pedido humano>"}`; `fonte` é obrigatória.
+  "metodo": "half_up" | "half_even" | "exigir_qualificacao" |
+  "truncar_centavos" | "valor_dia_arredondado", "fonte": "<origem da escolha:
+  documento, regra ou pedido humano>"}`; `fonte` é obrigatória. As fórmulas
+  aceitas estão em `accepted_formulas` (`remuneracao_periodo`,
+  `salario_base_proporcional` e `base_composta_proporcional`), não em
+  `requires_formula`, que guarda o texto antigo. `exigir_qualificacao` só vale
+  em `remuneracao_periodo` (`period_only`) e `valor_dia_arredondado` exige
+  `unidade_quantidade: dias` (`requires_days_unit`). Se a DP disser que a
+  empresa trunca, use `truncar_centavos`.
+- `arredondamento_vale_transporte`, quando
+  `policies.arredondamento_vale_transporte` aparecer: `{"policy_version":
+  "loki.vale-transporte-arredondamento/1", "metodo": "half_up" | "half_even" |
+  "truncar_centavos", "fonte": "..."}`, no mapa, independente da política das
+  verbas.
+- Partição de salário (`particoes_remuneracao`): o centavo é o do total e vem
+  de `arredondamento_total` (patch completo do mapa,
+  `loki.company-payroll-map-patch/1`, que aceita `truncar_centavos`). Política
+  num membro recusa com `particao_membro_arredondamento_use_arredondamento_total`.
 
 Prévia `VALIDO` → aplique a mesma proposta com `motivo` (e a declaração humana
 se o gate de evidência pedir); sai uma única versão para todos os mapas. Se
-algum mapa não tiver a verba com fórmula `remuneracao_periodo`, nada é alterado
+algum mapa não tiver a verba com uma fórmula aceita, nada é alterado
 (`payroll_policy_patch_rounding_verba_missing`,
 `payroll_policy_patch_rounding_verba_ambiguous` ou
 `payroll_policy_patch_rounding_formula_incompatible`). A escolha do método é decisão humana/DP; a harness não
-escolhe. O lote não recalcula folhas. Pode exigir Refresh do conector.
+escolhe. O lote não recalcula folhas: recalcule pelo fluxo normal e confira a
+memória (`fontes_insumos`) e a versão do motor, que ganha `-arredondamento-v1`
+com `truncar_centavos`, `valor_dia_arredondado`, fórmula além de
+`remuneracao_periodo` ou VT. Seguem em `half_up` a base de VT do admitido sem
+linha de salário, a cota do salário-família do mês de admissão e as fórmulas
+`salario_horario`, `salario_minimo_proporcional` e
+`base_composta_razao_quantidades`. Pode exigir Refresh do conector.
 
 
 # Dataprev mensal na folha

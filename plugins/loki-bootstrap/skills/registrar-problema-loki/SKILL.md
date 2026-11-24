@@ -138,17 +138,29 @@ Na 2.9.1 não são defeito: `sem_reajuste` com
 do VT; `snapshot_desatualizado` ao aplicar com o `validation_hash` antigo um
 lote de onboarding que voltou `ready` (valide de novo);
 `historical_vacation_use_period_incompatible` em gozo que termina antes do fim
-do aquisitivo (regra da DP, pergunte à Rafa). Admitido no mesmo mês, antes do
-dia da data-base, é pergunta à Rafa, não problema do Loki.
+do aquisitivo (regra da DP, pergunte à Rafa). Admitido no mesmo mês da
+data-base, em qualquer dia, segue a 2.9.8 (`sem_reajuste` com o sinal servido).
 Na 2.9.2, no 13º, `historical_thirteenth_unqualified_documentary_facts` com
 `path=no_typed_exit` (afastamento opaco) ou `path=dp_rule_pending` (rescisão
-ou transferência da carga) é pendência a registrar, com o `fact_id`, o
-`path` e as datas que a ficha mostrar, sem nome, CPF ou texto da ficha; a de
-`dp_rule_pending` também vai à DP (Rafa). `path=qualify_legacy_fact` não é
+da carga) é pendência a registrar, com o `fact_id`, o `path` e as datas que a
+ficha mostrar, sem nome, CPF ou texto da ficha; a de `dp_rule_pending` também
+vai à DP (Rafa). Com `thirteenth_rules.fact_assessment` servido (2.9.8), o
+afastamento opaco e a transferência vêm como `path=qualify_legacy_fact` e saem
+por `thirteenth_fact_assessment`; `dp_rule_pending` fica só para a rescisão. `path=qualify_legacy_fact` não é
 defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
+Na 2.9.8 não são defeito, quando o contrato servido mostrar o sinal:
+`aviso_projecao_incoerente` (ajuste `data_projecao_aviso`) e o aviso curto com
+`aviso_trabalhado_nao_cumprido` sem documento do ramo; `regra_nao_medida:saldo_afastamento_no_mes`;
+`thirteenth_prior_december_*` e `decimo_terceiro_medias_vigencias_sobrepostas`;
+`historical_thirteenth_transfer_out_destination_company` (cancele o caso da
+origem) e `historical_thirteenth_transfer_entry_unproven`;
+`admission_date_rectification_*` (depois da confirmação o caminho é a
+solicitação de alteração); `parameter_replacement_*` e
+`historical_vacation_balance_period_*` (retifique ou cancele a programação
+antes da troca do aquisitivo); `particao_membro_arredondamento_use_arredondamento_total`.
 Na 2.9.7, `worker_not_authorized` (com ou sem
 `worker_company_grant_missing`) e `worker_service_not_authorized` são problema
 a registrar e avisar à engenharia pelo Caixa: o worker de folha não precisa
@@ -173,7 +185,8 @@ passa o `onboarding_id` à operadora, e uma pessoa com a capacidade aplica);
 `case_superseded_by_new_case`; `historical_vacation_calculation_date_required`
 (falta `data_calculo`); `historical_vacation_native_occurrence_not_mirrored`
 (falta o espelho); `rescisao_ferias_gozo_antecipado_pendente_regra` (regra
-da DP, pergunte à Rafa); `matricula_coincide_com_codigo_auxiliar` e
+da DP já decidida, mas o motor da rescisão ainda não a aplica: avise a
+operadora); `matricula_coincide_com_codigo_auxiliar` e
 `termination_monthly_calculation_predates_registration_adoption` depois da
 adoção da matrícula do eSocial. `admission_cancelled_case_not_reusable` e
 `admission_reopening_chain_inconsistent` são problema a relatar (empresa,

@@ -137,8 +137,9 @@ Valem quando a resposta servida os apresentar.
   em curso. A regra das proporcionais nesse caso ainda não foi definida pela
   DP, e o Loki recusa em vez de pagar as proporcionais cheias, com ou sem
   histórico selecionado. É esperado: não remova o `advance`, não mude datas
-  nem contorne. Avise a operadora e pergunte à Rafa; o gozo antecipado está
-  no domínio `ferias`.
+  nem contorne. Avise a operadora; a regra já está decidida (o gozo
+  antecipado abate o direito proporcional, sem desconto no TRCT), mas o motor da
+  rescisão ainda não a aplica. O gozo antecipado está no domínio `ferias`.
   Quando o schema servido de `dados_ferias` tiver `gozo_antecipado_source`, a
   regra já está definida (dias antecipados abatidos do direito), mas ainda não
   está no motor da rescisão. A mesma recusa vale quando houver, no aquisitivo
@@ -201,17 +202,76 @@ apresentar (`rescisao-v43`/`rescisao-v44`): os dias do saldo são calculados
 pelo Loki; não informe dias nem troque o divisor. Desligamento em fevereiro ou
 no dia 31 agora calcula; mês inteiro trabalhado conta 30 dias; admissão no mesmo
 mês conta os dias corridos desde a admissão, incluindo atestado pago pela
-empresa. Continuam `regra_nao_medida:saldo_admissao_no_mes` até a DP responder:
-admissão no mês (depois do dia 1) com saída no dia 31 ou no último dia de
-fevereiro; afastamento pelo INSS ou licença-maternidade no mês da saída; empresa
-com divisor pelo calendário. Nesses casos não altere datas nem divisor;
-registre a dúvida com a DP. Cálculo novo exige gerar o pacote de novo e nova
+empresa. Dias efetivos e convenção do calendário (regra da DP de 18/11/2026), quando
+a resposta servida apresentar `rescisao-v45` (ou `rescisao-v46` com
+`faixa_pagador`): com divisor 30, admissão no mês (depois do dia 1) com saída
+no dia 31 ou no último dia de fevereiro paga os dias efetivos, sem completar o
+mês comercial (10/07 a 31/07 = 22 dias; 10/02 a 28/02 = 19). Com
+`convencoes.dias_do_mes: calendario` (da empresa ou, na falta, do cliente), o
+saldo divide pelos dias do mês civil, inclusive em fevereiro e na admissão no
+mês. A convenção vale só para o saldo da rescisão: folha mensal e férias não a
+leem. Continua `regra_nao_medida:saldo_afastamento_no_mes` o afastamento por
+INSS ou licença-maternidade no mês da saída, e
+`regra_nao_medida:saldo_divisor_sem_convencao` o divisor que não é 30 fixo nem
+os dias do mês. Nesses casos não altere datas nem divisor. Sem o sinal
+(servidor anterior), admissão no mês com saída no dia 31 ou no fim de
+fevereiro e o divisor pelo calendário seguem como
+`regra_nao_medida:saldo_admissao_no_mes`, `saldo_fevereiro` ou
+`saldo_dia_31_trinta_fixo`: a regra já é da DP e só falta a publicação, então
+avise a operadora em vez de perguntar à DP. Cálculo novo
+exige gerar o pacote de novo e uma nova
 revisão; versões congeladas antigas desses cenários passam a exigir nova versão.
 Atualização de instruções não corrige o calculador publicado nem certifica o
 caso completo.
 Confira versão do motor, dias, memória e bases; não reutilize memorial parcial
 antigo ou aceite anterior como resultado da regra nova. Parcelas independentes
 permanecem disponíveis conforme o contrato, sem preencher ausência com zero.
+
+## Aviso prévio: norma coletiva e cumprimento parcial (2.9.8)
+
+Valem quando o schema servido de `dados_rescisao` (`get_process_contract`)
+apresentar `aviso_norma_coletiva` e `aviso_cumprimento_parcial`. Sem
+declaração nada muda. Com qualquer uma, a versão do motor ganha o sufixo
+`+aviso-declarado-v1` (por exemplo `rescisao-v40+aviso-declarado-v1`). A
+harness confere a norma e a comunicação nos originais; o Loki só valida a
+coerência dos parâmetros e não guarda norma de cliente.
+
+- `aviso_norma_coletiva` `{dias_base, soma_lei_12506, fonte}`: só na dispensa
+  sem justa causa, com aviso trabalhado ou indenizado. `dias_base` vai de 31 a
+  90; com `soma_lei_12506: true` o total é a base mais 3 dias por ano completo
+  (teto 90; 45 com 3 anos = 54), e com `false` são os dias fixos da norma, nunca
+  abaixo do aviso legal. `fonte` cita a norma e a cláusula; idade, tempo de
+  casa e vigência da elegibilidade são da harness.
+- O aviso trabalhado cumpre 30 dias e o excedente sai indenizado (45 dias com
+  0 anos indenizam 15). A projeção e os avos de 13º e férias do aviso
+  (`avos_decimo_terceiro_aviso`, `avos_ferias_aviso`) contam pelo total.
+- `data_projecao_aviso` tem de ser `data_desligamento` mais os dias indenizados
+  (indenizado: o total; trabalhado: total menos 30; interrompido: total menos
+  os dias cumpridos). Se não bater, a recusa é `aviso_projecao_incoerente`, com
+  o campo e os dias esperados. A guarda vale com norma ou com
+  `empregador_dispensou_restante`; o aviso legal sem declaração fica fora.
+- `aviso_cumprimento_parcial` `{ramo, fonte}`, para o aviso trabalhado não
+  cumprido até o fim (dias cumpridos = dias corridos entre `data_aviso` e
+  `data_desligamento`; 30 é o aviso inteiro). `ramo`:
+  - `empregador_dispensou_restante` (dispensa sem justa causa, desligamento
+    antes dos 30 dias): os dias que faltavam do aviso total saem indenizados;
+    exige `data_projecao_aviso` e admite avos do aviso.
+  - `empregado_comunicou_desistencia` (pedido de demissão, antes dos 30 dias):
+    desconto de (30 menos os dias cumpridos) × salário/30, só sobre o salário.
+  - `empregado_faltou_sem_comunicacao` (pedido de demissão, desligamento no fim
+    do aviso): o bloco do aviso não desconta; os dias não trabalhados entram
+    como faltas na declaração do mês (`faltas_do_mes_operacionais` ou a 8792
+    das parcelas, com ao menos um dia). É a leitura adotada pela engenharia; se
+    a DP pedir outra contagem, registre o problema.
+- Sem documento que mostre o ramo, não escolha um: o aviso curto fica pendente
+  em `regra_nao_medida:aviso_trabalhado_nao_cumprido`. Quando o empregado pediu
+  a dispensa do cumprimento e comprovou novo emprego (Súmula 276 do TST), o
+  caso não usa o ramo `empregador_dispensou_restante` e também fica pendente.
+- Recusas de contexto: ramo em motivo ou modalidade que não é o dele, ramo que
+  encurta o cumprimento com 30 dias cumpridos, e ramo sem comunicação com
+  desligamento antes do fim do aviso ou sem falta declarada no mês.
+- Cálculo novo exige gerar o pacote de novo e nova revisão; casos já gravados
+  não mudam.
 
 ## Médias de rescisão obsoletas depois do deploy
 
