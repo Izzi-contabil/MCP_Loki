@@ -1,51 +1,38 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.8)
+## O que mudou nesta versão (2.9.9)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
 chegar em partes: cada item vale quando a resposta servida mostrar o sinal
 indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora:**
+**Exige ação da operadora:** atualizar o plugin instalado (as skills mudaram;
+o plugin não bloqueia o uso, as instruções vêm do servidor). **Não exige
+Refresh do conector**: não há ferramenta nominal nova, e os campos e recusas
+novos chegam pelos contratos servidos.
 
-- Atualizar o plugin instalado (as skills mudaram). O plugin não bloqueia o
-  uso: as instruções vêm do servidor.
-- **Refresh do conector só para a ferramenta nominal nova**
-  `rectify_case_admission_date` (retificar a data de admissão antes da
-  confirmação, domínio `admissao`). Sem o Refresh, a mesma retificação sai por
-  `receive_case_data` com `request.schema_version =
-  "loki.case-admission-date-rectification/1"`, sem outra ação. Peça o Refresh
-  (e conversa nova) só quando ela for usar a ferramenta nominal. Os schemas de
-  dados novos abaixo chegam pelos contratos servidos (`get_process_contract`,
-  `get_company_onboarding_contract`, `get_client_config`) e **não exigem
-  Refresh**.
+**Não exige nada** (vale quando o Loki for publicado, na mesma conversa):
 
-**Não exige nada** (vale assim que o Loki for publicado, na mesma conversa):
+- `decimo_terceiro`: a cobertura que o cálculo exige (não é a regra do estado),
+  a recusa `historical_thirteenth_first_installment_already_paid` (13º já
+  adiantado: não pagar de novo) e horas (Súmula 347) só onde a norma coletiva
+  é silente.
+- `folha_mensal`: folha em revisão recalcula por `restart_case` simples e novo
+  `enqueue_case_workflow` (`case_in_review_requires_restart`); folha pelo mês
+  civil (`folha_divisor_mes`); fórmulas do mapa e seus limites.
 
-- `rescisao`: aviso da norma coletiva e cumprimento parcial
-  (`dados_rescisao.aviso_norma_coletiva` e `aviso_cumprimento_parcial`, motor
-  com `+aviso-declarado-v1`) e saldo de salário pelos dias efetivos
-  (`rescisao-v45`/`v46`, convenção `calendario`).
-- `decimo_terceiro`: janela da média por empresa
-  (`empresas[].decimo_terceiro_medias`, `decimo-v5`,
-  `dados_decimo_terceiro.dezembro_anterior`) e fatos opacos qualificados pelo
-  id (`thirteenth_fact_assessment`).
-- `admissao`, `alteracao_cadastral`, `ferias`, `reajuste_salarial`: retificação
-  da data de admissão; troca de `parametrizacao` e do aquisitivo de
-  `vacation_balance` por `replaces_fact_id`; admitido no mês da data-base fica
-  `sem_reajuste`.
-- `folha_mensal`, `alteracao_cadastral` e lote de políticas do mapa:
-  arredondamento do centavo por empresa, regras da DP de salário-família, DSR e
-  VT, consignado alocado pela `data_inicio_contrato` e afastamento pago pela
-  empresa por rubrica marcada no mapa. Campos opcionais novos dos contratos
-  servidos (crédito e mapa) não exigem Refresh: os argumentos são dict livres.
-
-**Recalcular:** a folha com pessoa de 2 ou mais contratos de consignado
-confirmados no mês (`-worker-credit-allocation-v1`) ou com mês de afastamento
-derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e novo
-cálculo, mesmo se o valor não mudar. Marcar a rubrica de afastamento no mapa
-desatualiza as folhas abertas da empresa: marque antes de calcular.
+**Continua da 2.9.8:** rescisão (aviso da norma coletiva, saldo pelos dias
+efetivos), 13º (janela da média por empresa, fatos opacos), arredondamento do
+centavo por empresa, consignado e afastamento pago pela empresa.
+**Refresh do conector só para a ferramenta nominal**
+`rectify_case_admission_date`; sem ele, a retificação da data de admissão sai
+por `receive_case_data` com `request.schema_version =
+"loki.case-admission-date-rectification/1"`. Folha com pessoa de 2 ou mais
+contratos de consignado confirmados no mês (`-worker-credit-allocation-v1`) ou
+com mês de afastamento derivado (`-employer-leave-v1`) fica desatualizada:
+`restart_case` e novo cálculo. Os campos opcionais novos do crédito e do mapa
+não exigem Refresh: os argumentos são dict livres.
 
 **Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem
 concessão por empresa; `diferenca_*` com `retroactive_actions`.

@@ -1,4 +1,55 @@
-# Atualizações MCP Loki — contrato 2.9.8
+# Atualizações MCP Loki — contrato 2.9.9
+
+## Candidata 0.4.34 / contrato, instruções e plugin 2.9.9 — 24/11/2026
+
+Contrato aditivo, sem ferramenta nova e **sem Refresh**. O contrato sobe de
+2.9.8 para 2.9.9 pela regra "mudou interface → novo contrato" e pela prática
+das edições 2.9.7 e 2.9.8: o schema de dados e as recusas do backend mudaram
+desde a 2.9.8 (campos de horas e `folha_divisor_mes`, em `main`; campo `horas`
+da política, recusa da 1ª parcela e `review_refusal` do comando de fila, nas
+PRs abertas), sem passar pelo catálogo de ferramentas: `receive_case_data`,
+`apply_client_config` e `validate_client_config` recebem JSON livre e o schema
+vem dos contratos servidos. Instruções e plugin acompanham em 2.9.9 (as skills
+mudaram: a operadora atualiza o plugin); o provider sobe um patch. Mínimo 2.0.0
+permanece. A lista `compatible_tools` não muda. Wheel 0.4.33 permanece imutável.
+
+Backend, conferido no código: #404 (média por quantidade das horas) e #405
+(`folha_divisor_mes`) em `main` do Loki (`00cba4e9`). **Dependem de PRs abertas
+do backend** (cada texto diz "vale quando a resposta servida mostrar o sinal"):
+
+- #409 (`fix/13-primeira-parcela-ja-paga`, `9a39e468`): recusa
+  `historical_thirteenth_first_installment_already_paid` e as janelas
+  `required_windows`/`missing_intervals` em `get_case` e no dossiê (hoje só na
+  resposta imediata);
+- #408 (`feat/13-politica-media-horas`, `93f1a878`): campo `horas` (`valores` |
+  `quantidade_347`) em `empresas[].decimo_terceiro_medias` e recusa
+  `decimo_horas_vedado_pela_norma_coletiva`;
+- #410 (`fix/enqueue-recusa-folha-em-revisao`, `19e9e915`):
+  `case_in_review_requires_restart` no `enqueue_case_workflow`.
+
+Domínios:
+
+- `decimo_terceiro`: o gap `thirteenth_payment_coverage_not_certified` é
+  informativo e o cálculo não o lê; exige `thirteenth_payments` de 01/01 (ou
+  admissão) até a `data_pagamento` e `leave_occurrences` até o corte; passo da
+  cobertura adjacente; janelas só na resposta imediata; 1ª parcela com 13º já
+  adiantado; horas (Súmula 347) só onde a norma coletiva é silente e política
+  `horas: "valores"`; a seção "Médias" deixa de dizer que a média por
+  quantidade não é calculada.
+- `ferias`: a cobertura dela não é a do 13º.
+- `folha_mensal`: recálculo em revisão por `restart_case` simples e novo
+  enqueue; folha pelo mês civil (`folha_divisor_mes`); fórmulas do mapa e seus
+  limites.
+- `geral`: aviso "O que mudou nesta versão (2.9.9)" (atualizar o plugin, sem
+  Refresh) e "Continua da 2.9.8" (Refresh só da ferramenta nominal
+  `rectify_case_admission_date`).
+
+Fora desta edição (plano do lote): o texto de descontos recorrentes e do
+consignado em `credito_trabalhador_contratos` e `alteracao_cadastral.md`.
+
+Plugin: WORKFLOWS (seção 2.9.9 e nota na cobertura), CAPACIDADES_DP, operar-loki
+e registrar-problema-loki. A promoção ao Loki só ocorre depois da mesclagem das
+PRs do backend; wheel preparado não comprova publicação, instalação ou uso.
 
 ## Candidata 0.4.33 / contrato, instruções e plugin 2.9.8 — 24/11/2026
 

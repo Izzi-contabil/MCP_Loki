@@ -355,6 +355,12 @@ desatualizada e é refeita com `apply_historical_state`.
 cobrem, sem lacuna, **da data de admissão até o corte**. O `effective_on` de
 uma cobertura é o seu `end`.
 
+Essa regra é a do **estado e das férias**. Não é a do 13º: o cálculo do 13º não
+lê `thirteenth_payment_coverage_not_certified` e exige `thirteenth_payments`
+de 01/01 do ano (ou da admissão) até a `data_pagamento` da etapa, e
+`leave_occurrences` até o corte. Para a cobertura adjacente e as recusas do
+13º, veja o domínio `decimo_terceiro`.
+
 **Cobertura que termina depois do corte (estado `historical-state-v2`).** Uma
 cobertura `complete: true`, lançada até o mês do corte, que começa na admissão
 (ou emendada desde ela) e termina **depois** do corte limpa o gap **até o

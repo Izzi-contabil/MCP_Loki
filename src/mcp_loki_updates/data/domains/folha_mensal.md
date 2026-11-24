@@ -216,10 +216,28 @@ declaração da DP; manter o valor do motor ou declarar de novo é decisão dela
 Nada é recalculado, reaberto ou decidido automaticamente. Não cancele o caso
 para isso.
 
-- **Abertas e em revisão** (`aberto`, `em_preparacao`, `aguardando_revisao`):
-  recalcule pelo mesmo fluxo da folha (`enqueue_case_workflow`, uma folha por
-  empresa na fila), com `input_snapshot` e `expected_snapshot` atuais e novo
-  `request_ref`, gere o pacote corrente e confira de novo.
+- **Abertas** (`aberto`, `em_preparacao`): recalcule pelo mesmo fluxo da folha
+  (`enqueue_case_workflow`, uma folha por empresa na fila), com
+  `input_snapshot` e `expected_snapshot` atuais e novo `request_ref`, gere o
+  pacote corrente e confira de novo.
+- **Em revisão** (`aguardando_revisao`): o cálculo não aceita escrita nesse
+  estado; tirar o caso da fila de revisão é ato humano. O caminho é
+  `restart_case` **simples** (sem `preparation`), com
+  `expected_snapshot=get_case.correction_snapshot` e `human_message`, pela
+  conta pessoal da operadora; depois `enqueue_case_workflow` com o
+  `input_snapshot` e o `expected_snapshot` novos e novo `request_ref`; depois
+  o pacote corrente, a conferência e o novo aceite. O reinício simples não
+  reenvia os insumos (o `preparation` com `replace_process_inputs` arquiva-os e
+  exige reenviar tudo; não o use só para trocar o motor). A rotina sem
+  `decidir_chat` para e avisa a operadora. Não há reinício em lote:
+  `restart_case` não está no `execute_operational_batch`; são uma chamada por
+  caso e um enqueue por empresa. Enquanto o servidor aceitava o enqueue em
+  revisão, o job nascia e terminava em `job_preparation_failed`. Com a
+  correção do backend (#410, aberta), o
+  enqueue recusa na hora, sem criar job, com `case_in_review_requires_restart`
+  e `next_action=restart_case`; ao ver esse código, faça o reinício simples
+  acima. Não tente contornar com novo `request_ref`, cancelamento ou outro
+  caso.
 - **Aprovadas e não entregues:** a aprovação pertence ao pacote anterior; a
   entrega exige novo cálculo, conferência e aceite humano. O enqueue recusa
   caso aprovado (`case_not_preparable`). Siga a próxima ação servida e, se
@@ -359,6 +377,118 @@ Com `folha-v33` no cálculo, a base e a saída sem linha de salário mudam
   admissão continua pendente (`insalubridade_vigencia_parcial_exige_segmentacao`).
   A periculosidade parcial continua exigindo segmentação. Se o Domínio pagar
   diferente no mês de entrada (dias ou DSR), é ponto a confirmar com a DP.
+
+## Folha pelo mês civil: `folha_divisor_mes` (backend #405)
+
+Vale quando o contrato de onboarding servido mostrar
+`payroll_rules.month_divisor` e o schema do cadastro apresentar
+`empresas[].folha_divisor_mes`. Por padrão a folha divide por 30 (CLT, art.
+64). O mês civil (28, 29, 30 ou 31) é convenção da empresa ou da norma
+coletiva: só entra por pedido do cliente ou decisão da DP, **com a fonte**
+(CX-…), por empresa. Não ative por conta própria nem estenda a outra empresa
+do grupo. Sem a política, nada muda: mapa, resultado e hashes são os de antes.
+
+**O que muda sob a política** (marca `-divisor-mes-v1` no motor, só na
+vigência):
+
+- Toda linha em dias com divisor 30 passa a dividir pelos dias do mês:
+  `remuneracao_periodo` (com ou sem fator), `salario_base_proporcional`,
+  `base_composta_proporcional` em dias e `salario_minimo_proporcional`, como
+  provento ou desconto. Também as partições de remuneração e as compensações
+  com teto 30.
+- VT e salário-família do admitido: dias de vínculo sobre os dias do mês
+  (admissão em 07/10: 25/31). Faltas e DSR das faltas: no mesmo divisor do
+  salário, limitados ao salário do período; se passarem, a folha fica
+  pendente (`desconto_de_faltas_acima_do_salario`), em vez de cortar.
+- **O que não muda:** `valor_explicito`, linhas em horas (`salario_horario`,
+  divisor 220 ou outro explícito) e `base_composta_razao_quantidades`.
+- **Falta sempre pela rubrica de falta**, nunca embutida no período: falta
+  embutida não é detectável (28 dias com 2 faltas em fevereiro). Envie o
+  período pelos dias de vínculo do mês (31 em outubro, mês cheio) e a ausência
+  real na rubrica de falta, não um período reduzido a 30.
+
+**Como ligar**, num único `validate_client_config` seguido de
+`apply_client_config`, por empresa, com a mesma fonte nos três campos:
+
+```json
+{
+  "empresas[<codigo>].folha_divisor_mes": [
+    {"id": "folha-calendario-1", "valid_from": "AAAA-MM-01", "divisor": "calendario",
+     "fonte": {"kind": "external_reference", "reference": "CX-…"}}
+  ],
+  "empresas[<codigo>].ferias_recibo": [
+    {"id": "ferias-civil-1", "valid_from": "AAAA-MM-01", "divisor_dias": "dias_mes_civil",
+     "fonte": {"kind": "external_reference", "reference": "CX-…"}}
+  ],
+  "empresas[<codigo>].convencoes.dias_do_mes": "calendario"
+}
+```
+
+- `valid_from` no dia 1 de um mês, **depois da última folha fechada** da
+  empresa; `valid_until`, se houver, no último dia de um mês. Vigências
+  sobrepostas ou ids repetidos recusam. Valor já existente exige
+  `sobrescrever=true`.
+- O recibo de férias civil tem de cobrir toda a vigência; as bases não se
+  misturam (20 dias a /30 e 11 a /31 pagariam cerca de 102% das férias). Sem
+  `convencoes.dias_do_mes: calendario` (da empresa ou do cliente), o saldo da
+  rescisão sairia /30 e a folha /31.
+
+**Recusas e pendências:**
+
+- Cadastro: `folha_divisor_mes_retroativo` (mudança que altera a política em
+  mês até a última folha fechada; declare no mês seguinte),
+  `folha_divisor_mes_exige_ferias_recibo_mes_civil`,
+  `folha_divisor_mes_ferias_recibo_divisor_30_vigente` e
+  `folha_divisor_mes_exige_convencao_dias_do_mes_calendario`.
+- Mapa ambíguo: sob a política, mapa sem `remuneracao_periodo` (sem fator) e
+  com duas ou mais linhas provento `salario_base_proporcional` em dias, fora
+  de partição, é recusado ("mapa ambiguo"). O mapa precisa de uma única linha
+  de salário por dias, ou da partição, ou de uma `remuneracao_periodo` sem
+  fator: o salário e o feriado declarados no mesmo tipo (veja "Fórmulas do
+  mapa") ficam ambíguos. Acerte o mapa antes de ligar a política.
+- Folha: `periodo_remuneravel_diverge_do_vinculo` (período diferente dos dias
+  de vínculo no mês menos as férias; o detalhe traz esperado e recebido: reenvie
+  o período e lance a ausência pela falta), `ferias_calculadas_a_30_sob_a_politica`
+  (efeito de férias calculado com o recibo /30: recalcule as férias com o recibo
+  civil), `ferias_cruzam_o_inicio_da_politica`, `quantidade_dias_acima_do_mes`,
+  `particao_periodo_acima_do_mes` e `desconto_de_faltas_acima_do_salario`.
+  Nenhuma é resolvida por ajustar número para passar. Folha em revisão que
+  precise recalcular segue "Em revisão", na seção da `folha-v32`.
+
+## Fórmulas do mapa: o que existe hoje e os limites
+
+São escolhas do mapa de rubricas da empresa (política do mapa, lote de
+políticas). O Loki valida a coerência da fórmula declarada; não infere a
+verba.
+
+- **Dobro de feriado e domingo trabalhados sem folga** (Lei 605/1949, art.
+  9º): `salario_base_proporcional` não aceita `fator` (recusa "formula sem
+  base composta nao aceita fator ou rubricas_base"). Declare a verba como
+  `salario_base_proporcional`, unidade em dias, divisor 30, e lance a
+  **quantidade = 2 × dias** trabalhados. O valor é salário ÷ 30 × dias × 2,
+  sobre o salário contratual; o memorial mostra a quantidade em dobro. Essa
+  linha pode contar como linha de salário do mês (a base do VT e a cota do
+  salário-família do admitido, desde a `folha-v33`, leem o período pago), então
+  avise a operadora desse efeito na conferência do admitido. **Não**
+  use `base_composta_proporcional` com `fator: "2"` e a linha de salário em
+  `rubricas_base`: a base é o valor da linha de salário **já calculado no
+  mês**, e com admissão, férias ou afastamento no mês o dobro sai menor.
+  Sob `folha_divisor_mes`, o divisor 30 vira os dias do mês.
+- **Base da hora com outras verbas** (Súmulas 264 e 132 do TST):
+  `salario_horario` não aceita `rubricas_base`. Quem soma verbas é
+  `base_composta_proporcional`, com `unidade_quantidade: horas`, `divisor`
+  literal e `rubricas_base` (por exemplo, salário e periculosidade). Limites:
+  o divisor é **literal no mapa** (220 para todos), não o divisor individual
+  da pessoa; e a base é o **valor do mês** das linhas citadas, não o do mês
+  cheio. Num mês com admissão, férias ou afastamento a hora sai menor que a das
+  súmulas. Serve a quem tem jornada única e mês cheio; fora disso, não declare
+  e registre a limitação.
+- **Percentual individual por pessoa** (quinquênio, 5/10/15%): **ainda não
+  existe**. O `parametro_individual` aceita só insalubridade, periculosidade,
+  pensão alimentícia e vale-transporte, e o cadastro não tem percentual por
+  tempo de serviço. Lance o valor calculado em `valor_explicito`, que o Loki
+  não valida; declare a limitação na conferência. Não use a unidade
+  `percentual` em `base_composta_proporcional`: não tem uso nem prova.
 
 ## Fila durável: um job pendente por empresa
 

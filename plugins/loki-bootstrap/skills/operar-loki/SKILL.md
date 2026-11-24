@@ -144,6 +144,13 @@ detalhe por regra; no pago declarado, `quantidade` segue a fórmula do mapa da
 origem, e o lote já aplicado se corrige pela retirada no caso filho e um novo
 `reajuste_salarial` com outra `reference`. Não exigem Refresh; a operadora
 atualiza o plugin.
+Na 2.9.9 (“2.9.9: 13º (cobertura, 1ª parcela já paga, horas) e folha (revisão,
+mês civil, fórmulas)”), cada item quando a resposta servida mostrar o
+sinal: cobertura que o cálculo do 13º exige; 1ª parcela com 13º já pago
+(`historical_thirteenth_first_installment_already_paid`); horas só onde a norma
+coletiva é silente; recálculo da folha em revisão por `restart_case` simples;
+folha pelo mês civil (`folha_divisor_mes`) e fórmulas do mapa. Sem Refresh; a
+operadora atualiza o plugin.
 Na 2.9.8 (“2.9.8: rescisão, 13º, correções auditadas e arredondamento”), cada
 item quando a resposta servida mostrar o sinal: aviso da norma coletiva e
 cumprimento parcial do aviso na rescisão (`+aviso-declarado-v1`, ramo sem

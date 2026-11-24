@@ -225,7 +225,10 @@ aplique com o `validation_hash` novo. `leave_history_coverage_not_certified` e
 `thirteenth_payment_coverage_not_certified` só saem quando a cobertura vai da
 admissão até o corte; com o estado `historical-state-v2`, a que termina depois
 do corte também limpa o gap, só até o corte, e uma seleção v1 consumível não
-se refaz. Não altere coberturas de casos com seleção histórica feita. Afastamento antigo opaco não recebe `leave`
+se refaz. O 13º não segue essa regra: o gap
+`thirteenth_payment_coverage_not_certified` é informativo e o cálculo exige
+`thirteenth_payments` de 01/01 do ano (ou da admissão) até a `data_pagamento` e
+`leave_occurrences` até o corte (veja “2.9.9” de [WORKFLOWS.md](WORKFLOWS.md)). Não altere coberturas de casos com seleção histórica feita. Afastamento antigo opaco não recebe `leave`
 duplicado. Roteiro em “Recusas de fatos históricos e cobertura até o corte” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
@@ -320,6 +323,18 @@ o que muda o `state_hash` do empregado e desatualiza as seleções dos outros
 casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
+
+## 2.9.9: 13º e folha mensal
+
+Contrato 2.9.9 aditivo, sem Refresh; a operadora atualiza o plugin. Cada item
+vale quando a resposta servida mostrar o sinal. 13º: cobertura exigida pelo
+cálculo (não é a regra do estado), recusa
+`historical_thirteenth_first_installment_already_paid` e horas só onde a norma
+coletiva é silente (`decimo_horas_vedado_pela_norma_coletiva` com a política
+`horas: "valores"`). Folha: recálculo em revisão por `restart_case` simples,
+folha pelo mês civil (`folha_divisor_mes`) e fórmulas do mapa. Roteiro em “2.9.9: 13º
+(cobertura, 1ª parcela já paga, horas) e folha (revisão, mês civil, fórmulas)”
+de [WORKFLOWS.md](WORKFLOWS.md).
 
 ## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
 

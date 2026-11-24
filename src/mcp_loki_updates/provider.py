@@ -14,7 +14,7 @@ from functools import total_ordering
 from pathlib import Path
 from typing import Any, cast
 
-PROVIDER_VERSION = "0.4.33"
+PROVIDER_VERSION = "0.4.34"
 SUPPORTED_CONTRACT_MAJOR = 2
 DOMAINS = (
     "geral",
