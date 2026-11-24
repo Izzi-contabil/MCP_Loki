@@ -19,18 +19,23 @@ SECTION_298 = "## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
 LIMIT = 65536
 
 NOTICE = (
-    "## O que mudou nesta versão (2.9.8)",
+    "## O que mudou nesta versão (2.9.9)",
     "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
     "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
-    "Atualizar o plugin instalado",
-    "**Refresh do conector só para a ferramenta nominal nova**",
+    "atualizar o plugin instalado",
+    "**Não exige Refresh do conector**",
+    "`historical_thirteenth_first_installment_already_paid`",
+    "`case_in_review_requires_restart`",
+    "`folha_divisor_mes`",
+    "**Refresh do conector só para a ferramenta nominal**",
     "`rectify_case_admission_date`",
     "`receive_case_data` com `request.schema_version =",
     "loki.case-admission-date-rectification/1",
-    "**não exigem Refresh**",
+    "**Continua da 2.9.8:**",
     "**Continua da 2.9.7**",
 )
 STALE_NOTICE = (
+    "## O que mudou nesta versão (2.9.8)",
     "## O que mudou nesta versão (2.9.7)",
     "As 96 ferramentas são as mesmas: **não exige Refresh do conector**",
 )
@@ -78,7 +83,7 @@ THIRTEENTH = (
     "`historical_thirteenth_transfer_out_destination_company`",
     "`historical_thirteenth_transfer_entry_unproven`",
     "`decided_on` é o `effective_on` e nada retroage",
-    "não são calculadas pelo Loki: use a média importada",
+    "A produtividade não é calculada pelo Loki: use a média importada",
 )
 STALE_THIRTEENTH = (
     "ainda dependem de confirmação da DP",
@@ -167,32 +172,32 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.33"
-    assert metadata["instructions_version"] == "2.9.8"
-    assert metadata["mcp_contract_version"] == "2.9.8"
-    assert metadata["recommended_plugin_version"] == "2.9.8"
+    assert metadata["provider_version"] == "0.4.34"
+    assert metadata["instructions_version"] == "2.9.9"
+    assert metadata["mcp_contract_version"] == "2.9.9"
+    assert metadata["recommended_plugin_version"] == "2.9.9"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.6", "2.9.7", "2.9.8"):
+    for version in ("2.0.0", "2.9.6", "2.9.7", "2.9.8", "2.9.9"):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.9.8", "2.9.9")["compatible"] is False
+    assert provider.check_version("2.9.9", "2.9.10")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
         "loki_verificar_versao",
     ]
-    backend = release["changes"]["backend"][-1]
+    backend = release["changes"]["backend"][-2]
     assert backend.startswith("Contrato2.9.8 aditivo")
     markers = ("#395", "#396", "#397", "#399", "#401", "#400", "#402")
     for marker in (*markers, "rectify_case_admission_date"):
         assert marker in backend
     assert "Refresh do conector só para a ferramenta nominal" in backend
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.9.8")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.9.8")
+    assert release["changes"]["instructions"][-2].startswith("Instruções2.9.8")
+    assert release["changes"]["plugin"][-2].startswith("Plugin2.9.8")
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.9.8", path.name
+        assert data["version"] == "2.9.9", path.name
         assert data["updated_at"] == "2026-11-24", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.9.8", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.9.9", path.name
 
 
 def test_every_domain_stays_within_the_size_limit() -> None:
@@ -204,12 +209,13 @@ def test_every_domain_stays_within_the_size_limit() -> None:
 
 def test_general_notice_is_conditional_and_limits_the_refresh_to_the_named_tool() -> None:
     guide = text("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.9.8)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.9.9)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
     assert notice.index("**Exige ação da operadora:**") < notice.index("**Não exige nada**")
-    assert notice.index("**Não exige nada**") < notice.index("**Continua da 2.9.7**")
+    assert notice.index("**Não exige nada**") < notice.index("**Continua da 2.9.8:**")
+    assert notice.index("**Continua da 2.9.8:**") < notice.index("**Continua da 2.9.7**")
     assert notice.index("**Continua da 2.9.7**") < notice.index("**Continua da 2.9.6**")
     assert notice.index("**Continua da 2.9.6**") < notice.index("**Continua da 2.8.0**")
 

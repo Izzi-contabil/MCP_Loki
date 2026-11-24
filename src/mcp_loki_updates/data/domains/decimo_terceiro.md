@@ -69,10 +69,22 @@ data desta parcela. Fluxo:
 4. Aplique o estado (`apply_historical_state`) e calcule.
 
 O corte do estado depende só de `ano`, `etapa` e `data_pagamento`.
-`thirteenth_payment_coverage_not_certified` segue a regra de cobertura do
-domínio `ferias` ("Cobertura desde a admissão até o corte"): com o estado
-`historical-state-v2`, uma cobertura completa desde a admissão que termina
-depois do corte também limpa o gap, só até o corte.
+`thirteenth_payment_coverage_not_certified` é informativo no estado: o cálculo
+do 13º **não o lê** e não segue a regra de cobertura do domínio `ferias`
+("Cobertura desde a admissão até o corte"). Quem decide é a janela que o
+próprio cálculo exige:
+
+- `thirteenth_payments`: de 01/01 do `ano` (ou da admissão, se ela for no
+  ano) até a `data_pagamento` da etapa;
+- `leave_occurrences`: da mesma data inicial até o corte (a referência
+  salarial da etapa).
+
+O cálculo confere essas janelas, não o gap do estado: limpar o gap não basta.
+Cobertura `complete: true` que termina antes do fim da janela exigida (por
+exemplo, pagamentos até 31/10 com pagamento em 30/11) recusa com
+`historical_thirteenth_coverage_incomplete`; declare a **cobertura adjacente** (`start` 01/11, `end` 30/11, mesmo
+consumidor) sem alterar a cobertura que já existe, selecione o estado de novo
+e recalcule. O `effective_on` de uma cobertura é o seu `end`.
 
 **Recusa de cobertura.** `historical_thirteenth_coverage_incomplete` (campo
 `historical_state`, próxima ação `get_case_historical_state`) traz
@@ -80,10 +92,38 @@ depois do corte também limpa o gap, só até o corte.
 (`leave_occurrences` ou `thirteenth_payments`), `start` e `end`. Declare na
 carga histórica uma cobertura completa (`type: coverage`, `complete: true`) do
 consumidor indicado que feche cada lacuna, selecione o estado de novo e
-recalcule. Se a recusa vier sem janelas, a admissão do estado histórico é
-posterior à referência salarial ou ao pagamento: confira a admissão e as
-datas do 13º antes de declarar cobertura. Não presuma ausência de afastamento
-ou de pagamento só porque falta cobertura.
+recalcule. **As janelas vêm só na resposta imediata** do
+`run_prepared_case_workflow` (ou de `calculate_case`). `get_case` e o dossiê só
+passam a trazê-las quando o backend publicar a correção "13º 1ª parcela já
+paga" (#409, mesclada em main 3b4d3b11; vale desde a publicação); até lá, o
+registro gravado mostra a recusa sem `required_windows` nem
+`missing_intervals`. Por isso, **releia a resposta imediata antes de concluir**
+que a admissão é posterior: recusa sem janelas só significa admissão
+posterior à referência salarial ou ao pagamento quando a resposta imediata
+também vier sem elas. Nesse caso, confira a admissão e as datas do 13º antes
+de declarar cobertura. Não presuma ausência de afastamento ou de pagamento só
+porque falta cobertura.
+
+**13º já adiantado no ano.** Vale quando a resposta servida trouxer
+`historical_thirteenth_first_installment_already_paid` (backend #409,
+mesclada). Na etapa `primeira`, o estado
+selecionado tem um `thirteenth_payment` confirmado do ano para o vínculo, pago
+até a `data_pagamento` (por exemplo, o adiantamento pago em julho com as
+férias). A recusa traz `fields: ["historical_state"]`,
+`next_action=cancel_case`, `year` e `installment` (a parcela já paga) e
+`guidance`; nunca valor, fato ou fonte. Significa que já houve adiantamento de
+13º: **não pague de novo** a 1ª parcela (Lei 4.749/1965, arts. 1º e 2º); a 2ª
+parcela compensa o adiantamento. Cancele o caso da 1ª parcela e siga para a
+2ª na data dela. Não apague nem reclassifique o pagamento para passar. Sem a
+recusa no servidor, confira `thirteenth_payments` do ano no estado antes de
+calcular a 1ª parcela.
+
+**Homologação da 1ª parcela contra o Domínio.** O histórico importado não pode
+conter a própria 1ª parcela em teste como fato `thirteenth_payment` com a mesma
+data e parcela 1: se contiver, o Loki recusa com
+`historical_thirteenth_first_installment_already_paid`. O `next_action` é
+`cancel_case`, porque o 13º é um caso por pessoa e cancelar é retirá-la. Para
+homologar, mantenha fora do histórico o pagamento que o teste quer reproduzir.
 
 ## Fatos documentais não qualificados
 
@@ -148,8 +188,10 @@ da ficha. Não recalcule, não reinicie o caso e não troque o fato por zero ou
 
 Para bater com o Domínio, use `medias_importadas` (média final do Domínio,
 finalidade `decimo_terceiro`). Ela é exclusiva com `variavel_cents` mensal:
-com ela, nenhum mês leva valor. A média por quantidade × valor atual e a
-produtividade não são calculadas pelo Loki: use a média importada.
+com ela, nenhum mês leva valor. A produtividade não é calculada pelo Loki: use
+a média importada. A média por quantidade das horas (Súmula 347) passou a ser
+calculada, com `meses[].horas` ("Horas no 13º", abaixo), mas é exclusiva com a
+média importada (`decimo_horas_com_media_importada`): uma ou outra.
 
 **`final_average` é a média mensal integral do Domínio.** Envie essa média
 inteira, como veio, em `medias_importadas={fact_id}`, sem `variavel_cents`
@@ -241,6 +283,63 @@ importada não usa janela.
   `decimo-v3`/`decimo-v4`. Caso aprovado ou publicado conserva o cálculo que
   gerou o pacote; em preparação ou revisão, o caso passa a exigir
   `dezembro_anterior` e novo cálculo. A simulação continua no padrão.
+
+## Horas no 13º: só onde a norma coletiva é silente
+
+Vale quando o schema servido de `dados_decimo_terceiro` apresentar
+`meses[].horas` (backend #404, em `main`). A média por quantidade (Súmula 347
+do TST: média física das horas × valor da hora na data do pagamento) é o
+critério **no silêncio da norma coletiva**. Onde a CCT ou o ACT manda somar os
+valores recebidos, não há horas: a média segue pelos valores.
+
+- Norma silente: envie `meses[].horas` (e `dezembro_anterior.horas` na janela
+  `dez_nov_12`), `salario_hora_base` e, se houver repouso, `dsr_fator`, mais
+  `variavel_exclui_rubricas_de_horas` (a declaração de que `variavel_cents`
+  não repete o valor dessas rubricas). Motor `decimo-v3+horas-347-v1`
+  (`decimo-v5+horas-347-v1` com `dez_nov_12`). Sem horas, o motor e os hashes
+  são os de antes. O schema e as recusas fechadas `decimo_horas_*` vêm de
+  `get_process_contract("decimo_terceiro")`.
+- Norma manda somar valores: **não envie horas** (`meses[].horas`,
+  `dezembro_anterior.horas`). Envie só `variavel_cents` por mês, que é a média
+  pelos valores.
+- Não decida pela cláusula por conta própria: leia a norma coletiva da empresa
+  e registre na `fonte` a decisão da DP ou a cláusula. Norma ilegível ou
+  ambígua vai à DP, não ao silêncio presumido.
+
+**Política `horas` da empresa** (backend #408,
+aberta, ainda não mesclada; vale quando `empresas[].decimo_terceiro_medias` mostrar o campo
+`horas` no schema servido de `get_client_config`/`validate_client_config`).
+Declare no mesmo cadastro da janela (um `validate_client_config` e depois
+`apply_client_config`), com vigência e fonte:
+
+```json
+"empresas[<codigo>].decimo_terceiro_medias": [
+  {"id": "media-13-valores-2026", "valid_from": "2026-01-01", "horas": "valores",
+   "fonte": {"reference": "CX-…", "foundation": "<cláusula da norma coletiva>"}}
+]
+```
+
+- `horas` aceita `valores` ou `quantidade_347`. Ausente ou `quantidade_347`
+  mantém o comportamento de antes (horas aceitas quando enviadas). Uma política
+  só com `horas: "valores"` vale, com a janela padrão `jan_nov_11`; com
+  `janela: "dez_nov_12"` no mesmo registro, as duas regras valem juntas.
+- Com `valores` vigente na referência salarial da etapa, enviar horas recusa
+  com `decimo_horas_vedado_pela_norma_coletiva`: `fields` aponta
+  `dados_decimo_terceiro.meses` e/ou `dados_decimo_terceiro.dezembro_anterior`,
+  a resposta traz `politica_id` e a `fonte` da política, `next_action` é
+  `receive_case_data` e o `guidance` diz "enviar só os valores". Reenvie a seção
+  sem `horas`, com `variavel_cents`.
+- `quantidade_347` não entra na evidência da política (os hashes existentes
+  não mudam). **Mudar uma política vigente para `valores` exige uma vigência
+  nova** (`valid_from` novo), não a edição da vigente. O contrato de onboarding
+  (`thirteenth_rules.average_window`) anuncia `hours_field` (`horas`),
+  `hours_policies` (`valores`, `quantidade_347`) e `hours_values_refusal`
+  (`decimo_horas_vedado_pela_norma_coletiva`): o campo vale quando esses
+  sinais vierem.
+- A política só entra por declaração com fonte; nenhuma empresa a tem por
+  padrão. Sem a política, o Loki aceita as horas e **não** descobre a cláusula:
+  a conferência com a norma é da harness.
+- Servidor sem o campo `horas` no schema recusa o cadastro: não o declare.
 
 ## Fatos opacos do 13º qualificados pelo id
 

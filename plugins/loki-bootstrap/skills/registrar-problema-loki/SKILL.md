@@ -151,6 +151,15 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
+Na 2.9.9 não são defeito, quando a resposta servida mostrar o sinal:
+`historical_thirteenth_coverage_incomplete` (declare a cobertura adjacente),
+`historical_thirteenth_first_installment_already_paid` (13º já adiantado: não
+pague de novo), `decimo_horas_vedado_pela_norma_coletiva` (envie só os
+valores), `case_in_review_requires_restart` (`restart_case` simples) e as
+recusas e pendências da `folha_divisor_mes` (`folha_divisor_mes_retroativo`,
+`periodo_remuneravel_diverge_do_vinculo`,
+`ferias_calculadas_a_30_sob_a_politica`,
+`desconto_de_faltas_acima_do_salario`).
 Na 2.9.8 não são defeito, quando o contrato servido mostrar o sinal:
 `aviso_projecao_incoerente` (ajuste `data_projecao_aviso`) e o aviso curto com
 `aviso_trabalhado_nao_cumprido` sem documento do ramo; `regra_nao_medida:saldo_afastamento_no_mes`;

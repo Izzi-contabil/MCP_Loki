@@ -1,5 +1,5 @@
 {
   "name": "loki-orientacoes",
-  "version": "2.9.8",
+  "version": "2.9.9",
   "description": "Orienta operação HTTPS do Loki, modo eSocial e parâmetros temporais; leitores e preparo permanecem na harness."
 }

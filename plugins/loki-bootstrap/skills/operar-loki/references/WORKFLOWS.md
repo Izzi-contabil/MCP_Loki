@@ -746,7 +746,8 @@ domínio `ferias`.
 - `leave_history_coverage_not_certified` e
   `thirteenth_payment_coverage_not_certified`: a cobertura completa desde a
   admissão limpa o gap até o corte, termine ela no corte, antes (emendada) ou
-  depois dele (estado `historical-state-v2`). Seleção v1 consumível não se
+  depois dele (estado `historical-state-v2`). Isso vale para o estado e as
+  férias; **não para o cálculo do 13º** (seção 2.9.9). Seleção v1 consumível não se
   refaz. Não altere coberturas de casos com seleção histórica feita.
 - Afastamento antigo opaco: não grave `leave` duplicado; mantenha o gap
   pendente.
@@ -773,7 +774,8 @@ completo está em cada domínio de `loki_obter_instrucoes`.
   Caso em `aguardando_revisao` com média importada: decisão `ajustar`, depois
   `calculate_case`, geração e nova conferência. Reinício com `restart_case` e
   `replace_process_inputs`, sem `corrigir_dados`.
-  `historical_thirteenth_coverage_incomplete` traz `missing_intervals`.
+  `historical_thirteenth_coverage_incomplete` traz `missing_intervals` na resposta
+  imediata (em `get_case` e no dossiê, com o backend #409 (mesclado); seção 2.9.9).
 - Rescisão (`rescisao`): `loki.company-termination-map-patch/1` com `add` ou
   `replace` de uma parcela, quando `get_client_config` trouxer
   `termination_map_patch_transport`.
@@ -912,6 +914,45 @@ atualizar o plugin instalado.
   vêm como `path=qualify_legacy_fact` e saem por `thirteenth_fact_assessment`
   quando o contrato servido o apresentar; `dp_rule_pending` fica só para a
   rescisão da carga.
+
+## 2.9.9: 13º (cobertura, 1ª parcela já paga, horas) e folha (revisão, mês civil, fórmulas)
+
+O roteiro completo está em `decimo_terceiro` e `folha_mensal` de
+`loki_obter_instrucoes`; `ferias` ressalva que a cobertura dele não é a do 13º.
+Contrato 2.9.9 aditivo: sem ferramenta nova e sem Refresh. A operadora
+atualiza o plugin. Cada item vale quando a resposta servida mostrar o sinal.
+
+- **13º, cobertura.** O gap `thirteenth_payment_coverage_not_certified` é
+  informativo; o cálculo exige `thirteenth_payments` de 01/01 do ano (ou da
+  admissão) até a `data_pagamento` da etapa e `leave_occurrences` até o corte.
+  Pagamentos só até 31/10 com pagamento em 30/11: declare a cobertura adjacente
+  (01/11 a 30/11) sem alterar a existente. As janelas
+  (`required_windows`, `missing_intervals`) vêm só na resposta imediata; `get_case`
+  e o dossiê só as trazem com o backend "13º 1ª parcela já paga". Releia a
+  resposta imediata antes de concluir que a admissão é posterior.
+- **13º, 1ª parcela já paga** (backend #409, mesclada): recusa
+  `historical_thirteenth_first_installment_already_paid` (`next_action=cancel_case`,
+  `year`, `installment`): já houve adiantamento no ano; não pague de novo, a 2ª
+  parcela compensa.
+- **13º, horas.** `meses[].horas` e `dezembro_anterior.horas` (Súmula 347) só
+  onde a norma coletiva é silente; onde ela manda somar valores, envie só
+  `variavel_cents`. Com a política `horas: "valores"` em
+  `empresas[].decimo_terceiro_medias` (backend #408, aberta), enviar horas recusa (`next_action` `receive_case_data`, `guidance` “enviar só os valores”; mudar para `valores` exige vigência nova)
+  com `decimo_horas_vedado_pela_norma_coletiva`.
+- **Folha em revisão.** Recalcular é `restart_case` simples (sem `preparation`,
+  com `expected_snapshot=correction_snapshot` e `human_message`) e depois
+  `enqueue_case_workflow`. Com o backend #410 (mesclada), o enqueue em revisão recusa
+  com `case_in_review_requires_restart`.
+- **Folha pelo mês civil** (`folha_divisor_mes`, #405): por empresa, com fonte;
+  liga com `folha_divisor_mes`, `ferias_recibo.divisor_dias: dias_mes_civil` e
+  `convencoes.dias_do_mes: calendario` num só `validate_client_config` e
+  `apply_client_config`, com `valid_from` no dia 1 depois da última folha
+  fechada. Falta sempre pela rubrica de falta, nunca embutida no período.
+- **Fórmulas do mapa.** Dobro de feriado e domingo: `salario_base_proporcional`
+  com quantidade 2 × dias, não `base_composta_proporcional` com fator 2. Base
+  da hora com outras verbas: `base_composta_proporcional` em horas com
+  `rubricas_base`, divisor literal e base do mês. Percentual individual
+  (quinquênio) ainda não existe: `valor_explicito`.
 
 ## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
 
