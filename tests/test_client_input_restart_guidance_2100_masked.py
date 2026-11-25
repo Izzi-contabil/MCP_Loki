@@ -159,7 +159,7 @@ def test_unqualified_fact_source_and_authorization_busy_guidance() -> None:
     approvals = flat(read("aprovacoes"))
     for marker in (
         "code: authorization_change_busy",
-        "`retry_after_seconds`",
+        "retry_after_seconds}",
         "**não prepare nova autorização**",
         "`grants_count` e `grants_hash`",
         "`read_account_summary`",
