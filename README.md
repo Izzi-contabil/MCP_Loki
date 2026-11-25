@@ -4,7 +4,7 @@ o schema de `preparar_autorizacao` ganha o valor `atualizar_por_insumo_do_client
 no enum de capacidades, **com Refresh do conector e conversa nova**. A rotina com a
 capacidade (concedida pela Ana, só por `preparar_autorizacao`) reinicia por
 `restart_case` o caso em revisão por insumo novo do cliente (admissão e rescisão) ou
-por troca de motor (folha). Depende do backend (Project-loki #411, aberta); a
+por troca de motor (folha). Backend: Project-loki #411, #413 (13º: transcrição cadastral) e #414 (folha: divisor por linha, fator 1 ou 2), mescladas em main 55e110c1; a
 operadora atualiza o plugin.
 
 Edição anterior **provider 0.4.34 / contrato, instruções e plugin 2.9.9**, 24/11/2026:

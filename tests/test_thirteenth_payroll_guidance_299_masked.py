@@ -56,7 +56,7 @@ PAYROLL = (
     "**Falta sempre pela rubrica de falta**",
     "`valor_explicito`",
     "## Fórmulas do mapa: o que existe hoje e os limites",
-    "**quantidade = 2 × dias**",
+    "`salario_base_proporcional` aceita `fator` **1 ou 2**",
     '`base_composta_proporcional` com `fator: "2"`',
     "`rubricas_base`",
     "**ainda não\n  existe**",
@@ -90,6 +90,8 @@ def test_payroll_guidance_is_delivered_and_stale_review_path_is_gone() -> None:
     for marker in PAYROLL:
         assert flat(marker) in guide, marker
     assert flat(STALE[1]) not in guide
+    assert "quantidade = 2 × dias" not in guide
+    assert "não aceita `fator`" not in guide
 
 
 def test_plugin_mirrors_the_release_and_replaced_coverage_rule() -> None:

@@ -466,18 +466,28 @@ políticas). O Loki valida a coerência da fórmula declarada; não infere a
 verba.
 
 - **Dobro de feriado e domingo trabalhados sem folga** (Lei 605/1949, art.
-  9º): `salario_base_proporcional` não aceita `fator` (recusa "formula sem
-  base composta nao aceita fator ou rubricas_base"). Declare a verba como
-  `salario_base_proporcional`, unidade em dias, divisor 30, e lance a
-  **quantidade = 2 × dias** trabalhados. O valor é salário ÷ 30 × dias × 2,
-  sobre o salário contratual; o memorial mostra a quantidade em dobro. Essa
-  linha pode contar como linha de salário do mês (a base do VT e a cota do
-  salário-família do admitido, desde a `folha-v33`, leem o período pago), então
-  avise a operadora desse efeito na conferência do admitido. **Não**
+  9º; backend #414): `salario_base_proporcional` aceita `fator` **1 ou 2**
+  (outro valor recusa com `formula_day_factor_invalid`). Declare a verba como
+  `salario_base_proporcional`, unidade em dias, divisor 30, `fator: "2"`, e o
+  cliente lança os **dias** trabalhados. O valor é salário ÷ 30 × dias × 2,
+  sobre o salário contratual. Membro de partição e `afastamento_empregador` não
+  aceitam fator. Sob `folha_divisor_mes`, a linha com fator não é linha de
+  salário do período: o mapa precisa de outra linha de salário do período, sem
+  fator (`MapaFolhaInvalido`). Essa linha pode contar na base do VT e na cota
+  do salário-família do admitido; avise a operadora na conferência. **Não**
   use `base_composta_proporcional` com `fator: "2"` e a linha de salário em
-  `rubricas_base`: a base é o valor da linha de salário **já calculado no
-  mês**, e com admissão, férias ou afastamento no mês o dobro sai menor.
-  Sob `folha_divisor_mes`, o divisor 30 vira os dias do mês.
+  `rubricas_base`: a base é o valor da linha **já calculado no mês**, e com
+  admissão, férias ou afastamento no mês o dobro sai menor.
+- **Divisor por linha sob `folha_divisor_mes`**
+  (`formula.divisor_sob_calendario: "30" | "dias_do_mes"`, #414). A medição da
+  DP (CX-D0D4F1EF) mostrou que o divisor depende da verba. Com `"30"`, a linha
+  fica ÷30 mesmo com a política (faltas e DSR de faltas no Abençoado; feriado
+  em dobro onde o Domínio mede ÷30); sem o campo ou com `"dias_do_mes"`, segue
+  os dias do mês; **fora da política o campo não tem efeito**. Recusas: `"30"`
+  na linha de salário do período, em `remuneracao_periodo`, em membro de
+  partição e em `afastamento_empregador`; e mudança retroativa do campo ou do
+  `fator` até a última folha fechada (`folha_divisor_mes_retroativo`; vale a
+  partir do mês seguinte).
 - **Base da hora com outras verbas** (Súmulas 264 e 132 do TST):
   `salario_horario` não aceita `rubricas_base`. Quem soma verbas é
   `base_composta_proporcional`, com `unidade_quantidade: horas`, `divisor`

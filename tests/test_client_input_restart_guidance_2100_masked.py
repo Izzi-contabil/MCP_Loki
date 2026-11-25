@@ -111,3 +111,35 @@ def test_release_versions_and_hashes() -> None:
             content = (DOMAINS / f"{name}.{suffix}").read_bytes()
             assert hashlib.sha256(content).hexdigest() == hashes[key], (name, suffix)
         assert len((DOMAINS / f"{name}.md").read_bytes()) <= LIMIT, name
+
+
+def test_thirteenth_transcription_rule_and_payroll_line_divisor() -> None:
+    thirteenth = flat(read("decimo_terceiro"))
+    for marker in (
+        "`transcricao_cadastral_sem_efeito_no_13`",
+        "`identificacao_cadastral`",
+        "`alteracao_cargo_cbo`",
+        "`historical_thirteenth_legal_rule_remuneration_unproven`",
+        "`historical_thirteenth_legal_rule_effect_incompatible`",
+        "`historical_thirteenth_legal_rule_scope_incompatible`",
+        "até 1000",
+        "{kind: declaration, reference, locator: data}",
+        "`source_declarations`",
+        "`thirteenth_rules.fact_assessment.legal_rules`",
+    ):
+        assert marker in thirteenth, marker
+    payroll = flat(read("folha_mensal"))
+    for marker in (
+        '`formula.divisor_sob_calendario: "30" | "dias_do_mes"`',
+        "CX-D0D4F1EF",
+        "`folha_divisor_mes_retroativo`",
+        "`afastamento_empregador`",
+        "**fora da política o campo não tem efeito**",
+        "`fator` **1 ou 2**",
+        "`formula_day_factor_invalid`",
+    ):
+        assert marker in payroll, marker
+    assert "quantidade = 2 × dias" not in payroll
+    notice = flat(read("geral"))
+    assert "`transcricao_cadastral_sem_efeito_no_13`" in notice
+    assert "`formula.divisor_sob_calendario`" in notice

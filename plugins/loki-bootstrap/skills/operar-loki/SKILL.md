@@ -495,3 +495,6 @@ Ana pode conceder à rotina a capacidade `atualizar_por_insumo_do_cliente`, só 
 `restart_case` (admissão e rescisão com `replace_process_inputs` e `request_ref`
 `sha256-<64 hex>`; folha simples), sem decidir nada. **Exige Refresh do conector
 e conversa nova**, além de atualizar o plugin.
+Também na 2.10.0, sem Refresh próprio: regra legal
+`transcricao_cadastral_sem_efeito_no_13` no 13º (#413) e
+`formula.divisor_sob_calendario` e `fator` 1 ou 2 na folha (#414).

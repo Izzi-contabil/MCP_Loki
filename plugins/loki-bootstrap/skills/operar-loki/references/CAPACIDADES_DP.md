@@ -348,6 +348,12 @@ afastamento continuam com pessoa. Recusas que mandam parar e avisar a Ana:
 `caso_inexistente_ou_nao_autorizado`. Roteiro em “2.10.0: insumo novo do
 cliente e troca de motor pela rotina” de [WORKFLOWS.md](WORKFLOWS.md).
 
+Na mesma versão, sem Refresh próprio: 13º com a regra legal
+`transcricao_cadastral_sem_efeito_no_13` (`scope` `identificacao_cadastral` ou
+`alteracao_cargo_cbo`) e folha com `formula.divisor_sob_calendario` e `fator` 1
+ou 2 em `salario_base_proporcional`. Roteiro em “2.10.0: 13º (#413) e folha
+(#414)” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## 2.9.9: 13º e folha mensal
 
 Contrato 2.9.9 aditivo, sem Refresh; a operadora atualiza o plugin. Cada item

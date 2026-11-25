@@ -15,12 +15,14 @@ Refresh, o catálogo antigo não a oferece.
 
 **Vale quando o Loki for publicado:** a capacidade
 `atualizar_por_insumo_do_cliente` (seção "Empresa nova e onboarding pela
-rotina"; roteiros em `admissao`, `rescisao` e `folha_mensal`).
+rotina"; roteiros em `admissao`, `rescisao` e `folha_mensal`); `decimo_terceiro`
+com a regra legal `transcricao_cadastral_sem_efeito_no_13` (`scope`
+`identificacao_cadastral` ou `alteracao_cargo_cbo`); `folha_mensal` com
+`formula.divisor_sob_calendario` e `fator` 1 ou 2 em `salario_base_proporcional` (esses dois sem Refresh).
 
-**Continua da 2.9.9** (sem Refresh): 13º (cobertura que o cálculo exige,
-`historical_thirteenth_first_installment_already_paid`, horas pela Súmula 347
-só onde a norma coletiva é silente) e folha (recálculo em revisão por
-`restart_case` simples, `folha_divisor_mes`, fórmulas do mapa).
+**Continua da 2.9.9**: 13º (cobertura, 1ª parcela já paga
+(`historical_thirteenth_first_installment_already_paid`), horas pela Súmula 347) e folha (recálculo em revisão por `restart_case` simples,
+`folha_divisor_mes`, fórmulas do mapa).
 
 **Continua da 2.9.8:** rescisão (aviso da norma coletiva, saldo pelos dias
 efetivos), 13º (janela da média por empresa, fatos opacos), arredondamento do

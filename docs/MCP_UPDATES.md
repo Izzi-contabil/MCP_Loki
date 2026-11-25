@@ -9,8 +9,14 @@ concede a capacidade à rotina por `preparar_autorizacao`. Instruções e plugin
 acompanham em 2.10.0; o provider sobe um patch (0.4.35). Mínimo 2.0.0 permanece.
 Wheel 0.4.34 permanece imutável.
 
-Backend: Project-loki #411 (aberta, HEAD `327e090c`; ADR-039). Texto vale quando
-o Loki for publicado com a PR; a promoção ao Loki só ocorre depois da mesclagem.
+Backend: Project-loki #411 (ADR-039), #413 e #414, mescladas em `main` (`55e110c1`).
+#413: regra legal `transcricao_cadastral_sem_efeito_no_13` no 13º (`scope`
+`identificacao_cadastral` ou `alteracao_cargo_cbo`, três recusas
+`historical_thirteenth_legal_rule_*`, até 1000 ids por avaliação). #414:
+`formula.divisor_sob_calendario` (`"30"`/`"dias_do_mes"`) sob `folha_divisor_mes` e
+`fator` 1 ou 2 em `salario_base_proporcional` (medição CX-D0D4F1EF); a orientação
+"quantidade = 2 × dias" da 2.9.9 foi trocada pelo fator 2. A promoção ao Loki
+segue o fluxo do backend.
 A capacidade abre só `restart_case` em caso `aguardando_revisao`: admissão e
 rescisão com `preparation.mode=replace_process_inputs` e `request_ref`
 `sha256-<64 hex>`; folha mensal simples. Concedida só por

@@ -949,7 +949,9 @@ atualiza o plugin. Cada item vale quando a resposta servida mostrar o sinal.
   `apply_client_config`, com `valid_from` no dia 1 depois da última folha
   fechada. Falta sempre pela rubrica de falta, nunca embutida no período.
 - **Fórmulas do mapa.** Dobro de feriado e domingo: `salario_base_proporcional`
-  com quantidade 2 × dias, não `base_composta_proporcional` com fator 2. Base
+  com `fator: "2"` (só 1 ou 2; o cliente lança os dias; sob `folha_divisor_mes`
+  exige outra linha de salário do período), não `base_composta_proporcional`
+  com fator 2 (seção 2.10.0). Base
   da hora com outras verbas: `base_composta_proporcional` em horas com
   `rubricas_base`, divisor literal e base do mês. Percentual individual
   (quinquênio) ainda não existe: `valor_explicito`.
@@ -1367,3 +1369,27 @@ cancelamento, retificação de data, férias e afastamento seguem com pessoa.
   `client_input_restart_grant_origin_unrecorded`, `capacidade_nao_concedida`,
   `caso_inexistente_ou_nao_autorizado`. O replay com o mesmo `request_ref` é
   idempotente.
+
+### 2.10.0: 13º (#413) e folha (#414), já mesclados
+
+Texto completo em `decimo_terceiro` e `folha_mensal`. Sem ferramenta nova.
+
+- **13º, transcrição cadastral.** `thirteenth_fact_assessment` com
+  `effect=sem_efeito` e `legal_rule=transcricao_cadastral_sem_efeito_no_13` exige
+  `scope`: `identificacao_cadastral` ou `alteracao_cargo_cbo` (este exige o fato
+  com data e o salário vigente com `data_efeito` igual ou posterior; com aumento
+  junto do cargo, registre o salário vigente desde a data). Recusas:
+  `historical_thirteenth_legal_rule_remuneration_unproven`,
+  `historical_thirteenth_legal_rule_effect_incompatible` e
+  `historical_thirteenth_legal_rule_scope_incompatible`. Uma avaliação cita todos
+  os ids da mesma fonte (até 1000). Fonte de declaração sem documento:
+  `{kind: declaration, reference, locator: data}`. Página transcrita e cargo sem
+  data seguem por `dp_decision`. Regras em
+  `get_company_onboarding_contract` → `thirteenth_rules.fact_assessment.legal_rules`.
+- **Folha, divisor por linha.** `formula.divisor_sob_calendario: "30" |
+  "dias_do_mes"` sob `folha_divisor_mes`: `"30"` mantém a linha ÷30 (faltas e DSR
+  de faltas no Abençoado, feriado em dobro onde o Domínio mede ÷30); sem o
+  campo, dias do mês; fora da política, sem efeito. Recusa em linha de salário
+  do período, `remuneracao_periodo`, partição e `afastamento_empregador`, e
+  retroativo (`folha_divisor_mes_retroativo`). `fator` em
+  `salario_base_proporcional`: só 1 ou 2 (medição da DP: CX-D0D4F1EF).
