@@ -949,7 +949,9 @@ atualiza o plugin. Cada item vale quando a resposta servida mostrar o sinal.
   `apply_client_config`, com `valid_from` no dia 1 depois da última folha
   fechada. Falta sempre pela rubrica de falta, nunca embutida no período.
 - **Fórmulas do mapa.** Dobro de feriado e domingo: `salario_base_proporcional`
-  com quantidade 2 × dias, não `base_composta_proporcional` com fator 2. Base
+  com `fator: "2"` (só 1 ou 2; o cliente lança os dias; sob `folha_divisor_mes`
+  exige outra linha de salário do período), não `base_composta_proporcional`
+  com fator 2 (seção 2.10.0). Base
   da hora com outras verbas: `base_composta_proporcional` em horas com
   `rubricas_base`, divisor literal e base do mês. Percentual individual
   (quinquênio) ainda não existe: `valor_explicito`.
@@ -1336,3 +1338,76 @@ os mesmos hashes e `required_checks` efetivamente examinados. Não marque PASS
 por disponibilidade/download, não copie checks antigos e preserve FAIL/pendência.
 Sem pacote/documento previsto, releia o recibo factual; não invente PDF ou check
 visual. Conferência técnica não é decisão humana, entrega ou pagamento.
+
+## 2.10.0: insumo novo do cliente e troca de motor pela rotina
+
+Texto completo em `admissao`, `rescisao`, `folha_mensal` e `geral` de
+`loki_obter_instrucoes`. Contrato 2.10.0 muda o schema de `preparar_autorizacao`
+(valor novo no enum): **Refresh do conector e conversa nova**, e a operadora
+atualiza o plugin. Só então a Ana concede `atualizar_por_insumo_do_cliente` à
+rotina, por empresa e processo, por `preparar_autorizacao`/`aplicar_autorizacao`
+(nunca `preparar_acesso_tecnico`; pessoa não recebe). Backend: Project-loki #411.
+
+Gatilho: insumo novo do cliente (ou, na folha, troca de motor) com o caso em
+`aguardando_revisao`. A capacidade não decide; aprovação, efeitos, entrega,
+cancelamento, retificação de data, férias e afastamento seguem com pessoa.
+
+- **Admissão e rescisão.** (1) `get_case` e copie o `correction_snapshot`;
+  (2) `restart_case` com `expected_snapshot`, `preparation.mode=
+  replace_process_inputs`, `preparation.request_ref = sha256-<impressão do
+  insumo>` (64 hex minúsculos) e `human_message` com os campos e o motivo;
+  (3) `receive_case_data` e o fluxo normal, com nova revisão e novo aceite
+  humanos. A data de admissão não muda por esse caminho: a pessoa reinicia e
+  usa `rectify_case_admission_date`.
+- **Folha mensal.** `restart_case` simples (sem `preparation`, com
+  `human_message`) e `enqueue_case_workflow` com os snapshots novos. Sem a
+  capacidade, pare e avise a Ana. O aceite continua humano.
+- **Pare e avise a Ana, sem laço:**
+  `restart_requires_effect_reconciliation`,
+  `client_input_restart_requires_review_state`,
+  `client_input_restart_scope_refused`, `client_input_request_ref_invalid`,
+  `client_input_restart_grant_origin_unrecorded`, `capacidade_nao_concedida`,
+  `caso_inexistente_ou_nao_autorizado`. O replay com o mesmo `request_ref` é
+  idempotente.
+
+### 2.10.0: 13º (#413) e folha (#414), já mesclados
+
+Texto completo em `decimo_terceiro` e `folha_mensal`. Sem ferramenta nova.
+
+- **13º, transcrição cadastral.** `thirteenth_fact_assessment` com
+  `effect=sem_efeito` e `legal_rule=transcricao_cadastral_sem_efeito_no_13` exige
+  `scope`: `identificacao_cadastral` ou `alteracao_cargo_cbo` (este exige o fato
+  com data e o salário vigente com `data_efeito` igual ou posterior; com aumento
+  junto do cargo, registre o salário vigente desde a data). Recusas:
+  `historical_thirteenth_legal_rule_remuneration_unproven`,
+  `historical_thirteenth_legal_rule_effect_incompatible` e
+  `historical_thirteenth_legal_rule_scope_incompatible`. Uma avaliação cita todos
+  os ids da mesma fonte (até 1000). Fonte de declaração sem documento:
+  `{kind: declaration, reference, locator: data}`. Página transcrita e cargo sem
+  data seguem por `dp_decision`. Regras em
+  `get_company_onboarding_contract` → `thirteenth_rules.fact_assessment.legal_rules`.
+- **Folha, divisor por linha.** `formula.divisor_sob_calendario: "30" |
+  "dias_do_mes"` sob `folha_divisor_mes`: `"30"` mantém a linha ÷30 (faltas e DSR
+  de faltas no Abençoado, feriado em dobro onde o Domínio mede ÷30); sem o
+  campo, dias do mês; fora da política, sem efeito. Recusa em linha de salário
+  do período, `remuneracao_periodo`, partição e `afastamento_empregador`, e
+  retroativo (`folha_divisor_mes_retroativo`). `fator` em
+  `salario_base_proporcional`: só 1 ou 2 (medição da DP: CX-D0D4F1EF).
+- **13º, qual fonte citar** (#416, aberta). Em `get_case_historical_state`, cada
+  `unqualified_facts` de `outro` e `transferencia` traz `source` (documento:
+  `document_id`, `content_hash`, `locator_sha256`; declaração: `kind`,
+  `reference_sha256`, `locator_sha256`). Cada `*_sha256` é o SHA-256 (UTF-8) do
+  valor enviado na carga: confira e cite o valor por extenso na `source` da
+  avaliação. Uma avaliação por fonte, com todos os ids do grupo; fonte diferente
+  recusa `historical_legacy_qualification_source_incompatible`.
+- **Acessos sob contenção** (#415, aberta; domínio `aprovacoes`).
+  `aplicar_autorizacao` com `{status: BUSY, code: authorization_change_busy,
+  retry_after_seconds}` não aplicou nada: repita a mesma chamada (idempotente),
+  sem preparar outra autorização. Acima de 20 concessões o recibo traz
+  `grants_count` e `grants_hash`; confira com `read_account_summary`. A prévia de
+  `prepare_authorization_addition` é um delta (`added_grants`, `before`/`after`).
+  O `/token` (código, refresh e `client_credentials`) pode dar 503 com
+  `Retry-After` e corpo `{"error":"temporarily_unavailable"}` (sem
+  `error_description`): aguarde e repita, sem reautenticar. Durante uma fase de
+  folha da própria pessoa o login funciona, e a atualização de e-mail e de
+  último login fica para o próximo login.

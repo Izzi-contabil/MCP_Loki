@@ -33,3 +33,27 @@ nem exija aceite de PDF inexistente. Se houver efeito próprio, sua intenção h
 e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplicado.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Aplicar autorização sob contenção e prévia curta (backend #415, aberta)
+
+Valem quando a resposta servida mostrar o sinal.
+
+- `aplicar_autorizacao` espera no máximo 2 s por travas. Se devolver
+  `{status: BUSY, code: authorization_change_busy, retry_after_seconds}`, nada
+  foi aplicado. Aguarde e repita a **mesma** chamada: o mesmo `change_id` e
+  digest é idempotente, então **não prepare nova autorização**. Se a mudança já
+  tiver sido aplicada, a repetição devolve o recibo.
+- Acima de 20 concessões, o recibo traz `grants_count` e `grants_hash` em vez
+  da lista. Para conferir revisão, contagem e hash, use `read_account_summary`
+  (`receive_case_data` com `case_id: "@connector"`, só administradora).
+- A prévia de `prepare_authorization_addition` é um delta: `added_grants` e
+  `before`/`after` com revisão, contagem e hash. Mostre à pessoa as empresas
+  acrescentadas e as contagens; a lista completa não vem.
+- O `/token` (troca de código, renovação e `client_credentials`) pode responder
+  503 com `Retry-After` (2 s) e corpo `{"error": "temporarily_unavailable"}`,
+  sem `error_description`, durante a contenção. O código e o refresh não foram
+  consumidos: é temporário; aguarde e repita a mesma requisição, sem
+  reautenticar. `aplicar_acesso_tecnico` também pode devolver o BUSY acima.
+- Login durante uma fase de folha da própria pessoa: o login funciona, mas a
+  atualização de e-mail e de último login fica para o próximo login. Não é
+  erro nem exige ação.

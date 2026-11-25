@@ -354,7 +354,36 @@ vale só para o 13º; o fato continua no estado para os outros consumidores.
 | `sem_efeito` | `outro`, `afastamento` | `dp_decision` (CX-…) |
 | `afastamento_tipado` | `afastamento` sem data, junto com o `leave` tipado que também o cita | `dp_decision` |
 | `transferencia_mesmo_grupo` | `transferencia` | `legal_rule` (`transferencia_grupo_economico_continuidade`) ou `dp_decision` |
+| `sem_efeito` | `outro` | `legal_rule` (`transcricao_cadastral_sem_efeito_no_13`, com `scope`) ou `dp_decision` |
 
+- **Transcrição cadastral** (`transcricao_cadastral_sem_efeito_no_13`, backend
+  #413): transcrição de identificação ou de cargo/CBO não altera avos nem
+  parcelas (Lei 4.090/1962, art. 1º e § 1º). Exige `effect=sem_efeito`, alvo
+  `outro` e `scope`: `identificacao_cadastral` ou `alteracao_cargo_cbo` (`scope`
+  é proibido nas demais regras). Com `alteracao_cargo_cbo`, o fato precisa ter
+  **data** e o salário vigente (fato de contrato) precisa ter `data_efeito`
+  igual ou posterior a ela; **com aumento junto do cargo, registre o salário
+  vigente desde a data**. Recusas: `historical_thirteenth_legal_rule_remuneration_unproven`
+  (só `fact_id`; o caminho é a avaliação por `dp_decision`),
+  `historical_thirteenth_legal_rule_effect_incompatible` (efeito diferente de
+  `sem_efeito`) e `historical_thirteenth_legal_rule_scope_incompatible` (`scope`
+  ausente ou fora da regra). Página transcrita e cargo sem data continuam com
+  `dp_decision`. A fonte do fato "sem documento" é `{kind: declaration,
+  reference, locator: data}`, lida em `source_declarations`. Lista das regras:
+  `get_company_onboarding_contract` → `thirteenth_rules.fact_assessment.legal_rules`.
+- **Qual fonte citar** (backend #416, aberta). Fatos `outro` e `transferencia`
+  pendentes: em `get_case_historical_state`, cada item de `unqualified_facts`
+  traz `source`. Documento: `document_id`, `content_hash` e `locator_sha256`.
+  Declaração: `kind`, `reference_sha256` e `locator_sha256`. Cada `*_sha256` é
+  o SHA-256 (UTF-8) do valor que você enviou na carga: confira o hash contra
+  os valores enviados e **cite o valor por extenso** na `source` do
+  `historico_operacional` da avaliação (`thirteenth_fact_assessment`), igual à
+  do fato. Agrupe por `source` e mande **uma avaliação por fonte**, com todos
+  os ids do grupo em `qualifies_legacy_fact_ids`. Fonte diferente da do fato é
+  recusada (`historical_legacy_qualification_source_incompatible`). Sem o
+  campo `source` na resposta, o servidor é anterior à #416.
+- Uma avaliação cita todos os ids da mesma fonte, até 1000
+  (`qualifies_legacy_fact_ids`).
 - `decided_on` é o `effective_on` e nada retroage: a avaliação só vale em
   cortes a partir dessa data. Uma decisão posterior ao fim da janela da etapa
   não entra no estado daquele corte.

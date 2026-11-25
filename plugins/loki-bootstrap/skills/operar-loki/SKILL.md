@@ -489,3 +489,12 @@ e pins são preservados; o recibo não certifica equivalência factual. Use
 somente o `compatibility_transport` efetivamente anunciado quando a ferramenta
 nova não estiver descoberta. Pessoa, capacidades, CHAT_DECISIONS_ENABLED,
 CAS e decisão sobre o objeto concreto permanecem.
+Na 2.10.0 (“2.10.0: insumo novo do cliente e troca de motor pela rotina”), a
+Ana pode conceder à rotina a capacidade `atualizar_por_insumo_do_cliente`, só por
+`preparar_autorizacao`: o caso em `aguardando_revisao` reinicia por
+`restart_case` (admissão e rescisão com `replace_process_inputs` e `request_ref`
+`sha256-<64 hex>`; folha simples), sem decidir nada. **Exige Refresh do conector
+e conversa nova**, além de atualizar o plugin.
+Também na 2.10.0, sem Refresh próprio: regra legal
+`transcricao_cadastral_sem_efeito_no_13` no 13º (#413) e
+`formula.divisor_sob_calendario` e `fator` 1 ou 2 na folha (#414).

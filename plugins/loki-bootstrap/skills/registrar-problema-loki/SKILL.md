@@ -151,6 +151,10 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
+Na 2.10.0 não são defeito, quando a resposta servida mostrar o sinal:
+`client_input_restart_requires_review_state`, `client_input_restart_scope_refused`,
+`client_input_request_ref_invalid`, `capacidade_nao_concedida` e
+`restart_requires_effect_reconciliation` na rotina: pare e avise a Ana.
 Na 2.9.9 não são defeito, quando a resposta servida mostrar o sinal:
 `historical_thirteenth_coverage_incomplete` (declare a cobertura adjacente),
 `historical_thirteenth_first_installment_already_paid` (13º já adiantado: não

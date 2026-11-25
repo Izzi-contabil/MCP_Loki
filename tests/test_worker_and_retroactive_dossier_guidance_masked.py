@@ -133,7 +133,9 @@ def test_general_notice_keeps_the_297_items_as_continuation() -> None:
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
-    assert notice.index("**Não exige nada**") < notice.index("**Continua da 2.9.7**")
+    assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
+        "**Continua da 2.9.7**"
+    )
     assert notice.index("**Continua da 2.9.7**") < notice.index("**Continua da 2.9.6**")
     assert notice.index("**Continua da 2.9.6**") < notice.index("**Continua da 2.8.0**")
 
