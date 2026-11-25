@@ -143,3 +143,28 @@ def test_thirteenth_transcription_rule_and_payroll_line_divisor() -> None:
     notice = flat(read("geral"))
     assert "`transcricao_cadastral_sem_efeito_no_13`" in notice
     assert "`formula.divisor_sob_calendario`" in notice
+
+
+def test_unqualified_fact_source_and_authorization_busy_guidance() -> None:
+    thirteenth = flat(read("decimo_terceiro"))
+    for marker in (
+        "`unqualified_facts`",
+        "`locator_sha256`",
+        "`reference_sha256`",
+        "**cite o valor por extenso**",
+        "**uma avaliação por fonte**",
+        "`historical_legacy_qualification_source_incompatible`",
+    ):
+        assert marker in thirteenth, marker
+    approvals = flat(read("aprovacoes"))
+    for marker in (
+        "code: authorization_change_busy",
+        "`retry_after_seconds`",
+        "**não prepare nova autorização**",
+        "`grants_count` e `grants_hash`",
+        "`read_account_summary`",
+        "`added_grants`",
+        '"error": "temporarily_unavailable"',
+        "`Retry-After`",
+    ):
+        assert marker in approvals, marker

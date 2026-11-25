@@ -1393,3 +1393,18 @@ Texto completo em `decimo_terceiro` e `folha_mensal`. Sem ferramenta nova.
   do período, `remuneracao_periodo`, partição e `afastamento_empregador`, e
   retroativo (`folha_divisor_mes_retroativo`). `fator` em
   `salario_base_proporcional`: só 1 ou 2 (medição da DP: CX-D0D4F1EF).
+- **13º, qual fonte citar** (#416, aberta). Em `get_case_historical_state`, cada
+  `unqualified_facts` de `outro` e `transferencia` traz `source` (documento:
+  `document_id`, `content_hash`, `locator_sha256`; declaração: `kind`,
+  `reference_sha256`, `locator_sha256`). Cada `*_sha256` é o SHA-256 (UTF-8) do
+  valor enviado na carga: confira e cite o valor por extenso na `source` da
+  avaliação. Uma avaliação por fonte, com todos os ids do grupo; fonte diferente
+  recusa `historical_legacy_qualification_source_incompatible`.
+- **Acessos sob contenção** (#415, aberta; domínio `aprovacoes`).
+  `aplicar_autorizacao` com `{status: BUSY, code: authorization_change_busy,
+  retry_after_seconds}` não aplicou nada: repita a mesma chamada (idempotente),
+  sem preparar outra autorização. Acima de 20 concessões o recibo traz
+  `grants_count` e `grants_hash`; confira com `read_account_summary`. A prévia de
+  `prepare_authorization_addition` é um delta (`added_grants`, `before`/`after`).
+  O `/token` pode dar 503 `temporarily_unavailable` com `Retry-After`: aguarde,
+  sem reautenticar.
