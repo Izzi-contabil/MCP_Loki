@@ -60,7 +60,7 @@ def test_general_explains_blocked_payroll_job_diagnostic() -> None:
         "conjunto que o Loki serve no diagnóstico",
     ):
         assert required in general, required
-    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.10.0"
+    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.10.1"
 
 
 def test_plugin_mirrors_2610_guidance() -> None:

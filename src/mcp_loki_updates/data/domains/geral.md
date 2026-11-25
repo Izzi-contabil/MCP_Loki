@@ -1,24 +1,26 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.10.0)
+## O que mudou nesta versão (2.10.1)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
 chegar em partes: cada item vale quando a resposta servida mostrar o sinal
 indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora (2.10.0):** atualizar o plugin instalado (as skills
-mudaram) e **fazer o Refresh do conector e abrir uma conversa nova**: o schema
-de `preparar_autorizacao` ganhou um valor no enum de capacidades. Depois
-disso, a Ana concede a capacidade à rotina por `preparar_autorizacao`; sem o
-Refresh, o catálogo antigo não a oferece.
+**Exige ação da operadora (2.10.1):** só atualizar o plugin instalado (as
+skills mudaram). **Não exige Refresh do conector**: `create_case` recebe o
+payload genérico, sem ferramenta nova nem schema novo.
 
-**Vale quando o Loki for publicado:** a capacidade
-`atualizar_por_insumo_do_cliente` (seção "Empresa nova e onboarding pela
-rotina"; roteiros em `admissao`, `rescisao` e `folha_mensal`); `decimo_terceiro`
-com a regra legal `transcricao_cadastral_sem_efeito_no_13` (`scope`
-`identificacao_cadastral` ou `alteracao_cargo_cbo`); `folha_mensal` com
-`formula.divisor_sob_calendario` e `fator` 1 ou 2 em `salario_base_proporcional` (esses dois sem Refresh).
+**Vale quando o Loki for publicado:** em `rescisao`, a simulação de quem segue
+empregado, sem caso de origem (`loki.termination-simulation-create/2`), o
+descarte humano por `cancel_case` e o isolamento de toda simulação do 13º, do
+fechamento e da conciliação.
+
+**Continua da 2.10.0**, se o Refresh ainda não foi feito: **Refresh do conector
+e conversa nova** (o schema de `preparar_autorizacao` ganhou o valor
+`atualizar_por_insumo_do_cliente`); `decimo_terceiro` com
+`transcricao_cadastral_sem_efeito_no_13` e `folha_mensal` com
+`formula.divisor_sob_calendario` e `fator` 1 ou 2 (sem Refresh).
 
 **Continua da 2.9.9**: 13º (cobertura, 1ª parcela já paga
 (`historical_thirteenth_first_installment_already_paid`), horas pela Súmula 347) e folha (recálculo em revisão por `restart_case` simples,

@@ -19,11 +19,13 @@ SECTION_298 = "## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
 LIMIT = 65536
 
 NOTICE = (
-    "## O que mudou nesta versão (2.10.0)",
+    "## O que mudou nesta versão (2.10.1)",
     "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
     "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
     "atualizar o plugin instalado",
-    "**fazer o Refresh do conector e abrir uma conversa nova**",
+    "**Não exige Refresh do conector**",
+    "`loki.termination-simulation-create/2`",
+    "**Continua da 2.10.0**",
     "`atualizar_por_insumo_do_cliente`",
     "**Continua da 2.9.9**",
     "`historical_thirteenth_first_installment_already_paid`",
@@ -174,32 +176,32 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.35"
-    assert metadata["instructions_version"] == "2.10.0"
-    assert metadata["mcp_contract_version"] == "2.10.0"
-    assert metadata["recommended_plugin_version"] == "2.10.0"
+    assert metadata["provider_version"] == "0.4.36"
+    assert metadata["instructions_version"] == "2.10.1"
+    assert metadata["mcp_contract_version"] == "2.10.1"
+    assert metadata["recommended_plugin_version"] == "2.10.1"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.6", "2.9.7", "2.9.8", "2.9.9", "2.10.0"):
+    for version in ("2.0.0", "2.9.6", "2.9.7", "2.9.8", "2.9.9", "2.10.0", "2.10.1"):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.10.0", "2.10.1")["compatible"] is False
+    assert provider.check_version("2.10.1", "2.10.2")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
         "loki_verificar_versao",
     ]
-    backend = release["changes"]["backend"][-3]
+    backend = release["changes"]["backend"][-4]
     assert backend.startswith("Contrato2.9.8 aditivo")
     markers = ("#395", "#396", "#397", "#399", "#401", "#400", "#402")
     for marker in (*markers, "rectify_case_admission_date"):
         assert marker in backend
     assert "Refresh do conector só para a ferramenta nominal" in backend
-    assert release["changes"]["instructions"][-3].startswith("Instruções2.9.8")
-    assert release["changes"]["plugin"][-3].startswith("Plugin2.9.8")
+    assert release["changes"]["instructions"][-4].startswith("Instruções2.9.8")
+    assert release["changes"]["plugin"][-4].startswith("Plugin2.9.8")
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.10.0", path.name
+        assert data["version"] == "2.10.1", path.name
         assert data["updated_at"] == "2026-11-25", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.10.0", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.10.1", path.name
 
 
 def test_every_domain_stays_within_the_size_limit() -> None:
@@ -211,16 +213,17 @@ def test_every_domain_stays_within_the_size_limit() -> None:
 
 def test_general_notice_is_conditional_and_limits_the_refresh_to_the_named_tool() -> None:
     guide = text("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.10.0)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.10.1)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
-    assert notice.index("**Exige ação da operadora (2.10.0):**") < notice.index(
+    assert notice.index("**Exige ação da operadora (2.10.1):**") < notice.index(
         "**Vale quando o Loki for publicado:**"
     )
     assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
-        "**Continua da 2.9.9**"
+        "**Continua da 2.10.0**"
     )
+    assert notice.index("**Continua da 2.10.0**") < notice.index("**Continua da 2.9.9**")
     assert notice.index("**Continua da 2.9.9**") < notice.index("**Continua da 2.9.8:**")
     assert notice.index("**Continua da 2.9.8:**") < notice.index("**Continua da 2.9.7**")
     assert notice.index("**Continua da 2.9.7**") < notice.index("**Continua da 2.9.6**")

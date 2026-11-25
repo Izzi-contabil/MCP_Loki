@@ -599,6 +599,54 @@ simulação; num caso real é recusado com `parameters_invalid`.
 - `simulation_source_changed`: o histórico mudou durante a criação; repita
   com outra `simulation_ref`.
 
+## Simulação de quem segue empregado, sem caso de origem (2.10.1)
+
+Vale quando `get_process_contract("rescisao").simulation.versions` trouxer
+`loki.termination-simulation-create/2`. Sem o sinal, a única porta é a v1 das
+seções acima. A v1 continua valendo (`source_case_id`): o booleano
+`requires_source_case: true` é o da v1 e o valor por versão está em
+`requires_source_case_by_version`. Só `create_case` recebe o marcador; não há
+ferramenta nova nem Refresh.
+
+1. `get_company_employee_history` com `as_of` igual à data de desligamento
+   hipotética; guarde o `history_hash`.
+2. `create_case` com o `CasePayload` completo de rescisão, `preparation_only`
+   padrão, e `payload.simulation = {schema_version:
+   "loki.termination-simulation-create/2", source: {kind: "employee",
+   funcionario_id, expected_history_hash}, simulation_ref, field_sources}`. O
+   `expected_history_hash` é o `history_hash` do passo 1.
+3. `field_sources` só aceita **declaração**: um item por folha do payload, com
+   `kind=declaration` e `locator = $.payload.<caminho da folha>`. Não mande
+   `documentos_origem`; fonte documental ou `harness` exige caso e é recusada
+   (`field_source_invalid`).
+4. `run_prepared_case_workflow` no id da simulação.
+5. `get_case_version` e os artefatos (`get_case_version_artifact`).
+6. O PDF e o recibo saem como SIMULAÇÃO e dizem que o histórico não entrou no
+   cálculo (`BASE HISTÓRICA: ESTADO ATUAL DO VÍNCULO NO CORTE SIMULADO` e
+   `HISTÓRICO NÃO CONSUMIDO NO CÁLCULO DESTA SIMULAÇÃO`). Informe isso à
+   operadora ao mostrar os números.
+
+Recusas:
+
+- `simulation_history_changed`: o histórico mudou; releia
+  `get_company_employee_history` e repita com o hash novo.
+- `simulation_employment_not_active`: o vínculo já tem rescisão ou saída
+  efetiva; não há o que simular por este caminho.
+- `simulation_source_not_supported`: vínculo inexistente, de outra empresa ou
+  sem escopo `consultar` e `operar_casos` de rescisão; mesma recusa para os três.
+
+**Descarte.** Só a pessoa descarta, com `cancel_case` (decisão humana, com
+`expected_snapshot` e `human_message`). A rotina técnica não cancela. A
+`simulation_ref` fica ocupada: repetir a criação devolve `simulation_cancelled`
+e `run_prepared_case_workflow` devolve `BLOCKED/simulation_cancelled`. Para uma
+nova hipótese, use outra `simulation_ref`.
+
+**O que a simulação não faz.** Não é aprovada, entregue nem publicada, e não
+cria funcionário, evento de vínculo ou pin. Toda simulação (v1, v2 e as
+anteriores, inclusive as de 18/11) fica isolada: não entra no 13º, no
+fechamento do mês nem na conciliação. A resposta traz `source_employee_id` e
+`source_history_hash` no lugar de `source_case_id` e `source_snapshot`.
+
 ## Desligamento gravado pelo onboarding
 
 Rescisão vinda do cadastro de onboarding que não aconteceu (o contrato segue
