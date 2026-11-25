@@ -324,6 +324,30 @@ casos abertos dele. Nada disso exige Refresh; a operadora só atualiza o
 plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” de
 [WORKFLOWS.md](WORKFLOWS.md).
 
+## 2.10.0: a rotina reinicia caso em revisão por insumo do cliente
+
+**Exige Refresh do conector e conversa nova**: o schema de `preparar_autorizacao`
+ganhou o valor `atualizar_por_insumo_do_cliente` no enum de capacidades, e a
+operadora atualiza o plugin. Depois disso, a Ana concede a capacidade à rotina,
+por empresa e processo, e só por `preparar_autorizacao`/`aplicar_autorizacao`:
+`preparar_acesso_tecnico` recusa
+(`capacidade_concedida_so_por_autorizacao`) e pessoa não a recebe
+(`capacidade_exclusiva_de_automacao`). Vale também no modelo `@empresas-novas`;
+o concedente registrado é quem gravou o modelo.
+
+A capacidade não decide. Abre só `restart_case` em caso `aguardando_revisao`,
+em duas formas: **admissão e rescisão** com `preparation.mode=
+replace_process_inputs` e `request_ref = sha256-<64 hex>` (insumo novo do
+cliente), e **folha mensal** simples, sem `preparation` (troca de motor).
+Aprovação, efeitos, entrega, cancelamento, retificação de data, férias e
+afastamento continuam com pessoa. Recusas que mandam parar e avisar a Ana:
+`restart_requires_effect_reconciliation`,
+`client_input_restart_requires_review_state`,
+`client_input_restart_scope_refused`, `client_input_request_ref_invalid`,
+`client_input_restart_grant_origin_unrecorded`, `capacidade_nao_concedida` e
+`caso_inexistente_ou_nao_autorizado`. Roteiro em “2.10.0: insumo novo do
+cliente e troca de motor pela rotina” de [WORKFLOWS.md](WORKFLOWS.md).
+
 ## 2.9.9: 13º e folha mensal
 
 Contrato 2.9.9 aditivo, sem Refresh; a operadora atualiza o plugin. Cada item

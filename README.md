@@ -1,10 +1,16 @@
-# MCP Loki — contrato operacional 2.9.9
-Candidata **provider 0.4.34 / contrato, instruções e plugin 2.9.9**, 24/11/2026:
+# MCP Loki — contrato operacional 2.10.0
+Candidata **provider 0.4.35 / contrato, instruções e plugin 2.10.0**, 25/11/2026:
+o schema de `preparar_autorizacao` ganha o valor `atualizar_por_insumo_do_cliente`
+no enum de capacidades, **com Refresh do conector e conversa nova**. A rotina com a
+capacidade (concedida pela Ana, só por `preparar_autorizacao`) reinicia por
+`restart_case` o caso em revisão por insumo novo do cliente (admissão e rescisão) ou
+por troca de motor (folha). Depende do backend (Project-loki #411, aberta); a
+operadora atualiza o plugin.
+
+Edição anterior **provider 0.4.34 / contrato, instruções e plugin 2.9.9**, 24/11/2026:
 contrato aditivo, sem ferramenta nova e sem Refresh. 13º (cobertura que o cálculo exige, 1ª parcela já paga,
 horas só onde a norma coletiva é silente) e folha (recálculo em revisão por
 `restart_case` simples, mês civil `folha_divisor_mes`, fórmulas do mapa).
-Parte depende do backend (#409 e #410 mesclados; #408 aberta); cada texto vale quando a resposta
-servida mostrar o sinal. A operadora atualiza o plugin.
 
 Edição anterior **provider 0.4.33 / contrato, instruções e plugin 2.9.8**, 24/11/2026
 (backend #395, #396, #397, #399, #400, #401 e #402 em `main` do Loki; #398 e
@@ -246,11 +252,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.34** entrega instruções **2.9.9** ao backend.
+O pacote `mcp-loki-updates` **0.4.35** entrega instruções **2.10.0** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.9.9** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.10.0** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 

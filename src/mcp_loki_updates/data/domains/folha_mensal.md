@@ -228,8 +228,12 @@ para isso.
   `input_snapshot` e o `expected_snapshot` novos e novo `request_ref`; depois
   o pacote corrente, a conferência e o novo aceite. O reinício simples não
   reenvia os insumos (o `preparation` com `replace_process_inputs` arquiva-os e
-  exige reenviar tudo; não o use só para trocar o motor). A rotina sem
-  `decidir_chat` para e avisa a operadora. Não há reinício em lote:
+  exige reenviar tudo; não o use só para trocar o motor). A rotina com a capacidade
+  `atualizar_por_insumo_do_cliente` (2.10.0; a Ana concede por empresa, só por
+  `preparar_autorizacao`) faz o `restart_case` simples (sem `preparation`, com
+  `human_message`) e depois o `enqueue_case_workflow` com os snapshots novos;
+  sem a capacidade, ela para e avisa a Ana. O aceite continua humano e a
+  capacidade não abre cancelamento nem `preparation` na folha. Não há reinício em lote:
   `restart_case` não está no `execute_operational_batch`; são uma chamada por
   caso e um enqueue por empresa. Enquanto o servidor aceitava o enqueue em
   revisão, o job nascia e terminava em `job_preparation_failed`. Com a

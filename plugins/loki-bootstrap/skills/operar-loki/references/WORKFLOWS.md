@@ -1336,3 +1336,34 @@ os mesmos hashes e `required_checks` efetivamente examinados. Não marque PASS
 por disponibilidade/download, não copie checks antigos e preserve FAIL/pendência.
 Sem pacote/documento previsto, releia o recibo factual; não invente PDF ou check
 visual. Conferência técnica não é decisão humana, entrega ou pagamento.
+
+## 2.10.0: insumo novo do cliente e troca de motor pela rotina
+
+Texto completo em `admissao`, `rescisao`, `folha_mensal` e `geral` de
+`loki_obter_instrucoes`. Contrato 2.10.0 muda o schema de `preparar_autorizacao`
+(valor novo no enum): **Refresh do conector e conversa nova**, e a operadora
+atualiza o plugin. Só então a Ana concede `atualizar_por_insumo_do_cliente` à
+rotina, por empresa e processo, por `preparar_autorizacao`/`aplicar_autorizacao`
+(nunca `preparar_acesso_tecnico`; pessoa não recebe). Backend: Project-loki #411.
+
+Gatilho: insumo novo do cliente (ou, na folha, troca de motor) com o caso em
+`aguardando_revisao`. A capacidade não decide; aprovação, efeitos, entrega,
+cancelamento, retificação de data, férias e afastamento seguem com pessoa.
+
+- **Admissão e rescisão.** (1) `get_case` e copie o `correction_snapshot`;
+  (2) `restart_case` com `expected_snapshot`, `preparation.mode=
+  replace_process_inputs`, `preparation.request_ref = sha256-<impressão do
+  insumo>` (64 hex minúsculos) e `human_message` com os campos e o motivo;
+  (3) `receive_case_data` e o fluxo normal, com nova revisão e novo aceite
+  humanos. A data de admissão não muda por esse caminho: a pessoa reinicia e
+  usa `rectify_case_admission_date`.
+- **Folha mensal.** `restart_case` simples (sem `preparation`, com
+  `human_message`) e `enqueue_case_workflow` com os snapshots novos. Sem a
+  capacidade, pare e avise a Ana. O aceite continua humano.
+- **Pare e avise a Ana, sem laço:**
+  `restart_requires_effect_reconciliation`,
+  `client_input_restart_requires_review_state`,
+  `client_input_restart_scope_refused`, `client_input_request_ref_invalid`,
+  `client_input_restart_grant_origin_unrecorded`, `capacidade_nao_concedida`,
+  `caso_inexistente_ou_nao_autorizado`. O replay com o mesmo `request_ref` é
+  idempotente.

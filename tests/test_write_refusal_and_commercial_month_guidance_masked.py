@@ -63,7 +63,7 @@ def test_connector_write_refusal_and_payroll_map_batch_in_general() -> None:
         "harness não\nescolhe",
     ):
         assert required in general, required
-    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.9.9"
+    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.10.0"
 
 
 def test_second_vacation_occurrence_guidance() -> None:

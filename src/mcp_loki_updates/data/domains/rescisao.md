@@ -610,3 +610,30 @@ revogação só segue com a confirmação da operadora
 (`revoga_com_rescisao_aberta: true`). Uma rescisão verdadeira na mesma data da
 revogada não entra pelo onboarding (`onboarding_termination_fact_revoked`):
 use o caso de rescisão.
+
+
+## Insumo novo do cliente com o caso em revisão (rotina, 2.10.0)
+
+Vale quando `meu_acesso` mostrar `atualizar_por_insumo_do_cliente` na empresa e
+em `rescisao` (a Ana concede por `preparar_autorizacao`; sem ela, pare e avise
+a Ana). O gatilho é um insumo novo do cliente com o caso em
+`aguardando_revisao`. A capacidade não decide: aprovação, efeitos, entrega e
+cancelamento seguem com pessoa.
+
+1. `get_case` e copie o `correction_snapshot`.
+2. `restart_case` com `expected_snapshot=correction_snapshot`,
+   `preparation.mode=replace_process_inputs` (sem `preserve_imports`),
+   `preparation.request_ref = sha256-<impressão do insumo>` (`sha256-` e 64
+   hex minúsculos, calculada por você sobre o insumo novo) e `human_message`
+   com os campos que mudam e o motivo.
+3. `receive_case_data` com os dados completos e siga o fluxo normal; o pacote
+   novo exige nova revisão e novo aceite humanos.
+
+Pare e avise a Ana, sem insistir, se vier
+`restart_requires_effect_reconciliation`,
+`client_input_restart_requires_review_state`,
+`client_input_restart_scope_refused`, `client_input_request_ref_invalid`,
+`client_input_restart_grant_origin_unrecorded`, `capacidade_nao_concedida` ou
+`caso_inexistente_ou_nao_autorizado`. Não repita em laço: o replay com o mesmo
+`request_ref` é idempotente. A data de admissão (vínculo) não muda por esse
+caminho: retificação de data e cancelamento ficam com a pessoa.

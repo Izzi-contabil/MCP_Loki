@@ -1,0 +1,113 @@
+"""Entrega das orientações da 2.10.0 (rotina reinicia caso em revisão por insumo do cliente).
+
+Contrato 2.10.0 muda o schema de `preparar_autorizacao` (valor novo no enum): exige Refresh
+do conector e conversa nova. Prova que os textos chegam aos domínios e ao plugin e que as
+versões e os hashes acompanham; não mede obediência.
+"""
+
+import hashlib
+import json
+from pathlib import Path
+
+from mcp_loki_updates import InstructionsProvider
+
+ROOT = Path(__file__).resolve().parents[1]
+OPERATOR = ROOT / "plugins/loki-bootstrap/skills/operar-loki"
+DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
+RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
+LIMIT = 65536
+CAPABILITY = "atualizar_por_insumo_do_cliente"
+STOPS = (
+    "restart_requires_effect_reconciliation",
+    "client_input_restart_requires_review_state",
+    "client_input_restart_scope_refused",
+    "client_input_request_ref_invalid",
+    "client_input_restart_grant_origin_unrecorded",
+    "capacidade_nao_concedida",
+    "caso_inexistente_ou_nao_autorizado",
+)
+
+
+def read(domain: str) -> str:
+    return (DOMAINS / f"{domain}.md").read_text(encoding="utf-8")
+
+
+def flat(value: str) -> str:
+    return " ".join(value.split())
+
+
+def test_general_notice_requires_refresh_and_states_the_capability_limits() -> None:
+    guide = read("geral")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.10.0)")
+    notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
+    assert "fazer o Refresh do conector e abrir uma conversa nova" in flat(notice)
+    assert "**Continua da 2.9.9**" in notice
+    body = flat(guide)
+    for marker in (
+        "`preparar_autorizacao`/`aplicar_autorizacao`",
+        "`preparar_acesso_tecnico` recusa",
+        "`capacidade_concedida_so_por_autorizacao`",
+        "`capacidade_exclusiva_de_automacao`",
+        "Ela não decide: aprovação, efeitos, entrega, cancelamento, retificação de data, "
+        "férias e afastamento continuam com pessoa",
+        "o concedente registrado é quem gravou o modelo",
+    ):
+        assert marker in body, marker
+
+
+def test_admission_and_termination_carry_the_restart_script() -> None:
+    for domain in ("admissao", "rescisao"):
+        body = flat(read(domain))
+        for marker in (
+            "## Insumo novo do cliente com o caso em revisão (rotina, 2.10.0)",
+            "`aguardando_revisao`",
+            "copie o `correction_snapshot`",
+            "`preparation.mode=replace_process_inputs`",
+            "`preparation.request_ref = sha256-<impressão do insumo>`",
+            "`human_message`",
+            "`receive_case_data`",
+            "Não repita em laço",
+            "idempotente",
+            *STOPS,
+        ):
+            assert marker in body, (domain, marker)
+    assert "`rectify_case_admission_date`" in flat(read("admissao"))
+
+
+def test_payroll_restart_is_simple_with_the_capability() -> None:
+    body = flat(read("folha_mensal"))
+    assert f"`{CAPABILITY}`" in body
+    assert "sem `preparation`, com `human_message`" in body
+    assert "sem a capacidade, ela para e avisa a Ana" in body
+
+
+def test_plugin_mirrors_the_release() -> None:
+    workflows = (OPERATOR / "references/WORKFLOWS.md").read_text(encoding="utf-8")
+    capacities = (OPERATOR / "references/CAPACIDADES_DP.md").read_text(encoding="utf-8")
+    skill = (OPERATOR / "SKILL.md").read_text(encoding="utf-8")
+    assert "## 2.10.0: insumo novo do cliente e troca de motor pela rotina" in workflows
+    assert "## 2.10.0: a rotina reinicia caso em revisão por insumo do cliente" in capacities
+    assert "Na 2.10.0" in skill
+    for text in (workflows, capacities, skill):
+        assert CAPABILITY in text
+        assert "Refresh do conector" in text
+    for code in STOPS:
+        assert code in flat(workflows) and code in flat(capacities), code
+
+
+def test_release_versions_and_hashes() -> None:
+    provider = InstructionsProvider()
+    metadata = provider.metadata()
+    assert metadata["provider_version"] == "0.4.35"
+    assert metadata["instructions_version"] == "2.10.0"
+    assert metadata["mcp_contract_version"] == "2.10.0"
+    assert metadata["recommended_plugin_version"] == "2.10.0"
+    release = json.loads(RELEASE.read_text(encoding="utf-8"))
+    assert release["changes"]["backend"][-1].startswith("Contrato2.10.0 muda o schema")
+    assert release["changes"]["instructions"][-1].startswith("Instruções2.10.0")
+    assert release["changes"]["plugin"][-1].startswith("Plugin2.10.0")
+    for name, hashes in release["domains"].items():
+        for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
+            content = (DOMAINS / f"{name}.{suffix}").read_bytes()
+            assert hashlib.sha256(content).hexdigest() == hashes[key], (name, suffix)
+        assert len((DOMAINS / f"{name}.md").read_bytes()) <= LIMIT, name

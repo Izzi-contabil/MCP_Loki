@@ -1,26 +1,26 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.9.9)
+## O que mudou nesta versão (2.10.0)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
 chegar em partes: cada item vale quando a resposta servida mostrar o sinal
 indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora:** atualizar o plugin instalado (as skills mudaram;
-o plugin não bloqueia o uso, as instruções vêm do servidor). **Não exige
-Refresh do conector**: não há ferramenta nominal nova, e os campos e recusas
-novos chegam pelos contratos servidos.
+**Exige ação da operadora (2.10.0):** atualizar o plugin instalado (as skills
+mudaram) e **fazer o Refresh do conector e abrir uma conversa nova**: o schema
+de `preparar_autorizacao` ganhou um valor no enum de capacidades. Depois
+disso, a Ana concede a capacidade à rotina por `preparar_autorizacao`; sem o
+Refresh, o catálogo antigo não a oferece.
 
-**Não exige nada** (vale quando o Loki for publicado, na mesma conversa):
+**Vale quando o Loki for publicado:** a capacidade
+`atualizar_por_insumo_do_cliente` (seção "Empresa nova e onboarding pela
+rotina"; roteiros em `admissao`, `rescisao` e `folha_mensal`).
 
-- `decimo_terceiro`: a cobertura que o cálculo exige (não é a regra do estado),
-  a recusa `historical_thirteenth_first_installment_already_paid` (13º já
-  adiantado: não pagar de novo) e horas (Súmula 347) só onde a norma coletiva
-  é silente.
-- `folha_mensal`: folha em revisão recalcula por `restart_case` simples e novo
-  `enqueue_case_workflow` (`case_in_review_requires_restart`); folha pelo mês
-  civil (`folha_divisor_mes`); fórmulas do mapa e seus limites.
+**Continua da 2.9.9** (sem Refresh): 13º (cobertura que o cálculo exige,
+`historical_thirteenth_first_installment_already_paid`, horas pela Súmula 347
+só onde a norma coletiva é silente) e folha (recálculo em revisão por
+`restart_case` simples, `folha_divisor_mes`, fórmulas do mapa).
 
 **Continua da 2.9.8:** rescisão (aviso da norma coletiva, saldo pelos dias
 efetivos), 13º (janela da média por empresa, fatos opacos), arredondamento do
@@ -231,6 +231,16 @@ Para acrescentar empresa a uma conta que já passou de 500, use o comando
 aditivo `prepare_authorization_addition` (`receive_case_data` com
 `case_id: "@connector"`), que conserva papel, status e as concessões atuais,
 e aplique com `aplicar_autorizacao`.
+
+**Capacidade `atualizar_por_insumo_do_cliente` (2.10.0).** A rotina pode
+recebê-la, por empresa e processo. A Ana concede, e só por
+`preparar_autorizacao`/`aplicar_autorizacao`: `preparar_acesso_tecnico` recusa
+o pedido que a traga (`capacidade_concedida_so_por_autorizacao`) e pessoa não
+a recebe (`capacidade_exclusiva_de_automacao`). Ela não decide: aprovação,
+efeitos, entrega, cancelamento, retificação de data, férias e afastamento
+continuam com pessoa. Vale também no modelo `@empresas-novas`, e o concedente
+registrado é quem gravou o modelo. Roteiro em `admissao`, `rescisao` e
+`folha_mensal`.
 
 **Onboarding pela rotina (conta técnica)**, só quando `meu_acesso` da conta
 mostrar `carga_historica` numa empresa e o catálogo trouxer as ferramentas de

@@ -1,4 +1,29 @@
-# Atualizações MCP Loki — contrato 2.9.9
+# Atualizações MCP Loki — contrato 2.10.0
+
+## Candidata 0.4.35 / contrato, instruções e plugin 2.10.0 — 25/11/2026
+
+O contrato sobe de 2.9.9 para 2.10.0 porque o **schema de `preparar_autorizacao`
+ganhou um valor no enum** (`atualizar_por_insumo_do_cliente`): **exige Refresh do
+conector e conversa nova**, além da atualização do plugin. Depois disso, a Ana
+concede a capacidade à rotina por `preparar_autorizacao`. Instruções e plugin
+acompanham em 2.10.0; o provider sobe um patch (0.4.35). Mínimo 2.0.0 permanece.
+Wheel 0.4.34 permanece imutável.
+
+Backend: Project-loki #411 (aberta, HEAD `327e090c`; ADR-039). Texto vale quando
+o Loki for publicado com a PR; a promoção ao Loki só ocorre depois da mesclagem.
+A capacidade abre só `restart_case` em caso `aguardando_revisao`: admissão e
+rescisão com `preparation.mode=replace_process_inputs` e `request_ref`
+`sha256-<64 hex>`; folha mensal simples. Concedida só por
+`preparar_autorizacao`/`aplicar_autorizacao` (`preparar_acesso_tecnico` recusa com
+`capacidade_concedida_so_por_autorizacao`; pessoa, `capacidade_exclusiva_de_automacao`),
+inclusive no modelo `@empresas-novas`. Não decide: aprovação, efeitos, entrega,
+cancelamento, retificação de data, férias e afastamento seguem com pessoa.
+
+Domínios: `geral` (aviso 2.10.0 com Refresh; aviso da 2.9.9 comprimido em
+"Continua da 2.9.9" por causa do limite de 65536 bytes; a capacidade), `admissao`
+e `rescisao` (roteiro e recusas) e `folha_mensal` (restart simples e enqueue pela
+rotina). Plugin: WORKFLOWS (seção 2.10.0), CAPACIDADES_DP, operar-loki e
+registrar-problema-loki. Wheel preparado não comprova publicação, instalação ou uso.
 
 ## Candidata 0.4.34 / contrato, instruções e plugin 2.9.9 — 24/11/2026
 
