@@ -49,6 +49,11 @@ Valem quando a resposta servida mostrar o sinal.
 - A prévia de `prepare_authorization_addition` é um delta: `added_grants` e
   `before`/`after` com revisão, contagem e hash. Mostre à pessoa as empresas
   acrescentadas e as contagens; a lista completa não vem.
-- O `/token` pode responder 503 com `{"error": "temporarily_unavailable",
-  "error_description": "authorization_change_busy"}` e `Retry-After` (2 s)
-  durante a contenção. É temporário: aguarde e repita, sem reautenticar.
+- O `/token` (troca de código, renovação e `client_credentials`) pode responder
+  503 com `Retry-After` (2 s) e corpo `{"error": "temporarily_unavailable"}`,
+  sem `error_description`, durante a contenção. O código e o refresh não foram
+  consumidos: é temporário; aguarde e repita a mesma requisição, sem
+  reautenticar. `aplicar_acesso_tecnico` também pode devolver o BUSY acima.
+- Login durante uma fase de folha da própria pessoa: o login funciona, mas a
+  atualização de e-mail e de último login fica para o próximo login. Não é
+  erro nem exige ação.

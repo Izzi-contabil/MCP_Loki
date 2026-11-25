@@ -1406,5 +1406,8 @@ Texto completo em `decimo_terceiro` e `folha_mensal`. Sem ferramenta nova.
   sem preparar outra autorização. Acima de 20 concessões o recibo traz
   `grants_count` e `grants_hash`; confira com `read_account_summary`. A prévia de
   `prepare_authorization_addition` é um delta (`added_grants`, `before`/`after`).
-  O `/token` pode dar 503 `temporarily_unavailable` com `Retry-After`: aguarde,
-  sem reautenticar.
+  O `/token` (código, refresh e `client_credentials`) pode dar 503 com
+  `Retry-After` e corpo `{"error":"temporarily_unavailable"}` (sem
+  `error_description`): aguarde e repita, sem reautenticar. Durante uma fase de
+  folha da própria pessoa o login funciona, e a atualização de e-mail e de
+  último login fica para o próximo login.

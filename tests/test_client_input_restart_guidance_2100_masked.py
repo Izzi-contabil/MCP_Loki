@@ -164,7 +164,9 @@ def test_unqualified_fact_source_and_authorization_busy_guidance() -> None:
         "`grants_count` e `grants_hash`",
         "`read_account_summary`",
         "`added_grants`",
-        '"error": "temporarily_unavailable"',
+        '{"error": "temporarily_unavailable"}',
+        "sem `error_description`",
+        "fica para o próximo login",
         "`Retry-After`",
     ):
         assert marker in approvals, marker
