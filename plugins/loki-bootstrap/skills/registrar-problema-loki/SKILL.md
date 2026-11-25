@@ -151,6 +151,10 @@ defeito: qualifique pela cobertura da mesma ficha. No mapa de rescisão, não
 são defeito `termination_policy_patch_remove_incompatible`, o
 `value_error` em `companies[*].policy.arredondamento_proporcionais` nem a
 falta de `termination_map_policy_patch_transport` (servidor sem o patch).
+Na 2.10.1 não são defeito, na simulação de rescisão sem caso de origem:
+`simulation_history_changed` (releia o histórico e repita),
+`simulation_employment_not_active`, `simulation_source_not_supported` e
+`simulation_cancelled` (use outra `simulation_ref`).
 Na 2.10.0 não são defeito, quando a resposta servida mostrar o sinal:
 `client_input_restart_requires_review_state`, `client_input_restart_scope_refused`,
 `client_input_request_ref_invalid`, `capacidade_nao_concedida` e

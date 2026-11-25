@@ -1,4 +1,43 @@
-# Atualizações MCP Loki — contrato 2.10.0
+# Atualizações MCP Loki — contrato 2.10.1
+
+## Candidata 0.4.36 / contrato, instruções e plugin 2.10.1 — 25/11/2026
+
+Contrato aditivo, sem ferramenta nova e **sem Refresh do conector**: `create_case`
+recebe o payload genérico e o marcador `payload.simulation` é lido pelo backend.
+Basta a operadora atualizar o plugin (as skills mudaram). Contrato, instruções e
+plugin sobem para 2.10.1; o provider sobe um patch (0.4.36). Mínimo 2.0.0
+permanece. Wheel 0.4.35 permanece imutável.
+
+Backend, conferido no código de `main` do Loki: #418 (`a6bfea66`, ADR-040,
+migration 0067) e #419 (`8cc136a7`, par de preservação 0066→0067).
+`docs/contracts/case-simulations.md`, `case_simulations.py` e `operational.py`
+(`get_process_contract("rescisao").simulation`).
+
+- Spec `loki.termination-simulation-create/2` (simulação de quem segue empregado,
+  sem caso de origem): `get_company_employee_history` com `as_of` da data de
+  desligamento hipotética (`history_hash`); `create_case` com o `CasePayload`
+  completo e `payload.simulation` `{schema_version, source: {kind: employee,
+  funcionario_id, expected_history_hash}, simulation_ref, field_sources}`;
+  `field_sources` só de declaração (`locator = $.payload.<caminho>`), sem
+  `documentos_origem`; `run_prepared_case_workflow`; `get_case_version` e
+  artefatos. PDF e recibo saem como SIMULAÇÃO e dizem que o histórico não entrou
+  no cálculo.
+- Recusas: `simulation_history_changed`, `simulation_employment_not_active` e
+  `simulation_source_not_supported`.
+- Descarte só humano, por `cancel_case` (`expected_snapshot`, `human_message`); a
+  rotina técnica não cancela; `simulation_cancelled` mantém a referência
+  ocupada.
+- Isolamento (`casos.simulation`): a simulação (v1, v2 e as de 18/11) não entra no
+  13º, no fechamento nem na conciliação; não cria funcionário, evento de vínculo
+  nem pin.
+- A v1 (`source_case_id`) continua valendo. `requires_source_case: true` é o valor
+  da v1; o valor por versão está em `requires_source_case_by_version`.
+
+Domínios: `geral` (aviso 2.10.1 sem Refresh; aviso da 2.10.0 comprimido em
+"Continua da 2.10.0" por causa do limite de 65536 bytes) e `rescisao` (roteiro,
+recusas e descarte). Plugin: WORKFLOWS (seção 2.10.1), operar-loki e
+registrar-problema-loki. Wheel preparado não comprova publicação, instalação ou
+uso.
 
 ## Candidata 0.4.35 / contrato, instruções e plugin 2.10.0 — 25/11/2026
 

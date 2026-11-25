@@ -38,9 +38,9 @@ def flat(value: str) -> str:
 
 def test_general_notice_requires_refresh_and_states_the_capability_limits() -> None:
     guide = read("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.10.0)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.10.1)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
-    assert "fazer o Refresh do conector e abrir uma conversa nova" in flat(notice)
+    assert "Refresh do conector e conversa nova" in flat(notice)
     assert "**Continua da 2.9.9**" in notice
     body = flat(guide)
     for marker in (
@@ -98,14 +98,14 @@ def test_plugin_mirrors_the_release() -> None:
 def test_release_versions_and_hashes() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.35"
-    assert metadata["instructions_version"] == "2.10.0"
-    assert metadata["mcp_contract_version"] == "2.10.0"
-    assert metadata["recommended_plugin_version"] == "2.10.0"
+    assert metadata["provider_version"] == "0.4.36"
+    assert metadata["instructions_version"] == "2.10.1"
+    assert metadata["mcp_contract_version"] == "2.10.1"
+    assert metadata["recommended_plugin_version"] == "2.10.1"
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["backend"][-1].startswith("Contrato2.10.0 muda o schema")
-    assert release["changes"]["instructions"][-1].startswith("Instruções2.10.0")
-    assert release["changes"]["plugin"][-1].startswith("Plugin2.10.0")
+    assert release["changes"]["backend"][-2].startswith("Contrato2.10.0 muda o schema")
+    assert release["changes"]["instructions"][-2].startswith("Instruções2.10.0")
+    assert release["changes"]["plugin"][-2].startswith("Plugin2.10.0")
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
             content = (DOMAINS / f"{name}.{suffix}").read_bytes()

@@ -122,9 +122,9 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.35"
-    assert metadata["instructions_version"] == "2.10.0"
-    assert metadata["mcp_contract_version"] == "2.10.0"
+    assert metadata["provider_version"] == "0.4.36"
+    assert metadata["instructions_version"] == "2.10.1"
+    assert metadata["mcp_contract_version"] == "2.10.1"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -141,6 +141,7 @@ def test_versions_follow_the_additive_contract_patch() -> None:
         "2.9.7",
         "2.9.8",
         "2.10.0",
+        "2.10.1",
     ):
         assert provider.check_version(version, version)["compatible"] is True
     guide = provider.get("folha_mensal")

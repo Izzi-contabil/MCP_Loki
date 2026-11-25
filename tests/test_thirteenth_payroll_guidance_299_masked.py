@@ -113,20 +113,20 @@ def test_plugin_mirrors_the_release_and_replaced_coverage_rule() -> None:
 def test_release_is_text_only_with_matching_hashes_and_size_limit() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.35"
-    assert metadata["instructions_version"] == "2.10.0"
-    assert metadata["mcp_contract_version"] == "2.10.0"
-    assert metadata["recommended_plugin_version"] == "2.10.0"
+    assert metadata["provider_version"] == "0.4.36"
+    assert metadata["instructions_version"] == "2.10.1"
+    assert metadata["mcp_contract_version"] == "2.10.1"
+    assert metadata["recommended_plugin_version"] == "2.10.1"
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["backend"][-2].startswith("Contrato2.9.9 aditivo")
-    assert release["changes"]["instructions"][-2].startswith("Instruções2.9.9")
-    assert release["changes"]["plugin"][-2].startswith("Plugin2.9.9")
+    assert release["changes"]["backend"][-3].startswith("Contrato2.9.9 aditivo")
+    assert release["changes"]["instructions"][-3].startswith("Instruções2.9.9")
+    assert release["changes"]["plugin"][-3].startswith("Plugin2.9.9")
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
             content = (DOMAINS / f"{name}.{suffix}").read_bytes()
             assert hashlib.sha256(content).hexdigest() == hashes[key], (name, suffix)
         assert len((DOMAINS / f"{name}.md").read_bytes()) <= LIMIT, name
         data = json.loads((DOMAINS / f"{name}.json").read_text(encoding="utf-8"))
-        assert data["version"] == "2.10.0", name
-        assert data["compatibility"]["mcp_contract_version"] == "2.10.0", name
-        assert data["compatibility"]["recommended_plugin_version"] == "2.10.0", name
+        assert data["version"] == "2.10.1", name
+        assert data["compatibility"]["mcp_contract_version"] == "2.10.1", name
+        assert data["compatibility"]["recommended_plugin_version"] == "2.10.1", name

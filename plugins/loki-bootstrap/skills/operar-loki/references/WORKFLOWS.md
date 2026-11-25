@@ -1411,3 +1411,38 @@ Texto completo em `decimo_terceiro` e `folha_mensal`. Sem ferramenta nova.
   `error_description`): aguarde e repita, sem reautenticar. Durante uma fase de
   folha da própria pessoa o login funciona, e a atualização de e-mail e de
   último login fica para o próximo login.
+
+## 2.10.1: simulação de rescisão de quem segue empregado
+
+Texto completo em `rescisao` de `loki_obter_instrucoes`. **Sem Refresh do
+conector**: `create_case` recebe o payload genérico, sem ferramenta nova. Basta
+atualizar o plugin. Vale quando `get_process_contract("rescisao")` mostrar
+`loki.termination-simulation-create/2` em `simulation.versions` (Project-loki
+#418, ADR-040). A v1 (`source_case_id`) continua valendo:
+`requires_source_case: true` é o valor da v1; por versão, veja
+`requires_source_case_by_version`.
+
+1. `get_company_employee_history` com `as_of` igual à data de desligamento
+   hipotética; guarde o `history_hash`.
+2. `create_case` com o `CasePayload` completo de rescisão e `payload.simulation`:
+   `{schema_version: "loki.termination-simulation-create/2", source: {kind:
+   "employee", funcionario_id, expected_history_hash}, simulation_ref,
+   field_sources}`.
+3. `field_sources` só aceita declaração, um item por folha do payload, com
+   `locator = $.payload.<caminho>`. Não mande `documentos_origem`.
+4. `run_prepared_case_workflow` no id da simulação.
+5. `get_case_version` e os artefatos.
+6. O PDF e o recibo saem como SIMULAÇÃO e dizem que o histórico não entrou no
+   cálculo: informe isso à pessoa.
+
+- **Recusas.** `simulation_history_changed` (releia o histórico e repita),
+  `simulation_employment_not_active` e `simulation_source_not_supported`
+  (vínculo inexistente, de outra empresa ou sem escopo: a mesma recusa).
+- **Descarte.** Só a pessoa, com `cancel_case` (decisão humana,
+  `expected_snapshot` e `human_message`). A rotina técnica não cancela. A
+  `simulation_ref` fica ocupada (`simulation_cancelled`): hipótese nova, outra
+  referência.
+- **O que a simulação não faz.** Não é aprovada, entregue nem publicada; não
+  cria funcionário, evento de vínculo ou pin; não entra no 13º, no fechamento
+  nem na conciliação. As simulações antigas (v1 e as de 18/11) ficam isoladas
+  também.

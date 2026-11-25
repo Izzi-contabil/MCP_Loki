@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-PLUGIN_VERSION = "2.10.0"
+PLUGIN_VERSION = "2.10.1"
 
 # The native plugin cache is immutable working code, not an output directory.
 sys.dont_write_bytecode = True

@@ -498,3 +498,8 @@ e conversa nova**, além de atualizar o plugin.
 Também na 2.10.0, sem Refresh próprio: regra legal
 `transcricao_cadastral_sem_efeito_no_13` no 13º (#413) e
 `formula.divisor_sob_calendario` e `fator` 1 ou 2 na folha (#414).
+Na 2.10.1 (“2.10.1: simulação de rescisão de quem segue empregado”), a simulação
+de rescisão nasce do vínculo ativo, sem caso de origem: `create_case` com
+`payload.simulation` na spec `loki.termination-simulation-create/2` (histórico
+lido em `get_company_employee_history` e `expected_history_hash`), e só a pessoa
+descarta, por `cancel_case`. **Sem Refresh do conector**; basta atualizar o plugin.
