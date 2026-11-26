@@ -238,8 +238,8 @@ Para acrescentar (empresa nova ou já na conta) ou remover concessões, use
 com `aplicar_autorizacao`.
 
 **Capacidade `atualizar_por_insumo_do_cliente` (2.10.0).** A rotina pode
-recebê-la, por empresa e processo. A Ana concede, e só por
-`preparar_autorizacao`/`aplicar_autorizacao`: `preparar_acesso_tecnico` recusa
+recebê-la, por empresa e processo. A Ana concede, só pela autorização
+(`preparar_autorizacao`/`aplicar_autorizacao` ou o acréscimo): `preparar_acesso_tecnico` recusa
 o pedido que a traga (`capacidade_concedida_so_por_autorizacao`) e pessoa não
 a recebe (`capacidade_exclusiva_de_automacao`). Ela não decide: aprovação,
 efeitos, entrega, cancelamento, retificação de data, férias e afastamento

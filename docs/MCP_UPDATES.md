@@ -3,10 +3,15 @@
 ## Candidata 0.4.37 / contrato, instruções e plugin 2.11.0 — 26/11/2026
 
 Contrato aditivo, sem ferramenta nova e **sem Refresh do conector**: o hash do
-`tools/list` não mudou (as PRs #421, #422, #424, #425 e #426 declaram o hash de
-`list_tools` idêntico; o snapshot `connector_tools_list_d863b1aa_masked.json` do Loki
-segue sem alteração desde a #425). Basta a operadora atualizar o plugin (as skills
-mudaram). Contrato, instruções e plugin sobem para 2.11.0; o provider sobe um patch
+`tools/list` não mudou. Base: as PRs #421, #422, #424, #425 e #426 declaram o hash de
+`list_tools` idêntico; o snapshot `connector_tools_list_d863b1aa_masked.json` (nome,
+`inputSchema`, `outputSchema`, descrição e `annotations` de cada ferramenta) só foi
+criado na #425 e nenhuma PR posterior o alterou; e o diff de `d863b1aa` a `867efb14` em
+`connector/` e `mcp_server/` não toca assinatura nem docstring de ferramenta (o
+`REPLACEMENT_MAX_GRANTS = 500` de `preparar_autorizacao` mantém o `max_length` anterior).
+O `request_schema` do comando `@connector` ganha a variante `prepare_authorization_removal`,
+mas é conteúdo de resposta, não do catálogo. Basta a operadora atualizar o plugin (as
+skills mudaram). Contrato, instruções e plugin sobem para 2.11.0; o provider sobe um patch
 (0.4.37). Mínimo 2.0.0 permanece. Wheel 0.4.36 permanece imutável.
 
 Backend, conferido no código de `main` do Loki (`867efb14`): #424 (`31d93dcf`), #426

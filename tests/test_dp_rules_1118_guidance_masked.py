@@ -101,7 +101,7 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
         assert flat(item) not in body, item
 
 
-def test_contract_291_entries_are_kept_in_the_release() -> None:
+def test_contract_291_clients_remain_compatible() -> None:
     provider = InstructionsProvider()
     for version in ("2.0.0", "2.8.0", "2.9.0", "2.9.1"):
         assert provider.check_version(version, version)["compatible"] is True

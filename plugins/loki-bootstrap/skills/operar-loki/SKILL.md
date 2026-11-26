@@ -490,8 +490,8 @@ somente o `compatibility_transport` efetivamente anunciado quando a ferramenta
 nova não estiver descoberta. Pessoa, capacidades, CHAT_DECISIONS_ENABLED,
 CAS e decisão sobre o objeto concreto permanecem.
 Na 2.10.0 (“2.10.0: insumo novo do cliente e troca de motor pela rotina”), a
-Ana pode conceder à rotina a capacidade `atualizar_por_insumo_do_cliente`, só por
-`preparar_autorizacao`: o caso em `aguardando_revisao` reinicia por
+Ana pode conceder à rotina a capacidade `atualizar_por_insumo_do_cliente`, só pela
+autorização (`preparar_autorizacao` ou o acréscimo `prepare_authorization_addition`): o caso em `aguardando_revisao` reinicia por
 `restart_case` (admissão e rescisão com `replace_process_inputs` e `request_ref`
 `sha256-<64 hex>`; folha simples), sem decidir nada. **Exige Refresh do conector
 e conversa nova**, além de atualizar o plugin.

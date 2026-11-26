@@ -234,14 +234,13 @@ Recusas:
 - `matricula_esperada_divergente` e `snapshot_desatualizado`: como na
   restauração.
 
-Depois de adotar, leia `matricula_restoration.adoption_effects` de cada recibo e mostre à
-operadora. Ele
-vem na própria linha `applied` do `apply_company_onboarding` (e do
-`validate_company_onboarding` quando a linha já está aplicada), junto de
-`released_closed_consumers`, inclusive na repetição com `validation_hash` antigo. Para
-reler depois, use `get_employee_identifier_state`, em
-`applied_receipts[].matricula_restoration` (`adoption_effects`,
-`released_closed_consumers` e `previous_identifier`, sem PII):
+Depois de adotar, leia `adoption_effects` de cada recibo e mostre à operadora. Ele vem na
+própria linha `applied` do `apply_company_onboarding` (e do `validate_company_onboarding`
+quando a linha já está aplicada), junto de `released_closed_consumers`, inclusive na
+repetição com `validation_hash` antigo. Para reler depois, use
+`get_employee_identifier_state`, em `applied_receipts[].matricula_restoration`
+(`matricula_restoration.adoption_effects`, `released_closed_consumers` e
+`previous_identifier`, sem PII):
 
 - `open_payrolls_citing_previous_code`: folhas abertas que citam o código
   antigo e ficam `matricula_coincide_com_codigo_auxiliar` até reenviar a
