@@ -329,7 +329,8 @@ plugin. Roteiro em “2.9.2: política do mapa de rescisão e fatos do 13º” d
 **Exige Refresh do conector e conversa nova**: o schema de `preparar_autorizacao`
 ganhou o valor `atualizar_por_insumo_do_cliente` no enum de capacidades, e a
 operadora atualiza o plugin. Depois disso, a Ana concede a capacidade à rotina,
-por empresa e processo, e só por `preparar_autorizacao`/`aplicar_autorizacao`:
+por empresa e processo, e só pela autorização (`preparar_autorizacao`/`aplicar_autorizacao`, ou o acréscimo
+`prepare_authorization_addition`, que na 2.11.0 vale também em empresa que a conta já tem):
 `preparar_acesso_tecnico` recusa
 (`capacidade_concedida_so_por_autorizacao`) e pessoa não a recebe
 (`capacidade_exclusiva_de_automacao`). Vale também no modelo `@empresas-novas`;

@@ -1,4 +1,53 @@
-# Atualizações MCP Loki — contrato 2.10.1
+# Atualizações MCP Loki — contrato 2.11.0
+
+## Candidata 0.4.37 / contrato, instruções e plugin 2.11.0 — 26/11/2026
+
+Contrato aditivo, sem ferramenta nova e **sem Refresh do conector**: o hash do
+`tools/list` não mudou. Base: as PRs #421, #422, #424, #425 e #426 declaram o hash de
+`list_tools` idêntico; o snapshot `connector_tools_list_d863b1aa_masked.json` (nome,
+`inputSchema`, `outputSchema`, descrição e `annotations` de cada ferramenta) só foi
+criado na #425 e nenhuma PR posterior o alterou; e o diff de `d863b1aa` a `867efb14` em
+`connector/` e `mcp_server/` não toca assinatura nem docstring de ferramenta (o
+`REPLACEMENT_MAX_GRANTS = 500` de `preparar_autorizacao` mantém o `max_length` anterior).
+O `request_schema` do comando `@connector` ganha a variante `prepare_authorization_removal`,
+mas é conteúdo de resposta, não do catálogo. Basta a operadora atualizar o plugin (as
+skills mudaram). Contrato, instruções e plugin sobem para 2.11.0; o provider sobe um patch
+(0.4.37). Mínimo 2.0.0 permanece. Wheel 0.4.36 permanece imutável.
+
+Backend, conferido no código de `main` do Loki (`867efb14`): #424 (`31d93dcf`), #426
+(`d6facd51`), #421 (`78e3c2e7`) e #422 (`867efb14`). Sem texto para a operadora: #425
+(`52959521`, só compacta o JSON das respostas) e #427 (`960eef5f`, coorte de preservação
+do executor de publicação). 13º sem mudança de comportamento.
+
+- **Acessos (#424, domínio `aprovacoes`).** `prepare_authorization_addition` aceita
+  empresa que a conta já tem e acrescenta só os processos e capacidades que faltam, sem
+  remover nada, até 100 empresas por chamada (inclusive para dar
+  `atualizar_por_insumo_do_cliente` à rotina). Prévia em delta: `added_grants` (com
+  `extends_existing_company`), `added_companies` e `extended_companies`. Recusas
+  `authorization_addition_nothing_to_add` (a mensagem lista as empresas; repetir sem elas) e
+  `authorization_addition_duplicate_company`. Operação `prepare_authorization_removal`
+  (`removals[]`, até 100 empresas): prévia `removed_grants`, `removed_companies` e
+  `reduced_companies`, aplicação por `aplicar_autorizacao`, recusas
+  `authorization_removal_nothing_to_remove`, `authorization_removal_duplicate_company`,
+  `concessao_exige_consultar` e `proprietario_protegido`. `preparar_autorizacao` (substituição
+  completa) aceita no máximo 500 concessões; a conta guarda até 5000. A trava do grafo é
+  global: `BUSY` repete a mesma chamada.
+- **Rescisão (#426).** Catálogo `loki.termination-rubric-catalog/2` (tabelas por conteúdo
+  e `groups[]` com ids, reconstrução pelo campo `reconstruction`); `get_dp_capabilities`
+  só índice, com `contract_tool` e `contract_hash`.
+- **Onboarding (#421, #422, domínio `alteracao_cadastral`).** `adoption_effects` e
+  `released_closed_consumers` na linha `applied`; releitura por
+  `get_employee_identifier_state` (`applied_receipts[].matricula_restoration`).
+  `nome_do_vinculo_conflitante`, `dated_field_value_conflict` (`diagnostic.conflict`),
+  avisos `existing_dated_conflict` e `aplicacao_sequencial_por_vinculo`,
+  `snapshot_do_vinculo_desatualizado` e o mapa `refusals` de
+  `get_company_onboarding_contract`.
+
+Domínios: `aprovacoes`, `rescisao` e `alteracao_cadastral`; `geral` só com o aviso (menor
+que antes, por causa do limite de 65536 bytes). Plugin: WORKFLOWS (seção 2.11.0),
+operar-loki e registrar-problema-loki. Em `release.json`, `changes` guarda só a versão
+corrente; o histórico das edições anteriores está nas seções abaixo. Wheel preparado não
+comprova publicação, instalação ou uso.
 
 ## Candidata 0.4.36 / contrato, instruções e plugin 2.10.1 — 25/11/2026
 

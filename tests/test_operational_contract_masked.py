@@ -35,9 +35,9 @@ RETIRED = (
 def test_major_two_refuses_declared_old_clients_and_preserves_unknown() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.36"
-    assert metadata["instructions_version"] == "2.10.1"
-    assert metadata["mcp_contract_version"] == "2.10.1"
+    assert metadata["provider_version"] == "0.4.37"
+    assert metadata["instructions_version"] == "2.11.0"
+    assert metadata["mcp_contract_version"] == "2.11.0"
     assert provider.check_version("1.1.7", "1.0.0")["compatible"] is False
     assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
     assert provider.check_version()["compatible"] is None

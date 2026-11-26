@@ -1,29 +1,30 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.10.1)
+## O que mudou nesta versão (2.11.0)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
 vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
 chegar em partes: cada item vale quando a resposta servida mostrar o sinal
 indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora (2.10.1):** só atualizar o plugin instalado (as
-skills mudaram). **Não exige Refresh do conector**: `create_case` recebe o
-payload genérico, sem ferramenta nova nem schema novo.
+**Exige ação da operadora (2.11.0):** só atualizar o plugin instalado (as
+skills mudaram). **Não exige Refresh do conector**: o `tools/list` não mudou
+(mesmo hash).
 
-**Vale quando o Loki for publicado:** em `rescisao`, a simulação de quem segue
-empregado, sem caso de origem (`loki.termination-simulation-create/2`), o
-descarte humano por `cancel_case` e o isolamento de toda simulação do 13º, do
-fechamento e da conciliação.
+**Vale quando o Loki for publicado:** `aprovacoes` (concessão a empresa que a
+conta já tem; `prepare_authorization_removal`), `rescisao` (catálogo de rubricas
+v2; `get_dp_capabilities` só índice) e `alteracao_cadastral` (`adoption_effects`
+na linha aplicada; recusas de nome e de vigência do onboarding).
+
+**Continua da 2.10.1:** simulação de rescisão sem caso de origem (`rescisao`).
 
 **Continua da 2.10.0**, se o Refresh ainda não foi feito: **Refresh do conector
-e conversa nova** (o schema de `preparar_autorizacao` ganhou o valor
-`atualizar_por_insumo_do_cliente`); `decimo_terceiro` com
-`transcricao_cadastral_sem_efeito_no_13` e `folha_mensal` com
-`formula.divisor_sob_calendario` e `fator` 1 ou 2 (sem Refresh).
+e conversa nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`);
+13º `transcricao_cadastral_sem_efeito_no_13`; folha
+`formula.divisor_sob_calendario`.
 
-**Continua da 2.9.9**: 13º (cobertura, 1ª parcela já paga
-(`historical_thirteenth_first_installment_already_paid`), horas pela Súmula 347) e folha (recálculo em revisão por `restart_case` simples,
+**Continua da 2.9.9**: 13º (cobertura, 1ª parcela já paga, horas pela Súmula
+347) e folha (recálculo em revisão por `restart_case` simples,
 `folha_divisor_mes`, fórmulas do mapa).
 
 **Continua da 2.9.8:** rescisão (aviso da norma coletiva, saldo pelos dias
@@ -231,14 +232,14 @@ só daquela empresa (servidor anterior recusa). O modelo `@empresas-novas`
 entra pelo `preparar_autorizacao` da pessoa owner e não dá acesso a nada: só
 é copiado para cada empresa nova. Uma conta pode ter até 5000 concessões; o
 `preparar_autorizacao` substitui a lista inteira e aceita até 500 por pedido.
-Para acrescentar empresa a uma conta que já passou de 500, use o comando
-aditivo `prepare_authorization_addition` (`receive_case_data` com
-`case_id: "@connector"`), que conserva papel, status e as concessões atuais,
-e aplique com `aplicar_autorizacao`.
+Para acrescentar (empresa nova ou já na conta) ou remover concessões, use
+`prepare_authorization_addition` ou `prepare_authorization_removal`
+(`receive_case_data`, `case_id: "@connector"`; domínio `aprovacoes`) e aplique
+com `aplicar_autorizacao`.
 
 **Capacidade `atualizar_por_insumo_do_cliente` (2.10.0).** A rotina pode
-recebê-la, por empresa e processo. A Ana concede, e só por
-`preparar_autorizacao`/`aplicar_autorizacao`: `preparar_acesso_tecnico` recusa
+recebê-la, por empresa e processo. A Ana concede, só pela autorização
+(`preparar_autorizacao`/`aplicar_autorizacao` ou o acréscimo): `preparar_acesso_tecnico` recusa
 o pedido que a traga (`capacidade_concedida_so_por_autorizacao`) e pessoa não
 a recebe (`capacidade_exclusiva_de_automacao`). Ela não decide: aprovação,
 efeitos, entrega, cancelamento, retificação de data, férias e afastamento

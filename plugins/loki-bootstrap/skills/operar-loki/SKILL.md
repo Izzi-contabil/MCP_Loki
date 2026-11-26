@@ -490,8 +490,8 @@ somente o `compatibility_transport` efetivamente anunciado quando a ferramenta
 nova não estiver descoberta. Pessoa, capacidades, CHAT_DECISIONS_ENABLED,
 CAS e decisão sobre o objeto concreto permanecem.
 Na 2.10.0 (“2.10.0: insumo novo do cliente e troca de motor pela rotina”), a
-Ana pode conceder à rotina a capacidade `atualizar_por_insumo_do_cliente`, só por
-`preparar_autorizacao`: o caso em `aguardando_revisao` reinicia por
+Ana pode conceder à rotina a capacidade `atualizar_por_insumo_do_cliente`, só pela
+autorização (`preparar_autorizacao` ou o acréscimo `prepare_authorization_addition`): o caso em `aguardando_revisao` reinicia por
 `restart_case` (admissão e rescisão com `replace_process_inputs` e `request_ref`
 `sha256-<64 hex>`; folha simples), sem decidir nada. **Exige Refresh do conector
 e conversa nova**, além de atualizar o plugin.
@@ -503,3 +503,9 @@ de rescisão nasce do vínculo ativo, sem caso de origem: `create_case` com
 `payload.simulation` na spec `loki.termination-simulation-create/2` (histórico
 lido em `get_company_employee_history` e `expected_history_hash`), e só a pessoa
 descarta, por `cancel_case`. **Sem Refresh do conector**; basta atualizar o plugin.
+Na 2.11.0 (“2.11.0: acessos, catálogo de rubricas de rescisão e onboarding”),
+`prepare_authorization_addition` acrescenta também a empresa que a conta já tem (até
+100 por chamada), `prepare_authorization_removal` revoga pares ou a empresa inteira, e
+`get_dp_capabilities` vira só índice (`contract_tool`, `contract_hash`: releia
+`get_process_contract` quando o hash mudar). **Sem Refresh do conector** (o `tools/list`
+não mudou); basta atualizar o plugin.

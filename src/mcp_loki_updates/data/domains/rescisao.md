@@ -685,3 +685,35 @@ Pare e avise a Ana, sem insistir, se vier
 `caso_inexistente_ou_nao_autorizado`. Não repita em laço: o replay com o mesmo
 `request_ref` é idempotente. A data de admissão (vínculo) não muda por esse
 caminho: retificação de data e cancelamento ficam com a pessoa.
+
+## Catálogo de rubricas v2 e `get_dp_capabilities` como índice (2.11.0)
+
+Vale quando o catálogo servido trouxer `schema_version` igual a
+`loki.termination-rubric-catalog/2` (Project-loki #426). Sem Refresh: nenhuma ferramenta
+nem schema mudou; só o conteúdo das respostas encolheu. O catálogo vem em
+`termination_rubric_catalog` de `get_process_contract("rescisao")` e de
+`get_company_onboarding_contract`.
+
+- **Tabelas por conteúdo.** `parcel_table`, `mapping_table`, `tax_mapping_table` e
+  `caixa_table` guardam cada parcela, mapeamento, mapeamento de tributo e caixa uma
+  vez, com id por conteúdo: `p`, `m`, `t` ou `c` mais os 12 primeiros hex do sha256 do JSON
+  canônico da entrada. Ids iguais denotam conteúdo idêntico em todos os grupos.
+- **Grupos.** Cada item de `groups[]` traz `group`, `herda`, `parcel_ids`, `mapping_ids`,
+  `tax_mapping_ids`, `caixa_ids`, `resolved_other` e `resolved_map_hash`, além do
+  `selection_example`. Não procure a parcela dentro do grupo: ele só aponta ids.
+- **Reconstrução.** Leia o campo `reconstruction` do próprio catálogo. Em resumo: o mapa
+  resolvido de um grupo é o `resolved_other` mais, em `parcelas_do_mes`, `mappings`,
+  `tax_mappings` e `caixas_fora_do_modelo`, a lista, na mesma ordem, de `tabela[id]` para
+  cada id de `parcel_ids`, `mapping_ids`, `tax_mapping_ids` e `caixa_ids`. O
+  `resolved_map_hash` é o sha256 do JSON canônico (chaves ordenadas) desse mapa.
+  `catalog_hash` e `resolved_map_hash` cobrem o mapa resolvido completo, iguais aos da v1.
+- **Uso.** Para conferir a incidência de uma rubrica, reconstrua o grupo da empresa e da
+  data de desligamento e leia a parcela ali. O envelope de `validate_client_config` e
+  `apply_client_config` (`add`, `replace`, `selector`, `inline_map_schema`,
+  `inline_extension_schema`) não mudou.
+- **`get_dp_capabilities` é só índice.** Cada linha com `standalone_available` traz
+  `contract_tool` (`get_process_contract`) e `contract_hash`; o contrato inteiro do
+  processo vem de `get_process_contract(<processo>)`. Guarde o `contract_hash` do contrato
+  que você leu: quando ele mudar em `get_dp_capabilities`, releia o contrato antes de
+  montar o envio. Não espere schema, seções nem catálogo dentro de `get_dp_capabilities`.
+
