@@ -1446,3 +1446,43 @@ atualizar o plugin. Vale quando `get_process_contract("rescisao")` mostrar
   cria funcionário, evento de vínculo ou pin; não entra no 13º, no fechamento
   nem na conciliação. As simulações antigas (v1 e as de 18/11) ficam isoladas
   também.
+
+## 2.11.0: acessos, catálogo de rubricas de rescisão e onboarding
+
+Texto completo em `aprovacoes`, `rescisao` e `alteracao_cadastral` de
+`loki_obter_instrucoes`. **Sem Refresh do conector**: o `tools/list` não mudou (mesmo
+hash). Basta atualizar o plugin. Cada item vale quando a resposta servida mostrar o
+sinal (Project-loki #421, #422, #424 e #426, em main `867efb14`).
+
+- **Acréscimo de concessão (#424).** `prepare_authorization_addition`
+  (`receive_case_data`, `case_id: "@connector"`, só administradora) aceita empresa que
+  a conta já tem e acrescenta só os processos e capacidades que faltam, sem remover
+  nada; até 100 empresas por chamada. Serve para dar `atualizar_por_insumo_do_cliente`
+  à rotina em empresas que ela já tem. A prévia vem em delta: `added_grants` (com
+  `extends_existing_company`), `added_companies` e `extended_companies`. Recusas, sem
+  gravar nada: `authorization_addition_nothing_to_add` (a mensagem lista as empresas;
+  repita sem elas) e `authorization_addition_duplicate_company`.
+- **Remoção (#424).** `prepare_authorization_removal` revoga pares ou a empresa inteira
+  (omitir `processes` e/ou `capabilities` vale todos os que ela tem), até 100 por
+  chamada. Prévia em delta: `removed_grants`, `removed_companies`, `reduced_companies`.
+  Aplica-se por `aplicar_autorizacao`. Recusas:
+  `authorization_removal_nothing_to_remove`, `authorization_removal_duplicate_company`,
+  `concessao_exige_consultar` e `proprietario_protegido`.
+- **Limites.** `preparar_autorizacao` (substituição completa) aceita no máximo 500
+  concessões; em conta maior, só acréscimo e remoção. A trava do grafo é global:
+  `BUSY` (`authorization_change_busy`) não aplicou nada; repita a mesma chamada.
+- **Rescisão (#426).** O catálogo de rubricas é `loki.termination-rubric-catalog/2`:
+  tabelas por conteúdo (`parcel_table`, `mapping_table`, `tax_mapping_table`,
+  `caixa_table`) e `groups[]` com ids. Reconstrua o mapa de um grupo pelo campo
+  `reconstruction`. `get_dp_capabilities` traz só o índice, com `contract_tool` e
+  `contract_hash`; releia o contrato quando o hash mudar.
+- **Onboarding, adoção (#421).** `adoption_effects` e `released_closed_consumers`
+  aparecem na linha `applied` do `apply_company_onboarding`; para reler depois, use
+  `get_employee_identifier_state`, em `applied_receipts[].matricula_restoration`.
+- **Onboarding, conflitos (#422).** `nome_do_vinculo_conflitante`: leia `identity.nome`
+  em `get_company_employee_history` e declare o nome literal; se o cadastro estiver
+  errado, `name_correction`. `dated_field_value_conflict`: o diagnóstico traz
+  `diagnostic.conflict`. Avisos que não bloqueiam: `existing_dated_conflict` e
+  `aplicacao_sequencial_por_vinculo` (junte os fatos de uma pessoa num único candidato).
+  `snapshot_do_vinculo_desatualizado`: repita validate e apply. O mapa `refusals` de
+  `get_company_onboarding_contract` descreve cada um.

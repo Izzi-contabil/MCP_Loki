@@ -513,3 +513,10 @@ escritor. A resposta corrente, vínculo ao convite, edição/exclusão e replay
 são reconferidos. O ato não reinicia o ciclo, não zera limites, não envia nova pergunta e não
 autoriza código ou efeitos deDP. Não atribua uma hipótese de prompt à causa
 real sem evidência da saída recusada.
+Na 2.11.0 não são defeito, quando a resposta servida mostrar o sinal:
+`authorization_addition_nothing_to_add` e `authorization_removal_nothing_to_remove`
+(repita sem as empresas listadas), `authorization_addition_duplicate_company`,
+`authorization_removal_duplicate_company`, `proprietario_protegido`,
+`concessao_exige_consultar`; no onboarding, `nome_do_vinculo_conflitante`,
+`dated_field_value_conflict`, `snapshot_do_vinculo_desatualizado` e os avisos
+`existing_dated_conflict` e `aplicacao_sequencial_por_vinculo`.

@@ -4,7 +4,6 @@ O aviso do geral passou a ser o da 2.9.3
 (test_payroll_v31_and_simulation_current_state_guidance_masked.py).
 """
 
-import json
 from pathlib import Path
 
 from mcp_loki_updates import InstructionsProvider
@@ -96,16 +95,7 @@ def test_contract_290_entry_is_kept_in_the_release() -> None:
     provider = InstructionsProvider()
     for version in ("2.0.0", "2.8.0", "2.9.0"):
         assert provider.check_version(version, version)["compatible"] is True
-    release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    assert release["changes"]["compatible_tools"] == [
-        "loki_obter_instrucoes",
-        "loki_verificar_versao",
-    ]
-    entry = [
-        item for item in release["changes"]["backend"] if item.startswith("Contrato2.9.0 aditivo")
-    ]
-    assert len(entry) == 1
-    assert "mesmo hash" in entry[0]
+    # As entradas de `changes` desta edição foram movidas para docs/MCP_UPDATES.md.
 
 
 def test_general_notice_is_no_longer_the_290_one() -> None:

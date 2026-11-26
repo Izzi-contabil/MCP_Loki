@@ -34,7 +34,7 @@ e seus gates continuam obrigatórios. Recibo recebido não comprova efeito aplic
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
 
-## Aplicar autorização sob contenção e prévia curta (backend #415, aberta)
+## Aplicar autorização sob contenção e prévia curta (backend #415, em main)
 
 Valem quando a resposta servida mostrar o sinal.
 
@@ -46,9 +46,9 @@ Valem quando a resposta servida mostrar o sinal.
 - Acima de 20 concessões, o recibo traz `grants_count` e `grants_hash` em vez
   da lista. Para conferir revisão, contagem e hash, use `read_account_summary`
   (`receive_case_data` com `case_id: "@connector"`, só administradora).
-- A prévia de `prepare_authorization_addition` é um delta: `added_grants` e
-  `before`/`after` com revisão, contagem e hash. Mostre à pessoa as empresas
-  acrescentadas e as contagens; a lista completa não vem.
+- A prévia de `prepare_authorization_addition` e a de `prepare_authorization_removal`
+  são deltas (seção seguinte), com `before`/`after` de revisão, contagem e hash.
+  Mostre à pessoa as empresas afetadas e as contagens; a lista completa não vem.
 - O `/token` (troca de código, renovação e `client_credentials`) pode responder
   503 com `Retry-After` (2 s) e corpo `{"error": "temporarily_unavailable"}`,
   sem `error_description`, durante a contenção. O código e o refresh não foram
@@ -57,3 +57,42 @@ Valem quando a resposta servida mostrar o sinal.
 - Login durante uma fase de folha da própria pessoa: o login funciona, mas a
   atualização de e-mail e de último login fica para o próximo login. Não é
   erro nem exige ação.
+
+## Acrescentar e remover concessões em conta grande (2.11.0, backend #424)
+
+Valem quando a resposta servida mostrar o sinal. Sem Refresh: o schema das ferramentas
+não mudou, só o contrato do comando. Os dois comandos vão por `receive_case_data` com
+`case_id: "@connector"`, só administradora, e só preparam: a mudança vale por
+`aplicar_autorizacao` com o `change_id` e o digest da prévia, depois da confirmação
+humana. Ambos usam `account_id` e `expected_revision` (`versao_desatualizada` se a conta
+mudou: releia por `read_account_summary` e prepare de novo).
+
+- **`prepare_authorization_addition` aceita empresa que a conta já tem.** Para empresa
+  nova, anexa a concessão. Para empresa já na conta, acrescenta só os processos e as
+  capacidades que faltam, sem remover nem ampliar além do pedido. Até 100 empresas por
+  chamada. Serve, por exemplo, para dar `atualizar_por_insumo_do_cliente` à rotina em
+  empresas que ela já tem, sem refazer a lista inteira. As regras de capacidade são as
+  de sempre (`capacidade_exclusiva_de_automacao`, `automacao_capacidade_proibida`).
+- **Prévia em delta:** `added_grants` (por empresa, só o que entra, com
+  `extends_existing_company`), `added_companies` e `extended_companies`.
+- **Recusas do acréscimo (nada é gravado):**
+  `authorization_addition_nothing_to_add`, quando uma empresa não ganharia nada: a
+  mensagem lista essas empresas; repita a chamada sem elas.
+  `authorization_addition_duplicate_company`: a mesma empresa duas vezes na chamada.
+- **`prepare_authorization_removal`** (`operation`, `account_id`, `expected_revision`,
+  `removals[]`) revoga pares empresa x processo x capacidade ou a empresa inteira: em cada
+  item de `removals`, omitir `processes` e/ou `capabilities` significa tudo o que a
+  empresa tem naquele eixo. Até 100 empresas por chamada. Nunca acrescenta acesso. Prévia
+  em delta: `removed_grants` (com `removes_company`), `removed_companies` (empresas
+  inteiras) e `reduced_companies` (empresas que ficam com algo).
+- **Recusas da remoção:** `authorization_removal_nothing_to_remove` (a mensagem lista as
+  empresas sem nada a remover; repita sem elas) e
+  `authorization_removal_duplicate_company`. Valem as regras do resultado:
+  `concessao_exige_consultar` (a concessão que fica precisa manter `consultar`;
+  remova-a por inteiro ou deixe a capacidade) e `proprietario_protegido` (a conta do
+  proprietário inicial não é alterada por este caminho).
+- **Limites.** A conta guarda até 5000 concessões. `preparar_autorizacao`, que substitui a
+  lista inteira, aceita no máximo 500 concessões: em conta maior, só o acréscimo e a
+  remoção funcionam.
+- **`BUSY`.** A trava do grafo é global e curta. `authorization_change_busy` não aplicou
+  nada: repita a **mesma** chamada de `aplicar_autorizacao`, sem preparar de novo.

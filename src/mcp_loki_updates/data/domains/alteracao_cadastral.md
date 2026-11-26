@@ -234,8 +234,14 @@ Recusas:
 - `matricula_esperada_divergente` e `snapshot_desatualizado`: como na
   restauração.
 
-Depois de adotar, leia `matricula_restoration.adoption_effects` de cada
-recibo e mostre à operadora:
+Depois de adotar, leia `matricula_restoration.adoption_effects` de cada recibo e mostre à
+operadora. Ele
+vem na própria linha `applied` do `apply_company_onboarding` (e do
+`validate_company_onboarding` quando a linha já está aplicada), junto de
+`released_closed_consumers`, inclusive na repetição com `validation_hash` antigo. Para
+reler depois, use `get_employee_identifier_state`, em
+`applied_receipts[].matricula_restoration` (`adoption_effects`,
+`released_closed_consumers` e `previous_identifier`, sem PII):
 
 - `open_payrolls_citing_previous_code`: folhas abertas que citam o código
   antigo e ficam `matricula_coincide_com_codigo_auxiliar` até reenviar a
@@ -253,6 +259,36 @@ de reajuste e caso individual usam a matrícula eSocial; caso novo com o
 código Domínio recusa `matricula_funcionario_divergente`. Cliente novo
 declara a matrícula eSocial desde o onboarding. Casos fechados continuam com
 o código antigo impresso: não reabra nem recalcule por causa da adoção.
+
+## Recusas de nome e de vigência no onboarding (2.11.0)
+
+Valem quando `get_company_onboarding_contract` trouxer o mapa `refusals` (Project-loki
+#422); ele descreve cada recusa e aviso com `meaning` e `next_action`. Os diagnósticos
+não trazem nome, valor de campo nem outro dado pessoal.
+
+- `nome_do_vinculo_conflitante` (`fields: ["workers[].nome"]`): o nome declarado difere
+  do gravado no vínculo existente. Leia `identity.nome` em
+  `get_company_employee_history` e declare o nome literal. Se for o cadastro que está
+  errado, use `name_correction` (com `reuse_registered_company`, `expected_name` literal,
+  mensagem e motivo humanos); só quem tem `corrigir_dados` corrige.
+- `fato_historico_conflitante` com `dated_field_value_conflict`: um fato do próprio
+  candidato declara, para o mesmo tipo, data de efeito e campo, valor diferente do já
+  registrado. O diagnóstico traz `diagnostic.conflict` com `kind`, `effective_on`,
+  `field`, `existing` e `incoming`, cada lado como `event{origem, seq}`,
+  `onboarding_fact{fact_id}` ou `candidate`, sem os valores. Confira os valores na mesma
+  vigência no histórico do vínculo e corrija a declaração, ou revogue ou substitua o
+  fato anterior.
+- Só recusa quando o conflito envolve fato do próprio candidato. Conflito antigo entre
+  fato e evento já gravados, alheio ao candidato, vira o aviso `existing_dated_conflict`
+  (em `rows[].warnings`, com o detalhe em `rows[].warning_details[].conflict`): o
+  candidato continua `ready`, o `validation_hash` segue coerente e o aviso não altera o
+  apply. É informativo; confira o histórico se o conflito importar ao DP.
+- `aplicacao_sequencial_por_vinculo` (aviso, não bloqueia): mais de uma referência
+  `ready` da mesma pessoa no mesmo validate. O apply grava uma por vez e as demais podem
+  recusar com `snapshot_do_vinculo_desatualizado` (o vínculo mudou entre validate e
+  apply). Junte os fatos de uma pessoa num único candidato; se já enviou separado, repita
+  `validate_company_onboarding` e o apply com o `validation_hash` novo a cada referência.
+  Um candidato por pessoa por chamada continua valendo.
 
 ## Revogar desligamento gravado pelo onboarding
 

@@ -503,3 +503,9 @@ de rescisão nasce do vínculo ativo, sem caso de origem: `create_case` com
 `payload.simulation` na spec `loki.termination-simulation-create/2` (histórico
 lido em `get_company_employee_history` e `expected_history_hash`), e só a pessoa
 descarta, por `cancel_case`. **Sem Refresh do conector**; basta atualizar o plugin.
+Na 2.11.0 (“2.11.0: acessos, catálogo de rubricas de rescisão e onboarding”),
+`prepare_authorization_addition` acrescenta também a empresa que a conta já tem (até
+100 por chamada), `prepare_authorization_removal` revoga pares ou a empresa inteira, e
+`get_dp_capabilities` vira só índice (`contract_tool`, `contract_hash`: releia
+`get_process_contract` quando o hash mudar). **Sem Refresh do conector** (o `tools/list`
+não mudou); basta atualizar o plugin.
