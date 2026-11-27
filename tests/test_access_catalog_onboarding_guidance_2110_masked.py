@@ -4,8 +4,6 @@ import hashlib
 import json
 from pathlib import Path
 
-from mcp_loki_updates import InstructionsProvider
-
 ROOT = Path(__file__).resolve().parents[1]
 OPERATOR = ROOT / "plugins/loki-bootstrap/skills/operar-loki"
 PROBLEMS = ROOT / "plugins/loki-bootstrap/skills/registrar-problema-loki/SKILL.md"
@@ -22,16 +20,12 @@ def read(domain: str) -> str:
     return flat((DOMAINS / f"{domain}.md").read_text(encoding="utf-8"))
 
 
-def test_general_notice_needs_no_refresh_and_stays_small() -> None:
+def test_general_notice_keeps_the_2110_line_in_order() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.11.0)")
     notice = flat(guide[: guide.index("## Reaproveitar respostas e causas persistidas")])
-    assert "**Não exige Refresh do conector**" in notice
-    assert "`tools/list` não mudou" in notice
-    assert "`prepare_authorization_removal`" in notice
+    assert "**Continua da 2.11.0**, sem Refresh" in notice
+    assert notice.index("**Continua da 2.11.0**") < notice.index("**Continua da 2.10.1:**")
     assert notice.index("**Continua da 2.10.1:**") < notice.index("**Continua da 2.10.0**")
-    # O texto novo mora nos domínios específicos; o geral só diminuiu.
-    assert len(guide.encode("utf-8")) < 65469
 
 
 def test_approvals_carry_addition_to_existing_company_and_removal() -> None:
@@ -123,22 +117,8 @@ def test_plugin_mirrors_the_release_without_requiring_refresh() -> None:
         assert code in section and code in problems, code
 
 
-def test_release_versions_hashes_and_pruned_history() -> None:
-    metadata = InstructionsProvider().metadata()
-    assert metadata["provider_version"] == "0.4.37"
-    assert metadata["instructions_version"] == "2.11.0"
-    assert metadata["mcp_contract_version"] == "2.11.0"
-    assert metadata["recommended_plugin_version"] == "2.11.0"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
+def test_domain_hashes_and_size_limit() -> None:
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    for category, prefix in (
-        ("backend", "Contrato2.11.0 aditivo"),
-        ("instructions", "Instruções2.11.0"),
-        ("plugin", "Plugin2.11.0"),
-    ):
-        entries = release["changes"][category]
-        assert len(entries) == 2 and "docs/MCP_UPDATES.md" in entries[0], category
-        assert entries[1].startswith(prefix), category
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
             content = (DOMAINS / f"{name}.{suffix}").read_bytes()

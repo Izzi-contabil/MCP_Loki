@@ -120,7 +120,7 @@ Com raiz mínima válida, ausência de operandos não deve ser completada com ze
 
 Consulte `get_case_historical_state` e selecione somente o estado tipado aceito por `apply_historical_state` no caso e corte correntes. A seleção e as qualificações de `receive_case_data` não são a fixação legada de um histórico opaco. Confira recibo de carga, releitura, identidade, cobertura, seleção, hash/operandos e consumo efetivo nos resultados de rescisão e folha. Episódio errado, competência/corte errado, fonte adulterada, revisão superada ou cobertura insuficiente impedem a seleção correspondente; preserve as parcelas independentes disponíveis sem contaminar seu cálculo. Não declare consumo apenas porque o histórico existe.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -659,6 +659,76 @@ revogação só segue com a confirmação da operadora
 revogada não entra pelo onboarding (`onboarding_termination_fact_revoked`):
 use o caso de rescisão.
 
+
+## Confirmar o desligamento efetivo: `confirm_termination` (2.12.0)
+
+Vale quando o catálogo da conta mostrar `confirm_termination` (backend #435,
+ADR-042). **Ferramenta nova: exige Refresh do conector e conversa nova**; sem
+ela, pare e avise a Ana. A aprovação pelo chat (`registrar_decisao_chat`) é só
+documental e **não grava o vínculo**: sem esta confirmação a folha e o 13º
+seguem considerando a pessoa. Esta ferramenta é o único escritor de `rescisao`
+a partir da operação.
+
+**Quem pode.** Só pessoa provisionada com `confirmar_rescisao`, concedida pela
+Ana por empresa e processo `rescisao` (`preparar_autorizacao`/`aplicar_autorizacao`).
+Rotina e conta técnica não a recebem; `confirmar_admissao` não a substitui.
+
+**Quando.** Rescisão conferida pela operadora, com o fato do desligamento
+comprovado por anexo do caso (recibo do S-2299 ou TRCT, conferido por você).
+O caso tem de estar em `aguardando_revisao` (depois de `prepare_case_review`):
+**confirme antes de aprovar**. Caso aprovado pelo chat recusa
+`estado_nao_confirmavel`, e em preparação também.
+
+**Como.** `get_case` e copie `termination_confirmation_snapshot`. Chame
+`confirm_termination` com `declaration`: `case_id`, `funcionario_id`,
+`empresa_cnpj`, `cpf`, `data_desligamento` (igual à do caso e não futura),
+`expected_snapshot` (o snapshot acima), `reference` (idempotência),
+`termination_occurred: true`, `human_message` (transcrição literal da mensagem
+da operadora) e `source` (`document_id`, `content_hash` e `locator` do anexo; o
+Loki confere que o anexo existe e é íntegro, não o conteúdo). O efeito é um
+evento `rescisao` com `data_efeito = data_desligamento` e origem
+`confirmacao_desligamento`: a folha da competência seguinte deixa de considerar
+a pessoa, e o mês do desligamento ainda a conta. **Não atesta envio ao eSocial,
+não aprova pacote e não publica.** Repetir a mesma `reference` e declaração
+devolve o registro original (`created: false`). Desligamento já declarado pelo
+onboarding na mesma data é reconhecido sem evento novo (`already_present: true`).
+
+**Recusas** vêm com `status: BLOCKED`, o código `confirmacao_desligamento_recusada`
+e um `reason` fechado, entre eles: `exige_pessoa_provisionada`,
+`estado_nao_confirmavel`, `caso_cancelado_ou_rejeitado`,
+`caso_sem_data_desligamento`, `data_desligamento_divergente_do_caso`,
+`identidade_incompativel`, `desligamento_futuro`,
+`desligamento_anterior_a_admissao`, `snapshot_desatualizado` (releia o
+`get_case`), `fonte_invalida`, `fonte_integra_indisponivel`,
+`referencia_conflitante`, `referencia_sem_efeito_vigente` (o fato foi
+compensado: use outra `reference`), `desligamento_ja_confirmado`,
+`desligamento_ja_registrado` (aprovação legada anterior),
+`desligamento_divergente_no_historico` (onboarding em outra data: corrigir é
+`revoke_onboarding_termination`) e `exige_rescisao_operacional` (simulação não
+confirma). A mesma `reference` com declaração diferente é `referencia_conflitante`.
+
+**Desfazer e compensar.** Uma confirmação errada se desfaz pelo caso: voltar o
+caso à preparação (`registrar_decisao_chat` com `ajustar`) ou cancelá-lo grava
+`evento_revertido` uma só vez e o vínculo volta a valer. Corrija a data no
+caso, leve de novo à revisão e confirme com **outra** `reference`. **Cancelar um
+caso com confirmação vigente exige `confirmar_rescisao`** (sem ela, recusa
+`case_lifecycle_action_refused` com `cancelamento_exige_confirmar_rescisao`);
+reiniciar o caso com a confirmação vigente continua recusado
+(`restart_requires_effect_reconciliation`). Depois da compensação o reinício não
+é mais bloqueado por ela.
+
+Descrição da ferramenta no catálogo diz "ou aprovado pelo chat": vale o
+comportamento acima, só `aguardando_revisao`.
+
+## Razão social e saldo de férias inexistente na rescisão (2.12.0)
+
+- A razão social do caso é conferida de novo contra o cadastro vigente na geração: natureza
+  jurídica diferente recusa com `razao_social_natureza_juridica_divergente`;
+  só o tipo societário diferente gera o aviso `razao_social_tipo_societario`.
+  Regras em `admissao` ("Razão social da empresa").
+- Saldo de férias que a carga histórica gravou com aquisitivo que não existe é
+  retirado por `retire_onboarding_vacation_balance` (`alteracao_cadastral`).
+  **Nunca declare esses períodos na rescisão**, retirado o saldo ou não.
 
 ## Insumo novo do cliente com o caso em revisão (rotina, 2.10.0)
 

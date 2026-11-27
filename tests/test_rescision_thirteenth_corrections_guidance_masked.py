@@ -19,11 +19,10 @@ SECTION_298 = "## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
 LIMIT = 65536
 
 NOTICE = (
-    "## O que mudou nesta versão (2.11.0)",
+    "## O que mudou nesta versão (2.12.0)",
     "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
     "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
     "atualizar o plugin instalado",
-    "**Não exige Refresh do conector**",
     "**Continua da 2.10.1:**",
     "**Continua da 2.10.0**",
     "`atualizar_por_insumo_do_cliente`",
@@ -175,14 +174,24 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.37"
-    assert metadata["instructions_version"] == "2.11.0"
-    assert metadata["mcp_contract_version"] == "2.11.0"
-    assert metadata["recommended_plugin_version"] == "2.11.0"
+    assert metadata["provider_version"] == "0.4.38"
+    assert metadata["instructions_version"] == "2.12.0"
+    assert metadata["mcp_contract_version"] == "2.12.0"
+    assert metadata["recommended_plugin_version"] == "2.12.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
-    for version in ("2.0.0", "2.9.6", "2.9.7", "2.9.8", "2.9.9", "2.10.0", "2.10.1", "2.11.0"):
+    for version in (
+        "2.0.0",
+        "2.9.6",
+        "2.9.7",
+        "2.9.8",
+        "2.9.9",
+        "2.10.0",
+        "2.10.1",
+        "2.11.0",
+        "2.12.0",
+    ):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.11.0", "2.11.1")["compatible"] is False
+    assert provider.check_version("2.11.0", "2.12.1")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
@@ -190,9 +199,9 @@ def test_versions_follow_the_additive_contract_patch() -> None:
     ]
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.11.0", path.name
-        assert data["updated_at"] == "2026-11-26", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.11.0", path.name
+        assert data["version"] == "2.12.0", path.name
+        assert data["updated_at"] == "2026-11-27", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.12.0", path.name
 
 
 def test_every_domain_stays_within_the_size_limit() -> None:
@@ -204,16 +213,17 @@ def test_every_domain_stays_within_the_size_limit() -> None:
 
 def test_general_notice_is_conditional_and_limits_the_refresh_to_the_named_tool() -> None:
     guide = text("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.11.0)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.12.0)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
-    assert notice.index("**Exige ação da operadora (2.11.0):**") < notice.index(
+    assert notice.index("**Exige ação da operadora (2.12.0):**") < notice.index(
         "**Vale quando o Loki for publicado:**"
     )
     assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
-        "**Continua da 2.10.1:**"
+        "**Continua da 2.11.0**"
     )
+    assert notice.index("**Continua da 2.11.0**") < notice.index("**Continua da 2.10.1:**")
     assert notice.index("**Continua da 2.10.1:**") < notice.index("**Continua da 2.10.0**")
     assert notice.index("**Continua da 2.10.0**") < notice.index("**Continua da 2.9.9**")
     assert notice.index("**Continua da 2.9.9**") < notice.index("**Continua da 2.9.8:**")

@@ -56,4 +56,4 @@ def test_admission_unblocking_guidance_is_delivered_conditionally() -> None:
         "aguardando_revisao",
     ):
         assert required in general, required
-    assert provider.metadata()["mcp_contract_version"] == "2.11.0"
+    assert provider.metadata()["mcp_contract_version"] == "2.12.0"

@@ -352,6 +352,78 @@ abertos deixam de ver o desligamento na próxima leitura do histórico. Folhas e
 casos fechados não mudam. Depois da revogação, se o Domínio trocou o código do
 empregado, faça a troca auditada do código (seção anterior).
 
+## Retirar saldo de férias gravado pela carga histórica (2.12.0)
+
+Vale quando o catálogo da conta mostrar
+`preview_onboarding_vacation_balance_retirement` e
+`retire_onboarding_vacation_balance` (backend #438, ADR-043). **Ferramentas
+novas: exigem Refresh do conector e conversa nova**; antes disso use o transporte
+`receive_case_data(case_id="@connector", request={schema_version:
+"loki.connector-command/1", operation: "preview_onboarding_vacation_balance_retirement"
+| "retire_onboarding_vacation_balance", onboarding_id, target | request})`, com a
+mesma autoridade.
+
+**Quando usar.** A carga histórica gravou um `vacation_balance` com período
+aquisitivo que **não existe** (série errada na planilha). `replaces_fact_id` só
+troca o período por outro; para só tirá-lo de vigor existe este ato humano
+auditado, irmão da revogação de desligamento. Não serve para corrigir o
+aquisitivo (use a troca explícita) nem para saldo que existe.
+
+**Quem pode.** Pessoa provisionada com `carga_historica`, `configurar_cliente`,
+`decidir_chat` e `corrigir_dados`, com `CHAT_DECISIONS_ENABLED`; rotina não faz.
+
+**Passos.**
+
+1. Anexe ao lote de onboarding a fonte que mostra a série correta (por exemplo a
+   Programação de Férias do Domínio). Declaração nativa não basta.
+2. `get_company_employee_history` e ache os `target_fact_ids` (`ONBFACT-…`, de 1
+   a 20 saldos vigentes do **mesmo** vínculo, sem repetição).
+3. `preview_onboarding_vacation_balance_retirement(onboarding_id,
+   target={funcionario_id, target_fact_ids, source})`. Mostre à operadora os
+   períodos retirados, os que restam (`periods_after`), os casos abertos que
+   ficarão com a seleção histórica desatualizada (`open_consumers`), `snapshot`
+   e `preview_id`. Não grava e não certifica a fonte.
+4. Com o aceite explícito e a mensagem literal,
+   `retire_onboarding_vacation_balance(onboarding_id, request={schema_version:
+   "loki.company-onboarding-vacation-balance-retirement/1", intent:
+   "retire_onboarding_vacation_balance", request_ref, funcionario_id,
+   target_fact_ids, source, preview_id, expected_snapshot (o `snapshot` da
+   prévia), human_message, message_reference ou reason})`. Replay exato devolve
+   o recibo.
+
+**Efeito.** Só um recibo em `company_onboarding_reconciliations`; o fato fica
+arquivado e some do histórico, da projeção de períodos, da conferência de
+sobreposição e de movimentos pendentes e do `state_hash`. Aparece em
+`revoked_onboarding_facts` de `get_company_employee_history` e como
+`revocation_receipt` em `get_company_employee_effect_state`. Nada é apagado nem
+recalculado, e caso fechado não muda sozinho. O aquisitivo certo entra como fato
+novo; reenviar o saldo retirado recusa (`onboarding_vacation_balance_fact_retired`)
+e corrigir o retirado também (`onboarding_vacation_balance_target_retired`).
+
+**O que bloqueia** (a prévia recusa sem gravar; prefixo
+`onboarding_vacation_balance_retirement_`, salvo onde indicado):
+
+- `target_incompatible` (fato fora do vínculo) e `target_not_vacation_balance`;
+- `onboarding_vacation_balance_already_retired`, `target_replaced` e
+  `target_is_correction` (retirar uma correção traria o corrigido de volta);
+- `requires_documentary_source`: fonte ausente ou nativa;
+- `period_has_vacation_use`: há gozo vigente no período; corrija o gozo antes;
+- `period_schedule_pending`: há programação de férias vigente no período;
+  cancele com `record_vacation_schedule`;
+- `onboarding_vacation_balance_qualifies_legacy`: o saldo qualifica fato legado;
+  qualifique o legado por outro saldo antes de retirar;
+- `requires_consumer_reconciliation`: caso do vínculo, de qualquer tipo, ou caso
+  da empresa com pin do histórico dele (folha mensal, 13º etc.) em
+  `aguardando_revisao`, `aprovado` ou `publicado`; revise cada consumidor
+  listado antes (os abertos entram em `open_consumers`, não bloqueiam);
+- `snapshot_changed` na escrita: refaça a prévia;
+- `onboarding_reconciliation_request_conflict`: mesmo `request_ref` com pedido
+  ou pessoa diferentes.
+
+**Regra operacional.** **Nunca declare na rescisão** um período de saldo que
+não existe, retirado o saldo ou não: a retirada só tira o fato do histórico e da
+projeção de períodos; o que a rescisão declara continua sendo da harness.
+
 ## Declaração adicional no onboarding
 
 Use `get_company_onboarding_contract.additional_declaration_reconciliation`
@@ -490,7 +562,7 @@ Revisão e aprovação documental não aplicam salário, cargo, jornada ou outro
 
 Para empresa e estabelecimentos, parâmetros e regras e demais dados vinculados, descubra os contratos e escritores HTTPS vigentes. Confira o CNPJ e o escopo da identidade autenticada, a revisão esperada, vigência, fontes, diferenças e histórico. Não use o caso de alteração do empregado como substituto de um contrato empresarial ausente nem atualize outra empresa do mesmo grupo. Preserve intenção/revisão exigidas, envie apenas parâmetros estruturados e obtenha recibo persistido; depois releia o objeto empresarial para conferir revisão e valores aplicados. Staging, proposta e recibo de recebimento não comprovam ajuste aplicado. Endpoint ou campo ausente é lacuna contratual explícita.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 

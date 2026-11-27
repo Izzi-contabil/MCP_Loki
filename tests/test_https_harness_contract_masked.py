@@ -13,9 +13,9 @@ PLUGIN = ROOT / "plugins/loki-bootstrap"
 def test_additive_https_release_preserves_old_and_unknown_clients() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.37"
-    assert metadata["instructions_version"] == "2.11.0"
-    assert metadata["mcp_contract_version"] == "2.11.0"
+    assert metadata["provider_version"] == "0.4.38"
+    assert metadata["instructions_version"] == "2.12.0"
+    assert metadata["mcp_contract_version"] == "2.12.0"
     assert provider.check_version("2.0.0", "2.0.0")["compatible"] is True
     assert provider.check_version("2.3.0", "2.3.0")["compatible"] is True
     assert provider.check_version()["compatible"] is None
@@ -27,7 +27,7 @@ def test_each_runtime_domain_keeps_originals_in_harness_and_uses_https(domain: s
     guide = InstructionsProvider().get(domain)["instructions"]
     for required in (
         "HTTPS",
-        "loki.tominho.com/mcp",
+        "loki.izzicontabil.com.br/mcp",
         "Originais permanecem na harness",
         "parâmetros estruturados",
         "CSV tipado",

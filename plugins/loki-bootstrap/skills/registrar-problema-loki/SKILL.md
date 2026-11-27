@@ -490,7 +490,7 @@ afirmar publicação de código ou aceite de DP. Para origem Slack, quem abriu a
 demanda pode responder exatamente “orientação confirmada” na thread depois
 do convite. Silêncio, “ok” ou resposta de outra pessoa não encerram a demanda.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -520,3 +520,12 @@ Na 2.11.0 não são defeito, quando a resposta servida mostrar o sinal:
 `concessao_exige_consultar`; no onboarding, `nome_do_vinculo_conflitante`,
 `dated_field_value_conflict`, `snapshot_do_vinculo_desatualizado` e os avisos
 `existing_dated_conflict` e `aplicacao_sequencial_por_vinculo`.
+Na 2.12.0 não são defeito, quando a resposta servida mostrar o sinal:
+`razao_social_natureza_juridica_divergente` e o aviso `razao_social_tipo_societario`;
+`vinculo_intermitente_nao_suportado` e `credito_trabalhador_mapeamento_pendente` na
+folha; `confirmacao_desligamento_recusada` (com `reason`), `cancelamento_exige_confirmar_rescisao`;
+as recusas `prazo_determinado_*`, `admission_date_rectification_fixed_term_limit` e o
+aviso `texto_contrato_prazo_determinado_nao_homologado`; `preparation_identity_changed`
+no reinício de férias pela rotina; as recusas `onboarding_vacation_balance_*` da retirada
+de saldo de férias. Endereço antigo do Loki devolvendo 503 é a mudança de servidor, não
+falha: recadastre o conector no endereço novo.

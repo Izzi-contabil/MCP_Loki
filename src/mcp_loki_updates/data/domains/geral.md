@@ -1,60 +1,59 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.11.0)
+## O que mudou nesta versão (2.12.0)
 
 Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
-vez, curto, e não interrompa o trabalho dela por causa dele. O Loki pode
-chegar em partes: cada item vale quando a resposta servida mostrar o sinal
-indicado; sem o sinal, siga a orientação anterior do mesmo domínio.
+vez, curto, sem interrompê-la. O Loki pode chegar em partes:
+cada item vale quando a resposta servida mostrar o sinal indicado; sem o sinal,
+siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora (2.11.0):** só atualizar o plugin instalado (as
-skills mudaram). **Não exige Refresh do conector**: o `tools/list` não mudou
-(mesmo hash).
+**Exige ação da operadora (2.12.0):** atualizar o plugin instalado e, por haver
+ferramentas novas (`confirm_termination`,
+`preview_onboarding_vacation_balance_retirement`,
+`retire_onboarding_vacation_balance`), fazer **Refresh do conector e conversa
+nova**, só quando ela for usar uma delas; o resto não exige. **Endereço novo:** desde 27/11/2026
+o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
+503); o conector de conta de pessoa precisa ser recadastrado nele.
 
-**Vale quando o Loki for publicado:** `aprovacoes` (concessão a empresa que a
-conta já tem; `prepare_authorization_removal`), `rescisao` (catálogo de rubricas
-v2; `get_dp_capabilities` só índice) e `alteracao_cadastral` (`adoption_effects`
-na linha aplicada; recusas de nome e de vigência do onboarding).
+**Vale quando o Loki for publicado:** `admissao` (razão social do caso, prazo
+determinado), `ferias` (rotina), `folha_mensal` (intermitente, consignado),
+`rescisao` (`confirm_termination`), `alteracao_cadastral` (saldo de férias).
 
-**Continua da 2.10.1:** simulação de rescisão sem caso de origem (`rescisao`).
+**Continua da 2.11.0**, sem Refresh: concessões, catálogo de rubricas v2 e
+`adoption_effects` do onboarding.
 
-**Continua da 2.10.0**, se o Refresh ainda não foi feito: **Refresh do conector
-e conversa nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`);
-13º `transcricao_cadastral_sem_efeito_no_13`; folha
-`formula.divisor_sob_calendario`.
+**Continua da 2.10.1:** simulação de rescisão sem caso de origem.
 
-**Continua da 2.9.9**: 13º (cobertura, 1ª parcela já paga, horas pela Súmula
-347) e folha (recálculo em revisão por `restart_case` simples,
-`folha_divisor_mes`, fórmulas do mapa).
+**Continua da 2.10.0**, se o Refresh ainda não foi feito: **Refresh e conversa
+nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`); 13º
+`transcricao_cadastral_sem_efeito_no_13`; folha `formula.divisor_sob_calendario`.
+
+**Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas pela Súmula 347)
+e folha (`restart_case` simples em revisão, `folha_divisor_mes`, fórmulas do mapa).
 
 **Continua da 2.9.8:** rescisão (aviso da norma coletiva, saldo pelos dias
-efetivos), 13º (janela da média por empresa, fatos opacos), arredondamento do
-centavo por empresa, consignado e afastamento pago pela empresa.
-**Refresh do conector só para a ferramenta nominal**
-`rectify_case_admission_date`; sem ele, a retificação da data de admissão sai
-por `receive_case_data` com `request.schema_version =
-"loki.case-admission-date-rectification/1"`. Folha com pessoa de 2 ou mais
-contratos de consignado confirmados no mês (`-worker-credit-allocation-v1`) ou
-com mês de afastamento derivado (`-employer-leave-v1`) fica desatualizada:
-`restart_case` e novo cálculo. Os campos opcionais novos do crédito e do mapa
-não exigem Refresh: os argumentos são dict livres.
+efetivos), 13º (janela da média, fatos opacos), arredondamento do centavo,
+consignado e afastamento pago pela empresa. **Refresh do conector só para a
+ferramenta nominal** `rectify_case_admission_date`; sem ele a retificação sai por
+`receive_case_data` com `request.schema_version =
+"loki.case-admission-date-rectification/1"`. Folha com 2 ou mais contratos de
+consignado confirmados (`-worker-credit-allocation-v1`) ou mês de afastamento
+derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e novo
+cálculo. Campos opcionais novos do crédito e do mapa: argumentos dict livres.
 
-**Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem
-concessão por empresa; `diferenca_*` com `retroactive_actions`.
+**Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem concessão
+por empresa; `diferenca_*` com `retroactive_actions`.
 
-**Continua da 2.9.6**, se ainda não foi feito: recalcular, conferir e pedir
-novo aceite das folhas mensais não entregues calculadas antes da `folha-v33`
-(`folha_mensal`); preparar de novo a revisão que recusar
-`pacote_mudou_desde_a_leitura` (`prepare_case_review`).
+**Continua da 2.9.6**, se ainda não foi feito: recalcular, conferir e pedir novo
+aceite das folhas não entregues calculadas antes da `folha-v33`
+(`folha_mensal`); `pacote_mudou_desde_a_leitura`: `prepare_case_review`.
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
-matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os
-mesmos campos), troca de código Domínio e revogação de desligamento do
-onboarding (`preview_onboarding_termination_revocation`,
-`revoke_onboarding_termination`) exigem Refresh do conector e conversa nova
-(domínio `alteracao_cadastral`). Peça o Refresh só quando ela for usar um
-desses fluxos; antes dele, a revogação funciona pelo transporte
-`receive_case_data(case_id="@connector")`.
+matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os mesmos
+campos), troca de código Domínio e revogação de desligamento do onboarding
+(`preview_onboarding_termination_revocation`, `revoke_onboarding_termination`)
+exigem Refresh e conversa nova (`alteracao_cadastral`); antes dele, a revogação
+funciona por `receive_case_data(case_id="@connector")`.
 
 ## Reaproveitar respostas e causas persistidas
 
@@ -225,7 +224,7 @@ janela de publicação avisada, ninguém altera a conta do worker.
 **Rotinas (contas técnicas).** A conta da rotina continua precisando de
 concessão por empresa explícita. Conta de automação não recebe empresa `*`
 (`automacao_empresa_explicita_obrigatoria`) nem `decidir_chat`,
-`corrigir_dados`, `confirmar_admissao`, `configurar_cliente` ou
+`corrigir_dados`, `confirmar_admissao`, `confirmar_rescisao`, `configurar_cliente` ou
 `operar_shadow` (`automacao_capacidade_proibida`). Pode receber
 `carga_historica`, sempre por empresa explícita, e com ela opera o onboarding
 só daquela empresa (servidor anterior recusa). O modelo `@empresas-novas`
@@ -242,9 +241,9 @@ recebê-la, por empresa e processo. A Ana concede, só pela autorização
 (`preparar_autorizacao`/`aplicar_autorizacao` ou o acréscimo): `preparar_acesso_tecnico` recusa
 o pedido que a traga (`capacidade_concedida_so_por_autorizacao`) e pessoa não
 a recebe (`capacidade_exclusiva_de_automacao`). Ela não decide: aprovação,
-efeitos, entrega, cancelamento, retificação de data, férias e afastamento
-continuam com pessoa. Vale também no modelo `@empresas-novas`, e o concedente
-registrado é quem gravou o modelo. Roteiro em `admissao`, `rescisao` e
+efeitos, entrega, cancelamento, retificação de data e afastamento continuam
+com pessoa. Vale também no modelo `@empresas-novas`, e o concedente
+registrado é quem gravou o modelo. Roteiro em `admissao`, `rescisao`, `ferias` e
 `folha_mensal`.
 
 **Onboarding pela rotina (conta técnica)**, só quando `meu_acesso` da conta
@@ -674,7 +673,7 @@ Não configure nem ative o Drive nesta entrega. Drive Izzi é opção futura: so
 
 Para usar fecho anterior como abertura de provisões, selecione explicitamente `opening_selection={kind:"previous_revision",competencia,input_hash,result_hash}` no contrato de folha_mensal/fechamento. Envie `opening_cents=null` nos movimentos; `opening_origin` é resolvido e rastreado pelo servidor, não preenchido pela harness. A revisão deve ser da competência imediatamente anterior e ainda corrente. Sem fechamento conhecido, a abertura e seus totais dependentes permanecem desconhecidos; não crie zero. Saldo documentado de abertura também pode ser recebido com fonte qualificada pelo contrato, sem seleção automática de uma revisão. Retificação da origem exige conciliação e nova revisão do pacote dependente.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 

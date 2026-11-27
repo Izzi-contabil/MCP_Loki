@@ -832,6 +832,85 @@ valida com a coerência interna.
   do sindicato nem de referência livre: sem a regra declarada, o Loki não
   aplica taxa pela escala.
 
+## Vínculo intermitente: `categoria_esocial` (2.12.0)
+
+Vale quando `get_process_contract("folha_mensal")` listar `categoria_esocial` em
+`dados_folha.funcionarios[*]` (backend #434). O Loki **ainda não calcula
+contrato intermitente** (CLT art. 452-A: convocação, horas por período e
+parcelas proporcionais não existem no motor); ele só impede que a pessoa seja
+calculada como mensalista.
+
+- **Declare o fato.** `categoria_esocial` é opcional, com três dígitos
+  (`"101"`, `"111"`), lido da fonte pela harness. O Loki não infere o regime
+  por salário, jornada ou cargo.
+- **Com `"111"`** a pessoa vai para `nao_calculados` (motivo
+  `vinculo_nao_suportado`, código `vinculo_intermitente_nao_suportado`, próxima
+  ação `retirar_vinculo_intermitente_da_folha_mensal`, `missing_fields` vazio) e
+  abre a pendência agregada de mesmo código (evidência `competencia` e
+  `matriculas`). Os demais calculam normalmente e a cobertura fica parcial. A
+  checagem vem antes de rubrica e de alocação: rubrica não mapeada de um
+  intermitente não derruba a folha.
+- **Declare em TODA competência.** A memória do intermitente vale só dentro do
+  caso da competência: nenhum cadastro guarda a categoria e ela não atravessa
+  competências. Folha de outro mês, sem `categoria_esocial = "111"`, calcula a
+  pessoa como mensalista. Dentro do mesmo caso, a pendência aberta lembra as
+  matrículas e mantém a pessoa fora do cálculo mesmo se `restart_case` ou nova
+  escrita deixarem a categoria de fora.
+- **Fecha** (`auto_resolve` na reavaliação mensal) só quando cada matrícula
+  marcada saiu da folha ou foi declarada com outra categoria; campo ausente não
+  fecha.
+- **O que fazer.** Retire o intermitente da folha mensal e apure a competência
+  dele fora do Loki; se a categoria foi declarada por engano, corrija a fonte e
+  recalcule. Nunca calcule intermitente como mensalista nem tente reproduzir a
+  convocação por lançamentos.
+- Rescisão, 13º, férias, admissão e onboarding não recebem o fato de categoria
+  hoje: o aviso vale só para a folha mensal.
+
+## Consignado sem linha no mapa de verbas (2.12.0)
+
+Sintoma: o contrato de consignado (`credito_trabalhador_contratos`) declara
+`rubrica_loki`, mas o mapa de verbas da empresa não tem linha utilizável para
+esse nome. A folha da pessoa sai **parcial** (`funcionarios_parciais`), com o
+componente pendente `credito_trabalhador_mapeamento_pendente` (próxima ação
+`configurar_mapeamento_empresarial_do_credito`) e sem a verba do crédito; os
+proventos e os demais descontos dela e a folha dos outros seguem. Um número de
+rubrica como 220 nunca identifica o crédito sem esse vínculo explícito.
+
+Acrescente ao mapa da empresa, pelo patch completo do mapa
+(`loki.company-payroll-map-patch/1`, o mesmo caminho da seção de afastamento),
+uma linha que o Loki aceite como vínculo do crédito:
+
+- `loki` igual à `rubrica_loki` do contrato (nunca `vale_transporte`, `inss`,
+  `irrf`, `fgts` nem `salario_familia`);
+- `natureza` desconto e ao menos um código do Domínio em `dominio_codes`;
+- sem `parametro_individual` (a linha de VT e de pensão tem outra função);
+- incidência `sem_efeito` em INSS, FGTS e IRRF (cada uma com `fonte`); qualquer
+  outro efeito faz o vínculo ser recusado e a pendência persistir;
+- `disposition`, `formula` e `fonte` como em qualquer linha do mapa.
+
+O código do Domínio e a fonte vêm da DP, nunca de palpite. Como em toda mudança
+de mapa, o hash dele muda e as folhas abertas da empresa ficam desatualizadas:
+acrescente a linha antes de calcular o mês e, nas já calculadas, `restart_case`
+e novo cálculo. Não crie lançamento manual da parcela para o total fechar.
+
+## Razão social do caso x cadastro (2.12.0)
+
+Vale quando a resposta servida mostrar o código ou o aviso abaixo. Na geração
+dos holerites o Loki confere de novo a razão social do caso contra a do
+cadastro (binding) da empresa. Detalhe das regras em `admissao` ("Razão social
+da empresa"). Aqui, o que muda a folha:
+
+- natureza jurídica diferente (LTDA x S.A. x EIRELI) recusa a geração com
+  `razao_social_natureza_juridica_divergente` no início da mensagem da recusa. Diferença só
+  de tipo societário com `codigo_dominio` do caso diferente do cadastro também
+  recusa (a tolerância exige CNPJ e código conferidos). A conferência roda de
+  novo na geração, contra o cadastro vigente nela; divergência ali recusa com
+  "razao social do caso diverge do binding da empresa": confira a empresa e o
+  cadastro, nunca ajuste o nome só para silenciar;
+- só o tipo societário diferente, ou só o porte (ME, EPP) ou o tipo ausente de
+  um lado, não recusa: o holerite sai com o nome do cadastro e o pacote traz o
+  aviso `razao_social_tipo_societario` (sem reter documento, sem exigir ciência).
+
 ## Regras comuns da operação
 
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
@@ -840,7 +919,7 @@ Leitura de originais e comparação são externas ao Loki. Após receber os dado
 
 Documente bases recebidas, fontes, divergências e ausências. Uma base ausente não se transforma em zero. Não invente parcelas, critérios, legislação ou datas; consulte fontes e contratos aprovados pelo responsável. Cumpra os gates humanos. Uma validação técnica não autoriza aceite, transmissão, pagamento ou publicação de resultados.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 

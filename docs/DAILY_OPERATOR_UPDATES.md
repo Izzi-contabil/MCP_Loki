@@ -213,7 +213,9 @@ não é defeito automático; falha de suporte não gera recursão. O leitor reto
 support_handoff, sem enviar dados. [Escopo e limites](SUPPORT_COLLABORATION_20261027.md).
 
 
-A operação usa100%HTTPS em `https://loki.tominho.com/mcp`, com originais e
+A operação usa100%HTTPS em `https://loki.izzicontabil.com.br/mcp` (endereço novo desde
+27/11/2026; o anterior devolve 503 e o conector de conta de pessoa precisa ser
+recadastrado nele), com originais e
 preparação na harness, parâmetros JSON/CSV tipado e retorno por documentos ou
 recibo persistido quando não houver documento. Atualização Git não comprova
 publicação, identidade própria da automação ou execução observada; siga

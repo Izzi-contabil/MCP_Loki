@@ -427,7 +427,7 @@ Programação de férias exige contrato próprio para registrar, retificar ou ca
 
 No consumidor que oferecer `get_vacation_schedule_contract()`, siga o schema `loki.vacation-schedule/1` de `record_vacation_schedule(case_id, request)` e releia por `get_vacation_schedules(case_id)`. O request preserva `request_ref`, `expected_snapshot=correction_snapshot` atual de `get_case`, `reference`, `action` e fontes opcionais conforme o contrato. Em `register`, `data` informa `aquisitivo_inicio`, `aquisitivo_fim`, `inicio`, `fim` e `dias_abono` conforme o contrato. Registrar planejamento requer OPERAR_CASOS e não confirma gozo ou pagamento. `rectify` e `cancel` exigem pessoa autorizada com CORRIGIR_DADOS, `human_message` e `message_reference`, além do par `supersedes_id`/`supersedes_input_hash` da revisão anterior. A automação encaminha essas ações ao humano; não decide nem adapta a identidade. Preserve o recibo e a trilha anterior; releitura e retry usam a mesma referência e conteúdo. Esta candidata de instruções não comprova publicação ou adoção desses escritores.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -440,7 +440,8 @@ Fontes `kind=document` conservam o significado de documento já arquivado no Lok
 Quando `get_process_contract("ferias")` anunciar `preparation.supported=true`,
 use a preparação `replace_process_inputs` no restart existente ou pelo transporte
 `loki.case-preparation-transport/1` anunciado em `receive_case_data`. A pessoa
-precisa das capacidades do contrato, inclusive `corrigir_dados`; o replay também
+precisa das capacidades do contrato, inclusive `corrigir_dados` (a rotina, só com
+`atualizar_por_insumo_do_cliente`, tem o roteiro próprio abaixo); o replay também
 revalida a autorização. Transcreva a intenção específica e use o
 `correction_snapshot` corrente. Aprovação ou efeito aplicado exigem a conciliação
 própria antes do reinício.
@@ -466,6 +467,47 @@ envie sempre `competencia` igual ao mês de início do gozo. No `create_case`,
 `created: false` significa que o caso devolvido é o existente, não o novo: não
 continue nele. Duas frações na mesma competência ainda não têm suporte. Nunca
 cancele o primeiro caso para abrir o segundo.
+
+## Insumo novo do cliente com o caso em revisão (rotina, 2.12.0)
+
+Vale quando `meu_acesso` mostrar `atualizar_por_insumo_do_cliente` na empresa e
+em `ferias` (a Ana concede por `preparar_autorizacao`/`aplicar_autorizacao`; sem
+ela, pare e avise a Ana) e `get_process_contract("ferias")` anunciar
+`client_input_restart` (backend #433, ADR-039, emenda de 26/11/2026). Até a 2.11.0
+só admissão e rescisão tinham este caminho; **férias passou a ter**. Afastamento
+continua fora: a rotina recebe `client_input_restart_scope_refused`.
+
+O gatilho é um insumo novo do cliente com o caso em `aguardando_revisao`. A
+capacidade não decide: aprovação, efeitos, entrega e cancelamento seguem com
+pessoa.
+
+1. `get_case` e copie o `correction_snapshot`.
+2. `restart_case` com `expected_snapshot=correction_snapshot`,
+   `preparation.mode=replace_process_inputs` (sem `preserve_imports`),
+   `preparation.request_ref = sha256-<impressão do insumo>` (`sha256-` e 64 hex
+   minúsculos, calculada por você sobre o insumo novo) e `human_message` com os
+   campos que mudam e o motivo. A rotina **dispensa `corrigir_dados`** aqui; a
+   pessoa continua precisando dela (`vacation_preparation_requires_human_correction`).
+3. `receive_case_data` com a seção `dados_ferias` completa e siga o fluxo
+   normal; o pacote novo exige nova revisão e novo aceite humanos.
+
+**O que não pode mudar no reinício.** As identidades do período
+(`aquisitivo_inicio`, `aquisitivo_fim`, `inicio` e `fim`) são imutáveis: o
+`receive_case_data` que as altere recusa com `preparation_identity_changed`
+(campo `dados_ferias.<campo>`) e nada é gravado. Datas de pagamento, faltas e
+demais dados não identitários mudam normalmente. Mudou o gozo ou o aquisitivo:
+é outro caso (cancelamento é da pessoa). A programação de férias
+(`record_vacation_schedule`) é do caso, append-only: o reinício não a apaga nem
+a reescreve, e ela só se grava em `aberto`/`em_preparacao`.
+
+**Pare e avise a Ana, sem insistir,** se vier
+`client_input_restart_requires_review_state` (caso fora de
+`aguardando_revisao`), `client_input_restart_scope_refused`,
+`client_input_request_ref_invalid`, `client_input_restart_grant_origin_unrecorded`,
+`restart_requires_effect_reconciliation` (já há aprovação ou efeito anterior: o
+caso não é reiniciado pela rotina), `capacidade_nao_concedida` ou
+`caso_inexistente_ou_nao_autorizado`. O replay com o mesmo `request_ref` é
+idempotente (`reused: true`); não repita em laço.
 
 ## Recusa com campo e código de regra
 

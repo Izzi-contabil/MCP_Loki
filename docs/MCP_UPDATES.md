@@ -1,4 +1,74 @@
-# Atualizações MCP Loki — contrato 2.11.0
+# Atualizações MCP Loki — contrato 2.12.0
+
+## Candidata 0.4.38 / contrato, instruções e plugin 2.12.0 — 27/11/2026
+
+O contrato sobe de 2.11.0 para 2.12.0 porque há **ferramentas novas** e o schema de
+`preparar_autorizacao` ganha o valor `confirmar_rescisao` no enum de capacidades:
+**exige Refresh do conector e conversa nova** na conta da Ana, além de atualizar o
+plugin (as skills mudaram). Base do Refresh: `confirm_termination` (#435) e
+`preview_onboarding_vacation_balance_retirement` e `retire_onboarding_vacation_balance`
+(#438) entram em `list_tools` e o snapshot `connector_tools_list_d863b1aa_masked.json`
+foi atualizado na #438. Os demais itens chegam com o deploy do backend, sem Refresh
+próprio (argumentos livres ou conteúdo de resposta). Instruções e plugin acompanham em
+2.12.0; o provider sobe um patch (0.4.38). Mínimo 2.0.0 permanece. Wheel 0.4.37
+permanece imutável.
+
+**Endereço novo.** O Loki mudou de servidor em 27/11/2026: `https://loki.tominho.com/mcp`
+passa a `https://loki.izzicontabil.com.br/mcp` (o antigo devolve 503). Trocado em todos os
+domínios, nas skills e no README do plugin e nos documentos de configuração; o conector
+cadastrado numa conta de pessoa precisa ser recadastrado no endereço novo. Ficam com o
+endereço antigo, de propósito, só os parágrafos históricos de edições anteriores neste
+arquivo e no `README.md` (registro datado).
+
+Backend, conferido no código de `main` do Loki (`d0bcdd3d`): #432 (razão social), #433
+(férias pela rotina), #434 (intermitente), #435 (`confirm_termination`, ADR-042,
+migration 0068), #436 (prazo determinado), #437 (renumeração da migration, sem texto) e
+#438 (retirada de saldo de férias, ADR-043).
+
+- **Razão social do caso x cadastro (#432; `admissao`, `folha_mensal`, `rescisao`).**
+  `loki.domain.company_name`: igual; só o tipo societário do fim diferente (aceito, com o
+  aviso `razao_social_tipo_societario` e o evento `razao_social_normalizada_pelo_cadastro`);
+  corte do PDF. Natureza jurídica diferente (LTDA x S.A. x EIRELI) recusa com
+  `razao_social_natureza_juridica_divergente`; porte (ME, EPP) e tipo ausente só avisam.
+  Conferência dupla CNPJ + `codigo_dominio` do caso; caso sem código vale só o CNPJ
+  (provisório, constante `CASO_SEM_CODIGO_CONFIRMA_PELO_CNPJ`); código diferente tira a
+  tolerância e, em cadastro não ancorado (`cases._ensure_empresa`), recusa a criação do
+  caso. A geração (folha, rescisão, admissão) confere de novo contra o cadastro vigente
+  (`_conferir_identidade`); não há teste dedicado a cadastro alterado entre o cálculo e a
+  geração.
+- **Férias pela rotina (#433; `ferias`, `geral`).** `CLIENT_INPUT_PROCESSES` passa a
+  `admissao`, `rescisao` e `ferias`; a rotina dispensa `corrigir_dados` na preparação de
+  férias; `aquisitivo_inicio`, `aquisitivo_fim`, `inicio` e `fim` imutáveis
+  (`preparation_identity_changed`); programação preservada. Afastamento segue fora
+  (`client_input_restart_scope_refused`). Os textos "férias e afastamento continuam com
+  pessoa" passam a dizer só afastamento.
+- **Intermitente (#434; `folha_mensal`).** `categoria_esocial` (`"111"`) em
+  `dados_folha.funcionarios[*]`: `vinculo_intermitente_nao_suportado`, pendência agregada,
+  memória só dentro do caso da competência. O Loki ainda não calcula intermitente.
+- **`confirm_termination` (#435; `rescisao`, `aprovacoes`).** Capacidade
+  `confirmar_rescisao`, caso em `aguardando_revisao`, `termination_confirmation_snapshot`,
+  fonte anexada, recusa `confirmacao_desligamento_recusada` com `reason` fechado;
+  compensação por `ajustar` ou cancelamento (que exige `confirmar_rescisao`). A descrição
+  da ferramenta no catálogo diz "ou aprovado pelo chat", mas o código só aceita
+  `aguardando_revisao`; o texto segue o código.
+- **Prazo determinado (#436; `admissao`).** Seção `contrato_prazo_determinado`, oito
+  recusas `prazo_determinado_*`, aviso `texto_contrato_prazo_determinado_nao_homologado`,
+  retificação só do início (`admission_date_rectification_fixed_term_limit`) e
+  `generate_documents` e `run_prepared_case_workflow` devolvendo a recusa tipada (`errors`
+  com `path` e `type`, `next_action: receive_case_data`).
+- **Retirada de saldo de férias (#438; `alteracao_cadastral`, `rescisao`).** Prévia e ato
+  humano por `onboarding_id`; recibo sem migration; recusas
+  `onboarding_vacation_balance_retirement_*`.
+- **Consignado sem linha no mapa (`folha_mensal`).** `binding_for` em
+  `payroll_worker_credit` devolve nulo sem linha de desconto com código do Domínio,
+  sem `parametro_individual` e com INSS, FGTS e IRRF `sem_efeito`: a folha da pessoa
+  fica parcial com `credito_trabalhador_mapeamento_pendente`.
+
+Domínios: `geral` (aviso 2.12.0; avisos anteriores comprimidos por causa do limite de
+65536 bytes), `admissao`, `ferias`, `folha_mensal`, `rescisao`, `alteracao_cadastral` e
+`aprovacoes`. Plugin: WORKFLOWS (seção 2.12.0), CAPACIDADES_DP, operar-loki,
+registrar-problema-loki, bootstrap e README. Wheel preparado não comprova publicação,
+instalação ou uso.
 
 ## Candidata 0.4.37 / contrato, instruções e plugin 2.11.0 — 26/11/2026
 
