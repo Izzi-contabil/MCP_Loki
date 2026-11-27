@@ -8,15 +8,15 @@
   "domains": {
     "geral": {
       "metadata_sha256": "52202fd0c3f29356d554598b6c10bee1b61b9d475508b470ccf2e9aa98fb04d5",
-      "content_sha256": "652ae60149925319cbeee99146c555868f61fee3a5d689b7da169d1fd443bf48"
+      "content_sha256": "8dbd5923fbd1fb3a40e09a1405697209496f38f2308040149d5684c11c6ed129"
     },
     "admissao": {
       "metadata_sha256": "571410f2c9792b2d0afc577d8a94e376b60160e658d5ded3004e09405c21c439",
-      "content_sha256": "ac9814a6f423b83c8234f47cef8821408940ea27be6db2812328bcde6b415820"
+      "content_sha256": "71c826982c2806b6b2734cdd184b107c6cbfc1000396b1474bfab7535e54897c"
     },
     "rescisao": {
       "metadata_sha256": "406266c508aaf42cb2b6974b78c1e4572eecd31dd307bbbdf6e3df810a220afe",
-      "content_sha256": "0a72008be06f57526a6f819bffacbafe7f1263de77462724ef96d1af0af11323"
+      "content_sha256": "dbb17830079355af05209235754150115926e479b1f6ab04298427a3268ad7af"
     },
     "ferias": {
       "metadata_sha256": "e7e87b69a7dd9167fadc8ffecaaebf649ecdde992995dfc1032ddf0a7d906a17",
@@ -40,7 +40,7 @@
     },
     "alteracao_cadastral": {
       "metadata_sha256": "f86961539d6dc94d70d76ee02254141ae26cf907328ef8f6e323ae8676ab4fc4",
-      "content_sha256": "9201a35473eb2a281cc12dfd082dc7c49785c54d0f9b2bdcefb3004ac0632e1b"
+      "content_sha256": "b6e682ea37f7005054c56459d86fecfc7933c2b3514d7a54136685edcc617be3"
     },
     "ocorrencia": {
       "metadata_sha256": "aadb846202eee10083e9abf19fe98d64ab6330bc2aab3971d3c1b316f5623a87",

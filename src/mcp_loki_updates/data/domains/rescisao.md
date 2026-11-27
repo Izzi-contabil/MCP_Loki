@@ -666,8 +666,8 @@ Vale quando o catálogo da conta mostrar `confirm_termination` (backend #435,
 ADR-042). **Ferramenta nova: exige Refresh do conector e conversa nova**; sem
 ela, pare e avise a Ana. A aprovação pelo chat (`registrar_decisao_chat`) é só
 documental e **não grava o vínculo**: sem esta confirmação a folha e o 13º
-seguem considerando a pessoa. Esta ferramenta é o único escritor de `rescisao`
-a partir da operação.
+seguem considerando a pessoa. Quando a aprovação é pelo chat, só esta ferramenta grava o
+desligamento (a aprovação fora do chat continua gravando o vínculo).
 
 **Quem pode.** Só pessoa provisionada com `confirmar_rescisao`, concedida pela
 Ana por empresa e processo `rescisao` (`preparar_autorizacao`/`aplicar_autorizacao`).
@@ -711,8 +711,11 @@ confirma). A mesma `reference` com declaração diferente é `referencia_conflit
 caso à preparação (`registrar_decisao_chat` com `ajustar`) ou cancelá-lo grava
 `evento_revertido` uma só vez e o vínculo volta a valer. Corrija a data no
 caso, leve de novo à revisão e confirme com **outra** `reference`. **Cancelar um
-caso com confirmação vigente exige `confirmar_rescisao`** (sem ela, recusa
-`case_lifecycle_action_refused` com `cancelamento_exige_confirmar_rescisao`);
+caso com confirmação vigente exige `confirmar_rescisao`**. Pelo conector HTTPS, sem
+ela o cancelamento volta `{status: BLOCKED, code: lifecycle_authorization_revoked}`
+(a autorização barra antes do serviço, que diria `case_lifecycle_action_refused` com
+`cancelamento_exige_confirmar_rescisao`): nesse contexto significa "falta a concessão
+`confirmar_rescisao`"; peça a concessão à Ana e não repita;
 reiniciar o caso com a confirmação vigente continua recusado
 (`restart_requires_effect_reconciliation`). Depois da compensação o reinício não
 é mais bloqueado por ela.

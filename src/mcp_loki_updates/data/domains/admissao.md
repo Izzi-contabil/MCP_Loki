@@ -162,8 +162,8 @@ O Loki grava o nome do cadastro e registra a troca na trilha
   caso (a mensagem diz que o `codigo_dominio` do caso difere) e não troca o
   cadastro.
   **Caso sem código** (ou cadastro sem código): por ora vale só o CNPJ, decisão
-  provisória à espera da resposta da DP. Sem CNPJ confirmado, só vale o nome
-  igual;
+  provisória à espera da resposta da DP. Sem CNPJ confirmado, não vale a
+  tolerância do tipo societário (o corte do PDF por prefixo continua valendo);
 - nome que não é o do cadastro nem o começo dele, ou tipo no meio do nome:
   continua recusado na conferência, porque pode ser a empresa errada; confira o
   CNPJ e a empresa escolhida antes de qualquer outra ação;
@@ -442,11 +442,11 @@ escritas separadas.
 
 **Formato da recusa na geração.** `generate_documents` e
 `run_prepared_case_workflow` passam a devolver a recusa tipada da versão, não
-mais `{"erro": ...}` mudo: `{status: BLOCKED, reason: parameters_invalid,
-fields, errors: [{path, type}], next_action: receive_case_data}`, com o texto em
-`erro`, sem valores. Leia `errors[].type`, corrija o campo pelo
-`receive_case_data` e gere de novo. O mesmo formato vale para qualquer recusa
-tipada de versão do escritor, não só a deste contrato.
+mais `{"erro": ...}` mudo. Para a recusa de insumo da admissão: `{status: BLOCKED,
+reason: parameters_invalid, fields, errors: [{path, type}], next_action:
+receive_case_data}`, com o texto em `erro`, sem valores; leia `errors[].type`, corrija
+o campo pelo `receive_case_data` e gere de novo. Outras recusas tipadas de versão
+chegam pelo mesmo caminho com `errors` e sem `erro`: siga o `next_action` devolvido.
 
 **Aviso de texto não homologado.** As cláusulas 5, 10 e 15 do contrato foram
 redigidas a partir da lei e ainda não foram validadas pela DP. Todo pacote e

@@ -523,7 +523,9 @@ Na 2.11.0 não são defeito, quando a resposta servida mostrar o sinal:
 Na 2.12.0 não são defeito, quando a resposta servida mostrar o sinal:
 `razao_social_natureza_juridica_divergente` e o aviso `razao_social_tipo_societario`;
 `vinculo_intermitente_nao_suportado` e `credito_trabalhador_mapeamento_pendente` na
-folha; `confirmacao_desligamento_recusada` (com `reason`), `cancelamento_exige_confirmar_rescisao`;
+folha; `confirmacao_desligamento_recusada` (com `reason`), `cancelamento_exige_confirmar_rescisao` e,
+pelo conector, `lifecycle_authorization_revoked` ao cancelar rescisão confirmada (falta a
+concessão `confirmar_rescisao`: peça à Ana);
 as recusas `prazo_determinado_*`, `admission_date_rectification_fixed_term_limit` e o
 aviso `texto_contrato_prazo_determinado_nao_homologado`; `preparation_identity_changed`
 no reinício de férias pela rotina; as recusas `onboarding_vacation_balance_*` da retirada

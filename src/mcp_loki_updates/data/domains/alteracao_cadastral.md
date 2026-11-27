@@ -369,8 +369,9 @@ troca o período por outro; para só tirá-lo de vigor existe este ato humano
 auditado, irmão da revogação de desligamento. Não serve para corrigir o
 aquisitivo (use a troca explícita) nem para saldo que existe.
 
-**Quem pode.** Pessoa provisionada com `carga_historica`, `configurar_cliente`,
-`decidir_chat` e `corrigir_dados`, com `CHAT_DECISIONS_ENABLED`; rotina não faz.
+**Quem pode.** A prévia é leitura de pessoa provisionada com acesso ao lote. O ato
+exige pessoa provisionada com `carga_historica`, `configurar_cliente`, `decidir_chat`
+e `corrigir_dados` e `CHAT_DECISIONS_ENABLED`; rotina não faz.
 
 **Passos.**
 

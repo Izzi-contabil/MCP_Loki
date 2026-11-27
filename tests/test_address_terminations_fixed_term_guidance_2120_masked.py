@@ -40,8 +40,8 @@ def test_general_notice_leads_with_refresh_for_the_new_tools_and_the_new_address
         (
             "**Exige ação da operadora (2.12.0):** atualizar o plugin instalado",
             "`confirm_termination`",
-            "`preview_onboarding_vacation_balance_retirement`",
-            "`retire_onboarding_vacation_balance`",
+            "retirada de saldo de férias",
+            "`confirmar_rescisao` por `preparar_autorizacao`",
             "**Refresh do conector e conversa nova**",
             "**Endereço novo:**",
             NEW_ADDRESS,

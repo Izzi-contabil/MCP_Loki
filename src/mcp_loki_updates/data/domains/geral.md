@@ -2,58 +2,57 @@
 
 ## O que mudou nesta versão (2.12.0)
 
-Atualizações devem ser imperceptíveis para a operadora. Mostre este aviso uma
-vez, curto, sem interrompê-la. O Loki pode chegar em partes:
-cada item vale quando a resposta servida mostrar o sinal indicado; sem o sinal,
+Atualizações devem ser imperceptíveis para a operadora: mostre este aviso uma vez,
+curto. O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o sinal indicado; sem o sinal,
 siga a orientação anterior do mesmo domínio.
 
 **Exige ação da operadora (2.12.0):** atualizar o plugin instalado e, por haver
-ferramentas novas (`confirm_termination`,
-`preview_onboarding_vacation_balance_retirement`,
-`retire_onboarding_vacation_balance`), fazer **Refresh do conector e conversa
-nova**, só quando ela for usar uma delas; o resto não exige. **Endereço novo:** desde 27/11/2026
-o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
+ferramentas novas (`confirm_termination` e as duas de
+retirada de saldo de férias, em `alteracao_cadastral`), fazer **Refresh do conector e conversa
+nova**, só quando ela for usar uma delas ou conceder `confirmar_rescisao` por
+`preparar_autorizacao` (a capacidade entrou no enum do schema); o resto não exige.
+**Endereço novo:** desde 27/11/2026 o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
 503); o conector de conta de pessoa precisa ser recadastrado nele.
 
-**Vale quando o Loki for publicado:** `admissao` (razão social do caso, prazo
-determinado), `ferias` (rotina), `folha_mensal` (intermitente, consignado),
-`rescisao` (`confirm_termination`), `alteracao_cadastral` (saldo de férias).
+**Vale quando o Loki for publicado:** seções 2.12.0 de `admissao`, `ferias`,
+`folha_mensal`, `rescisao`, `aprovacoes` e `alteracao_cadastral`.
 
 **Continua da 2.11.0**, sem Refresh: concessões, catálogo de rubricas v2 e
 `adoption_effects` do onboarding.
 
 **Continua da 2.10.1:** simulação de rescisão sem caso de origem.
 
-**Continua da 2.10.0**, se o Refresh ainda não foi feito: **Refresh e conversa
+**Continua da 2.10.0**, se o Refresh falta: **Refresh e conversa
 nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`); 13º
 `transcricao_cadastral_sem_efeito_no_13`; folha `formula.divisor_sob_calendario`.
 
-**Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas pela Súmula 347)
-e folha (`restart_case` simples em revisão, `folha_divisor_mes`, fórmulas do mapa).
+**Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas) e folha
+(`restart_case` em revisão, `folha_divisor_mes`, fórmulas do mapa).
 
-**Continua da 2.9.8:** rescisão (aviso da norma coletiva, saldo pelos dias
-efetivos), 13º (janela da média, fatos opacos), arredondamento do centavo,
-consignado e afastamento pago pela empresa. **Refresh do conector só para a
+**Continua da 2.9.8:** rescisão (aviso, saldo pelos dias efetivos), 13º (janela da média,
+fatos opacos), arredondamento do centavo, consignado e afastamento pago. **Refresh do conector só para a
 ferramenta nominal** `rectify_case_admission_date`; sem ele a retificação sai por
 `receive_case_data` com `request.schema_version =
-"loki.case-admission-date-rectification/1"`. Folha com 2 ou mais contratos de
-consignado confirmados (`-worker-credit-allocation-v1`) ou mês de afastamento
-derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e novo
-cálculo. Campos opcionais novos do crédito e do mapa: argumentos dict livres.
+"loki.case-admission-date-rectification/1"`. Folha com pessoa que confirma 2 ou
+mais contratos de consignado no mês (`-worker-credit-allocation-v1`) ou com mês de
+afastamento derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e
+novo cálculo. Campos opcionais novos do crédito e do mapa: argumentos dict livres.
 
 **Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem concessão
 por empresa; `diferenca_*` com `retroactive_actions`.
 
-**Continua da 2.9.6**, se ainda não foi feito: recalcular, conferir e pedir novo
+**Continua da 2.9.6**: recalcular, conferir e pedir novo
 aceite das folhas não entregues calculadas antes da `folha-v33`
-(`folha_mensal`); `pacote_mudou_desde_a_leitura`: `prepare_case_review`.
+(`folha_mensal`); preparar de novo a revisão que recusar
+`pacote_mudou_desde_a_leitura` (`prepare_case_review`).
 
 **Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os mesmos
 campos), troca de código Domínio e revogação de desligamento do onboarding
 (`preview_onboarding_termination_revocation`, `revoke_onboarding_termination`)
-exigem Refresh e conversa nova (`alteracao_cadastral`); antes dele, a revogação
-funciona por `receive_case_data(case_id="@connector")`.
+exigem Refresh e conversa nova (`alteracao_cadastral`); peça o Refresh só quando
+ela for usar um desses fluxos (antes dele a revogação funciona por
+`receive_case_data(case_id="@connector")`).
 
 ## Reaproveitar respostas e causas persistidas
 
