@@ -681,7 +681,8 @@ processo, que você lê pelo `get_process_contract`.
 início do vínculo na categoria), **nunca a data do envio**. A folha, o 13º e a
 rescisão leem a categoria vigente na competência do próprio processo: com a data de
 hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como empregada e o
-13º ou a rescisão são criados. O campo da data é `effective_on` nos dois caminhos.
+13º ou a rescisão são criados. O campo da data é `effective_on` na alteração cadastral e no fato do onboarding
+(`data_efeito` no perfil documental).
 
 - **Caminho 1: alteração cadastral** (declarar ou corrigir a categoria de uma pessoa
   já cadastrada). O caso `alteracao_cadastral` aceita `categoria_esocial` em
@@ -692,17 +693,21 @@ hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como emprega
   3. `receive_case_data` com `dados_alteracao_cadastral = {effective_on, competencia,
      expected_profile_hash, changes: {"categoria_esocial": "723"}}`: `competencia` é o
      mês da `effective_on` (`AAAA-MM`), `expected_profile_hash` é o `profile_hash` do
-     passo 2 e `request_ref` e `expected_snapshot` seguem a regra de sempre. Valor sem
-     3 dígitos é recusado na recepção.
-  4. Conferência e intenção humana como nos demais efeitos de alteração cadastral:
-     `apply_case_effects` com `request_ref`, `expected_snapshot`, `human_message` e
-     `message_reference` da operadora e `authorize_operational_effects: true`; a conta
-     precisa de `decidir_chat` e `corrigir_dados` no processo. Receber os dados não
-     aplica nada: só o efeito aplicado grava a categoria no vínculo.
-  A primeira declaração de um vínculo sem categoria vem com a pendência informativa
-  `prior_value_missing`, porque não há valor anterior a comparar; não é defeito.
+     passo 2, e `request_ref` e `expected_snapshot` (o `input_snapshot` de `get_case`)
+     seguem a regra de sempre. Valor sem 3 dígitos é recusado na recepção. A primeira
+     declaração de um vínculo sem categoria vem com a pendência informativa
+     `prior_value_missing` no recibo factual, porque não há valor anterior a comparar;
+     não é defeito.
+  4. Receber os dados não aplica nada. Só o efeito grava a categoria no vínculo:
+     `apply_case_effects` com `request_ref`, `expected_snapshot` igual ao
+     `correction_snapshot` de `get_case`, `human_message` e `message_reference` da
+     operadora e `authorize_operational_effects: true`. Exige conta de pessoa com
+     `decidir_chat` e `corrigir_dados` (a rotina não aplica); `identity_source` é
+     opcional. Recusas: `effect_snapshot_changed` (releia o caso),
+     `employee_profile_changed` (o perfil mudou desde o passo 2: refaça-o) e
+     `employee_change_authority_required`. Releia o registro antes de afirmar aplicação.
   Corrigir (de `723` para `101`, por exemplo) é uma nova alteração cadastral, com
-  `effective_on` no início da competência a corrigir.
+  `effective_on` no início da primeira competência a corrigir.
 - **Caminho 2: fato `parametrizacao` do onboarding** (carga de vínculos). Como os outros
   parâmetros individuais (pensão, VT, adicionais), no lote de onboarding da empresa:
   1. `create_company_onboarding(cliente_slug, empresa_cnpj, reference)` (ou reutilize o
@@ -718,8 +723,9 @@ hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como emprega
      operadora, `apply_company_onboarding(onboarding_id, validation_hash)`, com as
      capacidades de onboarding de sempre.
   Em caso `aberto` ou `em_preparacao`, também o perfil documental
-  (`import_documentary_profile`, `parametrizacao.categoria_esocial`, com o documento
-  anexado ao caso e `competencia` igual ao mês de `effective_on`). Corrigir categoria
+  (`import_documentary_profile`, com `parametrizacao.categoria_esocial`, `data_efeito`
+  (o mesmo início da pessoa na categoria), `competencia` igual ao mês de `data_efeito`,
+  `field_sources` com a fonte do campo e `identity_source`, documentos anexados ao caso). Corrigir categoria
   já aplicada pelo onboarding segue a regra de `replaces_fact_id` acima.
 - **Recomendação.** Declare a categoria no cadastro de todo sócio, estagiário e
   intermitente **antes** de rodar folha.
