@@ -3,13 +3,10 @@ Candidata **provider 0.4.39 / contrato, instruções e plugin 2.13.0**, 27/11/20
 categoria eSocial na folha mensal e no cadastro do vínculo (sócio e estagiário não
 são calculados; `categoria_esocial_nao_suportada`, `categoria_esocial_divergente` e
 `categoria_sem_regime_clt` na criação de 13º, férias, rescisão, admissão e simulação
-de rescisão) e reinício autorizado em lote por correção (`restart_batch`, ADR-041). Não
-há ferramenta nova: o schema de `preparar_autorizacao` ganha a variante `restart_batch`,
-então a conta da proprietária precisa de **Refresh do conector e conversa nova** além de
-atualizar o plugin; a rotina e a categoria não exigem Refresh. Os textos descrevem
-funções que só valem depois da publicação do backend correspondente (Project-loki:
-branches `feature/folha-categoria-cadastro`, até `d334d574`, e `feat/reinicio-autorizado-0069`,
-até `e34c8e0f`, ainda fora de `main`).
+de rescisão). Não há ferramenta nova nem Refresh do conector: o `tools/list` não mudou,
+e o `get_process_contract("alteracao_cadastral")` ganhou a propriedade opcional
+`categoria_esocial` em `changes`; basta atualizar o plugin. O backend da categoria já
+está em `main` do Project-loki (PRs #441 e #444).
 
 Edição anterior **provider 0.4.38 / contrato, instruções e plugin 2.12.0**, 27/11/2026:
 o Loki mudou de servidor e passa a responder em `https://loki.izzicontabil.com.br/mcp`

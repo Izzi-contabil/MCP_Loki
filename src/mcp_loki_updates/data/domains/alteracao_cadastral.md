@@ -670,19 +670,57 @@ idempotência do pedido não é deduplicação fiscal para uma futura execução
 ## Categoria eSocial do vínculo no cadastro (2.13.0)
 
 Vale quando `get_company_onboarding_contract` listar `categoria_esocial` em
-`employee_parameters.data_schema` (texto de 3 dígitos, padrão `^[0-9]{3}$`, opcional).
-É parâmetro individual do vínculo e a fonte do fato para a folha e para os demais
-processos.
+`employee_parameters.data_schema` (texto de 3 dígitos, padrão `^[0-9]{3}$`, opcional) ou
+`get_process_contract("alteracao_cadastral")` trouxer a mesma propriedade em
+`dados_alteracao_cadastral.changes`. É parâmetro individual do vínculo e a fonte da
+categoria para a folha e para os demais processos. Nenhuma ferramenta é nova e o
+`tools/list` não mudou: não há Refresh do conector; o que mudou foi o contrato do
+processo, que você lê pelo `get_process_contract`.
 
-- **Como declarar.** Como os outros parâmetros individuais (pensão, VT, adicionais): fato
-  `kind: "parametrizacao"` com `effective_on`, `reference`, fonte e
-  `data: {"categoria_esocial": "723"}`, num trabalhador do lote de onboarding da
-  empresa; para vínculo já cadastrado, o mesmo fato no trabalhador com
-  `existing_employee_id`. O caso `alteracao_cadastral` (`dados_alteracao_cadastral.changes`)
-  não aceita `categoria_esocial` hoje: não o use para isso. Em caso `aberto` ou
-  `em_preparacao`, também o perfil documental (`import_documentary_profile`,
-  `parametrizacao.categoria_esocial` com a fonte do campo). Valor que não tenha 3 dígitos é recusado. Corrigir categoria já
-  aplicada segue a regra de `replaces_fact_id` acima.
+**Data de efeito: o início da pessoa naquela categoria** (em geral a admissão ou o
+início do vínculo na categoria), **nunca a data do envio**. A folha, o 13º e a
+rescisão leem a categoria vigente na competência do próprio processo: com a data de
+hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como empregada e o
+13º ou a rescisão são criados. O campo da data é `effective_on` nos dois caminhos.
+
+- **Caminho 1: alteração cadastral** (declarar ou corrigir a categoria de uma pessoa
+  já cadastrada). O caso `alteracao_cadastral` aceita `categoria_esocial` em
+  `dados_alteracao_cadastral.changes`, ao lado dos outros campos do perfil.
+  1. `create_case` do processo `alteracao_cadastral` para o vínculo.
+  2. `get_documentary_profile(case_id, funcionario_id, as_of)` com `as_of` igual à
+     `effective_on`; guarde o `profile_hash`.
+  3. `receive_case_data` com `dados_alteracao_cadastral = {effective_on, competencia,
+     expected_profile_hash, changes: {"categoria_esocial": "723"}}`: `competencia` é o
+     mês da `effective_on` (`AAAA-MM`), `expected_profile_hash` é o `profile_hash` do
+     passo 2 e `request_ref` e `expected_snapshot` seguem a regra de sempre. Valor sem
+     3 dígitos é recusado na recepção.
+  4. Conferência e intenção humana como nos demais efeitos de alteração cadastral:
+     `apply_case_effects` com `request_ref`, `expected_snapshot`, `human_message` e
+     `message_reference` da operadora e `authorize_operational_effects: true`; a conta
+     precisa de `decidir_chat` e `corrigir_dados` no processo. Receber os dados não
+     aplica nada: só o efeito aplicado grava a categoria no vínculo.
+  A primeira declaração de um vínculo sem categoria vem com a pendência informativa
+  `prior_value_missing`, porque não há valor anterior a comparar; não é defeito.
+  Corrigir (de `723` para `101`, por exemplo) é uma nova alteração cadastral, com
+  `effective_on` no início da competência a corrigir.
+- **Caminho 2: fato `parametrizacao` do onboarding** (carga de vínculos). Como os outros
+  parâmetros individuais (pensão, VT, adicionais), no lote de onboarding da empresa:
+  1. `create_company_onboarding(cliente_slug, empresa_cnpj, reference)` (ou reutilize o
+     lote da empresa).
+  2. `submit_company_onboarding_chunk(onboarding_id, declaration)` com
+     `schema_version: "loki.company-onboarding/1"`, `reuse_registered_company: true` e,
+     em `workers`, um trabalhador que continua levando `reference`, `cpf`, `nome` e
+     `data_admissao` (e `existing_employee_id` quando o vínculo já existe), com o fato
+     `facts: [{reference, kind: "parametrizacao", effective_on, data:
+     {"categoria_esocial": "723"}}]`; a fonte é opcional e, omitida, vira declaração
+     nativa do pedido.
+  3. `validate_company_onboarding(onboarding_id)` e, depois de mostrar a linha à
+     operadora, `apply_company_onboarding(onboarding_id, validation_hash)`, com as
+     capacidades de onboarding de sempre.
+  Em caso `aberto` ou `em_preparacao`, também o perfil documental
+  (`import_documentary_profile`, `parametrizacao.categoria_esocial`, com o documento
+  anexado ao caso e `competencia` igual ao mês de `effective_on`). Corrigir categoria
+  já aplicada pelo onboarding segue a regra de `replaces_fact_id` acima.
 - **Recomendação.** Declare a categoria no cadastro de todo sócio, estagiário e
   intermitente **antes** de rodar folha.
 - **Efeito na folha** (detalhe em `folha_mensal`): folha sem o campo usa a do cadastro;

@@ -1547,15 +1547,14 @@ a #438, em main `d0bcdd3d`).
   `credito_trabalhador_mapeamento_pendente`; acrescente ao mapa uma linha de desconto
   com a mesma `rubrica_loki`, código do Domínio e INSS, FGTS e IRRF `sem_efeito`.
 
-## 2.13.0: categoria eSocial e reinício em lote por correção
+## 2.13.0: categoria eSocial
 
-Texto completo em `folha_mensal`, `alteracao_cadastral`, `aprovacoes`, `admissao`,
-`rescisao`, `ferias` e `decimo_terceiro` de `loki_obter_instrucoes`. **Não há
-ferramenta nova.** O schema de `preparar_autorizacao` ganhou a variante
-`restart_batch`: **Refresh do conector e conversa nova** na conta da proprietária que
-for autorizar, além de atualizar o plugin. A categoria eSocial e a rotina não exigem
-Refresh. Cada item vale quando a resposta servida mostrar o sinal, depois da
-publicação do backend correspondente.
+Texto completo em `folha_mensal`, `alteracao_cadastral`, `admissao`, `rescisao`,
+`ferias` e `decimo_terceiro` de `loki_obter_instrucoes`. **Não há ferramenta nova e não há
+Refresh do conector**: o `tools/list` não mudou; o `get_process_contract("alteracao_cadastral")`
+ganhou a propriedade opcional `categoria_esocial` em `changes`. Basta atualizar o plugin.
+O backend da categoria já está em `main` (PRs #441 e #444); cada item vale quando a
+resposta servida mostrar o sinal.
 
 - **Categoria que não é de empregado na folha (`folha_mensal`).** `categoria_esocial`
   de 3 dígitos em `dados_folha.funcionarios[*]`; categoria que não começa com `1`
@@ -1564,25 +1563,27 @@ publicação do backend correspondente.
   `retirar_categoria_nao_clt_da_folha_mensal`) e os demais calculam. O Loki ainda não
   calcula pró-labore nem bolsa de estágio. O `111` segue com o código próprio. A
   pendência aberta lembra a categoria dentro do caso da competência.
-- **Categoria no cadastro (`alteracao_cadastral`).** `categoria_esocial` é parâmetro do
-  vínculo (fato `parametrizacao`, `employee_parameters.data_schema`). Folha sem o campo
-  usa a do cadastro; folha e cadastro diferentes dão `categoria_esocial_divergente` e a
-  pessoa não é calculada até alinhar; o cadastro vence a memória do caso; quem não é
-  empregado exige só dependentes de IRRF. **Declare a categoria de todo sócio, estagiário
-  e intermitente no cadastro antes de rodar folha.**
+- **Categoria no cadastro (`alteracao_cadastral`).** Folha sem o campo usa a do cadastro;
+  folha e cadastro diferentes dão `categoria_esocial_divergente` e a pessoa não é
+  calculada até alinhar; o cadastro vence a memória do caso; quem não é empregado exige
+  só dependentes de IRRF. **Declare a categoria de todo sócio, estagiário e intermitente
+  antes de rodar folha**, por um de dois caminhos:
+  - **Alteração cadastral:** `create_case` de `alteracao_cadastral`,
+    `get_documentary_profile` (guarde o `profile_hash`), `receive_case_data` com
+    `dados_alteracao_cadastral = {effective_on, competencia, expected_profile_hash,
+    changes: {"categoria_esocial": "723"}}` e `apply_case_effects` com a intenção humana.
+    A primeira declaração vem com a pendência informativa `prior_value_missing`.
+  - **Onboarding (carga):** `create_company_onboarding`,
+    `submit_company_onboarding_chunk` (trabalhador com `reference`, `cpf`, `nome`,
+    `data_admissao` e o fato `parametrizacao` com `effective_on` e
+    `data: {"categoria_esocial": "723"}`), `validate_company_onboarding` e
+    `apply_company_onboarding`.
+  - **Data de efeito (`effective_on`):** o início da pessoa naquela categoria (em geral
+    a admissão ou o início do vínculo na categoria), nunca a data do envio. A folha, o
+    13º e a rescisão leem a categoria vigente na competência do processo: com a data de
+    hoje, os meses anteriores não a enxergam e a pessoa é calculada como empregada.
 - **Outros processos.** `create_case` de 13º, férias, rescisão ou admissão, e a simulação
   de rescisão (`code` `case_simulation_refused`, `reason` `categoria_sem_regime_clt`),
   de quem tem categoria que não é de empregado no cadastro, é recusado com
   `categoria_sem_regime_clt` (`codigo` na criação). Vale só na criação, na competência do
-  próprio processo.
-- **Reinício em lote por correção (`aprovacoes`).** A proprietária autoriza, por
-  `preparar_autorizacao` com `operation = "restart_batch"` e `aplicar_autorizacao`, uma
-  lista fechada (até 100 casos de uma empresa, em `aguardando_revisao`, de admissão,
-  rescisão e folha mensal) por correção `CL-N`; validade de até 72 h, limites diários por
-  autorização e por conta, consumo único por caso. A rotina executa por
-  `receive_case_data` com `loki.case-restart-authorized/1` (`authorization_id`,
-  `case_id`, `expected_snapshot`, `human_message` com o `CL-N`), só com `consultar` e
-  `operar_casos`; pessoa não usa o envelope (`correction_restart_requires_routine`).
-  Repasse à rotina, pela Caixa, o `authorization_id` e o snapshot de cada caso. Recusas
-  da execução (`correction_restart_*`, `case_snapshot_changed`,
-  `restart_requires_effect_reconciliation`) não consomem o item: pare e avise, sem laço.
+  próprio processo (no 13º, o `ano`, que vale como dezembro, ou uma data completa).

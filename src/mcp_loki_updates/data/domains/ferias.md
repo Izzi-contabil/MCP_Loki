@@ -684,9 +684,9 @@ Vale quando a recusa abaixo aparecer. Quem tem, no cadastro do vínculo,
 `categoria_esocial` que não começa com `1` (723 sócio com pró-labore, 901
 estagiário) não passa por férias no Loki: `create_case` recusa antes de gravar, com
 `codigo` `categoria_sem_regime_clt` (`mode` `HUMAN_DECISION`; `proxima_acao`: conduzir
-o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la e
-recriar o caso; o texto servido fala em alteração cadastral, mas o campo vai pelo
-onboarding do vínculo (domínio `alteracao_cadastral`). O caso não é criado. Limites: vale só na
+o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la por
+alteração cadastral, com a data de efeito do início da pessoa naquela categoria
+(domínio `alteracao_cadastral`), e recriar o caso). O caso não é criado. Limites: vale só na
 criação (categoria cadastrada depois de o caso existir não o derruba, e o reenvio de
 caso já existente não a relê); `vinculo_nao_clt_*`, de `contrato.dados.categoria_vinculo`,
 vem antes. A categoria é lida na competência do próprio processo: a do caso; senão

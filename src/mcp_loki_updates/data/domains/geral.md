@@ -6,19 +6,19 @@ Atualizações devem ser imperceptíveis para a operadora: mostre este aviso uma
 curto. O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o sinal indicado; sem o sinal,
 siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora (2.13.0):** atualizar o plugin instalado e, só para a
-proprietária que for autorizar reinício em lote, **Refresh do conector e conversa
-nova** (variante `restart_batch` de `preparar_autorizacao`; sem ferramenta nova).
+**Exige ação da operadora (2.13.0):** atualizar o plugin instalado; sem ferramenta
+nova nem Refresh do conector.
 
-**Vale quando o Loki for publicado:** seções 2.13.0 de `folha_mensal`,
-`alteracao_cadastral`, `aprovacoes` e dos processos com `categoria_sem_regime_clt`.
+**Vale quando o Loki for publicado:** seções 2.13.0 (categoria eSocial) de
+`folha_mensal`, `alteracao_cadastral`, `admissao`, `ferias`, `rescisao` e `decimo_terceiro`.
 
-**Continua da 2.12.0:** **Endereço novo:** o Loki responde em
-`https://loki.izzicontabil.com.br/mcp` (o anterior devolve 503); o conector de conta de
-pessoa precisa ser recadastrado nele. `confirm_termination`, as duas ferramentas de
-retirada de saldo de férias e conceder `confirmar_rescisao` por `preparar_autorizacao`:
-**Refresh do conector e conversa nova**, se ainda falta, só quando ela for usá-los; o
-resto não exige.
+**Continua da 2.12.0:** atualizar o plugin instalado e, por haver
+ferramentas novas (`confirm_termination` e as duas de
+retirada de saldo de férias, em `alteracao_cadastral`), fazer **Refresh do conector e conversa
+nova**, só quando ela for usar uma delas ou conceder `confirmar_rescisao` por
+`preparar_autorizacao`; o resto não exige.
+**Endereço novo:** o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
+503); o conector de conta de pessoa precisa ser recadastrado nele.
 
 **Continua da 2.11.0**, sem Refresh: concessões, catálogo de rubricas v2 e
 `adoption_effects` do onboarding.
@@ -32,8 +32,7 @@ nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`); 13º
 **Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas) e folha
 (`restart_case` em revisão, `folha_divisor_mes`, fórmulas do mapa).
 
-**Continua da 2.9.8:** rescisão, 13º, arredondamento do centavo, consignado e
-afastamento pago. **Refresh do conector só para a
+**Continua da 2.9.8:** rescisão, 13º, arredondamento do centavo, consignado e afastamento pago. **Refresh do conector só para a
 ferramenta nominal** `rectify_case_admission_date`; sem ele a retificação sai por
 `receive_case_data` com `request.schema_version =
 "loki.case-admission-date-rectification/1"`. Folha com pessoa que confirma 2 ou
@@ -49,12 +48,12 @@ aceite das folhas não entregues calculadas antes da `folha-v33`
 (`folha_mensal`); preparar de novo a revisão que recusar
 `pacote_mudou_desde_a_leitura` (`prepare_case_review`).
 
-**Continua da 2.8.0**, se falta o Refresh: restauração de
+**Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
 matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os mesmos
 campos), troca de código Domínio e revogação de desligamento do onboarding
 (`preview_onboarding_termination_revocation`, `revoke_onboarding_termination`)
-exigem Refresh e conversa nova (`alteracao_cadastral`), só quando ela for usá-los
-(antes dele a revogação funciona por
+exigem Refresh e conversa nova (`alteracao_cadastral`); peça o Refresh só quando
+ela for usar um desses fluxos (antes dele a revogação funciona por
 `receive_case_data(case_id="@connector")`).
 
 ## Reaproveitar respostas e causas persistidas
@@ -547,6 +546,7 @@ as pendências `diferenca_*` por matrícula vão à DP e nunca viram zero;
 a decisão da DP sobre cada matrícula no aceite das ressalvas. Não informe a
 diferença à mão em `dados_folha` (`retroactive_difference_informed`).
 
+
 ## Identificar rubricas nas perguntas ao DP
 
 Antes de pedir validação de regra, base, incidência, classificação ou tratamento,
@@ -630,6 +630,7 @@ Replay não repete perguntas ou menções. O relato completo e as evidências fi
 no Loki/MCP. Preserve propostas/decisões anteriores: aviso de correção realmente
 publicada e confirmação da solução continuam sujeitos aos gates próprios.
 
+
 A mensagem tem um objetivo: uma pergunta específica ou um próximo passo claro,
 com quem precisa agir e sobre o quê. Prefira duas ou três frases curtas, palavras
 comuns e alvo de até60palavras. Contexto, ressalva e pendência indispensáveis ficam
@@ -645,6 +646,7 @@ o Slack mostra um resumo; consulte a íntegra e o histórico por
 `consultar_problema(problem_id)` quando precisar dos detalhes. A concisão da
 resposta não reduz o relato estruturado enviado ao Loki nem a apresentação de
 pacote, diff, testes, revisão, riscos e ressalvas necessária à decisão humana.
+
 
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
@@ -702,6 +704,7 @@ Projeção, adiantamento ou efeito planejado não demonstram pagamento real.
 Ausência de qualificação mantém pendência e valores dependentes desconhecidos,
 sem completar zero. Consulte `get_process_contract` e os schemas atuais do
 servidor antes de montar o pedido; esta orientação não substitui a validação.
+
 
 Sem pacote ou documento previsto, retorne o recibo persistido da operação e
 releia o registro pelo HTTPS; não chame checks de pacote ou entrega documental
@@ -799,6 +802,7 @@ com `truncar_centavos`, `valor_dia_arredondado`, fórmula além de
 linha de salário, a cota do salário-família do mês de admissão e as fórmulas
 `salario_horario`, `salario_minimo_proporcional` e
 `base_composta_razao_quantidades`. Pode exigir Refresh do conector.
+
 
 # Dataprev mensal na folha
 

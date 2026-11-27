@@ -1,5 +1,5 @@
-"""Entrega das orientações da 2.13.0 (categoria eSocial na folha e no cadastro, recusa de
-caso de quem não é empregado e reinício autorizado em lote por correção)."""
+"""Entrega das orientações da 2.13.0 (categoria eSocial na folha e no cadastro, por alteração
+cadastral e por onboarding, e recusa de caso de quem não é empregado)."""
 
 import hashlib
 import json
@@ -15,6 +15,9 @@ DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
 RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 LIMIT = 65536
 PROCESSES = ("admissao", "rescisao", "ferias", "decimo_terceiro")
+# O reinício em lote por correção fica fora desta versão: nenhum texto o menciona. Os
+# marcadores são montados aqui para que a busca por eles no repositório não os encontre.
+RESTART = ("restart" + "_batch", "correction" + "_restart", "case-restart" + "-authorized")
 
 
 def flat(value: str) -> str:
@@ -30,7 +33,7 @@ def assert_all(body: str, markers: tuple[str, ...]) -> None:
         assert flat(marker) in body, marker
 
 
-def test_general_notice_leads_with_the_2130_refresh_and_keeps_the_2120_one() -> None:
+def test_general_notice_leads_with_the_2130_no_refresh_and_keeps_the_2120_one() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
     assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.13.0)")
     assert "## O que mudou nesta versão (2.12.0)" not in guide
@@ -39,12 +42,13 @@ def test_general_notice_leads_with_the_2130_refresh_and_keeps_the_2120_one() -> 
         notice,
         (
             "**Exige ação da operadora (2.13.0):** atualizar o plugin instalado",
+            "sem ferramenta nova nem Refresh do conector",
+            "seções 2.13.0 (categoria eSocial)",
+            "**Continua da 2.12.0:**",
             "**Refresh do conector e conversa nova**",
-            "variante `restart_batch` de `preparar_autorizacao`",
-            "sem ferramenta nova",
-            "`categoria_sem_regime_clt`",
         ),
     )
+    assert not any(token in notice for token in RESTART)
     order = (
         "**Exige ação da operadora (2.13.0):**",
         "**Vale quando o Loki for publicado:**",
@@ -81,11 +85,11 @@ def test_payroll_carries_non_employee_category_and_the_cadastre_rules() -> None:
             "**Memória dentro do caso.**",
             "só dentro do caso da competência",
             "O cadastro vence a memória",
-            '`kind: "parametrizacao"`',
-            '`data: {"categoria_esocial": "723"}`',
-            "`workers[].existing_employee_id`",
-            "`import_documentary_profile`",
-            "Folha sem o campo usa a do cadastro",
+            "**(a) alteração cadastral**",
+            "**(b) fato `parametrizacao` do onboarding**",
+            "**Data de efeito: o início da pessoa naquela categoria**",
+            "**nunca a data do envio**",
+            "folha sem o campo usa a do cadastro",
             "`categoria_esocial_divergente`",
             "`alinhar_categoria_esocial_folha_e_cadastro`",
             "Quem não é empregado exige só `dependentes_irrf`",
@@ -97,22 +101,42 @@ def test_payroll_carries_non_employee_category_and_the_cadastre_rules() -> None:
     assert "nenhum cadastro guarda a categoria" not in guide
     assert "não recebem o fato de categoria hoje" not in guide
     assert "**Declare em TODA competência.**" in guide
-    # O reinício em lote não é mais descrito como inexistente sem a exceção da proprietária.
-    assert "Só a proprietária abre a exceção" in guide
+    # O reinício em lote continua inexistente nesta versão: nada o menciona.
+    assert "Só a proprietária abre a exceção" not in guide
+    assert not any(token in guide for token in RESTART)
 
 
-def test_cadastre_domain_says_how_to_declare_the_category() -> None:
+def test_cadastre_domain_says_how_to_declare_the_category_by_both_paths() -> None:
     guide = read("alteracao_cadastral")
+    section = guide[guide.index("## Categoria eSocial do vínculo no cadastro (2.13.0)") :]
     assert_all(
-        guide,
+        section,
         (
-            "## Categoria eSocial do vínculo no cadastro (2.13.0)",
             "`employee_parameters.data_schema`",
             "`^[0-9]{3}$`",
-            '`kind: "parametrizacao"`',
+            '`get_process_contract("alteracao_cadastral")`',
+            "não há Refresh do conector",
+            "**Data de efeito: o início da pessoa naquela categoria**",
+            "**nunca a data do envio**",
+            "a folha calcula a pessoa como empregada",
+            "**Caminho 1: alteração cadastral**",
+            "`dados_alteracao_cadastral.changes`",
+            "`get_documentary_profile(case_id, funcionario_id, as_of)`",
+            "`profile_hash`",
+            "`expected_profile_hash`",
+            'changes: {"categoria_esocial": "723"}}`',
+            "`apply_case_effects`",
+            "`prior_value_missing`",
+            "**Caminho 2: fato `parametrizacao` do onboarding**",
+            "`create_company_onboarding(cliente_slug, empresa_cnpj, reference)`",
+            "`submit_company_onboarding_chunk(onboarding_id, declaration)`",
+            '"loki.company-onboarding/1"',
+            "`reference`, `cpf`, `nome` e `data_admissao`",
             "`existing_employee_id`",
+            "`validate_company_onboarding(onboarding_id)`",
+            "`apply_company_onboarding(onboarding_id, validation_hash)`",
             "`import_documentary_profile`",
-            "Valor que não tenha 3 dígitos é recusado",
+            "Valor sem 3 dígitos é recusado",
             "`replaces_fact_id`",
             "**antes** de rodar folha",
             "`categoria_esocial_divergente`",
@@ -121,6 +145,8 @@ def test_cadastre_domain_says_how_to_declare_the_category() -> None:
             "`categoria_sem_regime_clt`",
         ),
     )
+    assert "não aceita `categoria_esocial` hoje" not in guide
+    assert not any(token in guide for token in RESTART)
 
 
 def test_other_processes_refuse_the_case_with_the_exact_code_and_its_limits() -> None:
@@ -138,11 +164,25 @@ def test_other_processes_refuse_the_case_with_the_exact_code_and_its_limits() ->
                 "`vinculo_nao_clt_*`",
                 "competência do próprio processo",
                 "o mês corrente (America/Sao_Paulo)",
+                "e recriar o caso). O caso não é criado.",
+                "com a data de efeito do início da pessoa naquela categoria",
                 "Sem vínculo conhecido",
                 "o caso segue",
                 "`folha_mensal` e `alteracao_cadastral`",
             ),
         )
+        # A divergência do texto servido acabou: a alteração cadastral aceita o campo.
+        assert "o campo vai pelo onboarding" not in guide
+        assert not any(token in guide for token in RESTART)
+    thirteenth = read("decimo_terceiro")
+    assert_all(
+        thirteenth,
+        (
+            "o `ano` de `dados_decimo_terceiro` (vale como dezembro)",
+            "uma data completa (`AAAA-MM-DD`)",
+        ),
+    )
+    assert "a competência ou o ano de `dados_decimo_terceiro`" not in thirteenth
     termination = read("rescisao")
     assert_all(
         termination,
@@ -155,84 +195,6 @@ def test_other_processes_refuse_the_case_with_the_exact_code_and_its_limits() ->
     )
 
 
-def test_approvals_carry_the_owner_side_of_the_restart_batch() -> None:
-    guide = read("aprovacoes")
-    assert_all(
-        guide,
-        (
-            "## Reinício autorizado em lote por correção: `restart_batch` (2.13.0, ADR-041)",
-            "**exige Refresh do conector e conversa nova**",
-            "não é ferramenta nova nem capacidade nova",
-            "uma lista **fechada** de casos de **uma** empresa",
-            "`aguardando_revisao`",
-            "`somente_proprietario_autoriza_reinicio`",
-            "`reinicio_exige_conta_de_rotina_ativa`",
-            "`versao_desatualizada`",
-            "`correction_restart_requires_routine`",
-            'correction_kind:\n            "loki" | "harness"',
-            "support_candidate_id (só `loki`)",
-            "`publication_receipt`",
-            "`manifest_hash`",
-            "case_ids (1 a 100",
-            "ttl_hours (1 a 72, padrão 72)",
-            "daily_limit (1 a 200, padrão 50)",
-            "vale 15 minutos",
-            "`restart_batch_refused`",
-            "`case_not_in_review`",
-            "`routine_scope_missing`",
-            "`case_has_effects`",
-            "`case_already_authorized`",
-            "`support_candidate_not_approved_and_published`",
-            "**nomeia o `CL-N`**",
-            "`restart_batch_message_requires_code`",
-            "`case_snapshot_changed`",
-            "`authorization_change_busy`",
-            "`authorization_id` (`rst-` e 32 hex)",
-            "limite diário por autorização (até 200)",
-            "por conta da rotina (200, ajustável no servidor)",
-            "**consumo único por caso**",
-            "`correction_restart_grantor_not_owner`",
-            '`action: "revoke"`',
-            "`restart_authorization_already_revoked`",
-            "`correction_restart_snapshot_mismatch`",
-            "`correction_restart_wrong_account`",
-            "`correction_restart_item_not_found`",
-            "`correction_restart_requires_review_state`",
-            "`correction_restart_authorization_expired`",
-            "`correction_restart_account_daily_limit`",
-            "`restart_requires_effect_reconciliation`",
-            "`simulation_context_invalid`",
-            "`caso_inexistente_ou_nao_autorizado`",
-            "só aparece se a rotina tem escopo nas duas empresas",
-            "`operational_case_restart`",
-            "`authority=correction_restart_authorization`",
-        ),
-    )
-
-
-def test_routine_scripts_carry_the_envelope_in_payroll_admission_and_termination() -> None:
-    for domain in ("folha_mensal", "admissao", "rescisao"):
-        guide = read(domain)
-        assert_all(
-            guide,
-            (
-                "## Reinício em lote autorizado por correção (rotina, 2.13.0)",
-                "`authorization_id` (`rst-` e 32 hex)",
-                "`atualizar_por_insumo_do_cliente` nem é exigida nem basta",
-                '"loki.case-restart-authorized/1"',
-                "`expected_snapshot` igual ao repassado",
-                "`human_message` que nomeia o `CL-N`",
-                "`requires_case_data`",
-                "`replayed: true`",
-                "Toda recusa deixa o item sem consumir",
-                "códigos em `aprovacoes`",
-            ),
-        )
-    assert "`enqueue_case_workflow`" in read("folha_mensal")
-    assert "`run_prepared_case_workflow`" in read("admissao")
-    assert "sem `replace_process_inputs`" in read("admissao")
-
-
 def test_plugin_mirrors_the_release() -> None:
     workflows = flat((OPERATOR / "references/WORKFLOWS.md").read_text(encoding="utf-8"))
     skill = flat((OPERATOR / "SKILL.md").read_text(encoding="utf-8"))
@@ -242,28 +204,31 @@ def test_plugin_mirrors_the_release() -> None:
     assert_all(
         section,
         (
-            "**Não há ferramenta nova.**",
-            "**Refresh do conector e conversa nova**",
-            "`restart_batch`",
+            "**Não há ferramenta nova e não há Refresh do conector**",
+            "PRs #441 e #444",
             "`categoria_esocial_nao_suportada`",
             "`categoria_esocial_divergente`",
             "`categoria_sem_regime_clt`",
             "`case_simulation_refused`",
-            "`loki.case-restart-authorized/1`",
-            "`correction_restart_requires_routine`",
+            "`get_documentary_profile`",
+            "`apply_case_effects`",
+            "`create_company_onboarding`",
+            "`apply_company_onboarding`",
+            "**Data de efeito (`effective_on`):**",
+            "nunca a data do envio",
+            "o `ano`, que vale como dezembro, ou uma data completa",
         ),
     )
-    assert "Na 2.13.0" in skill and "Sem ferramenta nova" in skill
+    assert "Na 2.13.0" in skill and "Sem ferramenta nova e sem Refresh do conector" in skill
+    assert "nunca a do envio" in skill
     for code in (
         "categoria_esocial_nao_suportada",
+        "categoria_esocial_divergente",
         "categoria_sem_regime_clt",
-        "restart_batch_refused",
-        "restart_batch_message_requires_code",
-        "correction_restart_*",
     ):
         assert code in problems, code
-    assert "`restart_batch`, 2.13.0" in capacities
-    assert "só `consultar` e `operar_casos`" in capacities
+    for text in (workflows, skill, problems, capacities):
+        assert not any(token in text for token in RESTART)
 
 
 def test_release_versions_hashes_and_current_history() -> None:
@@ -284,7 +249,10 @@ def test_release_versions_hashes_and_current_history() -> None:
         entries = release["changes"][category]
         assert len(entries) == 2 and "docs/MCP_UPDATES.md" in entries[0], category
         assert entries[1].startswith(prefix), category
-    assert "só valem depois da publicação do backend" in release["changes"]["backend"][1]
+    backend = release["changes"]["backend"][1]
+    assert "PRs #441 e #444" in backend and "sem Refresh do conector" in backend
+    assert not any(token in json.dumps(release["changes"]) for token in RESTART)
+    assert "bootstrap" not in release["changes"]["plugin"][1]
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
             content = (DOMAINS / f"{name}.{suffix}").read_bytes()

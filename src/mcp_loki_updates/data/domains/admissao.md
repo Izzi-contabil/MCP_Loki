@@ -491,33 +491,15 @@ Pare e avise a Ana, sem insistir, se vier
 `request_ref` é idempotente. A data de admissão **não** muda por esse caminho:
 fica com a pessoa, que reinicia e depois usa `rectify_case_admission_date`.
 
-## Reinício em lote autorizado por correção (rotina, 2.13.0)
-
-Vale quando a proprietária repassar um `authorization_id` (`rst-` e 32 hex) e o
-`expected_snapshot` de cada caso, depois de uma correção `CL-N` (autorização em
-`aprovacoes`). A rotina (conta de automação com `consultar` e `operar_casos` em
-`admissao`; `atualizar_por_insumo_do_cliente` nem é exigida nem basta) reinicia **uma
-vez cada caso listado**, em `aguardando_revisao`, de forma simples, com o payload
-preservado (sem `replace_process_inputs`): `receive_case_data(case_id,
-request={schema_version: "loki.case-restart-authorized/1", authorization_id, case_id,
-expected_snapshot, human_message})`, com `case_id` igual ao argumento,
-`expected_snapshot` igual ao repassado e `human_message` que nomeia o `CL-N`. O
-recibo traz `requires_case_data`: `true` em caso legado (reenvie os dados pelo
-`receive_case_data` comum) e `false` em `structured-v1`. Depois, siga o fluxo normal (`run_prepared_case_workflow`); o pacote
-novo exige nova revisão e novo aceite humanos. Repetir o mesmo pedido devolve o
-recibo (`replayed: true`). Toda recusa deixa o item sem consumir: pare e avise a
-proprietária, sem laço (códigos em `aprovacoes`); só `BUSY`
-(`authorization_change_busy`) pede repetir a mesma chamada.
-
 ## Categoria eSocial que não é de empregado no cadastro (2.13.0)
 
 Vale quando a recusa abaixo aparecer. Quem tem, no cadastro do vínculo,
 `categoria_esocial` que não começa com `1` (723 sócio com pró-labore, 901
 estagiário) não passa por admissão no Loki: `create_case` recusa antes de gravar, com
 `codigo` `categoria_sem_regime_clt` (`mode` `HUMAN_DECISION`; `proxima_acao`: conduzir
-o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la e
-recriar o caso; o texto servido fala em alteração cadastral, mas o campo vai pelo
-onboarding do vínculo (domínio `alteracao_cadastral`). O caso não é criado. Limites: vale só na
+o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la por
+alteração cadastral, com a data de efeito do início da pessoa naquela categoria
+(domínio `alteracao_cadastral`), e recriar o caso). O caso não é criado. Limites: vale só na
 criação (categoria cadastrada depois de o caso existir não o derruba, e o reenvio de
 caso já existente não a relê); `vinculo_nao_clt_*`, de `contrato.dados.categoria_vinculo`,
 vem antes. A categoria é lida na competência do próprio processo: a do caso; senão

@@ -235,8 +235,7 @@ para isso.
   sem a capacidade, ela para e avisa a Ana. O aceite continua humano e a
   capacidade não abre cancelamento nem `preparation` na folha. Não há reinício em lote:
   `restart_case` não está no `execute_operational_batch`; são uma chamada por
-  caso e um enqueue por empresa. Só a proprietária abre a exceção, por correção
-  `CL-N` e lista fechada de casos (seção da 2.13.0 abaixo). Enquanto o servidor aceitava o enqueue em
+  caso e um enqueue por empresa. Enquanto o servidor aceitava o enqueue em
   revisão, o job nascia e terminava em `job_preparation_failed`. Com a
   correção do backend (#410, mesclada), o
   enqueue recusa na hora, sem criar job, com `case_in_review_requires_restart`
@@ -868,9 +867,10 @@ calculada como mensalista.
 ## Categoria eSocial que não é de empregado e categoria no cadastro (2.13.0)
 
 Vale quando `get_company_onboarding_contract` listar `categoria_esocial` em
-`employee_parameters.data_schema` (padrão `^[0-9]{3}$`); sem o sinal, siga a seção
-do intermitente acima. O Loki só calcula empregado (categoria `1xx`, e dentre elas
-não a `111`).
+`employee_parameters.data_schema` (padrão `^[0-9]{3}$`) ou quando
+`get_process_contract("alteracao_cadastral")` trouxer `changes.categoria_esocial`; sem o
+sinal, siga a seção do intermitente acima. O Loki só calcula empregado (categoria
+`1xx`, e dentre elas não a `111`).
 
 - **Categoria que não começa com `1`** (723 sócio com pró-labore, 901 estagiário):
   a pessoa **não é calculada**. Vai para `nao_calculados` (motivo
@@ -883,8 +883,8 @@ não a `111`).
   checagem vem antes de rubrica: rubrica não mapeada dessa pessoa não derruba a folha.
 - **O que fazer.** Retire a pessoa da folha mensal e apure a competência dela fora do
   Loki; se a categoria foi declarada por engano na folha, corrija a fonte e
-  recalcule; se a do cadastro está errada, corrija-a no cadastro (fato
-  `parametrizacao`, abaixo). Nunca calcule sócio ou estagiário como empregado.
+  recalcule; se a do cadastro está errada, corrija-a no cadastro por um dos dois
+  caminhos abaixo. Nunca calcule sócio ou estagiário como empregado.
 - **Fecha** (`auto_resolve`) quando nenhuma matrícula marcada segue com categoria que
   não é de empregado: saiu da folha, ou a folha (ou o cadastro, se a folha omite o
   campo) passou a trazer `1xx`. Declarar `1xx` na folha de quem tem 723 ou 901 no
@@ -897,19 +897,21 @@ não a `111`).
   matrícula com categoria cadastrada não herda a lembrada (cadastro corrigido para
   101 e folha reenviada sem o campo calcula como 101).
 - **Categoria no cadastro do vínculo.** `categoria_esocial` (3 dígitos, opcional) é
-  parâmetro individual, declarado como os demais (pensão, VT, adicionais): fato
-  `kind: "parametrizacao"` com `effective_on`, referência, fonte e
-  `data: {"categoria_esocial": "723"}`, no trabalhador do lote de onboarding
-  (`workers[].existing_employee_id` quando o vínculo já existe) ou, em caso
-  aberto, pelo perfil documental
-  (`import_documentary_profile`, `parametrizacao` com a fonte do campo). Valor que
-  não tenha 3 dígitos é recusado. Folha sem o campo usa a do cadastro, inclusive
-  `111`, 723 e 901.
+  parâmetro individual do vínculo; folha sem o campo usa a do cadastro, inclusive
+  `111`, 723 e 901. Valor que não tenha 3 dígitos é recusado. Há dois caminhos, ambos
+  com a mesma data de efeito: **(a) alteração cadastral**, para declarar ou corrigir a
+  categoria de uma pessoa; **(b) fato `parametrizacao` do onboarding**, para carga.
+  Roteiro de cada um em `alteracao_cadastral`.
+- **Data de efeito: o início da pessoa naquela categoria** (em geral a admissão ou o
+  início do vínculo na categoria), **nunca a data do envio**. A folha lê a categoria
+  vigente na competência dela: com a data de hoje, as competências anteriores não
+  enxergam a categoria e a pessoa é calculada como empregada.
 - **Folha e cadastro divergentes** (qualquer diferença, até entre duas `1xx`): a
   pessoa não é calculada (`nao_calculados`, código `categoria_esocial_divergente`,
   próxima ação `alinhar_categoria_esocial_folha_e_cadastro`) e a pendência agregada
   de mesmo código fica aberta até nenhuma matrícula divergir. Se a folha está certa,
-  atualize o cadastro (fato `parametrizacao`); se o cadastro está certo, declare
+  atualize o cadastro (alteração cadastral, com vigência na competência a corrigir);
+  se o cadastro está certo, declare
   na folha a mesma categoria (ou omita o campo) e recalcule. Nunca escolha em
   silêncio.
 - **Exigência de cadastro.** Quem não é empregado exige só `dependentes_irrf`:
@@ -922,23 +924,6 @@ não a `111`).
 - Criar caso de 13º, férias, rescisão ou admissão (e simulação de rescisão) de
   quem tem categoria que não é de empregado no cadastro é recusado
   (`categoria_sem_regime_clt`): `rescisao`, `admissao`, `ferias` e `decimo_terceiro`.
-
-## Reinício em lote autorizado por correção (rotina, 2.13.0)
-
-Vale quando a proprietária repassar um `authorization_id` (`rst-` e 32 hex) e o
-`expected_snapshot` de cada caso, depois de uma correção `CL-N` (a autorização
-está em `aprovacoes`). A rotina (conta de automação com `consultar` e `operar_casos`
-em `folha_mensal`; `atualizar_por_insumo_do_cliente` nem é exigida nem basta)
-reinicia **uma vez cada caso listado**, em `aguardando_revisao`, de forma simples
-(payload preservado): `receive_case_data(case_id, request={schema_version:
-"loki.case-restart-authorized/1", authorization_id, case_id, expected_snapshot,
-human_message})`, com `case_id` igual ao argumento, `expected_snapshot` igual ao
-repassado e `human_message` que nomeia o `CL-N`. O recibo traz `requires_case_data`: `true`
-em caso legado (reenvie os dados pelo `receive_case_data` comum). Depois, `enqueue_case_workflow`
-com os snapshots novos; o pacote novo exige nova revisão e novo aceite humanos.
-Repetir o mesmo pedido devolve o recibo (`replayed: true`). Toda recusa deixa o item
-sem consumir: pare e avise a proprietária, sem laço (códigos em `aprovacoes`); só
-`BUSY` (`authorization_change_busy`) pede repetir a mesma chamada.
 
 ## Consignado sem linha no mapa de verbas (2.12.0)
 

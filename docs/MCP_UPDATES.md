@@ -2,21 +2,18 @@
 
 ## Candidata 0.4.39 / contrato, instruções e plugin 2.13.0 — 27/11/2026
 
-O contrato sobe de 2.12.0 para 2.13.0. Base do Refresh: o schema de `preparar_autorizacao`
-ganha a variante `RestartBatchProposal` (`operation = "restart_batch"`; ADR-041), então a
-conta da proprietária que for autorizar precisa de **Refresh do conector e conversa nova**,
-além de atualizar o plugin (o snapshot `connector_tools_list_d863b1aa_masked.json` do
-Loki muda por isso). **Não há ferramenta nova nem capacidade nova**; a rotina executa por
-`receive_case_data` com `loki.case-restart-authorized/1` e não precisa de Refresh. A
-categoria eSocial não muda `tools/list` (o campo entra em `dados_folha.funcionarios[*]`,
-em `employee_parameters.data_schema` do contrato do cadastro e em respostas): chega com o
-deploy, sem Refresh próprio. Instruções e plugin acompanham em 2.13.0; o provider sobe um
-patch (0.4.39). Mínimo 2.0.0 permanece. Wheel 0.4.38 permanece imutável.
+O contrato sobe de 2.12.0 para 2.13.0 porque o contrato de `alteracao_cadastral`
+(`dados_alteracao_cadastral.changes`) e o de onboarding (`employee_parameters.data_schema`)
+ganham a propriedade opcional `categoria_esocial`. **Não há ferramenta nova, capacidade
+nova nem Refresh do conector**: o `tools/list` não mudou (o campo entra em
+`dados_folha.funcionarios[*]`, nesses dois contratos e em respostas), então a mudança
+chega com o deploy. Instruções e plugin acompanham em 2.13.0; o provider sobe um patch
+(0.4.39). Mínimo 2.0.0 permanece. Wheel 0.4.38 permanece imutável.
 
-Backend lido nos arquivos das worktrees de Project-loki, **ainda não mesclado em
-`main`** (os textos só valem depois da publicação): `feature/folha-categoria-cadastro`
-(`914f7bbc`, `610c7a34`, `d334d574`; `docs/operations/categoria-nao-clt-bloqueio.md`) e
-`feat/reinicio-autorizado-0069` (`e34c8e0f`; ADR-041, migration 0069).
+Backend lido em `origin/main` do Project-loki: PR #441 (`feature/folha-categoria-cadastro`,
+`914f7bbc`, `610c7a34`, `d334d574`; `docs/operations/categoria-nao-clt-bloqueio.md`) e
+PR #444 (`4e86064b`, a alteração cadastral aceita `changes.categoria_esocial`). Ambas já
+estão em `main`.
 
 - **Categoria eSocial na folha mensal (`folha_mensal`).** `categoria_esocial` de 3 dígitos
   por pessoa; categoria que não começa com `1` (723, 901) tira a pessoa do cálculo
@@ -25,28 +22,29 @@ Backend lido nos arquivos das worktrees de Project-loki, **ainda não mesclado e
   abre a pendência agregada e os demais calculam. `111` segue com
   `vinculo_intermitente_nao_suportado`. `calculators/folha.py` (`categoria_nao_clt`),
   `services/calculation_folha.py` (pendência e memória no caso), `domain/folha.py`.
-- **Categoria no cadastro (`alteracao_cadastral`, `folha_mensal`).** Parâmetro
-  `categoria_esocial` (`^[0-9]{3}$`, opcional) em `employee_parameters.data_schema`
-  (`domain/cadastro.py`). Folha sem o campo usa a do cadastro; divergência dá
-  `categoria_esocial_divergente` e a pessoa não é calculada; o cadastro vence a memória do
-  caso; quem não é empregado exige só `dependentes_irrf` (`pendencias_de`).
+- **Categoria no cadastro (`alteracao_cadastral`, `folha_mensal`).** Dois caminhos: a
+  alteração cadastral (`domain/pending_dp.py`, `EmployeeProfileChanges.categoria_esocial`,
+  vigência pela `effective_on`, pendência informativa `prior_value_missing` na primeira
+  declaração) e o fato `parametrizacao` do onboarding (`employee_parameters.data_schema`,
+  `domain/cadastro.py`). Folha sem o campo usa a do cadastro; divergência dá
+  `categoria_esocial_divergente` e a pessoa não é calculada; o cadastro vence a memória
+  do caso; quem não é empregado exige só `dependentes_irrf` (`pendencias_de`). As
+  instruções mandam usar como data de efeito o início da pessoa na categoria, nunca a do
+  envio, porque a folha, o 13º e a rescisão leem a categoria vigente na competência.
 - **`categoria_sem_regime_clt` (`admissao`, `rescisao`, `ferias`, `decimo_terceiro`).**
   `services/cases._recusar_categoria_sem_regime_clt` recusa a criação (resposta com
   `codigo`, `proxima_acao` e `mode`), na competência do próprio processo
-  (`_competencia_do_processo`); a simulação de rescisão (`services/case_simulations`,
-  duas criações) recusa com `code` `case_simulation_refused` e `reason`
+  (`_competencia_do_processo`; no 13º, o `ano` vale como dezembro e `competencia` precisa
+  ser data completa); a simulação de rescisão (`services/case_simulations`, duas
+  criações) recusa com `code` `case_simulation_refused` e `reason`
   `categoria_sem_regime_clt`.
-- **Reinício em lote por correção (`aprovacoes`, `folha_mensal`, `admissao`,
-  `rescisao`).** `services/restart_authorizations.py`: concessão pela proprietária
-  (prévia, apply, revogação), execução pela rotina, consumo único, limites por dia,
-  recusas por caso e na execução. Os textos descrevem os códigos que o conector devolve
-  (`tests/integration/test_reinicio_por_correcao_masked.py` chama `operations.invoke`).
 
-Domínios: `geral` (aviso 2.13.0; avisos anteriores comprimidos por causa do limite de
-65536 bytes), `folha_mensal`, `alteracao_cadastral`, `aprovacoes`, `admissao`, `rescisao`,
-`ferias` e `decimo_terceiro`. Plugin: WORKFLOWS (seção 2.13.0), CAPACIDADES_DP, operar-loki,
-registrar-problema-loki e bootstrap. Wheel preparado não comprova publicação, instalação
-ou uso.
+Domínios: `geral` (aviso 2.13.0; o aviso da 2.12.0 vira "Continua", e frases de avisos
+antigos foram comprimidas por causa do limite de 65536 bytes), `folha_mensal`,
+`alteracao_cadastral`, `admissao`, `rescisao`, `ferias` e `decimo_terceiro`. Plugin:
+WORKFLOWS (seção 2.13.0), operar-loki e registrar-problema-loki (a skill `loki-bootstrap`
+não mudou; mudaram só `plugin.json` e `loki_local.py`, de versão). Wheel preparado não
+comprova publicação, instalação ou uso.
 
 ## Candidata 0.4.38 / contrato, instruções e plugin 2.12.0 — 27/11/2026
 

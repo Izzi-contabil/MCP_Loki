@@ -523,13 +523,12 @@ determinado e razão social do caso x cadastro. Onboarding: retirada de saldo de
 carga histórica. **Ferramentas novas (`confirm_termination` e as duas da retirada):
 Refresh do conector e conversa nova**, além de atualizar o plugin; o resto não exige
 Refresh.
-Na 2.13.0 (“2.13.0: categoria eSocial e reinício em lote por correção”), `categoria_esocial`
-que não começa com `1` (sócio, estagiário) tira a pessoa da folha mensal
-(`categoria_esocial_nao_suportada`; o Loki ainda não calcula pró-labore nem bolsa de
-estágio), vale também no cadastro do vínculo (`categoria_esocial_divergente` quando folha
-e cadastro diferem) e recusa a criação de caso de 13º, férias, rescisão e admissão
-(`categoria_sem_regime_clt`); declare a categoria no cadastro antes de rodar folha. A
-proprietária autoriza o reinício em lote por correção `CL-N` (`restart_batch` em
-`preparar_autorizacao`) e a rotina o executa por `receive_case_data` com
-`loki.case-restart-authorized/1`. **Sem ferramenta nova; Refresh do conector e conversa
-nova só na conta da proprietária que for autorizar**, além de atualizar o plugin.
+Na 2.13.0 (“2.13.0: categoria eSocial”), `categoria_esocial` que não começa com `1`
+(sócio, estagiário) tira a pessoa da folha mensal (`categoria_esocial_nao_suportada`; o
+Loki ainda não calcula pró-labore nem bolsa de estágio), vale também no cadastro do
+vínculo (`categoria_esocial_divergente` quando folha e cadastro diferem) e recusa a
+criação de caso de 13º, férias, rescisão e admissão (`categoria_sem_regime_clt`).
+Declare a categoria antes de rodar folha, pela alteração cadastral
+(`changes.categoria_esocial`) ou pelo fato `parametrizacao` do onboarding, com a data de
+efeito do início da pessoa naquela categoria, nunca a do envio. **Sem ferramenta nova e
+sem Refresh do conector**; basta atualizar o plugin.

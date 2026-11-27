@@ -8,23 +8,23 @@
   "domains": {
     "geral": {
       "metadata_sha256": "4cd70673d66fe2d9f2efc2582d97f8aae3ed35d7e2f943f429f2e20b2eb92775",
-      "content_sha256": "ccc2717ea1329ff1947efb835939a0c08b747b56bdc88106fa0cbf30710312f5"
+      "content_sha256": "d41771be9cdbb93fb12578755995adf836823595e05f6a7ab57965fe56b45966"
     },
     "admissao": {
       "metadata_sha256": "27af0bcc0374b318d77d9c82ce433171bc3fb015efd0d88d25ab4206caeefb36",
-      "content_sha256": "be178e92de1e5e649de8f67451e3874c8ab8fcd3a43253174a0e0e5d37d7d1e0"
+      "content_sha256": "f1ba8d7c36d4e11de0bad6158f0cb01e82b34fa68438e846dc88604948771a99"
     },
     "rescisao": {
       "metadata_sha256": "f3a92abef99f9fa09251613e3ab0662a7bf0028d60abee9aceea4e6c2a7336ae",
-      "content_sha256": "d916f4aff55bbb701161b4d28a62e376c7bd98027b5844bcdabfcd404cc397bb"
+      "content_sha256": "c9e7f979ce728c2665cd4361428a553b48fbffb43b78f5ce86d4706f1c3be274"
     },
     "ferias": {
       "metadata_sha256": "b443645dcfc8c7d8c76c41912c5b92800e0653b742acbd256e79e750726dfada",
-      "content_sha256": "72e059df03e132562ba28edda3bad20776ff8f19806b8f7dc85bbea4ac00a6d9"
+      "content_sha256": "118b742ae056a1b2a1e35838bb521a9d898f36e218537dec41cd74efbb9aa6bb"
     },
     "decimo_terceiro": {
       "metadata_sha256": "663a47c4c1dae54493b4eb6890bdc260c830533283ca8f860db476139ed28377",
-      "content_sha256": "410b985e1c1221dcbde557e9d0c2a1920e3b8cfa38ddd12d58a906c5777155ec"
+      "content_sha256": "cd85d9beb9e53a1d56d51aa330151a048dda7f62546f0a69f354e2c1360262ef"
     },
     "afastamento": {
       "metadata_sha256": "e95cee8e799a4942020205227b3180cb186c8a10d20bdf06e13e2f90daed70d0",
@@ -36,11 +36,11 @@
     },
     "aprovacoes": {
       "metadata_sha256": "f383684573304a36b96ba36ebedbf9bd0515ca13cd61a61ac5a45949c59ea66a",
-      "content_sha256": "4290c003d3a00d2710001034281ab3b132fab1de7a1aaac1279ee9a52318b540"
+      "content_sha256": "e0f1d13b2ba67f76e93db0bf7dc1ff5149fca2110641be45f5010bf95612ec2b"
     },
     "alteracao_cadastral": {
       "metadata_sha256": "1d7c117b03ff636b75aa4d3072ec683a0d1ce0699d8f7e3591317e1914c0f453",
-      "content_sha256": "3b3a7816eed8195bdfde8313a7cf8677d79c3dfad5bba84f9b08aba70fd663b5"
+      "content_sha256": "ee61073664cf9838d06ac91f5394d37fe33f956fd0a99ff242101da1ea8cc605"
     },
     "ocorrencia": {
       "metadata_sha256": "29e909ec5416154919c80be9ccaf52b9c982990d817c5c404196b58364ef9cc0",
@@ -64,17 +64,17 @@
     },
     "folha_mensal": {
       "metadata_sha256": "eb4e6860a275e8e5401de9b79c3e1167ddb70e1aa90437da8a3f7202f08e57db",
-      "content_sha256": "bbfb77b336a9b74ace8958993d833f7ee2d3b591c3096b10a1d67cfb1a8c56e7"
+      "content_sha256": "7e01628e449ee88d3181a53c5c5b81efbea614511445bbb9e9bc1eabdb781b94"
     }
   },
   "changes": {
     "backend": [
       "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Contrato2.13.0 sem ferramenta nova; exige Refresh do conector e conversa nova só na conta da proprietária que autoriza, porque o schema de preparar_autorizacao ganha a variante restart_batch (ADR-041, migration 0069; snapshot connector_tools_list_d863b1aa_masked.json do Loki; branch feat/reinicio-autorizado-0069 até e34c8e0f, fora de main). Sem Refresh próprio (branch feature/folha-categoria-cadastro até d334d574, fora de main): categoria_esocial na folha mensal (categoria_esocial_nao_suportada e categoria_esocial_divergente), no cadastro do vínculo (employee_parameters.data_schema) e categoria_sem_regime_clt na criação de 13º, férias, rescisão, admissão e simulação de rescisão; os textos descrevem funções que só valem depois da publicação do backend correspondente; mínimo do plugin 2.0.0."
+      "Contrato2.13.0 sem ferramenta nova e sem Refresh do conector (o tools/list não mudou): categoria_esocial na folha mensal (categoria_esocial_nao_suportada e categoria_esocial_divergente), no cadastro do vínculo (propriedade opcional em employee_parameters.data_schema e em changes de alteracao_cadastral) e categoria_sem_regime_clt na criação de 13º, férias, rescisão, admissão e simulação de rescisão; backend já em main do Project-loki (PRs #441 e #444); mínimo do plugin 2.0.0."
     ],
     "instructions": [
       "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Instruções2.13.0: geral (aviso da versão; avisos anteriores comprimidos pelo limite de 65536 bytes), folha_mensal (categoria eSocial que não é de empregado e no cadastro; reinício em lote pela rotina), alteracao_cadastral (categoria no cadastro), aprovacoes (restart_batch), admissao e rescisao (categoria_sem_regime_clt; reinício em lote pela rotina), ferias e decimo_terceiro (categoria_sem_regime_clt)."
+      "Instruções2.13.0: geral (aviso da versão; o aviso da 2.12.0 vira Continua e frases de avisos antigos foram comprimidas pelo limite de 65536 bytes), folha_mensal (categoria eSocial que não é de empregado e no cadastro), alteracao_cadastral (categoria no cadastro: alteração cadastral e onboarding, com a data de efeito), admissao, rescisao, ferias e decimo_terceiro (categoria_sem_regime_clt)."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -85,7 +85,7 @@
     ],
     "plugin": [
       "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Plugin2.13.0 espelha a 2.13.0 em WORKFLOWS (seção 2.13.0), CAPACIDADES_DP, operar-loki e registrar-problema-loki; sem ferramenta nova, basta atualizar o plugin, e o Refresh do conector com conversa nova vale só na conta da proprietária que for autorizar o reinício em lote; wheel0.4.39 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.38 permanece imutável."
+      "Plugin2.13.0 espelha a 2.13.0 em WORKFLOWS (seção 2.13.0), operar-loki e registrar-problema-loki; sem ferramenta nova e sem Refresh do conector, basta atualizar o plugin; wheel0.4.39 preparado não comprova instalação ou uso. Wheel0.4.38 permanece imutável."
     ]
   }
 }
