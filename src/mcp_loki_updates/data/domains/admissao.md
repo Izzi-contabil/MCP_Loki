@@ -96,7 +96,7 @@ Use o CNPJ indicado pelo cliente para a contratação, com referência ao portal
 
 Cabeçalhos de contrato, ficha e extrato divergentes exigem conciliação e registro da orientação/retificação. Não escolha automaticamente matriz, primeiro cadastro ou CNPJ mais frequente. Se a unidade correta estiver fora do escopo autenticado ou não cadastrada, preserve a pendência e solicite a providência autorizada; não redirecione o caso para outra empresa.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -131,17 +131,55 @@ adotou o eSocial, vínculo sem matrícula): reenvie omitindo
 ## Razão social da empresa
 
 Vale quando a resposta servida o apresentar. A razão social que sai nos
-documentos é a do cadastro da empresa no Loki, não a lida no original.
-Relatório em PDF do Onvio costuma cortar nome longo (por exemplo, "…
-ORGANIZAÇÃO DE" no lugar de "… ORGANIZAÇÃO DE EVENTOS LTDA"). Envie o valor
-como está na fonte. Quando ele for o nome do cadastro, ou o começo dele com
-pelo menos a primeira palavra inteira e ao menos 10 caracteres (ignorando caixa, acento, espaços e
-pontuação final), o Loki grava o nome do cadastro e registra a troca na
-trilha (`razao_social_normalizada_pelo_cadastro`). Não complete nem corrija o
-nome à mão para coincidir. Nome que não é o do cadastro nem o começo dele
-continua recusado na conferência, porque pode ser a empresa errada: confira o
-CNPJ e a empresa escolhida antes de qualquer outra ação. Caso gravado antes
-com o nome cortado continua recusando: cancele e reabra (seção seguinte).
+documentos é a do cadastro da empresa no Loki, não a lida no original. A que
+você envia só serve para conferir que o caso é da empresa certa (backend #432).
+Envie o valor como está na fonte. Não complete nem corrija o nome à mão para
+coincidir. Depois de ignorar caixa, acento, espaços e pontuação final, o
+Loki aceita o nome quando:
+
+1. é igual ao do cadastro;
+2. **só o tipo societário do fim difere**, nos dois sentidos (LTDA, ME, EPP,
+   EIRELI, S.A., SA, S/A, com hífen ou pontuação); o tipo só conta como palavra
+   inteira no fim do nome e nunca esvazia o nome;
+3. é o **começo do nome do cadastro**, com a primeira palavra inteira e ao menos
+   10 caracteres (relatório em PDF do Onvio costuma cortar nome longo,
+   por exemplo "… ORGANIZAÇÃO DE" no lugar de "… ORGANIZAÇÃO DE EVENTOS LTDA").
+
+O Loki grava o nome do cadastro e registra a troca na trilha
+(`razao_social_normalizada_pelo_cadastro`). O que **recusa**:
+
+- **natureza jurídica diferente** (LTDA x S.A. x EIRELI) com o resto do nome
+  igual: código `razao_social_natureza_juridica_divergente`, no início da
+  mensagem da recusa de identidade (geração, folha, rescisão); na captura da
+  versão a recusa segue `identity_changed`. É outra empresa, não outra forma de
+  escrever: confira com o cliente e corrija o cadastro pelo fluxo de cadastro
+  ou o caso, nunca ajuste o nome para silenciar;
+- **conferência dupla CNPJ + código da empresa.** A tolerância do tipo
+  societário (e o corte do PDF quando só o tipo difere) só vale com o CNPJ
+  **e** o `empresa.codigo_dominio` do caso batendo com o cadastro. Código
+  diferente tira a tolerância; em cadastro não ancorado na configuração do
+  cliente, código diferente do já cadastrado para o CNPJ recusa até a criação do
+  caso (a mensagem diz que o `codigo_dominio` do caso difere) e não troca o
+  cadastro.
+  **Caso sem código** (ou cadastro sem código): por ora vale só o CNPJ, decisão
+  provisória à espera da resposta da DP. Sem CNPJ confirmado, não vale a
+  tolerância do tipo societário (o corte do PDF por prefixo continua valendo);
+- nome que não é o do cadastro nem o começo dele, ou tipo no meio do nome:
+  continua recusado na conferência, porque pode ser a empresa errada; confira o
+  CNPJ e a empresa escolhida antes de qualquer outra ação;
+- **conferência de novo na geração.** A geração (admissão, folha e rescisão) confere
+  a razão social do caso contra o cadastro vigente na hora de gerar; se a natureza ou
+  o código divergem, a geração recusa (folha e rescisão, por exemplo, com "razao
+  social do caso diverge do binding da empresa"). Cadastro alterado entre o cálculo e
+  a geração cai aqui: não ajuste o nome para passar.
+
+**Só o tipo societário difere:** o caso segue e o documento sai com o nome do
+cadastro. Além do evento da trilha, o pacote (`generate_documents`, runner e
+versão da admissão) traz o aviso `razao_social_tipo_societario` ("cadastro
+difere da fonte no tipo societário"): não retém documento, não pede ciência na
+aprovação e não fecha sozinho na regeração. Porte (ME, EPP) e tipo ausente de
+um lado seguem só como esse aviso. Caso gravado antes com o nome cortado
+continua recusando: cancele e reabra (seção seguinte).
 
 ## Data de admissão errada no caso
 
@@ -168,7 +206,8 @@ exige Refresh. O contrato lista as capacidades `decidir_chat` e
    `message_reference` (`CX-…`, quando a mensagem veio pela Caixa) e `reason`.
 3. O recibo `RECTIFIED` troca a data no caso, no episódio e na chave natural,
    regenera a data por extenso, a `fgts_opcao_em` quando ela era a admissão e
-   as datas do contrato de experiência (deslocadas pelo mesmo número de dias),
+   as datas do contrato de experiência (deslocadas pelo mesmo número de dias) e só o
+   `data_inicio` do contrato a prazo determinado (seção "Contrato a prazo determinado"),
    descarta a última geração e não envia nada ao eSocial. Siga o `next_action`
    do recibo (`run_prepared_case_workflow`, ou `restart_case` em caso de
    processamento anterior). Confira em `review_text_fields` os textos e as
@@ -184,7 +223,10 @@ exige Refresh. O contrato lista as capacidades `decidir_chat` e
    `admission_date_rectification_target_case_exists` (a data nova já existe em
    outro episódio ou caso), `admission_date_rectification_minimum_age` (idade
    mínima na data nova), `admission_date_rectification_experience_limit` (teto
-   do contrato de experiência na data nova), `case_snapshot_changed`
+   do contrato de experiência na data nova),
+   `admission_date_rectification_fixed_term_limit` (teto de 2 anos do prazo
+   determinado, CLT art. 445, ou término antes do início na data nova),
+   `case_snapshot_changed`
    (releia o `get_case`) e `admission_date_rectification_identity_changed`.
 
 **Admissão reaberta** (com `supersedes_case_id`) divide o episódio com o caso
@@ -356,6 +398,72 @@ guarde a resposta e relate pelo fluxo de problema (skill
 sem dado pessoal. O bloqueio é real: não tente contornar, não cancele nem
 recrie o caso e não altere outro caso para liberar este.
 
+
+## Contrato a prazo determinado que não é de experiência (2.12.0)
+
+Vale quando `get_process_contract("admissao")` trouxer a seção
+`dados_admissao.contrato_prazo_determinado` (backend #436). Cobre CLT art. 443
+§ 1º e § 2º, alíneas a e b, art. 445 (até 2 anos), art. 451 (uma prorrogação).
+A experiência (art. 443 § 2º c, 90 dias) continua em `contrato_experiencia`,
+sem mudança.
+
+**O tipo vem da seção.** Com `contrato_prazo_determinado` declarada (qualquer
+campo preenchido), o caso é de prazo determinado e o documento
+`contrato_prazo_determinado.pdf` ocupa o lugar de `contrato_experiencia` (também
+em `doc_set` de cliente que liste a experiência). Ausente, `null`, `{}` ou só em
+branco, o caso é de experiência como sempre. Não declare as duas seções.
+
+| Campo | Regra |
+|---|---|
+| `motivo` | `servico_transitorio` (art. 443 § 2º a) ou `atividade_empresarial_transitoria` (§ 2º b); obrigatório |
+| `motivo_descricao` | texto livre da necessidade que justifica o prazo; obrigatório |
+| `data_inicio` | igual à admissão quando as duas vierem |
+| `data_termino` | não antes do início |
+| `data_inicio_prorrogacao`, `data_prorrogacao_termino` | prorrogação única: começa no dia seguinte ao término e termina depois dele |
+| `quantidade_prorrogacoes` | opcional; maior que 1 é recusado |
+| `cidade_data_assinatura` | texto do fecho, como na experiência |
+
+Datas ausentes não recusam: saem em branco no documento, com aviso. O teto do
+art. 445 é por aniversário (a véspera do 2º aniversário do início, somando a
+prorrogação) e conta da admissão se `data_inicio` faltar. O art. 452 (sucessão
+de contratos em até 6 meses) o Loki **não valida**: a conferência é da DP.
+
+**Recusas** (códigos fechados em `errors[].type`, caminho
+`dados_admissao.contrato_prazo_determinado`):
+`prazo_determinado_motivo_ausente`, `prazo_determinado_motivo_descricao_ausente`,
+`prazo_determinado_termino_antes_do_inicio`, `prazo_determinado_excede_dois_anos`,
+`prazo_determinado_segunda_prorrogacao`, `prazo_determinado_prorrogacao_incoerente`
+(fora do dia seguinte ao término, terminando antes dele, contagem 0 com datas, ou
+contagem 1 sem nenhuma data), `prazo_determinado_inicio_diferente_da_admissao`
+e `prazo_determinado_conflita_com_experiencia`. As regras entre campos e entre
+seções só rodam ao preparar ou gerar: `receive_case_data` valida campo a campo e
+aceita um pedaço da seção, porque motivo, datas e prorrogação podem chegar em
+escritas separadas.
+
+**Formato da recusa na geração.** `generate_documents` e
+`run_prepared_case_workflow` passam a devolver a recusa tipada da versão, não
+mais `{"erro": ...}` mudo. Para a recusa de insumo da admissão: `{status: BLOCKED,
+reason: parameters_invalid, fields, errors: [{path, type}], next_action:
+receive_case_data}`, com o texto em `erro`, sem valores; leia `errors[].type`, corrija
+o campo pelo `receive_case_data` e gere de novo. Outras recusas tipadas de versão
+chegam pelo mesmo caminho com `errors` e sem `erro`: siga o `next_action` devolvido.
+
+**Aviso de texto não homologado.** As cláusulas 5, 10 e 15 do contrato foram
+redigidas a partir da lei e ainda não foram validadas pela DP. Todo pacote e
+toda versão com o documento carregam o aviso
+`texto_contrato_prazo_determinado_nao_homologado`: não retém o documento e não
+exige ciência, mas **diga à Ana que a DP deve conferir o texto antes de enviar o
+contrato ao cliente**. Não remova o aviso nem altere o texto.
+
+**Retificação da data de admissão.** Troca só o `data_inicio` desta seção;
+término e prorrogação são datas pactuadas e **não deslocam** (a experiência
+continua deslocando). Com a data nova, o teto de 2 anos e o término depois do
+início são conferidos e a retificação recusa com
+`admission_date_rectification_fixed_term_limit` se estourar.
+
+O valor `termino_contrato_experiencia` do motivo de rescisão não mudou
+(contrato publicado); o texto passa a dizer término de contrato a prazo. A
+conversão por aditivo em prazo indeterminado ainda não existe.
 
 ## Insumo novo do cliente com o caso em revisão (rotina, 2.10.0)
 

@@ -44,7 +44,8 @@ def check(plugin: str | None = None, contract: str | None = None) -> dict[str, A
         ("2.0.0", "2.10.0", True, False),
         ("2.0.0", "2.10.1", True, False),
         ("2.0.0", "2.11.0", True, False),
-        ("2.0.0", "2.11.1", False, True),
+        ("2.0.0", "2.12.0", True, False),
+        ("2.0.0", "2.12.1", False, True),
         ("2.0.0-rc.1", "2.0.0", False, True),
         ("2.0.0+local.1", "2.0.0", True, False),
         ("2.0.0", "2.0.0-rc.1", True, False),
@@ -60,7 +61,7 @@ def test_compatibility_requires_evidence_for_both_dimensions(
     assert result["compatible"] is compatible
     assert result["manual_update_required"] is manual
     assert result["refresh_tools_required"] is None
-    assert result["mcp_contract_version"] == "2.11.0"
+    assert result["mcp_contract_version"] == "2.12.0"
 
 
 @pytest.mark.parametrize("invalid", ["", "v0.4.0", "0.4", "00.4.0", "0.4.0-01", "a", "1.0.0\n"])
@@ -73,7 +74,7 @@ def test_invalid_client_version_is_not_treated_as_unknown(invalid: str) -> None:
 
 def test_categorized_changes_and_fallback_do_not_claim_remote_tools_are_synced() -> None:
     result = check("2.0.0", "2.0.0")
-    assert result["recommended_plugin_version"] == "2.11.0"
+    assert result["recommended_plugin_version"] == "2.12.0"
     assert set(result["changes"]) == {
         "backend",
         "instructions",
@@ -90,7 +91,7 @@ def test_categorized_changes_and_fallback_do_not_claim_remote_tools_are_synced()
     assert result["tools_refresh_note"]
 
 
-@pytest.mark.parametrize("plugin", ["2.11.1", "2.12.0", "3.0.0", "9.0.0"])
+@pytest.mark.parametrize("plugin", ["2.12.1", "2.13.0", "3.0.0", "9.0.0"])
 def test_future_plugin_version_remains_unassessed(plugin: str) -> None:
     result = check(plugin, "2.0.0")
     assert result["compatible"] is None
@@ -139,6 +140,7 @@ def test_future_plugin_version_remains_unassessed(plugin: str) -> None:
         "2.10.0",
         "2.10.1",
         "2.11.0",
+        "2.12.0",
     ],
 )
 def test_short_response_release_preserves_previous_and_current_clients(plugin: str) -> None:

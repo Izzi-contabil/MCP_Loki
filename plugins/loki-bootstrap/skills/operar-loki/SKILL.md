@@ -440,7 +440,7 @@ Não configure nem ative o Drive nesta entrega. Drive Izzi é opção futura: so
 
 Para usar fecho anterior como abertura de provisões, selecione explicitamente `opening_selection={kind:"previous_revision",competencia,input_hash,result_hash}` no contrato de folha_mensal/fechamento. Envie `opening_cents=null` nos movimentos; `opening_origin` é resolvido e rastreado pelo servidor, não preenchido pela harness. A revisão deve ser da competência imediatamente anterior e ainda corrente. Sem fechamento conhecido, a abertura e seus totais dependentes permanecem desconhecidos; não crie zero. Saldo documentado de abertura também pode ser recebido com fonte qualificada pelo contrato, sem seleção automática de uma revisão. Retificação da origem exige conciliação e nova revisão do pacote dependente.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação. Desde 27/11/2026 este é o endereço do Loki (o anterior deixou de responder, 503): o conector cadastrado numa conta de pessoa precisa ser recadastrado nele.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -509,3 +509,17 @@ Na 2.11.0 (“2.11.0: acessos, catálogo de rubricas de rescisão e onboarding�
 `get_dp_capabilities` vira só índice (`contract_tool`, `contract_hash`: releia
 `get_process_contract` quando o hash mudar). **Sem Refresh do conector** (o `tools/list`
 não mudou); basta atualizar o plugin.
+Na 2.12.0 (“2.12.0: endereço novo, férias pela rotina, intermitente, confirmação de
+desligamento, prazo determinado e saldo de férias”), o Loki passa a responder em
+`https://loki.izzicontabil.com.br/mcp` (o endereço anterior devolve 503) e o conector
+da conta de pessoa precisa ser recadastrado nele. A rotina com
+`atualizar_por_insumo_do_cliente` também reinicia **férias** em revisão (identidades do
+período imutáveis; afastamento segue com pessoa). Folha mensal: `categoria_esocial`
+`"111"` tira o intermitente do cálculo, declarada em toda competência (o Loki ainda não
+calcula intermitente), e consignado sem linha no mapa deixa a folha da pessoa parcial
+(`credito_trabalhador_mapeamento_pendente`). Rescisão: `confirm_termination` grava o
+desligamento confirmado pela pessoa com `confirmar_rescisao`. Admissão: contrato a prazo
+determinado e razão social do caso x cadastro. Onboarding: retirada de saldo de férias da
+carga histórica. **Ferramentas novas (`confirm_termination` e as duas da retirada):
+Refresh do conector e conversa nova**, além de atualizar o plugin; o resto não exige
+Refresh.

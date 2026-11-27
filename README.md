@@ -1,12 +1,23 @@
-# MCP Loki — contrato operacional 2.11.0
-Candidata **provider 0.4.37 / contrato, instruções e plugin 2.11.0**, 26/11/2026:
-contrato aditivo, **sem Refresh do conector** (o hash do `tools/list` não mudou).
+# MCP Loki — contrato operacional 2.12.0
+Candidata **provider 0.4.38 / contrato, instruções e plugin 2.12.0**, 27/11/2026:
+o Loki mudou de servidor e passa a responder em `https://loki.izzicontabil.com.br/mcp`
+(o endereço anterior devolve 503); o conector de conta de pessoa precisa ser
+recadastrado no endereço novo. O contrato muda: há **ferramentas novas**
+(`confirm_termination`, `preview_onboarding_vacation_balance_retirement` e
+`retire_onboarding_vacation_balance`) e a capacidade `confirmar_rescisao` entra no
+schema de `preparar_autorizacao`, então a conta da Ana precisa de **Refresh do conector e
+conversa nova** além de atualizar o plugin. Sem Refresh próprio: razão social do caso
+x cadastro (#432), férias reiniciadas pela rotina (#433), `categoria_esocial` do
+intermitente (#434), contrato a prazo determinado (#436) e consignado sem linha no mapa
+de verbas. Backend: Project-loki #432 a #438, em main `d0bcdd3d`.
+
+Edição anterior **provider 0.4.37 / contrato, instruções e plugin 2.11.0**, 26/11/2026:
+contrato aditivo, sem Refresh do conector (o hash do `tools/list` não mudou).
 `prepare_authorization_addition` aceita também empresa que a conta já tem,
 `prepare_authorization_removal` revoga pares ou a empresa inteira, o catálogo de rubricas
 de rescisão passa a `loki.termination-rubric-catalog/2` com `get_dp_capabilities` só como
 índice, e o onboarding ganha `adoption_effects` na linha aplicada e diagnósticos de nome e
-de vigência. Backend: Project-loki #421, #422, #424 e #426, mescladas em main (867efb14);
-a operadora atualiza o plugin.
+de vigência. Backend: Project-loki #421, #422, #424 e #426, mescladas em main (867efb14).
 
 Edição anterior **provider 0.4.36 / contrato, instruções e plugin 2.10.1**, 25/11/2026:
 contrato aditivo, sem Refresh (simulação de rescisão sem caso de origem,
@@ -264,11 +275,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.37** entrega instruções **2.11.0** ao backend.
+O pacote `mcp-loki-updates` **0.4.38** entrega instruções **2.12.0** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.11.0** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.12.0** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 

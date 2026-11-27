@@ -227,7 +227,7 @@ Não configure nem ative o Drive nesta entrega. Drive Izzi é opção futura: so
 
 Para usar fecho anterior como abertura de provisões, selecione explicitamente `opening_selection={kind:"previous_revision",competencia,input_hash,result_hash}` no contrato de folha_mensal/fechamento. Envie `opening_cents=null` nos movimentos; `opening_origin` é resolvido e rastreado pelo servidor, não preenchido pela harness. A revisão deve ser da competência imediatamente anterior e ainda corrente. Sem fechamento conhecido, a abertura e seus totais dependentes permanecem desconhecidos; não crie zero. Saldo documentado de abertura também pode ser recebido com fonte qualificada pelo contrato, sem seleção automática de uma revisão. Retificação da origem exige conciliação e nova revisão do pacote dependente.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -1350,9 +1350,10 @@ rotina, por empresa e processo, por `preparar_autorizacao`/`aplicar_autorizacao`
 
 Gatilho: insumo novo do cliente (ou, na folha, troca de motor) com o caso em
 `aguardando_revisao`. A capacidade não decide; aprovação, efeitos, entrega,
-cancelamento, retificação de data, férias e afastamento seguem com pessoa.
+cancelamento, retificação de data e afastamento seguem com pessoa (férias entrou
+na 2.12.0: seção abaixo).
 
-- **Admissão e rescisão.** (1) `get_case` e copie o `correction_snapshot`;
+- **Admissão, rescisão e (desde a 2.12.0) férias.** (1) `get_case` e copie o `correction_snapshot`;
   (2) `restart_case` com `expected_snapshot`, `preparation.mode=
   replace_process_inputs`, `preparation.request_ref = sha256-<impressão do
   insumo>` (64 hex minúsculos) e `human_message` com os campos e o motivo;
@@ -1486,3 +1487,62 @@ sinal (Project-loki #421, #422, #424 e #426, em main `867efb14`).
   `aplicacao_sequencial_por_vinculo` (junte os fatos de uma pessoa num único candidato).
   `snapshot_do_vinculo_desatualizado`: repita validate e apply. O mapa `refusals` de
   `get_company_onboarding_contract` descreve cada um.
+
+## 2.12.0: endereço novo, férias pela rotina, intermitente, confirmação de desligamento, prazo determinado e saldo de férias
+
+Texto completo em `geral`, `admissao`, `ferias`, `folha_mensal`, `rescisao`,
+`alteracao_cadastral` e `aprovacoes` de `loki_obter_instrucoes`. **Há ferramentas
+novas** (`confirm_termination`, `preview_onboarding_vacation_balance_retirement`,
+`retire_onboarding_vacation_balance`) e a capacidade `confirmar_rescisao` entrou no
+schema de `preparar_autorizacao`: **Refresh do conector e conversa nova**, além de
+atualizar o plugin; só peça quando a Ana for usar uma delas. O resto não exige
+Refresh. Cada item vale quando a resposta servida mostrar o sinal (Project-loki #432
+a #438, em main `d0bcdd3d`).
+
+- **Endereço novo.** Desde 27/11/2026 o Loki responde em
+  `https://loki.izzicontabil.com.br/mcp`; o anterior devolve 503. O conector
+  cadastrado numa conta de pessoa precisa ser recadastrado no endereço novo.
+- **Razão social do caso x cadastro (#432, `admissao`).** Só o tipo societário do
+  fim diferente segue com aviso `razao_social_tipo_societario` (nome do cadastro
+  no documento, sem reter). Natureza jurídica diferente (LTDA x S.A. x EIRELI)
+  recusa com `razao_social_natureza_juridica_divergente`. A tolerância exige CNPJ e
+  `codigo_dominio` do caso conferidos com o cadastro (caso sem código: por ora só o
+  CNPJ); código diferente tira a tolerância e, em cadastro não ancorado, recusa a
+  criação do caso. A geração confere de novo contra o cadastro vigente. Nunca ajuste
+  o nome à mão.
+- **Férias pela rotina (#433, `ferias`).** A rotina com
+  `atualizar_por_insumo_do_cliente` em `ferias` reinicia o caso em
+  `aguardando_revisao` pelo mesmo roteiro de admissão e rescisão (`restart_case` com
+  `replace_process_inputs` e `request_ref` `sha256-<64 hex>`), sem `corrigir_dados`.
+  `aquisitivo_inicio`, `aquisitivo_fim`, `inicio` e `fim` não mudam
+  (`preparation_identity_changed`); a programação é preservada. Afastamento segue com
+  pessoa (`client_input_restart_scope_refused`); aprovação, efeitos, entrega,
+  cancelamento e retificação de data também.
+- **Intermitente (#434, `folha_mensal`).** `categoria_esocial` em
+  `dados_folha.funcionarios[*]`: com `"111"` a pessoa sai do cálculo
+  (`vinculo_intermitente_nao_suportado`) e os demais calculam. Declare em TODA
+  competência: a memória vale só dentro do caso. O Loki ainda não calcula
+  intermitente.
+- **Confirmar desligamento (#435, `rescisao`).** `confirm_termination` (pessoa com
+  `confirmar_rescisao`, caso em `aguardando_revisao`, anexo do S-2299 ou TRCT,
+  `termination_confirmation_snapshot` de `get_case`, `reference`, `human_message`)
+  grava o `rescisao` do vínculo; a aprovação pelo chat não grava. Voltar o caso à
+  preparação (`ajustar`) ou cancelar o compensa; cancelar exige `confirmar_rescisao`.
+  Recusa `confirmacao_desligamento_recusada` com `reason` fechado.
+- **Prazo determinado (#436, `admissao`).** Seção
+  `dados_admissao.contrato_prazo_determinado` (`motivo`, `motivo_descricao`, datas,
+  uma prorrogação, teto de 2 anos), oito recusas `prazo_determinado_*` em
+  `errors[].type`, aviso `texto_contrato_prazo_determinado_nao_homologado` (a DP
+  confere o texto antes de enviar), retificação só do início, e `generate_documents` e
+  `run_prepared_case_workflow` devolvem a recusa tipada (`errors`, `next_action:
+  receive_case_data`) em vez do `erro` solto.
+- **Retirada de saldo de férias (#438, `alteracao_cadastral`).** Prévia e ato humano
+  (`preview_onboarding_vacation_balance_retirement`,
+  `retire_onboarding_vacation_balance`) tiram de vigor o `vacation_balance` de período
+  aquisitivo inexistente gravado pela carga histórica. Bloqueiam gozo ou programação no
+  período, saldo que qualifica fato legado e consumidor protegido do vínculo. Nunca
+  declare esse período na rescisão, retirado o saldo ou não.
+- **Consignado sem linha no mapa (`folha_mensal`).** `rubrica_loki` do contrato sem
+  linha utilizável no mapa deixa a folha da pessoa parcial com
+  `credito_trabalhador_mapeamento_pendente`; acrescente ao mapa uma linha de desconto
+  com a mesma `rubrica_loki`, código do Domínio e INSS, FGTS e IRRF `sem_efeito`.

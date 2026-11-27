@@ -18,7 +18,7 @@ A entrega padrão é ao solicitante autenticado: use `prepare_delivery(case_id, 
 
 Não configure nem ative o Drive nesta entrega. Drive Izzi é opção futura: somente um pedido humano externo explícito permite `prepare_delivery(case_id, include_drive=True)`. Nesse caminho, apresente pacote/revisão/hash/destino e aguarde intenção humana própria antes de `authorize_delivery`, com `delivery_id`, `plan_hash`, `human_message`, `message_reference` e `authorize_external_delivery=true`; o aceite privado anterior não autoriza envio externo. Destino/credencial do host ausentes ou falha mantêm a entrega ao Drive PENDING. Não envie folder, conta, token ou URL no payload; não use Drive Iris nem PUBLIC. Estas instruções não provisionam acesso nem removem gates de publicação.
 
-Toda operação usa o conector HTTPS `https://loki.tominho.com/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
+Toda operação usa o conector HTTPS `https://loki.izzicontabil.com.br/mcp`, com identidade, capacidades e escopo próprios da pessoa ou do executor. A harness lê, extrai, interpreta e prepara; envia parâmetros estruturados por JSON direto ou CSV tipado do contrato vigente; a proveniência detalhada é opcional. Originais permanecem na harness. Não restaure transporte operacional SSH/stdio nem empreste credencial humana à automação; o plugin não implementa transporte, autenticação ou renovação.
 
 Se optar por preservar proveniência detalhada de um original sem enviá-lo, consulte `get_harness_source_contract()` no catálogo HTTPS. Quando oferecido, prepare `loki.harness-source/1` com `request_ref`, `reference` externa real, `content_hash` SHA256 declarado do original, `source_role=CLIENT_INPUT|HISTORICAL_SOURCE|OFFICIAL_REFERENCE`, `locator` e `foundation`; envie por `register_harness_source(case_id, request)` e releia por `get_harness_source(case_id, source_id)`. O recibo retorna `EXTSRC-...`, `kind=harness`, `source_kind=harness_manifest`, `content_hash`, `manifest_hash`, `manifest`, `original_archived=false` e `verification=authenticated_harness_declaration`. O Loki não verifica os bytes originais: registra a declaração autenticada da harness. Não anuncie download de original a partir de EXTSRC nem equivalência com documento arquivado. A fonte de cada campo usa `kind=harness`, `reference` igual ao ID EXTSRC retornado e o mesmo `content_hash`; não invente IDs ou altere hashes.
 
@@ -96,3 +96,14 @@ mudou: releia por `read_account_summary` e prepare de novo).
   remoção funcionam.
 - **`BUSY`.** A trava do grafo é global e curta. `authorization_change_busy` não aplicou
   nada: repita a **mesma** chamada de `aplicar_autorizacao`, sem preparar de novo.
+
+## Capacidade `confirmar_rescisao` (2.12.0, backend #435)
+
+Vale quando o schema de `preparar_autorizacao` listar `confirmar_rescisao`
+(**exige Refresh do conector e conversa nova**, como a 2.10.0). Concede a pessoa
+provisionada, por empresa e processo `rescisao`, o direito de chamar
+`confirm_termination` (domínio `rescisao`) e de cancelar caso de rescisão com
+desligamento confirmado. Só pessoa a recebe: conta de automação é recusada
+(`automacao_capacidade_proibida`), e `confirmar_admissao` não a substitui. Conceda
+só com pedido explícito da Ana; a concessão nova segue a confirmação humana de
+sempre antes de `aplicar_autorizacao`.

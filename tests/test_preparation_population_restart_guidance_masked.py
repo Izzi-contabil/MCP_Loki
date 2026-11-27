@@ -78,7 +78,7 @@ def test_general_explains_population_index_and_restart_reuse() -> None:
         "não registre nem anexe de novo o mesmo original",
     ):
         assert required in general, required
-    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.11.0"
+    assert InstructionsProvider().metadata()["mcp_contract_version"] == "2.12.0"
 
 
 def test_documents_domain_points_to_reuse_after_restart() -> None:

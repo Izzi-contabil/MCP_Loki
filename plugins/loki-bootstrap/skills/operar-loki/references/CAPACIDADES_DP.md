@@ -337,10 +337,10 @@ por empresa e processo, e só pela autorização (`preparar_autorizacao`/`aplica
 o concedente registrado é quem gravou o modelo.
 
 A capacidade não decide. Abre só `restart_case` em caso `aguardando_revisao`,
-em duas formas: **admissão e rescisão** com `preparation.mode=
+em duas formas: **admissão, rescisão e férias** com `preparation.mode=
 replace_process_inputs` e `request_ref = sha256-<64 hex>` (insumo novo do
-cliente), e **folha mensal** simples, sem `preparation` (troca de motor).
-Aprovação, efeitos, entrega, cancelamento, retificação de data, férias e
+cliente; férias entrou na 2.12.0, com identidades do período imutáveis), e **folha mensal** simples, sem `preparation` (troca de motor).
+Aprovação, efeitos, entrega, cancelamento, retificação de data e
 afastamento continuam com pessoa. Recusas que mandam parar e avisar a Ana:
 `restart_requires_effect_reconciliation`,
 `client_input_restart_requires_review_state`,

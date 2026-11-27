@@ -38,7 +38,7 @@ def flat(value: str) -> str:
 
 def test_general_notice_requires_refresh_and_states_the_capability_limits() -> None:
     guide = read("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.11.0)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.12.0)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert "Refresh do conector e conversa nova" in flat(notice)
     assert "**Continua da 2.9.9**" in notice
@@ -48,8 +48,8 @@ def test_general_notice_requires_refresh_and_states_the_capability_limits() -> N
         "`preparar_acesso_tecnico` recusa",
         "`capacidade_concedida_so_por_autorizacao`",
         "`capacidade_exclusiva_de_automacao`",
-        "Ela não decide: aprovação, efeitos, entrega, cancelamento, retificação de data, "
-        "férias e afastamento continuam com pessoa",
+        "Ela não decide: aprovação, efeitos, entrega, cancelamento, retificação de data "
+        "e afastamento continuam com pessoa",
         "o concedente registrado é quem gravou o modelo",
     ):
         assert marker in body, marker
@@ -98,10 +98,10 @@ def test_plugin_mirrors_the_release() -> None:
 def test_release_versions_and_hashes() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.37"
-    assert metadata["instructions_version"] == "2.11.0"
-    assert metadata["mcp_contract_version"] == "2.11.0"
-    assert metadata["recommended_plugin_version"] == "2.11.0"
+    assert metadata["provider_version"] == "0.4.38"
+    assert metadata["instructions_version"] == "2.12.0"
+    assert metadata["mcp_contract_version"] == "2.12.0"
+    assert metadata["recommended_plugin_version"] == "2.12.0"
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     # O histórico das edições anteriores vive em docs/MCP_UPDATES.md, não em release.json.
     history = (ROOT / "docs" / "MCP_UPDATES.md").read_text(encoding="utf-8")

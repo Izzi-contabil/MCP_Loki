@@ -1,6 +1,6 @@
 # eSocial: modo da empresa e parâmetros temporais
 
-Use o conector HTTPS existente `https://loki.tominho.com/mcp`, a identidade e o
+Use o conector HTTPS existente `https://loki.izzicontabil.com.br/mcp`, a identidade e o
 escopo de `meu_acesso`/`get_operator_context`. Consulte instruções `geral` e
 `alteracao_cadastral`; esta versão preserva a allowlist de domínios. O contrato
 fiscal é `get_company_esocial_contract()`, versão `loki.company-esocial/1`.

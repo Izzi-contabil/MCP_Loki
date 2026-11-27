@@ -32,9 +32,8 @@ def flat(value: str) -> str:
 
 def test_general_notice_needs_no_refresh_and_keeps_the_previous_one() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.11.0)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.12.0)")
     notice = flat(guide[: guide.index("## Reaproveitar respostas e causas persistidas")])
-    assert "**Não exige Refresh do conector**" in notice
     assert notice.index("**Continua da 2.10.1:**") < notice.index("**Continua da 2.10.0**")
     assert notice.index("**Continua da 2.10.0**") < notice.index("**Continua da 2.9.9**")
     assert "Refresh do conector e conversa nova" in notice
@@ -85,10 +84,10 @@ def test_plugin_mirrors_the_simulation_without_requiring_refresh() -> None:
 def test_release_versions_and_hashes() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.37"
-    assert metadata["instructions_version"] == "2.11.0"
-    assert metadata["mcp_contract_version"] == "2.11.0"
-    assert metadata["recommended_plugin_version"] == "2.11.0"
+    assert metadata["provider_version"] == "0.4.38"
+    assert metadata["instructions_version"] == "2.12.0"
+    assert metadata["mcp_contract_version"] == "2.12.0"
+    assert metadata["recommended_plugin_version"] == "2.12.0"
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
