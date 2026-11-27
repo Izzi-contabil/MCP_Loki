@@ -687,7 +687,9 @@ hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como emprega
 - **Caminho 1: alteração cadastral** (declarar ou corrigir a categoria de uma pessoa
   já cadastrada). O caso `alteracao_cadastral` aceita `categoria_esocial` em
   `dados_alteracao_cadastral.changes`, ao lado dos outros campos do perfil.
-  1. `create_case` do processo `alteracao_cadastral` para o vínculo.
+  1. `create_case` do processo `alteracao_cadastral` com `funcionario` (`cpf`,
+     `data_admissao`) e uma `occurrence_ref` **nova a cada declaração ou correção**:
+     reaproveitar a referência recusa o efeito com `effect_reference_already_applied`.
   2. `get_documentary_profile(case_id, funcionario_id, as_of)` com `as_of` igual à
      `effective_on`; guarde o `profile_hash`.
   3. `receive_case_data` com `dados_alteracao_cadastral = {effective_on, competencia,
@@ -707,13 +709,17 @@ hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como emprega
      `employee_profile_changed` (o perfil mudou desde o passo 2: refaça-o) e
      `employee_change_authority_required`. Releia o registro antes de afirmar aplicação.
   Corrigir (de `723` para `101`, por exemplo) é uma nova alteração cadastral, com
-  `effective_on` no início da primeira competência a corrigir.
+  `occurrence_ref` nova e a **mesma `effective_on` da declaração errada** (ou a data em que
+  a nova categoria passa a valer, se for depois). Nunca uma data anterior à da declaração
+  errada, porque vale a de data de efeito maior (na mesma data, a gravada depois), nem
+  anterior à admissão (`effect_before_admission`).
 - **Caminho 2: fato `parametrizacao` do onboarding** (carga de vínculos). Como os outros
   parâmetros individuais (pensão, VT, adicionais), no lote de onboarding da empresa:
   1. `create_company_onboarding(cliente_slug, empresa_cnpj, reference)` (ou reutilize o
      lote da empresa).
   2. `submit_company_onboarding_chunk(onboarding_id, declaration)` com
-     `schema_version: "loki.company-onboarding/1"`, `reuse_registered_company: true` e,
+     `schema_version: "loki.company-onboarding/1"`, `reference` (do chunk, obrigatório),
+     `reuse_registered_company: true` e,
      em `workers`, um trabalhador que continua levando `reference`, `cpf`, `nome` e
      `data_admissao` (e `existing_employee_id` quando o vínculo já existe), com o fato
      `facts: [{reference, kind: "parametrizacao", effective_on, data:

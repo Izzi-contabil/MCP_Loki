@@ -9,10 +9,10 @@ siga a orientação anterior do mesmo domínio.
 **Exige ação da operadora (2.13.0):** atualizar o plugin instalado; sem ferramenta
 nova nem Refresh do conector.
 
-**Vale quando o Loki for publicado:** seções 2.13.0 (categoria eSocial) de
-`folha_mensal`, `alteracao_cadastral`, `admissao`, `ferias`, `rescisao` e `decimo_terceiro`.
+**Vale quando o Loki for publicado:** nada pendente; a categoria eSocial (seções 2.13.0)
+já está publicada. Releia `get_process_contract` de `alteracao_cadastral` antes de declará-la.
 
-**Continua da 2.12.0:** atualizar o plugin instalado e, por haver
+**Continua da 2.12.0:** por haver
 ferramentas novas (`confirm_termination` e as duas de
 retirada de saldo de férias, em `alteracao_cadastral`), fazer **Refresh do conector e conversa
 nova**, só quando ela for usar uma delas ou conceder `confirmar_rescisao` por

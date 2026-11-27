@@ -8,7 +8,7 @@
   "domains": {
     "geral": {
       "metadata_sha256": "4cd70673d66fe2d9f2efc2582d97f8aae3ed35d7e2f943f429f2e20b2eb92775",
-      "content_sha256": "d41771be9cdbb93fb12578755995adf836823595e05f6a7ab57965fe56b45966"
+      "content_sha256": "1380b26cd108f1f9ba24ea963e36bc190d98e9a724061019a113ef8a4ecdcc12"
     },
     "admissao": {
       "metadata_sha256": "27af0bcc0374b318d77d9c82ce433171bc3fb015efd0d88d25ab4206caeefb36",
@@ -40,7 +40,7 @@
     },
     "alteracao_cadastral": {
       "metadata_sha256": "1d7c117b03ff636b75aa4d3072ec683a0d1ce0699d8f7e3591317e1914c0f453",
-      "content_sha256": "22a78e43dc5396437b03e028e66b3fb873cbfdceb866eb9b7e78bebea094cab2"
+      "content_sha256": "ae8c5841654f017c226b659638afb05596eaf1fc11efd0d70fbc01d13a749d95"
     },
     "ocorrencia": {
       "metadata_sha256": "29e909ec5416154919c80be9ccaf52b9c982990d817c5c404196b58364ef9cc0",
@@ -64,7 +64,7 @@
     },
     "folha_mensal": {
       "metadata_sha256": "eb4e6860a275e8e5401de9b79c3e1167ddb70e1aa90437da8a3f7202f08e57db",
-      "content_sha256": "7e01628e449ee88d3181a53c5c5b81efbea614511445bbb9e9bc1eabdb781b94"
+      "content_sha256": "dfa4da2a1512abdb7577d57d9b62a21ad836799b94b2c9413282363d14af58a3"
     }
   },
   "changes": {

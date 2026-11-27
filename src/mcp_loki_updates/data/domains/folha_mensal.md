@@ -910,7 +910,8 @@ sinal, siga a seção do intermitente acima. O Loki só calcula empregado (categ
   pessoa não é calculada (`nao_calculados`, código `categoria_esocial_divergente`,
   próxima ação `alinhar_categoria_esocial_folha_e_cadastro`) e a pendência agregada
   de mesmo código fica aberta até nenhuma matrícula divergir. Se a folha está certa,
-  atualize o cadastro (alteração cadastral, com vigência na competência a corrigir);
+  atualize o cadastro (alteração cadastral, com a mesma data de efeito da declaração errada
+  ou a data em que a nova categoria passa a valer, se for depois; nunca antes);
   se o cadastro está certo, declare
   na folha a mesma categoria (ou omita o campo) e recalcule. Nunca escolha em
   silêncio.
