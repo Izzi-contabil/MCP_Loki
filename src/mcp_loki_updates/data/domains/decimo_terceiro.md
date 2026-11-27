@@ -455,3 +455,20 @@ Se optar por preservar proveniência detalhada de um original sem enviá-lo, con
 Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Categoria eSocial que não é de empregado no cadastro (2.13.0)
+
+Vale quando a recusa abaixo aparecer. Quem tem, no cadastro do vínculo,
+`categoria_esocial` que não começa com `1` (723 sócio com pró-labore, 901
+estagiário) não passa por 13º no Loki: `create_case` recusa antes de gravar, com
+`codigo` `categoria_sem_regime_clt` (`mode` `HUMAN_DECISION`; `proxima_acao`: conduzir
+o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la e
+recriar o caso; o texto servido fala em alteração cadastral, mas o campo vai pelo
+onboarding do vínculo (domínio `alteracao_cadastral`). O caso não é criado. Limites: vale só na
+criação (categoria cadastrada depois de o caso existir não o derruba, e o reenvio de
+caso já existente não a relê); `vinculo_nao_clt_*`, de `contrato.dados.categoria_vinculo`,
+vem antes. A categoria é lida na competência do próprio processo: a do caso; senão
+a competência ou o ano de `dados_decimo_terceiro` (o ano vale como dezembro), se vier no pedido de criação; sem nada disso, o mês corrente
+(America/Sao_Paulo). Sem vínculo conhecido (mesma empresa, CPF e admissão), sem
+categoria declarada ou com erro de leitura, o caso segue. Detalhe e declaração da
+categoria: `folha_mensal` e `alteracao_cadastral`.

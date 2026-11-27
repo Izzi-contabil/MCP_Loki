@@ -235,7 +235,8 @@ para isso.
   sem a capacidade, ela para e avisa a Ana. O aceite continua humano e a
   capacidade não abre cancelamento nem `preparation` na folha. Não há reinício em lote:
   `restart_case` não está no `execute_operational_batch`; são uma chamada por
-  caso e um enqueue por empresa. Enquanto o servidor aceitava o enqueue em
+  caso e um enqueue por empresa. Só a proprietária abre a exceção, por correção
+  `CL-N` e lista fechada de casos (seção da 2.13.0 abaixo). Enquanto o servidor aceitava o enqueue em
   revisão, o job nascia e terminava em `job_preparation_failed`. Com a
   correção do backend (#410, mesclada), o
   enqueue recusa na hora, sem criar job, com `case_in_review_requires_restart`
@@ -850,12 +851,12 @@ calculada como mensalista.
   `matriculas`). Os demais calculam normalmente e a cobertura fica parcial. A
   checagem vem antes de rubrica e de alocação: rubrica não mapeada de um
   intermitente não derruba a folha.
-- **Declare em TODA competência.** A memória do intermitente vale só dentro do
-  caso da competência: nenhum cadastro guarda a categoria e ela não atravessa
-  competências. Folha de outro mês, sem `categoria_esocial = "111"`, calcula a
-  pessoa como mensalista. Dentro do mesmo caso, a pendência aberta lembra as
-  matrículas e mantém a pessoa fora do cálculo mesmo se `restart_case` ou nova
-  escrita deixarem a categoria de fora.
+- **Declare em TODA competência.** Sem a categoria no cadastro (seção da 2.13.0
+  abaixo), a memória do intermitente vale só dentro do caso da competência e não
+  atravessa competências. Folha de outro mês, sem `categoria_esocial = "111"`
+  na folha nem no cadastro, calcula a pessoa como mensalista. Dentro do mesmo
+  caso, a pendência aberta lembra as matrículas e mantém a pessoa fora do
+  cálculo mesmo se `restart_case` ou nova escrita deixarem a categoria de fora.
 - **Fecha** (`auto_resolve` na reavaliação mensal) só quando cada matrícula
   marcada saiu da folha ou foi declarada com outra categoria; campo ausente não
   fecha.
@@ -863,8 +864,81 @@ calculada como mensalista.
   dele fora do Loki; se a categoria foi declarada por engano, corrija a fonte e
   recalcule. Nunca calcule intermitente como mensalista nem tente reproduzir a
   convocação por lançamentos.
-- Rescisão, 13º, férias, admissão e onboarding não recebem o fato de categoria
-  hoje: o aviso vale só para a folha mensal.
+
+## Categoria eSocial que não é de empregado e categoria no cadastro (2.13.0)
+
+Vale quando `get_company_onboarding_contract` listar `categoria_esocial` em
+`employee_parameters.data_schema` (padrão `^[0-9]{3}$`); sem o sinal, siga a seção
+do intermitente acima. O Loki só calcula empregado (categoria `1xx`, e dentre elas
+não a `111`).
+
+- **Categoria que não começa com `1`** (723 sócio com pró-labore, 901 estagiário):
+  a pessoa **não é calculada**. Vai para `nao_calculados` (motivo
+  `vinculo_nao_suportado`, código `categoria_esocial_nao_suportada` em
+  `issues[].code`, `detalhe` com a categoria recebida, próxima ação
+  `retirar_categoria_nao_clt_da_folha_mensal`) e abre a pendência agregada de mesmo
+  código (evidência `competencia` e `matriculas`); os demais calculam e a cobertura
+  fica parcial. O Loki ainda **não calcula pró-labore nem bolsa de estágio**. O `111`
+  segue com o código próprio da seção acima; `1xx` e campo ausente, como sempre. A
+  checagem vem antes de rubrica: rubrica não mapeada dessa pessoa não derruba a folha.
+- **O que fazer.** Retire a pessoa da folha mensal e apure a competência dela fora do
+  Loki; se a categoria foi declarada por engano na folha, corrija a fonte e
+  recalcule; se a do cadastro está errada, corrija-a no cadastro (fato
+  `parametrizacao`, abaixo). Nunca calcule sócio ou estagiário como empregado.
+- **Fecha** (`auto_resolve`) quando nenhuma matrícula marcada segue com categoria que
+  não é de empregado: saiu da folha, ou a folha (ou o cadastro, se a folha omite o
+  campo) passou a trazer `1xx`. Declarar `1xx` na folha de quem tem 723 ou 901 no
+  cadastro fecha esta pendência, mas abre `categoria_esocial_divergente` e a pessoa
+  segue sem cálculo.
+- **Memória dentro do caso.** A pendência aberta lembra matrícula e categoria e
+  mantém a pessoa fora do cálculo mesmo se `restart_case` ou nova escrita deixarem
+  o campo de fora. Limites: só dentro do caso da competência e só o que a folha
+  declarou; o campo ausente não fecha a pendência. O cadastro vence a memória:
+  matrícula com categoria cadastrada não herda a lembrada (cadastro corrigido para
+  101 e folha reenviada sem o campo calcula como 101).
+- **Categoria no cadastro do vínculo.** `categoria_esocial` (3 dígitos, opcional) é
+  parâmetro individual, declarado como os demais (pensão, VT, adicionais): fato
+  `kind: "parametrizacao"` com `effective_on`, referência, fonte e
+  `data: {"categoria_esocial": "723"}`, no trabalhador do lote de onboarding
+  (`workers[].existing_employee_id` quando o vínculo já existe) ou, em caso
+  aberto, pelo perfil documental
+  (`import_documentary_profile`, `parametrizacao` com a fonte do campo). Valor que
+  não tenha 3 dígitos é recusado. Folha sem o campo usa a do cadastro, inclusive
+  `111`, 723 e 901.
+- **Folha e cadastro divergentes** (qualquer diferença, até entre duas `1xx`): a
+  pessoa não é calculada (`nao_calculados`, código `categoria_esocial_divergente`,
+  próxima ação `alinhar_categoria_esocial_folha_e_cadastro`) e a pendência agregada
+  de mesmo código fica aberta até nenhuma matrícula divergir. Se a folha está certa,
+  atualize o cadastro (fato `parametrizacao`); se o cadastro está certo, declare
+  na folha a mesma categoria (ou omita o campo) e recalcule. Nunca escolha em
+  silêncio.
+- **Exigência de cadastro.** Quem não é empregado exige só `dependentes_irrf`:
+  sindicato, escala, VT e salário-família deixam de ser cobrados
+  (`cadastro_mestre_campo_ausente`). Cadastro sem o campo: mesma saída, mesmos
+  hashes e mesma versão do motor, e nenhuma folha fica desatualizada por isso.
+- **Recomendação.** Declare a categoria no cadastro de todo sócio, estagiário e
+  intermitente ANTES de rodar a folha: sem ela no cadastro nem na folha, a pessoa
+  é calculada como mensalista.
+- Criar caso de 13º, férias, rescisão ou admissão (e simulação de rescisão) de
+  quem tem categoria que não é de empregado no cadastro é recusado
+  (`categoria_sem_regime_clt`): `rescisao`, `admissao`, `ferias` e `decimo_terceiro`.
+
+## Reinício em lote autorizado por correção (rotina, 2.13.0)
+
+Vale quando a proprietária repassar um `authorization_id` (`rst-` e 32 hex) e o
+`expected_snapshot` de cada caso, depois de uma correção `CL-N` (a autorização
+está em `aprovacoes`). A rotina (conta de automação com `consultar` e `operar_casos`
+em `folha_mensal`; `atualizar_por_insumo_do_cliente` nem é exigida nem basta)
+reinicia **uma vez cada caso listado**, em `aguardando_revisao`, de forma simples
+(payload preservado): `receive_case_data(case_id, request={schema_version:
+"loki.case-restart-authorized/1", authorization_id, case_id, expected_snapshot,
+human_message})`, com `case_id` igual ao argumento, `expected_snapshot` igual ao
+repassado e `human_message` que nomeia o `CL-N`. O recibo traz `requires_case_data`: `true`
+em caso legado (reenvie os dados pelo `receive_case_data` comum). Depois, `enqueue_case_workflow`
+com os snapshots novos; o pacote novo exige nova revisão e novo aceite humanos.
+Repetir o mesmo pedido devolve o recibo (`replayed: true`). Toda recusa deixa o item
+sem consumir: pare e avise a proprietária, sem laço (códigos em `aprovacoes`); só
+`BUSY` (`authorization_change_busy`) pede repetir a mesma chamada.
 
 ## Consignado sem linha no mapa de verbas (2.12.0)
 

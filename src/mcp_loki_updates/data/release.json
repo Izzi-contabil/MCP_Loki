@@ -1,80 +1,80 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.12.0",
-  "contract_version": "2.12.0",
-  "plugin_version": "2.12.0",
+  "instructions_version": "2.13.0",
+  "contract_version": "2.13.0",
+  "plugin_version": "2.13.0",
   "minimum_plugin_version": "2.0.0",
   "updated_at": "2026-11-27",
   "domains": {
     "geral": {
-      "metadata_sha256": "52202fd0c3f29356d554598b6c10bee1b61b9d475508b470ccf2e9aa98fb04d5",
-      "content_sha256": "8dbd5923fbd1fb3a40e09a1405697209496f38f2308040149d5684c11c6ed129"
+      "metadata_sha256": "4cd70673d66fe2d9f2efc2582d97f8aae3ed35d7e2f943f429f2e20b2eb92775",
+      "content_sha256": "ccc2717ea1329ff1947efb835939a0c08b747b56bdc88106fa0cbf30710312f5"
     },
     "admissao": {
-      "metadata_sha256": "571410f2c9792b2d0afc577d8a94e376b60160e658d5ded3004e09405c21c439",
-      "content_sha256": "71c826982c2806b6b2734cdd184b107c6cbfc1000396b1474bfab7535e54897c"
+      "metadata_sha256": "27af0bcc0374b318d77d9c82ce433171bc3fb015efd0d88d25ab4206caeefb36",
+      "content_sha256": "be178e92de1e5e649de8f67451e3874c8ab8fcd3a43253174a0e0e5d37d7d1e0"
     },
     "rescisao": {
-      "metadata_sha256": "406266c508aaf42cb2b6974b78c1e4572eecd31dd307bbbdf6e3df810a220afe",
-      "content_sha256": "dbb17830079355af05209235754150115926e479b1f6ab04298427a3268ad7af"
+      "metadata_sha256": "f3a92abef99f9fa09251613e3ab0662a7bf0028d60abee9aceea4e6c2a7336ae",
+      "content_sha256": "d916f4aff55bbb701161b4d28a62e376c7bd98027b5844bcdabfcd404cc397bb"
     },
     "ferias": {
-      "metadata_sha256": "e7e87b69a7dd9167fadc8ffecaaebf649ecdde992995dfc1032ddf0a7d906a17",
-      "content_sha256": "f474bffd6896422a17a2903f6f78859660fa70da56d9ddbca0f17e01f9625a66"
+      "metadata_sha256": "b443645dcfc8c7d8c76c41912c5b92800e0653b742acbd256e79e750726dfada",
+      "content_sha256": "72e059df03e132562ba28edda3bad20776ff8f19806b8f7dc85bbea4ac00a6d9"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "d104a97657196f99a8ac6dd4250b745dfa64a351d4a629212fe0ad2b1b1daf02",
-      "content_sha256": "6d1b0875a58e465d64d22f68d14db38eb616a1f78087c6a3890373ae254769a6"
+      "metadata_sha256": "663a47c4c1dae54493b4eb6890bdc260c830533283ca8f860db476139ed28377",
+      "content_sha256": "410b985e1c1221dcbde557e9d0c2a1920e3b8cfa38ddd12d58a906c5777155ec"
     },
     "afastamento": {
-      "metadata_sha256": "be1c7a4b0ea6e5dd37d0dca09a0de329d306968ddc68ab22d958b2fae42d8eb5",
+      "metadata_sha256": "e95cee8e799a4942020205227b3180cb186c8a10d20bdf06e13e2f90daed70d0",
       "content_sha256": "2b77212c374df2039a5cfdbd46b4b1003772571f6ed1ff6ad48dc3e336228d33"
     },
     "documentos": {
-      "metadata_sha256": "34235ddeaee2237741c273742c4942791a470848c1720b1ee69b09675f20d324",
+      "metadata_sha256": "dd5d5fcd258c532f4e24f5c7eefd08a21632ba57394d16579dc0dd803d997469",
       "content_sha256": "75b78ee747b0ff350093a9bc9c839c167806748d28a554984a12cd79d9105c22"
     },
     "aprovacoes": {
-      "metadata_sha256": "8feb21f875d6dbc7535d3b2844c0e1e45a2c732ee61fede4111e0a7a70b0fc8d",
-      "content_sha256": "e0f1d13b2ba67f76e93db0bf7dc1ff5149fca2110641be45f5010bf95612ec2b"
+      "metadata_sha256": "f383684573304a36b96ba36ebedbf9bd0515ca13cd61a61ac5a45949c59ea66a",
+      "content_sha256": "4290c003d3a00d2710001034281ab3b132fab1de7a1aaac1279ee9a52318b540"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "f86961539d6dc94d70d76ee02254141ae26cf907328ef8f6e323ae8676ab4fc4",
-      "content_sha256": "b6e682ea37f7005054c56459d86fecfc7933c2b3514d7a54136685edcc617be3"
+      "metadata_sha256": "1d7c117b03ff636b75aa4d3072ec683a0d1ce0699d8f7e3591317e1914c0f453",
+      "content_sha256": "3b3a7816eed8195bdfde8313a7cf8677d79c3dfad5bba84f9b08aba70fd663b5"
     },
     "ocorrencia": {
-      "metadata_sha256": "aadb846202eee10083e9abf19fe98d64ab6330bc2aab3971d3c1b316f5623a87",
+      "metadata_sha256": "29e909ec5416154919c80be9ccaf52b9c982990d817c5c404196b58364ef9cc0",
       "content_sha256": "eee11e80a6b9ecd50579d6af29d8d6f1ee4a2ee108d07ab678d0d744a81a1561"
     },
     "adiantamento": {
-      "metadata_sha256": "560c39a6c9cb1fe2289d57cf3426396226b12fd39c673ba667ae6a193a7bf45f",
+      "metadata_sha256": "d29863339f7022b978f21aec88078b08012690f098bae8644b9c2dd5c6cdca24",
       "content_sha256": "7cb2a02bfa9699e98713715fe7776ac11b915232aa8e90c3412667480b5f20bf"
     },
     "aviso_ferias": {
-      "metadata_sha256": "df642882cb6c218f58382c55bac232cc885078c5aadded7f580199ac8e795987",
+      "metadata_sha256": "5d411be481f8b70569e6ecddedf89573f456e8d692f6a317dda470fb9dbc2acb",
       "content_sha256": "32899ec8c6c2a0daaf9b93cdac13e3d5ccab5d4cfff6b48ad53652bec56e3f13"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "9daa25e07fea5545ec6933a92fd8a8ad91b2b73d5496f1ae0d5d8de8c079f6e2",
+      "metadata_sha256": "6e524f581f2e7e8e895f5dbf50ccf28ba4aeed0181751d503c4347626a2531fc",
       "content_sha256": "f41aa8c3b08bff48a257ba966c7b0409e658be5dd5866f203bfa578c32dc0700"
     },
     "reajuste_salarial": {
-      "metadata_sha256": "163201e3745269a81625b58f3215c37ab8e60e1bde4b5076cbd6de9cfe0262d4",
+      "metadata_sha256": "716b4b7ef992773334b071202d6d801ce6caf132bb694f41551d2ba50a2faca6",
       "content_sha256": "dd97a5f6e2394a802824d0b28012899783736dab8bc9e0cd8ee815b8831a13be"
     },
     "folha_mensal": {
-      "metadata_sha256": "b234dd6da2b942dbdd776b92298b8ce8cea98ee4a775d99170e9086f042f77e7",
-      "content_sha256": "cc14756e23b7a693cefab92d4db7548b90e1fd000b07e1720ba7ced5dab43f72"
+      "metadata_sha256": "eb4e6860a275e8e5401de9b79c3e1167ddb70e1aa90437da8a3f7202f08e57db",
+      "content_sha256": "bbfb77b336a9b74ace8958993d833f7ee2d3b591c3096b10a1d67cfb1a8c56e7"
     }
   },
   "changes": {
     "backend": [
-      "Histórico das edições anteriores (2.2 a 2.11.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Contrato2.12.0 com ferramentas novas: confirm_termination (#435, ADR-042, capacidade confirmar_rescisao no enum de preparar_autorizacao, migration 0068), preview_onboarding_vacation_balance_retirement e retire_onboarding_vacation_balance (#438, ADR-043); exige Refresh do conector e conversa nova (backend #432 a #438 em main d0bcdd3d). Sem Refresh próprio: razão social do caso x cadastro com a recusa razao_social_natureza_juridica_divergente, o aviso razao_social_tipo_societario e a conferência dupla CNPJ + codigo_dominio (#432); a rotina reinicia férias por insumo do cliente, com identidades do período imutáveis (#433, ADR-039); categoria_esocial 111 do intermitente na folha mensal com vinculo_intermitente_nao_suportado (#434); contrato a prazo determinado com as recusas prazo_determinado_*, o aviso texto_contrato_prazo_determinado_nao_homologado e a recusa tipada em generate_documents e run_prepared_case_workflow (#436); credito_trabalhador_mapeamento_pendente para consignado sem linha no mapa; mínimo do plugin 2.0.0. O servidor mudou para https://loki.izzicontabil.com.br/mcp em 27/11/2026."
+      "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
+      "Contrato2.13.0 sem ferramenta nova; exige Refresh do conector e conversa nova só na conta da proprietária que autoriza, porque o schema de preparar_autorizacao ganha a variante restart_batch (ADR-041, migration 0069; snapshot connector_tools_list_d863b1aa_masked.json do Loki; branch feat/reinicio-autorizado-0069 até e34c8e0f, fora de main). Sem Refresh próprio (branch feature/folha-categoria-cadastro até d334d574, fora de main): categoria_esocial na folha mensal (categoria_esocial_nao_suportada e categoria_esocial_divergente), no cadastro do vínculo (employee_parameters.data_schema) e categoria_sem_regime_clt na criação de 13º, férias, rescisão, admissão e simulação de rescisão; os textos descrevem funções que só valem depois da publicação do backend correspondente; mínimo do plugin 2.0.0."
     ],
     "instructions": [
-      "Histórico das edições anteriores (2.2 a 2.11.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Instruções2.12.0: geral (aviso da versão com Refresh, endereço novo e recadastro do conector da conta de pessoa; avisos anteriores comprimidos pelo limite de 65536 bytes), admissao (razão social do caso x cadastro e contrato a prazo determinado), ferias (rotina reinicia por insumo do cliente), folha_mensal (categoria_esocial do intermitente, consignado sem linha no mapa e razão social), rescisao (confirm_termination), alteracao_cadastral (retirada de saldo de férias da carga histórica) e aprovacoes (capacidade confirmar_rescisao)."
+      "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
+      "Instruções2.13.0: geral (aviso da versão; avisos anteriores comprimidos pelo limite de 65536 bytes), folha_mensal (categoria eSocial que não é de empregado e no cadastro; reinício em lote pela rotina), alteracao_cadastral (categoria no cadastro), aprovacoes (restart_batch), admissao e rescisao (categoria_sem_regime_clt; reinício em lote pela rotina), ferias e decimo_terceiro (categoria_sem_regime_clt)."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -84,8 +84,8 @@
       "Contrato2.0.0 retira ferramentas de extração e execução especial; migrar para get_process_contract e receive_case_data. Cliente1.x declarado é incompatível."
     ],
     "plugin": [
-      "Histórico das edições anteriores (2.2 a 2.11.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Plugin2.12.0 espelha a 2.12.0 em WORKFLOWS (seção 2.12.0), CAPACIDADES_DP, operar-loki, registrar-problema-loki, bootstrap e README, com o endereço novo; ferramentas novas exigem Refresh do conector e conversa nova, além de atualizar o plugin; wheel0.4.38 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.37 permanece imutável."
+      "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
+      "Plugin2.13.0 espelha a 2.13.0 em WORKFLOWS (seção 2.13.0), CAPACIDADES_DP, operar-loki e registrar-problema-loki; sem ferramenta nova, basta atualizar o plugin, e o Refresh do conector com conversa nova vale só na conta da proprietária que for autorizar o reinício em lote; wheel0.4.39 preparado não comprova backend publicado, instalação ou uso. Wheel0.4.38 permanece imutável."
     ]
   }
 }

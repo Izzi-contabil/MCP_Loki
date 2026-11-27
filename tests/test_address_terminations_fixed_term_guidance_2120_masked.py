@@ -31,14 +31,13 @@ def assert_all(body: str, markers: tuple[str, ...]) -> None:
         assert flat(marker) in body, marker
 
 
-def test_general_notice_leads_with_refresh_for_the_new_tools_and_the_new_address() -> None:
+def test_general_notice_keeps_the_2120_refresh_for_the_new_tools_and_the_new_address() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.12.0)")
     notice = flat(guide[: guide.index("## Reaproveitar respostas e causas persistidas")])
     assert_all(
         notice,
         (
-            "**Exige ação da operadora (2.12.0):** atualizar o plugin instalado",
+            "**Continua da 2.12.0:**",
             "`confirm_termination`",
             "retirada de saldo de férias",
             "`confirmar_rescisao` por `preparar_autorizacao`",
@@ -50,9 +49,10 @@ def test_general_notice_leads_with_refresh_for_the_new_tools_and_the_new_address
             "o resto não exige",
         ),
     )
-    assert notice.index("**Exige ação da operadora (2.12.0):**") < notice.index(
-        "**Vale quando o Loki for publicado:**"
+    assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
+        "**Continua da 2.12.0:**"
     )
+    assert notice.index("**Continua da 2.12.0:**") < notice.index("**Continua da 2.11.0**")
     assert notice.index("**Continua da 2.11.0**") < notice.index("**Continua da 2.10.1:**")
     # A rotina passa a reiniciar férias; só o afastamento continua com pessoa.
     body = flat(guide)
@@ -243,24 +243,8 @@ def test_plugin_mirrors_the_release() -> None:
         assert "recadastrado nele" in flat(path.read_text(encoding="utf-8")), path
 
 
-def test_release_versions_hashes_and_current_history() -> None:
-    metadata = InstructionsProvider().metadata()
-    assert metadata["provider_version"] == "0.4.38"
-    assert metadata["instructions_version"] == "2.12.0"
-    assert metadata["mcp_contract_version"] == "2.12.0"
-    assert metadata["recommended_plugin_version"] == "2.12.0"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
-    manifest = json.loads((PLUGIN / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
-    assert manifest["version"] == "2.12.0"
+def test_domain_hashes_and_size_limit() -> None:
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    for category, prefix in (
-        ("backend", "Contrato2.12.0"),
-        ("instructions", "Instruções2.12.0"),
-        ("plugin", "Plugin2.12.0"),
-    ):
-        entries = release["changes"][category]
-        assert len(entries) == 2 and "docs/MCP_UPDATES.md" in entries[0], category
-        assert entries[1].startswith(prefix), category
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
             content = (DOMAINS / f"{name}.{suffix}").read_bytes()

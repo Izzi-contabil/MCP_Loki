@@ -531,3 +531,11 @@ aviso `texto_contrato_prazo_determinado_nao_homologado`; `preparation_identity_c
 no reinício de férias pela rotina; as recusas `onboarding_vacation_balance_*` da retirada
 de saldo de férias. Endereço antigo do Loki devolvendo 503 é a mudança de servidor, não
 falha: recadastre o conector no endereço novo.
+Na 2.13.0 não são defeito, quando a resposta servida mostrar o sinal:
+`categoria_esocial_nao_suportada` e `categoria_esocial_divergente` na folha mensal,
+`categoria_sem_regime_clt` na criação de caso (e como `reason` da simulação de rescisão),
+e na execução do reinício em lote as recusas `correction_restart_*`,
+`case_snapshot_changed` e `restart_requires_effect_reconciliation` (peça nova
+autorização à proprietária); `restart_batch_refused` (com `refusals[]`) e
+`restart_batch_message_requires_code` na autorização. A conta que recebe
+`caso_inexistente_ou_nao_autorizado` ao executar o reinício não tem escopo no caso.

@@ -666,3 +666,33 @@ novamente S-2200 para provar a mesma identidade já conciliada por fontes sufici
 Referências diferentes podem preparar drafts distintos. O contrato declara
 `allowed_multiple_preparations=true` e `execution_deduplication_verified=false`;
 idempotência do pedido não é deduplicação fiscal para uma futura execução.
+
+## Categoria eSocial do vínculo no cadastro (2.13.0)
+
+Vale quando `get_company_onboarding_contract` listar `categoria_esocial` em
+`employee_parameters.data_schema` (texto de 3 dígitos, padrão `^[0-9]{3}$`, opcional).
+É parâmetro individual do vínculo e a fonte do fato para a folha e para os demais
+processos.
+
+- **Como declarar.** Como os outros parâmetros individuais (pensão, VT, adicionais): fato
+  `kind: "parametrizacao"` com `effective_on`, `reference`, fonte e
+  `data: {"categoria_esocial": "723"}`, num trabalhador do lote de onboarding da
+  empresa; para vínculo já cadastrado, o mesmo fato no trabalhador com
+  `existing_employee_id`. O caso `alteracao_cadastral` (`dados_alteracao_cadastral.changes`)
+  não aceita `categoria_esocial` hoje: não o use para isso. Em caso `aberto` ou
+  `em_preparacao`, também o perfil documental (`import_documentary_profile`,
+  `parametrizacao.categoria_esocial` com a fonte do campo). Valor que não tenha 3 dígitos é recusado. Corrigir categoria já
+  aplicada segue a regra de `replaces_fact_id` acima.
+- **Recomendação.** Declare a categoria no cadastro de todo sócio, estagiário e
+  intermitente **antes** de rodar folha.
+- **Efeito na folha** (detalhe em `folha_mensal`): folha sem o campo usa a do cadastro;
+  folha e cadastro diferentes dão `categoria_esocial_divergente` e a pessoa não é
+  calculada até alinhar; o cadastro vence a memória do caso. Categoria que não começa
+  com `1` não é calculada (`categoria_esocial_nao_suportada`): o Loki ainda não calcula
+  pró-labore nem bolsa de estágio.
+- **Exigência de cadastro.** Para quem não é empregado o cadastro exige só os
+  dependentes de IRRF; sindicato, escala, VT e salário-família não são cobrados.
+  Empregado ou campo ausente: a exigência de sempre.
+- **Outros processos.** Criar caso de 13º, férias, rescisão ou admissão, e simulação de
+  rescisão, de quem tem categoria que não é de empregado é recusado com
+  `categoria_sem_regime_clt` (seção própria em cada domínio).
