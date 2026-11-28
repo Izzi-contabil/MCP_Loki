@@ -12,11 +12,11 @@
     },
     "admissao": {
       "metadata_sha256": "9eebf13cd18d1a0f911f80bbbc51f1151ee1db41996f844d7e76cdb0a27aeb3c",
-      "content_sha256": "36c736c9052f7462134fb5dbd249e0fb6be1a6fff33fac3c5ac8289e1ec3ea1a"
+      "content_sha256": "db47798d9233c4bfd35d715a34eca31063c67b9019f92ff26df1bc4a94427879"
     },
     "rescisao": {
       "metadata_sha256": "73ff6732841ee364a8394b19695904da03c9c4e1fa864ad299106ce6f4f9ecff",
-      "content_sha256": "fe4fc38a13237dc25d85df5fe635f0ee3f366ccb65309bad62fe64dc066f4036"
+      "content_sha256": "7014994561527b043f4700ae105c8c24877b11520eadba22fd30f2fbbcf1f5f5"
     },
     "ferias": {
       "metadata_sha256": "67570c0ee93052e461d80e9e5b83947ea5882318841f7afb962d6beca9c25b24",
@@ -36,7 +36,7 @@
     },
     "aprovacoes": {
       "metadata_sha256": "3af667c9963989b28f0475fcbcd5e7483710b557bfa94721170420e3d5ae1ba9",
-      "content_sha256": "16e9db376398c59a9c703e9125c7cb6f42f007043715bc598d9c343671d4ced0"
+      "content_sha256": "4fbb47e402738e74a95426e86ed3a546818f8a37a5388f2e65e3ae16e98586fd"
     },
     "alteracao_cadastral": {
       "metadata_sha256": "6a5ab079b780bb19b4eeb517cc34208fc8e215ab5760e3a23583785a69059e65",
@@ -64,7 +64,7 @@
     },
     "folha_mensal": {
       "metadata_sha256": "8b360f1cfca124c820ae4d19db4dcc19e20ca29a6c37de6b16e94d9fe58b596f",
-      "content_sha256": "b7e7788c3a1ed61764185523160803ae10fe39209eb0fb17e2ccbd430bc8fa72"
+      "content_sha256": "b5e5a33f7a9457e09e39f387f9252161aa4e068f0f3f71d68a8cedc7d5cb4249"
     }
   },
   "changes": {

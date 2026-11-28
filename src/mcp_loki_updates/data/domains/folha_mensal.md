@@ -973,9 +973,10 @@ human_message})`, com `case_id` igual ao argumento, `expected_snapshot` igual ao
 e `human_message` que nomeia o `CL-N`. O recibo traz `requires_case_data`: `true` em caso
 legado (reenvie os dados pelo `receive_case_data` comum). Depois,
 `enqueue_case_workflow` com os snapshots novos; o pacote novo exige nova revisão e novo
-aceite humanos. Repetir o pedido devolve o recibo com `replayed: true`: já reiniciado
-por esta autorização, sem segundo reinício; não siga para o cálculo como se tivesse
-reiniciado, avise a proprietária. Entre a autorização e a execução, `prepare_case_review` pela primeira vez, `record_package_checks` e decisão registrada no caso gravam evento e invalidam o item: a execução devolve `case_snapshot_changed`; pare e avise a proprietária, sem mandar o snapshot atual (dá `correction_restart_snapshot_mismatch`). Ler caso, dossiê e documentos não invalida. Não rode a rotina de correção durante uma janela de
+aceite humanos. Repetir o pedido devolve o recibo com `replayed: true`: releia `get_case`; em
+`em_preparacao`, o reinício valeu e siga com os dados e o cálculo; se o caso já voltou à
+revisão, não há segundo reinício: pare e avise a proprietária (autorização nova; o item
+consumido não bloqueia). Entre a autorização e a execução, `prepare_case_review` pela primeira vez, `record_package_checks` e decisão registrada no caso gravam evento e invalidam o item: a execução devolve `case_snapshot_changed`; pare e avise a proprietária, sem mandar o snapshot atual (dá `correction_restart_snapshot_mismatch`). Ler caso, dossiê e documentos não invalida. Não rode a rotina de correção durante uma janela de
 publicação do executor anterior: o reinício muda o censo de eventos e a publicação recusa.
 
 **Recusa** (`BLOCKED` com `code`; nada é consumido e o item segue aberto; sem laço).

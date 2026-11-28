@@ -188,8 +188,9 @@ pacote (`record_package_checks`) e prepare a revisão (`prepare_case_review`) **
 pedir a autorização; autorize; a rotina executa em seguida. Entre as duas, não chame
 `prepare_case_review` pela primeira vez, não chame `record_package_checks` e não registre
 decisão no caso: gravam evento e invalidam o item daquele caso, que só se refaz revogando a
-autorização inteira. Ler o caso, o dossiê e os documentos, `prepare_case_review` repetido de
-revisão já preparada antes da autorização e repetir um envio idêntico não invalidam. A
+autorização inteira. Ler o caso, o dossiê e os documentos, `prepare_case_review` repetido pela
+mesma conta sobre o mesmo pacote (outra conta, ou pacote com outro hash, grava evento e
+invalida) e repetir um envio idêntico não invalidam. A
 execução com o snapshot autorizado devolve então `case_snapshot_changed`; com o snapshot
 atual do caso, `correction_restart_snapshot_mismatch`: a rotina nunca troca um pelo outro.
 Não chame por precaução `prepare_version_review`, `calculate_case` nem `generate_documents`
@@ -222,10 +223,12 @@ faz, por código:
 
 - `correction_restart_snapshot_mismatch`: a rotina reenvia com o `expected_snapshot` do
   recibo da concessão (não o atual do caso). Vem também no segundo reinício de item já
-  consumido, se o snapshot do caso mudou: é preciso autorização nova (o item consumido não
-  bloqueia). Com o mesmo snapshot, o item consumido devolve o recibo antigo com
-  `replayed: true`: já foi reiniciado por esta autorização, não há segundo reinício, e a
-  rotina avisa a proprietária em vez de seguir como se tivesse reiniciado.
+  consumido, se a rotina enviar um snapshot diferente do autorizado (por exemplo, o atual do
+  caso). Com o snapshot autorizado, a mesma chamada devolve o recibo antigo com
+  `replayed: true`: a rotina relê `get_case`; em `em_preparacao`, o reinício desta
+  autorização valeu e ela segue o fluxo normal (dados e cálculo); se o caso já voltou à
+  revisão, não há segundo reinício por esta autorização: ela para e avisa a proprietária, e é
+  preciso autorização nova (o item consumido não bloqueia).
 - `correction_restart_message_requires_code`: a rotina corrige a mensagem.
 - `correction_restart_authorization_daily_limit`, `correction_restart_account_daily_limit`:
   esperar o dia seguinte (America/Sao_Paulo).

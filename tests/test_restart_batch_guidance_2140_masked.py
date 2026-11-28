@@ -190,8 +190,11 @@ def test_revocation_is_bound_to_the_authorization_and_reauthorizing_needs_it() -
             "`correction_restart_snapshot_mismatch`: a rotina reenvia com o `expected_snapshot` "
             "do recibo da concessão (não o atual do caso)",
             "é preciso autorização nova (o item consumido não bloqueia)",
-            "o item consumido devolve o recibo antigo com `replayed: true`",
-            "não há segundo reinício",
+            "se a rotina enviar um snapshot diferente do autorizado (por exemplo, o atual do caso)",
+            "Com o snapshot autorizado, a mesma chamada devolve o recibo antigo com "
+            "`replayed: true`",
+            "em `em_preparacao`, o reinício desta autorização valeu e ela segue o fluxo normal",
+            "se o caso já voltou à revisão, não há segundo reinício por esta autorização",
             "`correction_restart_message_requires_code`: a rotina corrige a mensagem",
             "`correction_restart_authorization_daily_limit`, "
             "`correction_restart_account_daily_limit`: esperar o dia seguinte",
@@ -232,6 +235,8 @@ def test_safe_order_and_the_operations_that_invalidate_the_authorization() -> No
             "gravam evento e invalidam o item daquele caso, que só se refaz revogando a "
             "autorização inteira",
             "Ler o caso, o dossiê e os documentos",
+            "`prepare_case_review` repetido pela mesma conta sobre o mesmo pacote (outra conta, ou "
+            "pacote com outro hash, grava evento e invalida)",
             "repetir um envio idêntico não invalidam",
             "com o snapshot autorizado devolve então `case_snapshot_changed`",
             "com o snapshot atual do caso, `correction_restart_snapshot_mismatch`",
@@ -310,8 +315,9 @@ def test_routine_scripts_are_self_sufficient_and_do_not_depend_on_approvals() ->
         assert_all(
             section,
             (
-                "`replayed: true`",
-                "avise a proprietária",
+                "`replayed: true`: releia `get_case`; em `em_preparacao`, o reinício",
+                "se o caso já voltou à revisão, não há segundo reinício: pare e avise a "
+                "proprietária (autorização nova; o item consumido não bloqueia)",
                 "deixar o caso fora (o item fica aberto até vencer)",
             ),
         )
