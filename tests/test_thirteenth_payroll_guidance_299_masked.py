@@ -113,10 +113,10 @@ def test_plugin_mirrors_the_release_and_replaced_coverage_rule() -> None:
 def test_release_is_text_only_with_matching_hashes_and_size_limit() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.39"
-    assert metadata["instructions_version"] == "2.13.0"
-    assert metadata["mcp_contract_version"] == "2.13.0"
-    assert metadata["recommended_plugin_version"] == "2.13.0"
+    assert metadata["provider_version"] == "0.4.40"
+    assert metadata["instructions_version"] == "2.14.0"
+    assert metadata["mcp_contract_version"] == "2.14.0"
+    assert metadata["recommended_plugin_version"] == "2.14.0"
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     for name, hashes in release["domains"].items():
         for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
@@ -124,6 +124,6 @@ def test_release_is_text_only_with_matching_hashes_and_size_limit() -> None:
             assert hashlib.sha256(content).hexdigest() == hashes[key], (name, suffix)
         assert len((DOMAINS / f"{name}.md").read_bytes()) <= LIMIT, name
         data = json.loads((DOMAINS / f"{name}.json").read_text(encoding="utf-8"))
-        assert data["version"] == "2.13.0", name
-        assert data["compatibility"]["mcp_contract_version"] == "2.13.0", name
-        assert data["compatibility"]["recommended_plugin_version"] == "2.13.0", name
+        assert data["version"] == "2.14.0", name
+        assert data["compatibility"]["mcp_contract_version"] == "2.14.0", name
+        assert data["compatibility"]["recommended_plugin_version"] == "2.14.0", name

@@ -532,3 +532,10 @@ Declare a categoria antes de rodar folha, pela alteração cadastral
 (`changes.categoria_esocial`) ou pelo fato `parametrizacao` do onboarding, com a data de
 efeito do início da pessoa naquela categoria, nunca a do envio. **Sem ferramenta nova e
 sem Refresh do conector**; basta atualizar o plugin.
+Na 2.14.0 (“2.14.0: reinício em lote por correção”), a proprietária autoriza o reinício
+em lote por correção `CL-N` (`restart_batch` em `preparar_autorizacao`, já publicado) e a
+rotina o executa por `receive_case_data` com `loki.case-restart-authorized/1`. **Sem
+ferramenta nova; Refresh do conector e conversa nova só na conta de quem autoriza** (o
+schema de `preparar_autorizacao` ganhou a variante), além de atualizar o plugin; a rotina
+não precisa de Refresh. Para autorizar de novo um caso cuja autorização segue aberta, a
+proprietária revoga a autorização inteira antes.

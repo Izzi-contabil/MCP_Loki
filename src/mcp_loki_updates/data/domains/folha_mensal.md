@@ -233,12 +233,12 @@ para isso.
   autorização: `preparar_autorizacao` ou o acréscimo `prepare_authorization_addition`) faz o `restart_case` simples (sem `preparation`, com
   `human_message`) e depois o `enqueue_case_workflow` com os snapshots novos;
   sem a capacidade, ela para e avisa a Ana. O aceite continua humano e a
-  capacidade não abre cancelamento nem `preparation` na folha. Não há reinício em lote:
-  `restart_case` não está no `execute_operational_batch`; são uma chamada por
-  caso e um enqueue por empresa. Enquanto o servidor aceitava o enqueue em
-  revisão, o job nascia e terminava em `job_preparation_failed`. Com a
-  correção do backend (#410, mesclada), o
-  enqueue recusa na hora, sem criar job, com `case_in_review_requires_restart`
+  capacidade não abre cancelamento nem `preparation` na folha. Não há reinício em lote
+  (`restart_case` fora do `execute_operational_batch`): uma chamada por caso
+  e um enqueue por empresa; só a proprietária abre a exceção (seção da 2.14.0). O servidor
+  anterior aceitava o enqueue em revisão e o job terminava em
+  `job_preparation_failed`; o atual (#410, mesclada) recusa na hora, sem criar
+  job, com `case_in_review_requires_restart`
   e `next_action=restart_case`; ao ver esse código, faça o reinício simples
   acima. Não tente contornar com novo `request_ref`, cancelamento ou outro
   caso.
@@ -542,9 +542,8 @@ verba.
 3. **Enfileire em série na mesma empresa, em paralelo entre empresas.** Para
    várias folhas da mesma empresa, envie uma, espere o estado terminal e só
    então envie a próxima. Folhas de **empresas diferentes** rodam ao mesmo
-   tempo no worker, no máximo uma por empresa: para várias empresas,
-   enfileire uma folha de cada sem esperar as outras; o tempo total deixa de
-   ser a soma. Consultas Dataprev mensais podem demorar mais enquanto houver
+   tempo no worker, no máximo uma por empresa: enfileire uma folha de cada
+   sem esperar as outras. Consultas Dataprev mensais podem demorar mais enquanto houver
    folhas em execução, porque só rodam com a fila de folha vazia; acompanhe
    pelo recibo, sem reenviar. Depois da recusa, releia `get_case` do caso recusado
    antes de repetir o enqueue; a mesma referência pode ser usada, porque nada
@@ -642,8 +641,8 @@ primária. Leia três coisas:
 afastamento) não serve como fonte da folha. Cada caso usa as próprias fontes
 registradas.
 
-Depois de qualificar, recalcule a folha e releia o dossiê. As causas antes
-dependentes podem então aparecer como causas próprias.
+Depois de qualificar, recalcule e releia o dossiê: as causas antes dependentes
+podem aparecer como causas próprias.
 
 **Salário-base ausente.** `salario_base_ausente` é reconhecido no dossiê. Siga
 primeiro `next_action`, que é a ação gravada pelo cálculo.
@@ -813,9 +812,9 @@ afastamento segue como antes.
 
 ## Regras da DP para declarar o cadastro e os descontos (2.9.8)
 
-São regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O
-Loki não as deriva sozinho: ele recebe a quantidade declarada por pessoa e a
-valida com a coerência interna.
+Regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O Loki
+não as deriva: recebe a quantidade declarada por pessoa e a valida com a
+coerência interna.
 
 - **Salário-família.** Depende da flag no cadastro do Domínio. Com a flag
   desmarcada, a quantidade de filhos para o salário-família é 0, mesmo que o
@@ -829,8 +828,7 @@ valida com a coerência interna.
 - **VT.** O percentual vem da escala da pessoa: 3% na 12x36 e 6% na 6x1. A
   harness declara o percentual por pessoa em `vale_transporte_regra`
   (`percentual_basis_points`: 300 ou 600). O Loki não deduz a taxa da escala,
-  do sindicato nem de referência livre: sem a regra declarada, o Loki não
-  aplica taxa pela escala.
+  do sindicato nem de referência livre; sem a regra declarada, não aplica taxa pela escala.
 
 ## Vínculo intermitente: `categoria_esocial` (2.12.0)
 
@@ -986,3 +984,24 @@ Se optar por preservar proveniência detalhada de um original sem enviá-lo, con
 Fontes `kind=document` conservam o significado de documento já arquivado no Loki; `document.reference` seleciona uma fonte já registrada quando o contrato assim exigir. Caminho local, ID do Drive e hash isolado não são ID de fonte registrada. `kind=declaration` descreve somente uma declaração real com referência, localizador, fundamento e limites honestos. Não reclassifique documento como declaração para inventar uma qualificação, nem declare EXTSRC como DOC. A declaração informal autorizada do próprio request é válida quando a operação não exigir evidência específica. Se o consumidor ainda exigir anexação nova do original ou recusar o tipo harness, isso é lacuna contratual: preserve os dados preparados e peça adequação explícita da evidência estruturada pelo HTTPS, sem fabricar DOC nem enviar o original. Contrato indisponível e fonte insuficiente são pendências distintas.
 
 `field_sources` é opcional. Informação informal ou implícita autorizada pode ser enviada em `data` sem anexo, manifesto ou hash por campo. O Loki registra automaticamente ator, data/hora, request e origem declarada. Preserve a distinção entre informado, inferido e confirmado; inferência contextual deve conservar sua justificativa quando disponível, sem virar documento lido ou confirmação independente. `kind=inference` e `kind=context` podem descrever inferência ou contexto sem hash e sem `foundation` obrigatório; preserve a justificativa quando disponível. Proveniência detalhada e EXTSRC são recursos opcionais: EXTSRC é opcional e não é pré-requisito universal. Não bloqueie cálculo ou registro inteiro pela ausência de fonte formal. Exija comprovante ou fundamento somente quando a operação específica o requerer e mantenha a pendência limitada ao resultado dependente.
+
+## Reinício em lote autorizado por correção (rotina, 2.14.0)
+
+Vale quando a proprietária repassar `authorization_id` (`rst-` e 32 hex) e o
+`expected_snapshot` por caso, após uma correção `CL-N`. A rotina (`consultar` e
+`operar_casos`; não exige `atualizar_por_insumo_do_cliente`) reinicia **uma vez cada caso
+listado**, em `aguardando_revisao`, com o payload preservado, por
+`receive_case_data(case_id, request={schema_version: "loki.case-restart-authorized/1",
+authorization_id, case_id, expected_snapshot, human_message})`, com `human_message` que
+nomeia o `CL-N`. `requires_case_data: true` (caso legado): reenvie os dados pelo
+`receive_case_data` comum. Depois, `enqueue_case_workflow` com os snapshots novos; o pacote
+novo exige nova revisão e aceite humanos.
+
+**Recusa** (`BLOCKED` com `code`; nada é consumido; sem laço). Corrija sozinha só
+`correction_restart_snapshot_mismatch` (reenvie o snapshot do recibo da concessão) e
+`correction_restart_message_requires_code` (nomeie o `CL-N`); nos limites diários
+(`correction_restart_*_daily_limit`), espere o dia seguinte; `BUSY`
+(`authorization_change_busy`): repita a mesma chamada. Em qualquer outro `code`
+(`correction_restart_*`, `case_snapshot_changed`, `restart_requires_effect_reconciliation`,
+`case_simulation_refused`) ou no erro `caso_inexistente_ou_nao_autorizado`, pare e avise
+a proprietária pela Caixa com o código; a decisão é dela.

@@ -1,5 +1,16 @@
-# MCP Loki — contrato operacional 2.13.0
-Candidata **provider 0.4.39 / contrato, instruções e plugin 2.13.0**, 27/11/2026:
+# MCP Loki — contrato operacional 2.14.0
+Candidata **provider 0.4.40 / contrato, instruções e plugin 2.14.0**, 28/11/2026:
+reinício autorizado em lote por correção (`restart_batch`, ADR-041): a proprietária
+autoriza, por `preparar_autorizacao` e `aplicar_autorizacao`, uma lista fechada de casos em
+`aguardando_revisao` (admissão, rescisão e folha mensal) e a rotina os reinicia por
+`receive_case_data` com `loki.case-restart-authorized/1`, uma vez por caso. Não há
+ferramenta nova nem capacidade nova: o schema de `preparar_autorizacao` ganha a variante
+`restart_batch`, então a conta de quem autoriza precisa de **Refresh do conector e conversa
+nova** além de atualizar o plugin; a rotina não precisa de Refresh. O backend já está
+publicado (Project-loki `origin/main` `4b497231`, schema 0069). Quem reautoriza um caso cuja
+autorização segue aberta revoga a autorização inteira antes.
+
+Edição anterior **provider 0.4.39 / contrato, instruções e plugin 2.13.0**, 27/11/2026:
 categoria eSocial na folha mensal e no cadastro do vínculo (sócio e estagiário não
 são calculados; `categoria_esocial_nao_suportada`, `categoria_esocial_divergente` e
 `categoria_sem_regime_clt` na criação de 13º, férias, rescisão, admissão e simulação

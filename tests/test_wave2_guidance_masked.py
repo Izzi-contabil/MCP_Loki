@@ -132,10 +132,10 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_new_contract_minor() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.39"
-    assert metadata["instructions_version"] == "2.13.0"
-    assert metadata["mcp_contract_version"] == "2.13.0"
-    assert metadata["recommended_plugin_version"] == "2.13.0"
+    assert metadata["provider_version"] == "0.4.40"
+    assert metadata["instructions_version"] == "2.14.0"
+    assert metadata["mcp_contract_version"] == "2.14.0"
+    assert metadata["recommended_plugin_version"] == "2.14.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -156,9 +156,10 @@ def test_versions_follow_the_new_contract_minor() -> None:
         "2.11.0",
         "2.12.0",
         "2.13.0",
+        "2.14.0",
     ):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.11.0", "2.13.1")["compatible"] is False
+    assert provider.check_version("2.11.0", "2.14.1")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
@@ -166,8 +167,8 @@ def test_versions_follow_the_new_contract_minor() -> None:
     ]
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.13.0", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.13.0", path.name
+        assert data["version"] == "2.14.0", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.14.0", path.name
     for path in DOMAINS.glob("*.md"):
         assert len(path.read_bytes()) <= 65536, path.name
 

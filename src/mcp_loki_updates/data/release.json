@@ -1,80 +1,80 @@
 {
   "schema_version": 1,
-  "instructions_version": "2.13.0",
-  "contract_version": "2.13.0",
-  "plugin_version": "2.13.0",
+  "instructions_version": "2.14.0",
+  "contract_version": "2.14.0",
+  "plugin_version": "2.14.0",
   "minimum_plugin_version": "2.0.0",
-  "updated_at": "2026-11-27",
+  "updated_at": "2026-11-28",
   "domains": {
     "geral": {
-      "metadata_sha256": "4cd70673d66fe2d9f2efc2582d97f8aae3ed35d7e2f943f429f2e20b2eb92775",
-      "content_sha256": "1380b26cd108f1f9ba24ea963e36bc190d98e9a724061019a113ef8a4ecdcc12"
+      "metadata_sha256": "efb3ef5ecfac7bb3aef628570036227360d395efaab39346c4544abc16d31998",
+      "content_sha256": "130c74365fecc3857f4af8bb4f79e9a84db855faee7478a8cf9c4fdeda770b91"
     },
     "admissao": {
-      "metadata_sha256": "27af0bcc0374b318d77d9c82ce433171bc3fb015efd0d88d25ab4206caeefb36",
-      "content_sha256": "f1ba8d7c36d4e11de0bad6158f0cb01e82b34fa68438e846dc88604948771a99"
+      "metadata_sha256": "9eebf13cd18d1a0f911f80bbbc51f1151ee1db41996f844d7e76cdb0a27aeb3c",
+      "content_sha256": "47e510d30c40f9b9acb0ab6090c603477425092eea63f91531320c24ebe10796"
     },
     "rescisao": {
-      "metadata_sha256": "f3a92abef99f9fa09251613e3ab0662a7bf0028d60abee9aceea4e6c2a7336ae",
-      "content_sha256": "c9e7f979ce728c2665cd4361428a553b48fbffb43b78f5ce86d4706f1c3be274"
+      "metadata_sha256": "73ff6732841ee364a8394b19695904da03c9c4e1fa864ad299106ce6f4f9ecff",
+      "content_sha256": "1bd642b5cdc80f48ae634ca88f1376307310be78f38abd57a11e7a73927fa052"
     },
     "ferias": {
-      "metadata_sha256": "b443645dcfc8c7d8c76c41912c5b92800e0653b742acbd256e79e750726dfada",
+      "metadata_sha256": "67570c0ee93052e461d80e9e5b83947ea5882318841f7afb962d6beca9c25b24",
       "content_sha256": "118b742ae056a1b2a1e35838bb521a9d898f36e218537dec41cd74efbb9aa6bb"
     },
     "decimo_terceiro": {
-      "metadata_sha256": "663a47c4c1dae54493b4eb6890bdc260c830533283ca8f860db476139ed28377",
+      "metadata_sha256": "3be554d6bf8205152010d6020c79d011cd9d71005bd832318b52af9c67df56cb",
       "content_sha256": "cd85d9beb9e53a1d56d51aa330151a048dda7f62546f0a69f354e2c1360262ef"
     },
     "afastamento": {
-      "metadata_sha256": "e95cee8e799a4942020205227b3180cb186c8a10d20bdf06e13e2f90daed70d0",
+      "metadata_sha256": "a5ef0dc4e61699167732c51841c01122db896e181ce4bac7b29e9c4876703994",
       "content_sha256": "2b77212c374df2039a5cfdbd46b4b1003772571f6ed1ff6ad48dc3e336228d33"
     },
     "documentos": {
-      "metadata_sha256": "dd5d5fcd258c532f4e24f5c7eefd08a21632ba57394d16579dc0dd803d997469",
+      "metadata_sha256": "ce5ce74a62e27487c0b31aefa5bb9aa5d55a8ef7922187802e84acd76578c7ca",
       "content_sha256": "75b78ee747b0ff350093a9bc9c839c167806748d28a554984a12cd79d9105c22"
     },
     "aprovacoes": {
-      "metadata_sha256": "f383684573304a36b96ba36ebedbf9bd0515ca13cd61a61ac5a45949c59ea66a",
-      "content_sha256": "e0f1d13b2ba67f76e93db0bf7dc1ff5149fca2110641be45f5010bf95612ec2b"
+      "metadata_sha256": "3af667c9963989b28f0475fcbcd5e7483710b557bfa94721170420e3d5ae1ba9",
+      "content_sha256": "7f5426557605b13ea7973161a2022747de050ea391a1739cbba90426e3a19bee"
     },
     "alteracao_cadastral": {
-      "metadata_sha256": "1d7c117b03ff636b75aa4d3072ec683a0d1ce0699d8f7e3591317e1914c0f453",
+      "metadata_sha256": "6a5ab079b780bb19b4eeb517cc34208fc8e215ab5760e3a23583785a69059e65",
       "content_sha256": "ae8c5841654f017c226b659638afb05596eaf1fc11efd0d70fbc01d13a749d95"
     },
     "ocorrencia": {
-      "metadata_sha256": "29e909ec5416154919c80be9ccaf52b9c982990d817c5c404196b58364ef9cc0",
+      "metadata_sha256": "8ec18905594b56c6d6b7cf8114e4b5e14fb98ad90b80163632431468b2e644a8",
       "content_sha256": "eee11e80a6b9ecd50579d6af29d8d6f1ee4a2ee108d07ab678d0d744a81a1561"
     },
     "adiantamento": {
-      "metadata_sha256": "d29863339f7022b978f21aec88078b08012690f098bae8644b9c2dd5c6cdca24",
+      "metadata_sha256": "185000b4f3d33116cfbfb5d8a82c64e84a1570454f429f466ec564c2cc2e5398",
       "content_sha256": "7cb2a02bfa9699e98713715fe7776ac11b915232aa8e90c3412667480b5f20bf"
     },
     "aviso_ferias": {
-      "metadata_sha256": "5d411be481f8b70569e6ecddedf89573f456e8d692f6a317dda470fb9dbc2acb",
+      "metadata_sha256": "ccc0d4d38a5b911ac7a641b8478b31b5462c9c64cbc79821477739b542a076d4",
       "content_sha256": "32899ec8c6c2a0daaf9b93cdac13e3d5ccab5d4cfff6b48ad53652bec56e3f13"
     },
     "aviso_rescisao": {
-      "metadata_sha256": "6e524f581f2e7e8e895f5dbf50ccf28ba4aeed0181751d503c4347626a2531fc",
+      "metadata_sha256": "16e4120101cc6ab3cae34057ea07dd7ea22ec2e9815395507796bae6c02228de",
       "content_sha256": "f41aa8c3b08bff48a257ba966c7b0409e658be5dd5866f203bfa578c32dc0700"
     },
     "reajuste_salarial": {
-      "metadata_sha256": "716b4b7ef992773334b071202d6d801ce6caf132bb694f41551d2ba50a2faca6",
+      "metadata_sha256": "7f6070e09176e9893d6e2f840e4551e0131a2d66c6a99844e728f028bef1d6ac",
       "content_sha256": "dd97a5f6e2394a802824d0b28012899783736dab8bc9e0cd8ee815b8831a13be"
     },
     "folha_mensal": {
-      "metadata_sha256": "eb4e6860a275e8e5401de9b79c3e1167ddb70e1aa90437da8a3f7202f08e57db",
-      "content_sha256": "dfa4da2a1512abdb7577d57d9b62a21ad836799b94b2c9413282363d14af58a3"
+      "metadata_sha256": "8b360f1cfca124c820ae4d19db4dcc19e20ca29a6c37de6b16e94d9fe58b596f",
+      "content_sha256": "ce5db8a6bae445005c64a60f7bfe583452d32e22a51c164ce864b6ff38ec547f"
     }
   },
   "changes": {
     "backend": [
-      "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Contrato2.13.0 sem ferramenta nova e sem Refresh do conector (o tools/list não mudou): categoria_esocial na folha mensal (categoria_esocial_nao_suportada e categoria_esocial_divergente), no cadastro do vínculo (propriedade opcional em employee_parameters.data_schema e em changes de alteracao_cadastral) e categoria_sem_regime_clt na criação de 13º, férias, rescisão, admissão e simulação de rescisão; backend já em main do Project-loki (PRs #441 e #444); mínimo do plugin 2.0.0."
+      "Histórico das edições anteriores (2.2 a 2.13.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
+      "Contrato2.14.0 sem ferramenta nova e sem capacidade nova: o schema de preparar_autorizacao ganha a variante restart_batch (reinício autorizado em lote por correção, ADR-041), então a conta de quem autoriza precisa de Refresh do conector e conversa nova; a rotina executa por receive_case_data com loki.case-restart-authorized/1 e não precisa. Backend já publicado no Project-loki (schema 0069); o tools/list mudou só em preparar_autorizacao; mínimo do plugin 2.0.0."
     ],
     "instructions": [
-      "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Instruções2.13.0: geral (aviso da versão; o aviso da 2.12.0 vira Continua e frases de avisos antigos foram comprimidas pelo limite de 65536 bytes), folha_mensal (categoria eSocial que não é de empregado e no cadastro), alteracao_cadastral (categoria no cadastro: alteração cadastral e onboarding, com a data de efeito), admissao, rescisao, ferias e decimo_terceiro (categoria_sem_regime_clt)."
+      "Histórico das edições anteriores (2.2 a 2.13.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
+      "Instruções2.14.0: aprovacoes (concessão, revogação, reautorização e conduta por código), folha_mensal, admissao e rescisao (execução pela rotina e recusas) e geral (aviso da versão; o aviso da 2.13.0 vira Continua e frases redundantes foram comprimidas pelo limite de 65536 bytes)."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",
@@ -84,8 +84,8 @@
       "Contrato2.0.0 retira ferramentas de extração e execução especial; migrar para get_process_contract e receive_case_data. Cliente1.x declarado é incompatível."
     ],
     "plugin": [
-      "Histórico das edições anteriores (2.2 a 2.12.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Plugin2.13.0 espelha a 2.13.0 em WORKFLOWS (seção 2.13.0), operar-loki e registrar-problema-loki; sem ferramenta nova e sem Refresh do conector, basta atualizar o plugin; wheel0.4.39 preparado não comprova instalação ou uso. Wheel0.4.38 permanece imutável."
+      "Histórico das edições anteriores (2.2 a 2.13.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
+      "Plugin2.14.0 espelha a 2.14.0 em WORKFLOWS (seção 2.14.0), CAPACIDADES_DP, operar-loki e registrar-problema-loki; sem ferramenta nova, Refresh do conector só na conta de quem autoriza; wheel0.4.40 preparado não comprova instalação ou uso. Wheel0.4.39 permanece imutável."
     ]
   }
 }

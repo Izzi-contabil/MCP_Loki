@@ -1,4 +1,43 @@
-# Atualizações MCP Loki — contrato 2.13.0
+# Atualizações MCP Loki — contrato 2.14.0
+
+## Candidata 0.4.40 / contrato, instruções e plugin 2.14.0 — 28/11/2026
+
+O contrato sobe de 2.13.0 para 2.14.0 porque o schema de `preparar_autorizacao` ganha a
+variante `RestartBatchProposal` (`operation = "restart_batch"`; ADR-041). **Não há
+ferramenta nova nem capacidade nova.** A conta de quem autoriza precisa de **Refresh do
+conector e conversa nova**, além de atualizar o plugin; a rotina executa por
+`receive_case_data` com `loki.case-restart-authorized/1` e não precisa de Refresh. No
+`tools/list` só o hash de `preparar_autorizacao` muda (Project-loki `75243395`, snapshot
+`connector_tools_list_d863b1aa_masked.json`). Instruções e plugin acompanham em 2.14.0; o
+provider sobe um patch (0.4.40). Mínimo 2.0.0 permanece. Wheel 0.4.39 permanece imutável.
+
+Backend lido em `origin/main` do Project-loki (`4b497231`, schema 0069, já publicado):
+`services/restart_authorizations.py`, `connector/legacy_authorization.py`
+(`RestartBatchProposal`), `connector/access.py` (`apply_change`), `connector/server.py`,
+`services/operational_lifecycle.py`, ADR-041 e `docs/HTTPS_Operational_Harness.md`. Os
+códigos de recusa conferem com `tests/integration/test_reinicio_por_correcao_masked.py`
+(`operations.invoke`) e `test_reinicio_por_correcao_https_masked.py`, incluindo o commit
+`872ba743` (mensagem humana vazia ou com mais de 4000 caracteres,
+`confirmacao_humana_obrigatoria`; revogação presa à autorização, sem conferir a revisão
+da rotina; mudança de revisão entre prévia e apply na concessão,
+`versao_desatualizada_ou_alteracao_expirada`).
+
+- **Concessão e revogação (`aprovacoes`).** Prévia, apply, recusa tipada
+  `restart_batch_refused` com `refusals[].code` (inclusive `case_snapshot_changed` no
+  apply), erros de ferramenta por código, validade, limites e revogação.
+- **Reautorizar.** Recusa na execução não consome o item; uma concessão nova para caso com
+  item aberto em autorização não revogada e não vencida volta com `case_already_authorized`:
+  a proprietária revoga a autorização inteira e autoriza de novo os casos que ainda valem.
+  A conduta é por código (`aprovacoes`; a rotina, que não lê `aprovacoes`, tem o que resolve
+  sozinha em `folha_mensal`, `admissao` e `rescisao`).
+- **Limites de auditoria (ADR-041).** Recusa de execução não deixa linha de auditoria; a
+  expiração só é gravada quando o mesmo caso recebe nova concessão; não rodar a rotina de
+  correção durante uma janela de publicação do executor anterior.
+
+Domínios: `aprovacoes`, `folha_mensal`, `admissao`, `rescisao` e `geral` (aviso 2.14.0; o
+aviso da 2.13.0 vira "Continua" e frases redundantes foram comprimidas por causa do limite
+de 65536 bytes). Plugin: WORKFLOWS (seção 2.14.0), CAPACIDADES_DP, operar-loki e
+registrar-problema-loki. Wheel preparado não comprova publicação, instalação ou uso.
 
 ## Candidata 0.4.39 / contrato, instruções e plugin 2.13.0 — 27/11/2026
 

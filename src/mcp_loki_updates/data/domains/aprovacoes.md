@@ -107,3 +107,139 @@ desligamento confirmado. Só pessoa a recebe: conta de automação é recusada
 (`automacao_capacidade_proibida`), e `confirmar_admissao` não a substitui. Conceda
 só com pedido explícito da Ana; a concessão nova segue a confirmação humana de
 sempre antes de `aplicar_autorizacao`.
+
+## Reinício autorizado em lote por correção: `restart_batch` (2.14.0, ADR-041)
+
+O backend já está publicado (schema 0069). **Refresh do conector e conversa nova**
+só na conta de quem autoriza, e só se o schema servido de `preparar_autorizacao`
+ainda não trouxer a variante `operation = "restart_batch"`; a rotina não precisa de
+Refresh (o envelope viaja em `receive_case_data`). Não é ferramenta nova nem
+capacidade nova.
+
+**Para que serve.** Depois de uma correção, do Loki ou da harness, a proprietária
+autoriza uma lista **fechada** de casos de **uma** empresa, em `aguardando_revisao`, de
+`admissao`, `rescisao` e `folha_mensal`, e a rotina os reinicia de forma simples
+(payload preservado), um a um. `atualizar_por_insumo_do_cliente` não serve para isso
+(o motivo seria falso e admissão e rescisão só reiniciam por `replace_process_inputs`).
+Casos `aberto` e `em_preparacao` a rotina recalcula sem este ato (ADR-041).
+
+**Quem.** Autoriza e revoga só a **proprietária** (conta de pessoa, papel `owner`):
+outra pessoa administradora recebe `somente_proprietario_autoriza_reinicio` e quem não
+administra nem vê a ferramenta. O alvo (`account_id`) é a conta da **rotina** (automação,
+ativa, papel operador: `reinicio_exige_conta_de_rotina_ativa`). Executa só a rotina, por
+`receive_case_data`; pessoa, até a proprietária, recebe `correction_restart_requires_routine`.
+A rotina precisa só de `consultar` e `operar_casos` nos casos. O contrato do processo
+anuncia o envelope em `get_process_contract` (`preparation.correction_restart`).
+
+**Prévia.** `preparar_autorizacao(account_id, expected_revision, proposal)`; na concessão,
+`expected_revision` é a revisão atual da rotina (`versao_desatualizada`) e `proposal =
+{operation: "restart_batch", correction_code: "CL-N", correction_kind: "loki" | "harness",
+support_candidate_id (só `loki`), company_id, case_ids (1 a 100, sem repetir), ttl_hours
+(1 a 72, padrão 72), daily_limit (1 a 200, padrão 50)}`. `loki` exige candidato de suporte
+aprovado e publicado (recibo `publication_receipt` com `status=published` e o mesmo
+`manifest_hash`); `harness` não leva candidato. O servidor confere o formato do `CL-N`
+e que a mensagem o nomeia, não que a correção exista: quem responde por ele é a
+proprietária, e a trilha o guarda. A prévia devolve `change_id`, `digest` e `preview`
+(`case_count`, `daily_limit`, `account_daily_limit`, `ttl_hours`, `mode: "simple"` e
+`items[]` com `case_id`, `case_type`, `state`, `competencia` e `correction_snapshot`, sem
+nome de pessoa) e vale 15 minutos. Mostre cada caso e os limites à proprietária antes de
+pedir a confirmação.
+
+**Recusa da prévia e do apply.** Só `restart_batch_refused` e o `BUSY` são resposta tipada;
+os demais códigos (`somente_proprietario_autoriza_reinicio`,
+`reinicio_exige_conta_de_rotina_ativa`, `versao_desatualizada`,
+`restart_authorization_not_found`, `restart_authorization_already_revoked` e os do apply
+abaixo) chegam como erro de ferramenta. A recusa tipada é `{status: "BLOCKED", code:
+"restart_batch_refused", refusals: [{case_id, code}], refusal_count}` (até 100
+listadas); nada é autorizado, nem os casos bons. Códigos por caso (um por caso, o
+primeiro que falha): `case_not_found`, `case_other_company`, `case_process_not_supported`,
+`case_is_simulation`, `case_retired_execution_context`, `case_not_in_review`,
+`routine_scope_missing` (a rotina não tem `consultar` e `operar_casos` ali),
+`case_has_effects` e `case_already_authorized` (o caso tem item aberto em autorização
+não revogada e não vencida); só no apply, `case_snapshot_changed` (o caso mudou entre
+a prévia e a confirmação: nada foi concedido, prepare de novo). Com `case_id` nulo:
+`support_candidate_not_approved_and_published` e `case_already_authorized` quando outra
+concessão ganha a corrida. Remova ou corrija os casos recusados e prepare de novo.
+
+**Aplicar.** `aplicar_autorizacao(change_id, digest, human_message)`. Erros de
+ferramenta, nada gravado: `confirmacao_humana_obrigatoria` (mensagem vazia ou com mais
+de 4000 caracteres, na concessão e na revogação), `alteracao_invalida` (`change_id` ou
+`digest` não são os da prévia), `versao_desatualizada_ou_alteracao_expirada` (a revisão
+da rotina mudou depois da prévia, ou passaram os 15 minutos: prepare de novo) e
+`restart_batch_message_requires_code` (a mensagem transcrita da proprietária precisa
+**nomear o `CL-N`**; `CL-1` não casa em `CL-12`). O apply revê todos os casos sob
+trava. Retry com o mesmo `change_id` devolve o mesmo recibo; `BUSY`
+(`authorization_change_busy`, com `retry_after_seconds`) pede repetir a **mesma**
+chamada. O recibo traz `status: "authorized"`, `authorization_id` (`rst-` e 32 hex),
+`expires_at`, os limites e `items[]` com `case_id`, `case_type` e `expected_snapshot`. A
+rotina não lê a autorização por conta própria: repasse a ela, pela Caixa, o
+`authorization_id` e o `expected_snapshot` de cada caso.
+
+**Validade e limites.** Validade de até 72 h; limite diário por autorização (até 200) e
+por conta da rotina (200, ajustável no servidor), contados no dia de
+America/Sao_Paulo; **consumo único por caso**. Um caso só tem um item aberto por vez.
+A autorização não vale enquanto quem a concedeu não for proprietária ativa
+(`correction_restart_grantor_not_owner`, sem consumir; ao voltar a ser, o item vale de novo).
+
+**Revogar.** A mesma variante com `action: "revoke"` e `authorization_id` (sem os demais
+campos), pela mesma prévia e confirmação; fecha **todos** os itens ainda abertos
+(`items_closed`). A mensagem não precisa nomear o `CL-N`. A revogação não confere a
+revisão da rotina (`expected_revision` segue como argumento, mas não é comparado) e
+vale com a rotina suspensa; `account_id` tem de ser a rotina da própria autorização, senão
+`restart_authorization_not_found`; revogada, a autorização não volta ao reativar a rotina
+(`restart_authorization_already_revoked` recusa uma segunda revogação).
+
+**Autorizar de novo exige revogar antes** quando a autorização do caso segue aberta
+(não revogada, não vencida, item não consumido): a concessão nova é recusada com
+`restart_batch_refused` e `case_already_authorized`. A proprietária revoga a
+autorização inteira e depois autoriza de novo só os casos que ainda valem. Autorização
+revogada ou vencida, e item já consumido, não bloqueiam a concessão nova.
+
+**Execução pela rotina** (roteiro em `folha_mensal`, `admissao` e `rescisao`).
+`receive_case_data(case_id, request={schema_version: "loki.case-restart-authorized/1",
+authorization_id, case_id, expected_snapshot, human_message})`, com a `human_message`
+nomeando o `CL-N` da autorização. Toda recusa chega como resposta `BLOCKED` com `code`,
+sem consumir o item (só `BUSY` pede repetir a **mesma** chamada). O que a proprietária
+faz, por código:
+
+- `correction_restart_snapshot_mismatch`: a rotina reenvia com o `expected_snapshot` do
+  recibo da concessão (não o atual do caso). Vem também no segundo reinício de item já
+  consumido: o caso voltou à revisão com snapshot novo, e a autorização é nova.
+- `correction_restart_message_requires_code`: a rotina corrige a mensagem.
+- `correction_restart_authorization_daily_limit`, `correction_restart_account_daily_limit`:
+  esperar o dia seguinte (America/Sao_Paulo).
+- `correction_restart_authorization_revoked` (itens fechados pela revogação) e
+  `correction_restart_authorization_expired` (vencida: o item não vale mais e não bloqueia
+  nova concessão): autorize de novo, sem nada a revogar.
+- `correction_restart_authorization_not_found`, `correction_restart_wrong_account`,
+  `correction_restart_wrong_company`, `correction_restart_item_not_found`: o id, a rotina ou
+  o caso não são os autorizados; confira o que foi repassado à rotina.
+- `correction_restart_requires_review_state`: o caso saiu de `aguardando_revisao`. O
+  snapshot inclui estado, relógio e sequência de eventos, e uma volta real à revisão o
+  muda: o item só volta a valer se o snapshot voltar a ser o autorizado; do contrário
+  vem `case_snapshot_changed`.
+- `case_snapshot_changed` (o caso mudou depois da autorização),
+  `correction_restart_candidate_not_published` (o candidato `loki` deixou de estar
+  aprovado e publicado) e `correction_restart_grantor_not_owner` quando o concedente não
+  volta a ser proprietário: revogue a autorização inteira e autorize de novo os casos que
+  ainda valem (com o candidato corrente, em `loki`).
+- `restart_requires_effect_reconciliation` (efeito ou decisão `aprovar` depois da
+  autorização) e `case_simulation_refused` com `reason` `simulation_context_invalid` (o
+  caso virou simulação): o caso sai do reinício em lote; uma autorização nova também seria
+  recusada (`case_has_effects`, `case_is_simulation`).
+- `correction_restart_requires_routine` (quem usou o envelope não é a rotina),
+  `correction_restart_case_mismatch` (`case_id` do pedido diferente do argumento) e
+  `lifecycle_authorization_revoked` (a rotina perdeu escopo, status ou credencial): corrija
+  a chamada ou o acesso da rotina. Conta sem `consultar` e `operar_casos` no caso, ou de
+  outra empresa, é recusada antes do serviço com erro de ferramenta
+  `caso_inexistente_ou_nao_autorizado`; `correction_restart_wrong_company` só aparece se a
+  rotina tem escopo nas duas empresas.
+
+**Trilha e limites.** O reinício grava o evento `operational_case_restart` com
+`authority=correction_restart_authorization`, a autorização, o `CL-N`, quem concedeu e a
+rotina. Uma recusa de execução não deixa linha de auditoria (a transação inteira é
+desfeita), e a expiração só é gravada quando o mesmo caso recebe nova concessão: item
+vencido que ninguém reautoriza fica aberto, recusado por `expires_at`. Aprovação, efeitos,
+entrega e cancelamento continuam humanos, e o pacote refeito exige nova revisão e novo
+aceite. **Não rode a rotina de correção durante uma janela de publicação do executor
+anterior**: o reinício muda o censo de eventos e a publicação recusa (falha fechada).
