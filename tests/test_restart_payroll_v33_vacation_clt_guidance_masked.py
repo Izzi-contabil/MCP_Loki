@@ -162,13 +162,15 @@ def test_every_domain_stays_within_the_size_limit() -> None:
 def test_general_notice_keeps_the_296_actions() -> None:
     guide = text("geral")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
+    # 2.14.0: o aviso "Continua da 2.9.6" foi aposentado. A regra de recalcular as folhas
+    # anteriores à `folha-v33` mora na `folha_mensal`; a da revisão recusada, em `geral`.
+    assert "**Continua da 2.9.6**" not in notice
+    assert "todas as folhas mensais não entregues" in " ".join(text("folha_mensal").split())
     assert_all(
-        notice,
+        guide,
         (
-            "**Continua da 2.9.6**",
-            "calculadas antes da `folha-v33`",
             "`pacote_mudou_desde_a_leitura`",
-            "`prepare_case_review`",
+            "Prepare de novo (`prepare_case_review`) a revisão que recusar",
         ),
     )
     assert_none(guide, STALE_GENERAL)

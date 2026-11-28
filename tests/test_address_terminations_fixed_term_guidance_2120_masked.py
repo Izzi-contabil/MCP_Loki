@@ -52,8 +52,9 @@ def test_general_notice_keeps_the_2120_refresh_for_the_new_tools_and_the_new_add
     assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
         "**Continua da 2.12.0:**"
     )
-    assert notice.index("**Continua da 2.12.0:**") < notice.index("**Continua da 2.11.0**")
-    assert notice.index("**Continua da 2.11.0**") < notice.index("**Continua da 2.10.1:**")
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); cada regra que eles apontavam segue no domínio próprio.
+    assert "**Continua da 2.11.0**" not in notice
     # A rotina passa a reiniciar férias; só o afastamento continua com pessoa.
     body = flat(guide)
     assert "retificação de data e afastamento continuam com pessoa" in body

@@ -57,19 +57,19 @@ def test_general_notice_keeps_the_2130_no_refresh_line_and_the_2120_one() -> Non
         "**Vale quando o Loki for publicado:**",
         "**Continua da 2.13.0:**",
         "**Continua da 2.12.0:**",
-        "**Continua da 2.11.0**",
-        "**Continua da 2.10.1:**",
-        "**Continua da 2.10.0**",
-        "**Continua da 2.9.9**",
-        "**Continua da 2.9.8:**",
     )
     positions = [notice.index(marker) for marker in order]
     assert positions == sorted(positions)
-    # A regra do consignado não pode ficar mais larga do que a 2.12.0 a escreveu.
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); cada regra que eles apontavam segue no domínio próprio.
+    for retired in ("2.11.0", "2.10.1", "2.10.0", "2.9.9", "2.9.8", "2.9.7", "2.9.6", "2.8.0"):
+        assert f"**Continua da {retired}" not in notice, retired
+    # A regra do consignado não pode ficar mais larga do que a 2.12.0 a escreveu; saiu do
+    # aviso e mora agora em `geral` (sufixos do motor), com o mesmo alcance.
     assert (
         "Folha com pessoa que confirma 2 ou mais contratos de consignado no mês "
         "(`-worker-credit-allocation-v1`)"
-    ) in notice
+    ) in flat(guide)
     assert len((DOMAINS / "geral.md").read_bytes()) <= LIMIT
 
 

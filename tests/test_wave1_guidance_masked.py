@@ -165,7 +165,21 @@ def test_every_domain_stays_under_the_file_limit() -> None:
 
 def test_payroll_domain_carries_queue_and_dossier_guidance() -> None:
     guide = text("folha_mensal")
-    assert_all(guide, (*QUEUE, *QUEUE_DOMAIN, *DIAGNOSTIC, *DIAGNOSTIC_DOMAIN))
+    # 2.14.0: os recibos do restart com `replace_payroll_population` e o recurso ocupado
+    # foram para `geral`, ao lado da correção da população da folha (abriu espaço na folha).
+    moved = (
+        "`population_hash`",
+        "`payroll_population_dependencies_busy`",
+        "`population_count`",
+        "`retryable: true`",
+    )
+    in_payroll = tuple(
+        item
+        for item in (*QUEUE, *QUEUE_DOMAIN, *DIAGNOSTIC, *DIAGNOSTIC_DOMAIN)
+        if item not in moved
+    )
+    assert_all(guide, in_payroll)
+    assert_all(text("geral"), moved)
 
 
 def test_general_points_to_payroll_and_explains_registration() -> None:

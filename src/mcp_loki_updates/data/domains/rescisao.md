@@ -820,13 +820,15 @@ igual ao repassado e `human_message` que nomeia o `CL-N`. O recibo traz
 `requires_case_data`: `true` em caso legado (reenvie os dados pelo `receive_case_data`
 comum) e `false` em `structured-v1`. Depois, siga o fluxo normal
 (`run_prepared_case_workflow`); o pacote novo exige nova revisão e novo aceite humanos.
-Repetir o mesmo pedido devolve o recibo (`replayed: true`).
+Repetir o mesmo pedido devolve o recibo com `replayed: true`: já reiniciado por esta
+autorização, sem segundo reinício; não siga para o fluxo normal como se tivesse
+reiniciado, avise a proprietária. Entre a autorização e a execução, `prepare_case_review` pela primeira vez, `record_package_checks` e decisão registrada no caso gravam evento e invalidam o item: a execução devolve `case_snapshot_changed`; pare e avise a proprietária, sem mandar o snapshot atual (dá `correction_restart_snapshot_mismatch`). Ler caso, dossiê e documentos não invalida.
 Não rode a rotina de correção durante uma janela de publicação do executor anterior: o
 reinício muda o censo de eventos e a publicação recusa.
 
 **Recusa** (`BLOCKED` com `code`; nada é consumido e o item segue aberto; não repita em
 laço). Corrija sozinha só `correction_restart_snapshot_mismatch` (reenvie o snapshot do
-recibo da concessão, não o atual do caso) e `correction_restart_message_requires_code` (a
+recibo da concessão, não o atual do caso; se vier `replayed: true`, é o caso acima) e `correction_restart_message_requires_code` (a
 mensagem nomeia o `CL-N`); nos limites diários (`correction_restart_authorization_daily_limit`
 e `correction_restart_account_daily_limit`), espere o dia seguinte; `BUSY`
 (`authorization_change_busy`): repita a mesma chamada. Em qualquer outro `code`
@@ -834,4 +836,4 @@ e `correction_restart_account_daily_limit`), espere o dia seguinte; `BUSY`
 `case_simulation_refused`, `lifecycle_authorization_revoked`) ou no erro de ferramenta
 `caso_inexistente_ou_nao_autorizado` (sem escopo no caso), pare e avise a proprietária,
 pela Caixa, com o código: a autorização aberta bloqueia uma nova do mesmo caso, e ela decide
-entre revogar e autorizar de novo ou tirar o caso do lote.
+entre revogar e autorizar de novo ou deixar o caso fora (o item fica aberto até vencer).

@@ -23,9 +23,14 @@ def read(domain: str) -> str:
 def test_general_notice_keeps_the_2110_line_in_order() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
     notice = flat(guide[: guide.index("## Reaproveitar respostas e causas persistidas")])
-    assert "**Continua da 2.11.0**, sem Refresh" in notice
-    assert notice.index("**Continua da 2.11.0**") < notice.index("**Continua da 2.10.1:**")
-    assert notice.index("**Continua da 2.10.1:**") < notice.index("**Continua da 2.10.0**")
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); cada regra que eles apontavam segue no domínio próprio.
+    for retired in ("**Continua da 2.11.0**", "**Continua da 2.10.1:**", "**Continua da 2.10.0**"):
+        assert retired not in notice, retired
+    # Onde as regras que o aviso da 2.11.0 apontava moram agora.
+    assert "## Acrescentar e remover concessões em conta grande (2.11.0" in read("aprovacoes")
+    assert "## Catálogo de rubricas v2 e `get_dp_capabilities`" in read("rescisao")
+    assert "`adoption_effects`" in read("alteracao_cadastral")
 
 
 def test_approvals_carry_addition_to_existing_company_and_removal() -> None:

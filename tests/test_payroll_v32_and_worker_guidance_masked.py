@@ -38,7 +38,9 @@ FAMILY = (
     "**Faltas não reduzem a remuneração.**",
     "`30 − dia da admissão + 1`",
     "A contagem está em confirmação com a DP",
-    "não aparece mais em cálculos novos",
+    # 2.14.0: a frase histórica "não aparece mais em cálculos novos" saiu (narrativa da v31); a
+    # regra que ela repetia segue no rótulo "(não é mais pendência)" e no cálculo da cota.
+    "**Mês de admissão (não é mais pendência):**",
     "`salario_familia_mes_transferencia_pendente_regra`",
     "`aguardar_regra_dp_do_salario_familia_no_mes_de_transferencia`",
     "`salario_familia_salario_do_mes_nao_identificado`",
@@ -57,7 +59,9 @@ FAMILY = (
 )
 TRANSPORT = (
     "## VT do admitido no mês (folha-v32)",
-    'Isto substitui o "VT do admitido no mês: sem mudança" da `folha-v31`',
+    # 2.14.0: a frase histórica "Isto substitui o 'VT do admitido no mês: sem mudança' da
+    # `folha-v31`" saiu; STALE_V31 garante que o texto antigo não volta, e a regra da v32
+    # segue nas linhas abaixo.
     "aplicado **uma vez** sobre o salário proporcional do mês",
     "admissão no dia 1: vale a fórmula de sempre",
     "sem reaplicar a proporção",
@@ -111,9 +115,19 @@ def test_payroll_domain_carries_v32_guidance() -> None:
         payroll,
         (
             "**Worker de folha sem concessão por empresa.**",
+            "domínio `geral`",
+            "Não use `prepare_authorization_addition` nem `preparar_autorizacao` para ele",
+        ),
+    )
+    # 2.14.0: o item 0 da fila virou ponteiro; a regra completa (mensagem de registrar o
+    # problema, `reason` do servidor anterior) mora em `geral`, "Worker de folha".
+    general = text("geral")
+    assert_all(
+        general,
+        (
             "registre o problema e avise a engenharia pelo Caixa",
             '`reason: "worker_company_grant_missing"`',
-            "Não use `prepare_authorization_addition` nem `preparar_autorizacao` para o worker",
+            "não use `prepare_authorization_addition` nem `preparar_autorizacao` para o worker",
         ),
     )
 

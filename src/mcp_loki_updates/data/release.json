@@ -8,15 +8,15 @@
   "domains": {
     "geral": {
       "metadata_sha256": "efb3ef5ecfac7bb3aef628570036227360d395efaab39346c4544abc16d31998",
-      "content_sha256": "130c74365fecc3857f4af8bb4f79e9a84db855faee7478a8cf9c4fdeda770b91"
+      "content_sha256": "8707fbb6e46a9b4dd8b101de34570af07972555a017aea685bb9ccfc6889fa37"
     },
     "admissao": {
       "metadata_sha256": "9eebf13cd18d1a0f911f80bbbc51f1151ee1db41996f844d7e76cdb0a27aeb3c",
-      "content_sha256": "47e510d30c40f9b9acb0ab6090c603477425092eea63f91531320c24ebe10796"
+      "content_sha256": "36c736c9052f7462134fb5dbd249e0fb6be1a6fff33fac3c5ac8289e1ec3ea1a"
     },
     "rescisao": {
       "metadata_sha256": "73ff6732841ee364a8394b19695904da03c9c4e1fa864ad299106ce6f4f9ecff",
-      "content_sha256": "1bd642b5cdc80f48ae634ca88f1376307310be78f38abd57a11e7a73927fa052"
+      "content_sha256": "fe4fc38a13237dc25d85df5fe635f0ee3f366ccb65309bad62fe64dc066f4036"
     },
     "ferias": {
       "metadata_sha256": "67570c0ee93052e461d80e9e5b83947ea5882318841f7afb962d6beca9c25b24",
@@ -36,7 +36,7 @@
     },
     "aprovacoes": {
       "metadata_sha256": "3af667c9963989b28f0475fcbcd5e7483710b557bfa94721170420e3d5ae1ba9",
-      "content_sha256": "7f5426557605b13ea7973161a2022747de050ea391a1739cbba90426e3a19bee"
+      "content_sha256": "16e9db376398c59a9c703e9125c7cb6f42f007043715bc598d9c343671d4ced0"
     },
     "alteracao_cadastral": {
       "metadata_sha256": "6a5ab079b780bb19b4eeb517cc34208fc8e215ab5760e3a23583785a69059e65",
@@ -64,7 +64,7 @@
     },
     "folha_mensal": {
       "metadata_sha256": "8b360f1cfca124c820ae4d19db4dcc19e20ca29a6c37de6b16e94d9fe58b596f",
-      "content_sha256": "ce5db8a6bae445005c64a60f7bfe583452d32e22a51c164ce864b6ff38ec547f"
+      "content_sha256": "b7e7788c3a1ed61764185523160803ae10fe39209eb0fb17e2ccbd430bc8fa72"
     }
   },
   "changes": {
@@ -74,7 +74,7 @@
     ],
     "instructions": [
       "Histórico das edições anteriores (2.2 a 2.13.0): docs/MCP_UPDATES.md; esta lista guarda só a versão corrente.",
-      "Instruções2.14.0: aprovacoes (concessão, revogação, reautorização e conduta por código), folha_mensal, admissao e rescisao (execução pela rotina e recusas) e geral (aviso da versão; o aviso da 2.13.0 vira Continua e frases redundantes foram comprimidas pelo limite de 65536 bytes)."
+      "Instruções2.14.0: aprovacoes (concessão, revogação, reautorização e conduta por código), folha_mensal, admissao e rescisao (execução pela rotina e recusas) e geral (aviso da versão; o aviso da 2.13.0 vira Continua; os avisos anteriores à 2.12.0, sem objeto depois do recadastro dos conectores, foram aposentados e a regra de reiniciar a folha com sufixo do motor foi para folha_mensal) e aprovacoes/admissao/rescisao/folha_mensal (correções da revisão: replayed, item que não volta a valer, tirar caso do lote)."
     ],
     "compatible_tools": [
       "loki_obter_instrucoes",

@@ -34,8 +34,13 @@ def test_general_notice_needs_no_refresh_and_keeps_the_previous_one() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
     assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.14.0)")
     notice = flat(guide[: guide.index("## Reaproveitar respostas e causas persistidas")])
-    assert notice.index("**Continua da 2.10.1:**") < notice.index("**Continua da 2.10.0**")
-    assert notice.index("**Continua da 2.10.0**") < notice.index("**Continua da 2.9.9**")
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); cada regra que eles apontavam segue no domínio próprio.
+    for retired in ("**Continua da 2.10.1:**", "**Continua da 2.10.0**", "**Continua da 2.9.9**"):
+        assert retired not in notice, retired
+    # A regra do aviso da 2.10.1 (simulação sem caso de origem) segue no domínio da rescisão.
+    rescisao = flat((DOMAINS / "rescisao.md").read_text(encoding="utf-8"))
+    assert "## Simulação de quem segue empregado, sem caso de origem (2.10.1)" in rescisao
     assert "Refresh do conector e conversa nova" in notice
 
 

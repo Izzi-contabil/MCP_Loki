@@ -145,8 +145,13 @@ proprietária, e a trilha o guarda. A prévia devolve `change_id`, `digest` e `p
 nome de pessoa) e vale 15 minutos. Mostre cada caso e os limites à proprietária antes de
 pedir a confirmação.
 
-**Recusa da prévia e do apply.** Só `restart_batch_refused` e o `BUSY` são resposta tipada;
-os demais códigos (`somente_proprietario_autoriza_reinicio`,
+**Recusa da prévia e do apply.** Só `restart_batch_refused` (prévia e apply) e o `BUSY`
+(só no apply) são resposta tipada; a prévia não devolve `BUSY` tipado. Proposta com formato
+incoerente é recusada na validação, antes de tudo: `restart_batch_grant_shape` (concessão sem
+`correction_code`, `correction_kind`, `company_id` ou `case_ids`, ou com `authorization_id`),
+`restart_batch_revoke_shape` (revogação sem `authorization_id` ou com os campos da concessão),
+`restart_batch_duplicate_case` (`case_ids` repetido) e `restart_batch_candidate_shape`
+(`loki` sem candidato, ou `harness` com ele). Os demais códigos (`somente_proprietario_autoriza_reinicio`,
 `reinicio_exige_conta_de_rotina_ativa`, `versao_desatualizada`,
 `restart_authorization_not_found`, `restart_authorization_already_revoked` e os do apply
 abaixo) chegam como erro de ferramenta. A recusa tipada é `{status: "BLOCKED", code:
@@ -178,12 +183,25 @@ rotina não lê a autorização por conta própria: repasse a ela, pela Caixa, o
 **Validade e limites.** Validade de até 72 h; limite diário por autorização (até 200) e
 por conta da rotina (200, ajustável no servidor), contados no dia de
 America/Sao_Paulo; **consumo único por caso**. Um caso só tem um item aberto por vez.
+Qualquer mudança no caso depois da autorização invalida o item. **Ordem segura:** confira o
+pacote (`record_package_checks`) e prepare a revisão (`prepare_case_review`) **antes** de
+pedir a autorização; autorize; a rotina executa em seguida. Entre as duas, não chame
+`prepare_case_review` pela primeira vez, não chame `record_package_checks` e não registre
+decisão no caso: gravam evento e invalidam o item daquele caso, que só se refaz revogando a
+autorização inteira. Ler o caso, o dossiê e os documentos, `prepare_case_review` repetido de
+revisão já preparada antes da autorização e repetir um envio idêntico não invalidam. A
+execução com o snapshot autorizado devolve então `case_snapshot_changed`; com o snapshot
+atual do caso, `correction_restart_snapshot_mismatch`: a rotina nunca troca um pelo outro.
+Não chame por precaução `prepare_version_review`, `calculate_case` nem `generate_documents`
+(não medidos).
 A autorização não vale enquanto quem a concedeu não for proprietária ativa
 (`correction_restart_grantor_not_owner`, sem consumir; ao voltar a ser, o item vale de novo).
 
 **Revogar.** A mesma variante com `action: "revoke"` e `authorization_id` (sem os demais
 campos), pela mesma prévia e confirmação; fecha **todos** os itens ainda abertos
-(`items_closed`). A mensagem não precisa nomear o `CL-N`. A revogação não confere a
+(`items_closed`), inclusive os dos casos da lista ainda não reiniciados, que precisam ser
+autorizados de novo. Não há como tirar um só caso da autorização: ou revoga a inteira, ou deixa
+o caso fora (o item fica aberto até vencer e bloqueia nova concessão dele até lá). A mensagem não precisa nomear o `CL-N`. A revogação não confere a
 revisão da rotina (`expected_revision` segue como argumento, mas não é comparado) e
 vale com a rotina suspensa; `account_id` tem de ser a rotina da própria autorização, senão
 `restart_authorization_not_found`; revogada, a autorização não volta ao reativar a rotina
@@ -204,7 +222,10 @@ faz, por código:
 
 - `correction_restart_snapshot_mismatch`: a rotina reenvia com o `expected_snapshot` do
   recibo da concessão (não o atual do caso). Vem também no segundo reinício de item já
-  consumido: o caso voltou à revisão com snapshot novo, e a autorização é nova.
+  consumido, se o snapshot do caso mudou: é preciso autorização nova (o item consumido não
+  bloqueia). Com o mesmo snapshot, o item consumido devolve o recibo antigo com
+  `replayed: true`: já foi reiniciado por esta autorização, não há segundo reinício, e a
+  rotina avisa a proprietária em vez de seguir como se tivesse reiniciado.
 - `correction_restart_message_requires_code`: a rotina corrige a mensagem.
 - `correction_restart_authorization_daily_limit`, `correction_restart_account_daily_limit`:
   esperar o dia seguinte (America/Sao_Paulo).
@@ -215,9 +236,10 @@ faz, por código:
   `correction_restart_wrong_company`, `correction_restart_item_not_found`: o id, a rotina ou
   o caso não são os autorizados; confira o que foi repassado à rotina.
 - `correction_restart_requires_review_state`: o caso saiu de `aguardando_revisao`. O
-  snapshot inclui estado, relógio e sequência de eventos, e uma volta real à revisão o
-  muda: o item só volta a valer se o snapshot voltar a ser o autorizado; do contrário
-  vem `case_snapshot_changed`.
+  snapshot inclui estado, relógio (`updated_at`) e o último `seq` de eventos, e toda
+  transição grava evento: o item não volta a valer; quando o caso voltar à revisão, a
+  proprietária revoga e autoriza de novo (de volta à revisão com outro snapshot, vem
+  `case_snapshot_changed`).
 - `case_snapshot_changed` (o caso mudou depois da autorização),
   `correction_restart_candidate_not_published` (o candidato `loki` deixou de estar
   aprovado e publicado) e `correction_restart_grantor_not_owner` quando o concedente não
@@ -232,8 +254,8 @@ faz, por código:
   `lifecycle_authorization_revoked` (a rotina perdeu escopo, status ou credencial): corrija
   a chamada ou o acesso da rotina. Conta sem `consultar` e `operar_casos` no caso, ou de
   outra empresa, é recusada antes do serviço com erro de ferramenta
-  `caso_inexistente_ou_nao_autorizado`; `correction_restart_wrong_company` só aparece se a
-  rotina tem escopo nas duas empresas.
+  `caso_inexistente_ou_nao_autorizado`; `correction_restart_wrong_company` aparece
+  quando a rotina tem escopo no caso, mas ele é de outra empresa que a autorizada.
 
 **Trilha e limites.** O reinício grava o evento `operational_case_restart` com
 `authority=correction_restart_authorization`, a autorização, o `CL-N`, quem concedeu e a

@@ -19,45 +19,9 @@ antes de declará-la.
 **Continua da 2.12.0:** ferramentas novas
 (`confirm_termination` e as duas de retirada de saldo de férias, em `alteracao_cadastral`)
 exigem **Refresh do conector e conversa nova**, só quando ela for usar uma delas ou conceder
-`confirmar_rescisao` por `preparar_autorizacao`; o resto não exige.
-**Endereço novo:** o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
+`confirmar_rescisao` por `preparar_autorizacao` (a capacidade entrou no enum do schema); o resto não exige.
+**Endereço novo:** desde 27/11/2026 o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
 503); o conector de conta de pessoa precisa ser recadastrado nele.
-
-**Continua da 2.11.0**, sem Refresh: concessões, catálogo de rubricas v2 e
-`adoption_effects` do onboarding.
-
-**Continua da 2.10.1:** simulação de rescisão sem caso de origem.
-
-**Continua da 2.10.0**, se o Refresh falta: **Refresh e conversa
-nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`); 13º
-`transcricao_cadastral_sem_efeito_no_13`; folha `formula.divisor_sob_calendario`.
-
-**Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas) e folha
-(`restart_case` em revisão, `folha_divisor_mes`, fórmulas do mapa).
-
-**Continua da 2.9.8:** rescisão, 13º, arredondamento do centavo, consignado e afastamento pago. **Refresh do conector só para a
-ferramenta nominal** `rectify_case_admission_date`; sem ele a retificação sai por
-`receive_case_data` com `request.schema_version =
-"loki.case-admission-date-rectification/1"`. Folha com pessoa que confirma 2 ou
-mais contratos de consignado no mês (`-worker-credit-allocation-v1`) ou com mês de
-afastamento derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e
-novo cálculo. Campos opcionais novos do crédito e do mapa: argumentos dict livres.
-
-**Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem concessão
-por empresa; `diferenca_*` com `retroactive_actions`.
-
-**Continua da 2.9.6**: recalcular, conferir e pedir novo
-aceite das folhas não entregues calculadas antes da `folha-v33`
-(`folha_mensal`); preparar de novo a revisão que recusar
-`pacote_mudou_desde_a_leitura` (`prepare_case_review`).
-
-**Continua da 2.8.0**, se falta o Refresh: restauração de
-matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os mesmos
-campos), troca de código Domínio e revogação de desligamento do onboarding
-(`preview_onboarding_termination_revocation`, `revoke_onboarding_termination`)
-exigem Refresh e conversa nova (`alteracao_cadastral`); peça o Refresh só quando
-ela for usar um desses fluxos (antes dele a revogação funciona por
-`receive_case_data(case_id="@connector")`).
 
 ## Reaproveitar respostas e causas persistidas
 
@@ -113,7 +77,7 @@ conteúdo divergente no apply ordinário continua válida.
 Se o inventário de onboarding oferecer `projection=discovery`, use essa leitura
 para localizar lotes, referências e recibos e depois consulte as declarações
 específicas. Descoberta por metadados não atesta integridade, prontidão, fatos
-ou aplicação; não substitui a inspeção completa quando necessária.
+ou aplicação; não substitui a inspeção completa quando ela for necessária.
 
 Use o schema servido do escritor que recebeu o pedido. Campo, tipo, relação,
 conflito e falta de cobertura são causas diferentes; preserve o código, os
@@ -203,13 +167,15 @@ valide de novo e aplique com o `validation_hash` novo) estão no domínio
 Valem quando a resposta servida os apresentar. Empresa nova no Loki
 (`apply_client_config`, onboarding ou criação de caso) é copiada sozinha, com
 auditoria (`access_auto_granted`), para as contas técnicas com o modelo
-`@empresas-novas`, com os processos e as capacidades do modelo.
+`@empresas-novas`, com os processos e as capacidades do modelo. Não é preciso
+fazer nada.
 
 **Worker de folha.** O worker não precisa de concessão por empresa: ele só
 executa o job que uma pessoa ou rotina autorizada enfileirou, e o escopo de
 quem enfileirou é conferido no enqueue e em cada fase. Empresa nova não entra
 na conta do worker e ninguém a inclui: não use `prepare_authorization_addition`
-nem `preparar_autorizacao` para o worker. As concessões antigas seguem gravadas, sem efeito. As recusas do worker não são da operadora nem da
+nem `preparar_autorizacao` para o worker. As concessões antigas dele continuam
+gravadas e não mudam nada. As recusas do worker não são da operadora nem da
 pessoa owner, e não gravam job (o mesmo `request_ref` serve depois):
 
 - `worker_not_authorized`: conta do worker suspensa ou com papel ou tipo
@@ -340,6 +306,7 @@ alias, dispatcher ou rota de lote em `receive_case_data`.
 O lote existente, quando disponível, pode encadear leituras
 `get_case_historical_state` e seleções `apply_historical_state` por caso,
 com o `state_hash` retornado, identidade/episódio e corte conferidos.
+Isso continua sendo execução sequencial por item, sem endpoint bulk novo.
 Use dependências/referências de resultado somente no formato do contrato;
 releia recibos e consumo por calculador. `SUCCEEDED` da linha não comprova
 consumo financeiro; `STARTED` ambíguo exige conciliação antes de repetir.
@@ -478,6 +445,10 @@ podem exigir conciliação própria. Nos demais
 estados a recusa é `restart_requires_adjustable_state`: não há reinício por
 esse caminho; não cancele nem recrie o caso para contorná-la.
 
+**Sufixos do motor.** Folha com pessoa que confirma 2 ou mais contratos de consignado
+no mês (`-worker-credit-allocation-v1`) ou com mês de afastamento derivado
+(`-employer-leave-v1`) fica desatualizada: `restart_case` e novo cálculo.
+
 Depois de `restart_case`, quando a resposta servida apresentar, `get_case`
 continua listando as fontes da harness (`harness_sources`) e os anexos nativos
 já registrados (`documentos`): eles são insumo do caso e seguem válidos na
@@ -514,6 +485,21 @@ no restart autorizado ou seu transporte tipado anunciado. Não é complemento
 incremental: exige repor dados/qualificações financeiras e nova revisão.
 Prévia não aplica; seleção antiga, valores e aceite não migram por presunção.
 Sem esse bloco/rota, preserve a pendência; plugin novo não publica a PR240.
+
+**Recibo do restart com `replace_payroll_population`.** Em
+`population_correction`, o recibo traz `population_count` e `population_hash`
+(`canonical_hash(population)`), não a lista. `added`, `removed`, `rebound` e
+`preview_id` continuam. A prévia (`preview_payroll_population_correction`)
+continua devolvendo a `population` completa com `funcionario_id` e também
+`population_hash`, com o mesmo valor do recibo. Compare os dois para confirmar
+que a população aplicada é a da prévia.
+
+**Recurso ocupado.** `payroll_population_dependencies_busy` traz
+`retryable: true`, `dependency` (`empresa` ou `funcionarios`) e
+`next_action: "get_case"`, sem identificadores: outra operação usava esses
+registros e nada foi gravado. Releia o caso (`get_case`) e repita o mesmo
+pedido, com o mesmo `request_ref`, depois de alguns instantes. Se o snapshot
+tiver mudado, gere uma prévia nova.
 
 Cancelamento usa `cancellation` do contrato. Quando anunciado,
 `loki.case-cancellation/1` pode seguir em `receive_case_data`, com
@@ -659,7 +645,7 @@ Para histórico, confira identidade empresa/pessoa/episódio, competência, cobe
 
 Para provisões, consulte o contrato de `folha_mensal` ou `fechamento`; quando a operação estiver disponível use `calculate_provisions` sobre o caso autorizado. Bases e médias, dias/avos, abertura, ajustes, baixas e encargos precisam de fontes qualificadas e vigentes. Mensuração acumulada difere de constituição mensal. Confira abertura + constituição + ajustes - baixas = fechamento e a soma por pessoa/empresa; política de encargos ausente não significa zero. JSON, CSV e PDF, quando produzidos, conservam pendências e hashes.
 
-Apresente pacote e ressalvas para decisão humana explícita pelos canais autorizados. Entrega padrão ao solicitante usa acesso autenticado e recibo próprio; conferência ou geração não significa entrega. Retry conserva pacote, revisão, hash e referência de entrega sem recalcular ou duplicar.
+Apresente pacote e ressalvas para decisão humana explícita pelos canais autorizados. Entrega padrão ao solicitante usa acesso autenticado e recibo próprio; conferência ou geração não significa entrega. Retry conserva pacote, revisão, hash e referência de entrega sem recalcular ou duplicar. Drive permanece opção futura explícita. Prepare de novo (`prepare_case_review`) a revisão que recusar `pacote_mudou_desde_a_leitura`.
 
 Em falha técnica inesperada ou melhoria, use `registrar_problema` conforme a skill de suporte e a autorização vigente. Preserve UUID, recibo e thread; não envie dados de RH ou documentos. Pendência prevista não vira erro automaticamente; falha do suporte não cria relato recursivo. Orientação de processo e correção de software preservam seus próprios gates e exigem confirmação sustentada antes de declarar solução.
 

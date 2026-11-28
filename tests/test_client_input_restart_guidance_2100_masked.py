@@ -41,7 +41,11 @@ def test_general_notice_requires_refresh_and_states_the_capability_limits() -> N
     assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.14.0)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert "Refresh do conector e conversa nova" in flat(notice)
-    assert "**Continua da 2.9.9**" in notice
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); cada regra que eles apontavam segue no domínio próprio.
+    assert "**Continua da 2.9.9**" not in notice
+    # A folha com o motor trocado (aviso da 2.9.9) segue na `folha_mensal`: restart simples.
+    assert "`folha_divisor_mes`" in read("folha_mensal")
     body = flat(guide)
     for marker in (
         "`preparar_autorizacao`/`aplicar_autorizacao`",
@@ -141,8 +145,10 @@ def test_thirteenth_transcription_rule_and_payroll_line_divisor() -> None:
         assert marker in payroll, marker
     assert "quantidade = 2 × dias" not in payroll
     notice = flat(read("geral"))
-    assert "`transcricao_cadastral_sem_efeito_no_13`" in notice
-    assert "`formula.divisor_sob_calendario`" in notice
+    # O aviso da 2.10.0 foi aposentado; as duas regras moram nos domínios próprios (conferidas
+    # acima: `decimo_terceiro` e `folha_mensal`).
+    assert "`transcricao_cadastral_sem_efeito_no_13`" not in notice
+    assert "`formula.divisor_sob_calendario`" not in notice
 
 
 def test_unqualified_fact_source_and_authorization_busy_guidance() -> None:

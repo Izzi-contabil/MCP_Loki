@@ -61,14 +61,13 @@ def test_general_notice_leads_with_the_2140_refresh_only_for_the_owner() -> None
         "**Vale quando o Loki for publicado:**",
         "**Continua da 2.13.0:**",
         "**Continua da 2.12.0:**",
-        "**Continua da 2.11.0**",
-        "**Continua da 2.10.1:**",
-        "**Continua da 2.10.0**",
-        "**Continua da 2.9.9**",
-        "**Continua da 2.9.8:**",
     )
     positions = [notice.index(marker) for marker in order]
     assert positions == sorted(positions)
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); as regras que apontavam seguem nos domínios próprios.
+    for retired in ("2.11.0", "2.10.1", "2.10.0", "2.9.9", "2.9.8", "2.9.7", "2.9.6", "2.8.0"):
+        assert f"**Continua da {retired}" not in notice, retired
     assert len((DOMAINS / "geral.md").read_bytes()) <= LIMIT
 
 
@@ -102,7 +101,13 @@ def test_approvals_carry_the_owner_side_with_the_published_state() -> None:
     assert_all(
         guide,
         (
-            "Só `restart_batch_refused` e o `BUSY` são resposta tipada",
+            "Só `restart_batch_refused` (prévia e apply) e o `BUSY` (só no apply) são "
+            "resposta tipada",
+            "a prévia não devolve `BUSY` tipado",
+            "`restart_batch_grant_shape`",
+            "`restart_batch_revoke_shape`",
+            "`restart_batch_duplicate_case`",
+            "`restart_batch_candidate_shape`",
             "`somente_proprietario_autoriza_reinicio`",
             "`restart_authorization_not_found`, `restart_authorization_already_revoked`",
             "chegam como erro de ferramenta",
@@ -159,7 +164,10 @@ def test_revocation_is_bound_to_the_authorization_and_reauthorizing_needs_it() -
         guide,
         (
             '`action: "revoke"`',
-            "fecha **todos** os itens ainda abertos (`items_closed`)",
+            "fecha **todos** os itens ainda abertos (`items_closed`), inclusive os dos casos da "
+            "lista ainda não reiniciados, que precisam ser autorizados de novo",
+            "Não há como tirar um só caso da autorização: ou revoga a inteira, ou deixa o caso "
+            "fora (o item fica aberto até vencer e bloqueia nova concessão dele até lá)",
             "A mensagem não precisa nomear o `CL-N`",
             "A revogação não confere a revisão da rotina",
             "`expected_revision` segue como argumento, mas não é comparado",
@@ -181,6 +189,9 @@ def test_revocation_is_bound_to_the_authorization_and_reauthorizing_needs_it() -
         (
             "`correction_restart_snapshot_mismatch`: a rotina reenvia com o `expected_snapshot` "
             "do recibo da concessão (não o atual do caso)",
+            "é preciso autorização nova (o item consumido não bloqueia)",
+            "o item consumido devolve o recibo antigo com `replayed: true`",
+            "não há segundo reinício",
             "`correction_restart_message_requires_code`: a rotina corrige a mensagem",
             "`correction_restart_authorization_daily_limit`, "
             "`correction_restart_account_daily_limit`: esperar o dia seguinte",
@@ -188,8 +199,11 @@ def test_revocation_is_bound_to_the_authorization_and_reauthorizing_needs_it() -
             "`correction_restart_authorization_expired` (vencida: o item não vale mais e não "
             "bloqueia nova concessão): autorize de novo, sem nada a revogar",
             "`correction_restart_requires_review_state`: o caso saiu de `aguardando_revisao`",
-            "o item só volta a valer se o snapshot voltar a ser o autorizado",
-            "do contrário vem `case_snapshot_changed`",
+            # 2.14.0: a frase "o item só volta a valer se o snapshot voltar a ser o autorizado"
+            # prometia o que não acontece (toda transição grava evento e muda o snapshot).
+            "o item não volta a valer; quando o caso voltar à revisão, a proprietária revoga e "
+            "autoriza de novo",
+            "de volta à revisão com outro snapshot, vem `case_snapshot_changed`",
             "revogue a autorização inteira e autorize de novo os casos que ainda valem",
             "`correction_restart_candidate_not_published`",
             "`correction_restart_grantor_not_owner`",
@@ -200,9 +214,43 @@ def test_revocation_is_bound_to_the_authorization_and_reauthorizing_needs_it() -
             "`correction_restart_case_mismatch`",
             "`lifecycle_authorization_revoked`",
             "`caso_inexistente_ou_nao_autorizado`",
-            "só aparece se a rotina tem escopo nas duas empresas",
+            "aparece quando a rotina tem escopo no caso, mas ele é de outra empresa que a "
+            "autorizada",
         ),
     )
+
+
+def test_safe_order_and_the_operations_that_invalidate_the_authorization() -> None:
+    approvals = read("aprovacoes")
+    assert_all(
+        approvals,
+        (
+            "**Ordem segura:** confira o pacote (`record_package_checks`) e prepare a revisão "
+            "(`prepare_case_review`) **antes** de pedir a autorização",
+            "não chame `prepare_case_review` pela primeira vez, não chame "
+            "`record_package_checks` e não registre decisão no caso",
+            "gravam evento e invalidam o item daquele caso, que só se refaz revogando a "
+            "autorização inteira",
+            "Ler o caso, o dossiê e os documentos",
+            "repetir um envio idêntico não invalidam",
+            "com o snapshot autorizado devolve então `case_snapshot_changed`",
+            "com o snapshot atual do caso, `correction_restart_snapshot_mismatch`",
+            "Não chame por precaução `prepare_version_review`, `calculate_case` nem "
+            "`generate_documents`",
+        ),
+    )
+    for domain in ("folha_mensal", "admissao", "rescisao"):
+        assert_all(
+            routine_section(domain),
+            (
+                "Entre a autorização e a execução, `prepare_case_review` pela primeira vez, "
+                "`record_package_checks` e decisão registrada no caso gravam evento e invalidam o "
+                "item",
+                "a execução devolve `case_snapshot_changed`; pare e avise a proprietária, sem "
+                "mandar o snapshot atual (dá `correction_restart_snapshot_mismatch`)",
+                "Ler caso, dossiê e documentos não invalida",
+            ),
+        )
 
 
 def test_audit_limits_and_the_publication_window_come_from_the_adr() -> None:
@@ -245,7 +293,29 @@ def test_routine_scripts_are_self_sufficient_and_do_not_depend_on_approvals() ->
         )
         # A rotina não lê `aprovacoes` (exige `decidir_chat`): o texto dela não a manda ler.
         assert "códigos em `aprovacoes`" not in section
-    assert_all(routine_section("folha_mensal"), ("`enqueue_case_workflow`",))
+    assert_all(
+        routine_section("folha_mensal"),
+        (
+            "`enqueue_case_workflow`",
+            "`atualizar_por_insumo_do_cliente` nem é exigida nem basta",
+            "`restart_case` simples **nunca** refaz o caso por correção",
+            "Não rode a rotina de correção durante uma janela de publicação",
+            "`lifecycle_authorization_revoked`",
+            "`expected_snapshot` igual ao repassado",
+        ),
+    )
+    for domain in ("folha_mensal", "admissao", "rescisao"):
+        section = routine_section(domain)
+        # `replayed: true` é item já reiniciado: não há segundo reinício; a rotina avisa.
+        assert_all(
+            section,
+            (
+                "`replayed: true`",
+                "avise a proprietária",
+                "deixar o caso fora (o item fica aberto até vencer)",
+            ),
+        )
+        assert "tirar o caso do lote" not in section
     for domain in ("admissao", "rescisao"):
         section = routine_section(domain)
         assert_all(
@@ -253,7 +323,6 @@ def test_routine_scripts_are_self_sufficient_and_do_not_depend_on_approvals() ->
             (
                 "`run_prepared_case_workflow`",
                 "sem `replace_process_inputs`",
-                "`replayed: true`",
                 "Não rode a rotina de correção durante uma janela de publicação",
                 "`correction_restart_authorization_daily_limit`",
                 "`correction_restart_account_daily_limit`",
@@ -261,7 +330,9 @@ def test_routine_scripts_are_self_sufficient_and_do_not_depend_on_approvals() ->
             ),
         )
     payroll = read("folha_mensal")
-    assert "só a proprietária abre a exceção (seção da 2.14.0)" in payroll
+    assert "também é um caso por chamada" in payroll
+    assert "só a proprietária abre a exceção" not in payroll
+    assert "**Nunca** por causa de uma correção (`CL-N`)" in payroll
     assert "(#410, mesclada)" in payroll
 
 

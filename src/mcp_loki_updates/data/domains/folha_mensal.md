@@ -229,18 +229,18 @@ para isso.
   o pacote corrente, a conferência e o novo aceite. O reinício simples não
   reenvia os insumos (o `preparation` com `replace_process_inputs` arquiva-os e
   exige reenviar tudo; não o use só para trocar o motor). A rotina com a capacidade
-  `atualizar_por_insumo_do_cliente` (2.10.0; a Ana concede por empresa, só pela
-  autorização: `preparar_autorizacao` ou o acréscimo `prepare_authorization_addition`) faz o `restart_case` simples (sem `preparation`, com
-  `human_message`) e depois o `enqueue_case_workflow` com os snapshots novos;
-  sem a capacidade, ela para e avisa a Ana. O aceite continua humano e a
-  capacidade não abre cancelamento nem `preparation` na folha. Não há reinício em lote
-  (`restart_case` fora do `execute_operational_batch`): uma chamada por caso
-  e um enqueue por empresa; só a proprietária abre a exceção (seção da 2.14.0). O servidor
-  anterior aceitava o enqueue em revisão e o job terminava em
-  `job_preparation_failed`; o atual (#410, mesclada) recusa na hora, sem criar
-  job, com `case_in_review_requires_restart`
-  e `next_action=restart_case`; ao ver esse código, faça o reinício simples
-  acima. Não tente contornar com novo `request_ref`, cancelamento ou outro
+  `atualizar_por_insumo_do_cliente` (2.10.0, concedida pela Ana) faz esse `restart_case` simples (sem `preparation`,
+  com `human_message`) e o enqueue com os snapshots novos, **só para trocar o
+  motor**; sem a capacidade, ela para e avisa a Ana.
+  **Nunca** por causa de uma correção (`CL-N`): o motivo gravado seria falso e
+  sem a trilha da correção; para isso vale só o reinício autorizado em lote
+  (seção da 2.14.0). O aceite continua humano e a capacidade não abre
+  cancelamento nem `preparation` na folha. `restart_case` não está no
+  `execute_operational_batch`: uma chamada por caso e um enqueue por empresa; o
+  reinício autorizado por correção (a proprietária abre) também é um caso por chamada. O enqueue em revisão recusa na hora, sem
+  criar job (#410, mesclada), com `case_in_review_requires_restart` e
+  `next_action=restart_case`; ao ver esse código, faça o reinício simples acima
+  (a rotina, só para trocar o motor). Não tente contornar com novo `request_ref`, cancelamento ou outro
   caso.
 - **Aprovadas e não entregues:** a aprovação pertence ao pacote anterior; a
   entrega exige novo cálculo, conferência e aceite humano. O enqueue recusa
@@ -290,9 +290,7 @@ fica pendente.
   cheio, e a cota sai proporcional aos dias do contrato, pelo mês comercial de
   30 dias: `30 − dia da admissão + 1`. Admissão em 16/07 dá 15 dias, em 31/07
   dá 1 e em 01/02 dá 30. A contagem está em confirmação com a DP; se o Domínio
-  divergir, registre como divergência a confirmar, não como defeito. A
-  pendência `salario_familia_mes_admissao_pendente_regra` não aparece mais em
-  cálculos novos.
+  divergir, registre como divergência a confirmar, não como defeito.
   Com `folha-v33`, a contagem segue a base de dias da linha de salário
   ("Salário-família do admitido (v33)", acima).
 
@@ -338,8 +336,7 @@ cadastro não usa essa rota: complete o cadastro dos dependentes.
 
 ## VT do admitido no mês (folha-v32)
 
-Regra da DP de 19/11/2026. Isto substitui o "VT do admitido no mês: sem
-mudança" da `folha-v31`.
+Regra da DP de 19/11/2026.
 Com `folha-v33` no cálculo, a base e a saída sem linha de salário mudam
 ("VT do admitido no mês (v33)", acima).
 
@@ -506,15 +503,10 @@ verba.
 
 ## Fila durável: um job pendente por empresa
 
-0. **Worker de folha sem concessão por empresa.** O worker não precisa de
-   concessão na empresa da folha e ninguém o inclui nela (domínio `geral`,
-   "Empresa nova e onboarding pela rotina"). Não use
-   `prepare_authorization_addition` nem `preparar_autorizacao` para o worker.
-   `worker_not_authorized` (com ou sem `reason:
-   "worker_company_grant_missing"`, este de servidor anterior) e
-   `worker_service_not_authorized` não gravam job e não são da operadora:
-   registre o problema e avise a engenharia pelo Caixa. Depois da correção,
-   repita o mesmo enqueue com o mesmo `request_ref`.
+0. **Worker de folha sem concessão por empresa.** Regras e recusas do worker
+   (`worker_not_authorized`, `worker_service_not_authorized`): domínio `geral`,
+   "Empresa nova e onboarding pela rotina"; o mesmo `request_ref` serve depois.
+   Não use `prepare_authorization_addition` nem `preparar_autorizacao` para ele.
 1. **Uma folha por empresa na fila.** O Loki aceita um único job pendente
    (`queued` ou `running`) por empresa. O contrato anuncia isso em
    `durable_workflow.admission: "one_pending_job_per_company"`. Se outro caso
@@ -542,8 +534,9 @@ verba.
 3. **Enfileire em série na mesma empresa, em paralelo entre empresas.** Para
    várias folhas da mesma empresa, envie uma, espere o estado terminal e só
    então envie a próxima. Folhas de **empresas diferentes** rodam ao mesmo
-   tempo no worker, no máximo uma por empresa: enfileire uma folha de cada
-   sem esperar as outras. Consultas Dataprev mensais podem demorar mais enquanto houver
+   tempo no worker, no máximo uma por empresa: para várias empresas,
+   enfileire uma folha de cada sem esperar as outras; o tempo total deixa de
+   ser a soma. Consultas Dataprev mensais podem demorar mais enquanto houver
    folhas em execução, porque só rodam com a fila de folha vazia; acompanhe
    pelo recibo, sem reenviar. Depois da recusa, releia `get_case` do caso recusado
    antes de repetir o enqueue; a mesma referência pode ser usada, porque nada
@@ -568,11 +561,7 @@ verba.
 
 ## Janela de publicação e a fila de folha
 
-- **Na janela que publica esta versão** (a primeira com a re-fixação de
-  jobs), a fila de folha ainda precisa estar vazia antes da janela: jobs
-  aceitos na versão anterior não são retomados.
-- **A partir das janelas seguintes**, não é mais preciso esvaziar a fila.
-  Durante a janela avisada, só pare de gravar dados (`receive_case_data`,
+- **Não é preciso esvaziar a fila.** Durante a janela avisada, só pare de gravar dados (`receive_case_data`,
   correções, anexos) e de iniciar jobs novos (`enqueue_case_workflow`). Jobs
   que estavam na fila e ainda não tinham começado são retomados depois da
   janela, no build novo, sem reenfileirar. A trilha do caso registra
@@ -641,29 +630,14 @@ primária. Leia três coisas:
 afastamento) não serve como fonte da folha. Cada caso usa as próprias fontes
 registradas.
 
-Depois de qualificar, recalcule e releia o dossiê: as causas antes dependentes
-podem aparecer como causas próprias.
+Depois de qualificar, recalcule a folha e releia o dossiê. As causas antes
+dependentes podem então aparecer como causas próprias.
 
 **Salário-base ausente.** `salario_base_ausente` é reconhecido no dossiê. Siga
 primeiro `next_action`, que é a ação gravada pelo cálculo.
 `code_next_action: "qualify_payroll_salary"`, quando aparece (só quando difere
 de `next_action`), é a alternativa própria do código: qualificar o salário do
 vínculo na competência por `qualify_payroll_salary`.
-
-**Recibo do restart com `replace_payroll_population`.** Em
-`population_correction`, o recibo traz `population_count` e `population_hash`
-(`canonical_hash(population)`), não a lista. `added`, `removed`, `rebound` e
-`preview_id` continuam. A prévia (`preview_payroll_population_correction`)
-continua devolvendo a `population` completa com `funcionario_id` e também
-`population_hash`, com o mesmo valor do recibo. Compare os dois para confirmar
-que a população aplicada é a da prévia.
-
-**Recurso ocupado.** `payroll_population_dependencies_busy` traz
-`retryable: true`, `dependency` (`empresa` ou `funcionarios`) e
-`next_action: "get_case"`, sem identificadores: outra operação usava esses
-registros e nada foi gravado. Releia o caso (`get_case`) e repita o mesmo
-pedido, com o mesmo `request_ref`, depois de alguns instantes. Se o snapshot
-tiver mudado, gere uma prévia nova.
 
 ## Contexto do mês por pessoa e hashes dos lançamentos
 
@@ -725,9 +699,9 @@ aparecer, leve a restrição à operadora em vez de insistir em incluir a pessoa
 na folha do mês. Se a operadora confirmar que o contrato segue ativo, o
 caminho é a revogação auditada do desligamento (domínio
 `alteracao_cadastral`, "Revogar desligamento gravado pelo onboarding").
-Depois da revogação, nada é recalculado sozinho: cada folha aberta da
-empresa a partir do mês recebe `populacao_desatualizada_por_revogacao`;
-refaça a preparação incluindo a pessoa e refaça as seleções históricas.
+Depois da revogação, nada é recalculado sozinho: as folhas abertas da
+empresa recebem `populacao_desatualizada_por_revogacao`; refaça a preparação
+com a pessoa e as seleções históricas.
 
 A leitura também traz `identifiers.matricula` e
 `identifiers.matricula_operacional`; a regra da matrícula no `create_case`
@@ -812,9 +786,9 @@ afastamento segue como antes.
 
 ## Regras da DP para declarar o cadastro e os descontos (2.9.8)
 
-Regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O Loki
-não as deriva: recebe a quantidade declarada por pessoa e a valida com a
-coerência interna.
+São regras da DP aplicadas pela harness ao ler o cadastro e o lançamento. O
+Loki não as deriva sozinho: ele recebe a quantidade declarada por pessoa e a
+valida com a coerência interna.
 
 - **Salário-família.** Depende da flag no cadastro do Domínio. Com a flag
   desmarcada, a quantidade de filhos para o salário-família é 0, mesmo que o
@@ -828,7 +802,8 @@ coerência interna.
 - **VT.** O percentual vem da escala da pessoa: 3% na 12x36 e 6% na 6x1. A
   harness declara o percentual por pessoa em `vale_transporte_regra`
   (`percentual_basis_points`: 300 ou 600). O Loki não deduz a taxa da escala,
-  do sindicato nem de referência livre; sem a regra declarada, não aplica taxa pela escala.
+  do sindicato nem de referência livre: sem a regra declarada, o Loki não
+  aplica taxa pela escala.
 
 ## Vínculo intermitente: `categoria_esocial` (2.12.0)
 
@@ -988,20 +963,29 @@ Fontes `kind=document` conservam o significado de documento já arquivado no Lok
 ## Reinício em lote autorizado por correção (rotina, 2.14.0)
 
 Vale quando a proprietária repassar `authorization_id` (`rst-` e 32 hex) e o
-`expected_snapshot` por caso, após uma correção `CL-N`. A rotina (`consultar` e
-`operar_casos`; não exige `atualizar_por_insumo_do_cliente`) reinicia **uma vez cada caso
-listado**, em `aguardando_revisao`, com o payload preservado, por
-`receive_case_data(case_id, request={schema_version: "loki.case-restart-authorized/1",
-authorization_id, case_id, expected_snapshot, human_message})`, com `human_message` que
-nomeia o `CL-N`. `requires_case_data: true` (caso legado): reenvie os dados pelo
-`receive_case_data` comum. Depois, `enqueue_case_workflow` com os snapshots novos; o pacote
-novo exige nova revisão e aceite humanos.
+`expected_snapshot` de cada caso, após uma correção `CL-N`. A rotina (`consultar` e
+`operar_casos` em `folha_mensal`; `atualizar_por_insumo_do_cliente` nem é exigida nem
+basta, e `restart_case` simples **nunca** refaz o caso por correção: o motivo gravado
+seria falso) reinicia **uma vez cada caso listado**, em `aguardando_revisao`, com o
+payload preservado: `receive_case_data(case_id, request={schema_version:
+"loki.case-restart-authorized/1", authorization_id, case_id, expected_snapshot,
+human_message})`, com `case_id` igual ao argumento, `expected_snapshot` igual ao repassado
+e `human_message` que nomeia o `CL-N`. O recibo traz `requires_case_data`: `true` em caso
+legado (reenvie os dados pelo `receive_case_data` comum). Depois,
+`enqueue_case_workflow` com os snapshots novos; o pacote novo exige nova revisão e novo
+aceite humanos. Repetir o pedido devolve o recibo com `replayed: true`: já reiniciado
+por esta autorização, sem segundo reinício; não siga para o cálculo como se tivesse
+reiniciado, avise a proprietária. Entre a autorização e a execução, `prepare_case_review` pela primeira vez, `record_package_checks` e decisão registrada no caso gravam evento e invalidam o item: a execução devolve `case_snapshot_changed`; pare e avise a proprietária, sem mandar o snapshot atual (dá `correction_restart_snapshot_mismatch`). Ler caso, dossiê e documentos não invalida. Não rode a rotina de correção durante uma janela de
+publicação do executor anterior: o reinício muda o censo de eventos e a publicação recusa.
 
-**Recusa** (`BLOCKED` com `code`; nada é consumido; sem laço). Corrija sozinha só
-`correction_restart_snapshot_mismatch` (reenvie o snapshot do recibo da concessão) e
+**Recusa** (`BLOCKED` com `code`; nada é consumido e o item segue aberto; sem laço).
+Corrija sozinha só `correction_restart_snapshot_mismatch` (reenvie o snapshot do recibo da
+concessão, não o atual do caso; se vier `replayed: true`, é o caso acima) e
 `correction_restart_message_requires_code` (nomeie o `CL-N`); nos limites diários
 (`correction_restart_*_daily_limit`), espere o dia seguinte; `BUSY`
 (`authorization_change_busy`): repita a mesma chamada. Em qualquer outro `code`
 (`correction_restart_*`, `case_snapshot_changed`, `restart_requires_effect_reconciliation`,
-`case_simulation_refused`) ou no erro `caso_inexistente_ou_nao_autorizado`, pare e avise
-a proprietária pela Caixa com o código; a decisão é dela.
+`case_simulation_refused`, `lifecycle_authorization_revoked`) ou no erro
+`caso_inexistente_ou_nao_autorizado`, pare e avise a proprietária pela Caixa com o código:
+a autorização aberta bloqueia uma nova do mesmo caso, e ela decide entre revogar e
+autorizar de novo ou deixar o caso fora (o item fica aberto até vencer).
