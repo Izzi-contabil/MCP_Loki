@@ -20,7 +20,9 @@ CAPACITIES = OPERATOR / "references/CAPACIDADES_DP.md"
 DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
 SECTION_295 = "## 2.9.5: onboarding pela rotina, admissão, férias e matrícula do eSocial"
 
-NOTICE = ("adoção da matrícula eSocial (usa os mesmos campos)",)
+# O aviso "Continua da 2.8.0" foi aposentado na 2.14.0; a regra da adoção da matrícula segue em
+# `alteracao_cadastral` ("Adotar a matrícula do eSocial").
+NOTICE = ()
 ONBOARDING = (
     "## Empresa nova e onboarding pela rotina",
     "`access_auto_granted`",
@@ -184,7 +186,8 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
 def test_general_notice_keeps_the_295_items() -> None:
     guide = text("geral")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
-    assert_all(notice, NOTICE)
+    assert "adoção da matrícula eSocial (usa os mesmos campos)" not in flat(notice)
+    assert "## Adotar a matrícula do eSocial" in text("alteracao_cadastral")
     assert_all(guide, (*ONBOARDING, *CANCELLATION))
     assert_none(guide, STALE_GENERAL)
     assert_all(

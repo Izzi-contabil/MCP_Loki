@@ -349,6 +349,12 @@ afastamento continuam com pessoa. Recusas que mandam parar e avisar a Ana:
 `caso_inexistente_ou_nao_autorizado`. Roteiro em “2.10.0: insumo novo do
 cliente e troca de motor pela rotina” de [WORKFLOWS.md](WORKFLOWS.md).
 
+Fora dessa capacidade, a rotina também reinicia, de forma simples e uma vez por caso,
+os casos que a proprietária autorizou por correção `CL-N` (`restart_batch`, 2.14.0;
+admissão, rescisão e folha mensal): não é capacidade do grant, só `consultar` e
+`operar_casos`. Roteiro em “2.14.0: reinício em lote por correção” de
+[WORKFLOWS.md](WORKFLOWS.md).
+
 Na mesma versão, sem Refresh próprio: 13º com a regra legal
 `transcricao_cadastral_sem_efeito_no_13` (`scope` `identificacao_cadastral` ou
 `alteracao_cargo_cbo`) e folha com `formula.divisor_sob_calendario` e `fator` 1

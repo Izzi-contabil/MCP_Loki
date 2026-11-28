@@ -1,60 +1,27 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.13.0)
+## O que mudou nesta versão (2.14.0)
 
 Atualizações devem ser imperceptíveis para a operadora: mostre este aviso uma vez,
 curto. O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o sinal indicado; sem o sinal,
 siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora (2.13.0):** atualizar o plugin instalado; sem ferramenta
-nova nem Refresh do conector.
+**Exige ação da operadora (2.14.0):** atualizar o plugin instalado e, só para quem
+autoriza reinício em lote (variante `restart_batch` de `preparar_autorizacao`), **Refresh do
+conector e conversa nova**; a rotina não precisa.
 
-**Vale quando o Loki for publicado:** nada pendente; a categoria eSocial (seções 2.13.0)
-já está publicada. Releia `get_process_contract` de `alteracao_cadastral` antes de declará-la.
+**Vale quando o Loki for publicado:** nada pendente; o reinício em lote já está publicado.
 
-**Continua da 2.12.0:** por haver
-ferramentas novas (`confirm_termination` e as duas de
-retirada de saldo de férias, em `alteracao_cadastral`), fazer **Refresh do conector e conversa
-nova**, só quando ela for usar uma delas ou conceder `confirmar_rescisao` por
-`preparar_autorizacao`; o resto não exige.
-**Endereço novo:** o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
+**Continua da 2.13.0:** sem ferramenta nova nem Refresh do conector; a categoria eSocial
+(seções 2.13.0) já está publicada. Releia `get_process_contract` de `alteracao_cadastral`
+antes de declará-la.
+
+**Continua da 2.12.0:** ferramentas novas
+(`confirm_termination` e as duas de retirada de saldo de férias, em `alteracao_cadastral`)
+exigem **Refresh do conector e conversa nova**, só quando ela for usar uma delas ou conceder
+`confirmar_rescisao` por `preparar_autorizacao` (a capacidade entrou no enum do schema); o resto não exige.
+**Endereço novo:** desde 27/11/2026 o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
 503); o conector de conta de pessoa precisa ser recadastrado nele.
-
-**Continua da 2.11.0**, sem Refresh: concessões, catálogo de rubricas v2 e
-`adoption_effects` do onboarding.
-
-**Continua da 2.10.1:** simulação de rescisão sem caso de origem.
-
-**Continua da 2.10.0**, se o Refresh falta: **Refresh e conversa
-nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`); 13º
-`transcricao_cadastral_sem_efeito_no_13`; folha `formula.divisor_sob_calendario`.
-
-**Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas) e folha
-(`restart_case` em revisão, `folha_divisor_mes`, fórmulas do mapa).
-
-**Continua da 2.9.8:** rescisão, 13º, arredondamento do centavo, consignado e afastamento pago. **Refresh do conector só para a
-ferramenta nominal** `rectify_case_admission_date`; sem ele a retificação sai por
-`receive_case_data` com `request.schema_version =
-"loki.case-admission-date-rectification/1"`. Folha com pessoa que confirma 2 ou
-mais contratos de consignado no mês (`-worker-credit-allocation-v1`) ou com mês de
-afastamento derivado (`-employer-leave-v1`) fica desatualizada: `restart_case` e
-novo cálculo. Campos opcionais novos do crédito e do mapa: argumentos dict livres.
-
-**Continua da 2.9.7** (`folha_mensal`, `reajuste_salarial`): worker sem concessão
-por empresa; `diferenca_*` com `retroactive_actions`.
-
-**Continua da 2.9.6**: recalcular, conferir e pedir novo
-aceite das folhas não entregues calculadas antes da `folha-v33`
-(`folha_mensal`); preparar de novo a revisão que recusar
-`pacote_mudou_desde_a_leitura` (`prepare_case_review`).
-
-**Continua da 2.8.0**, se o Refresh ainda não foi feito: restauração de
-matrícula (`restoration_declaration`), adoção da matrícula eSocial (usa os mesmos
-campos), troca de código Domínio e revogação de desligamento do onboarding
-(`preview_onboarding_termination_revocation`, `revoke_onboarding_termination`)
-exigem Refresh e conversa nova (`alteracao_cadastral`); peça o Refresh só quando
-ela for usar um desses fluxos (antes dele a revogação funciona por
-`receive_case_data(case_id="@connector")`).
 
 ## Reaproveitar respostas e causas persistidas
 
@@ -478,6 +445,10 @@ podem exigir conciliação própria. Nos demais
 estados a recusa é `restart_requires_adjustable_state`: não há reinício por
 esse caminho; não cancele nem recrie o caso para contorná-la.
 
+**Sufixos do motor.** Folha com pessoa que confirma 2 ou mais contratos de consignado
+no mês (`-worker-credit-allocation-v1`) ou com mês de afastamento derivado
+(`-employer-leave-v1`) fica desatualizada: `restart_case` e novo cálculo.
+
 Depois de `restart_case`, quando a resposta servida apresentar, `get_case`
 continua listando as fontes da harness (`harness_sources`) e os anexos nativos
 já registrados (`documentos`): eles são insumo do caso e seguem válidos na
@@ -515,6 +486,21 @@ incremental: exige repor dados/qualificações financeiras e nova revisão.
 Prévia não aplica; seleção antiga, valores e aceite não migram por presunção.
 Sem esse bloco/rota, preserve a pendência; plugin novo não publica a PR240.
 
+**Recibo do restart com `replace_payroll_population`.** Em
+`population_correction`, o recibo traz `population_count` e `population_hash`
+(`canonical_hash(population)`), não a lista. `added`, `removed`, `rebound` e
+`preview_id` continuam. A prévia (`preview_payroll_population_correction`)
+continua devolvendo a `population` completa com `funcionario_id` e também
+`population_hash`, com o mesmo valor do recibo. Compare os dois para confirmar
+que a população aplicada é a da prévia.
+
+**Recurso ocupado.** `payroll_population_dependencies_busy` traz
+`retryable: true`, `dependency` (`empresa` ou `funcionarios`) e
+`next_action: "get_case"`, sem identificadores: outra operação usava esses
+registros e nada foi gravado. Releia o caso (`get_case`) e repita o mesmo
+pedido, com o mesmo `request_ref`, depois de alguns instantes. Se o snapshot
+tiver mudado, gere uma prévia nova.
+
 Cancelamento usa `cancellation` do contrato. Quando anunciado,
 `loki.case-cancellation/1` pode seguir em `receive_case_data`, com
 `expected_snapshot=correction_snapshot` e `human_message` específico.
@@ -545,7 +531,6 @@ as pendências `diferenca_*` por matrícula vão à DP e nunca viram zero;
 `diferenca_rescisao_complementar_pendente` não impede a aprovação, mas exige
 a decisão da DP sobre cada matrícula no aceite das ressalvas. Não informe a
 diferença à mão em `dados_folha` (`retroactive_difference_informed`).
-
 
 ## Identificar rubricas nas perguntas ao DP
 
@@ -630,7 +615,6 @@ Replay não repete perguntas ou menções. O relato completo e as evidências fi
 no Loki/MCP. Preserve propostas/decisões anteriores: aviso de correção realmente
 publicada e confirmação da solução continuam sujeitos aos gates próprios.
 
-
 A mensagem tem um objetivo: uma pergunta específica ou um próximo passo claro,
 com quem precisa agir e sobre o quê. Prefira duas ou três frases curtas, palavras
 comuns e alvo de até60palavras. Contexto, ressalva e pendência indispensáveis ficam
@@ -647,7 +631,6 @@ o Slack mostra um resumo; consulte a íntegra e o histórico por
 resposta não reduz o relato estruturado enviado ao Loki nem a apresentação de
 pacote, diff, testes, revisão, riscos e ressalvas necessária à decisão humana.
 
-
 Consulte `meu_acesso` (ou `get_operator_context`), `list_workflows`, `get_dp_capabilities` e `get_process_contract` para o processo autorizado. Obtenha o schema e a seção atuais; envie o conteúdo da seção em `data` por `receive_case_data`, com `field_sources` opcional, `request_ref` estável e `expected_snapshot` igual ao `input_snapshot` corrente de `get_case`. Dinheiro usa centavos inteiros; ausências, conflitos e totais dependentes permanecem pendentes.
 
 Leitura de originais e comparação são externas ao Loki. Após receber os dados, siga as operações declaradas no contrato; use `run_prepared_case_workflow` quando oferecido. Gere e revise documentos somente quando previstos; `document_outputs=[]` permite retorno por recibo persistido, sem PDF artificial. Releia o registro pelo contrato vigente antes de afirmar aplicação. Versões internas preservam auditoria. A empresa de teste usa o mesmo fluxo e os mesmos gates. Disponibilidade de uma ferramenta não comprova cálculo validado, aprovação, envio, pagamento ou transmissão.
@@ -662,7 +645,7 @@ Para histórico, confira identidade empresa/pessoa/episódio, competência, cobe
 
 Para provisões, consulte o contrato de `folha_mensal` ou `fechamento`; quando a operação estiver disponível use `calculate_provisions` sobre o caso autorizado. Bases e médias, dias/avos, abertura, ajustes, baixas e encargos precisam de fontes qualificadas e vigentes. Mensuração acumulada difere de constituição mensal. Confira abertura + constituição + ajustes - baixas = fechamento e a soma por pessoa/empresa; política de encargos ausente não significa zero. JSON, CSV e PDF, quando produzidos, conservam pendências e hashes.
 
-Apresente pacote e ressalvas para decisão humana explícita pelos canais autorizados. Entrega padrão ao solicitante usa acesso autenticado e recibo próprio; conferência ou geração não significa entrega. Retry conserva pacote, revisão, hash e referência de entrega sem recalcular ou duplicar. Drive permanece opção futura explícita.
+Apresente pacote e ressalvas para decisão humana explícita pelos canais autorizados. Entrega padrão ao solicitante usa acesso autenticado e recibo próprio; conferência ou geração não significa entrega. Retry conserva pacote, revisão, hash e referência de entrega sem recalcular ou duplicar. Drive permanece opção futura explícita. Prepare de novo (`prepare_case_review`) a revisão que recusar `pacote_mudou_desde_a_leitura`.
 
 Em falha técnica inesperada ou melhoria, use `registrar_problema` conforme a skill de suporte e a autorização vigente. Preserve UUID, recibo e thread; não envie dados de RH ou documentos. Pendência prevista não vira erro automaticamente; falha do suporte não cria relato recursivo. Orientação de processo e correção de software preservam seus próprios gates e exigem confirmação sustentada antes de declarar solução.
 
@@ -704,7 +687,6 @@ Projeção, adiantamento ou efeito planejado não demonstram pagamento real.
 Ausência de qualificação mantém pendência e valores dependentes desconhecidos,
 sem completar zero. Consulte `get_process_contract` e os schemas atuais do
 servidor antes de montar o pedido; esta orientação não substitui a validação.
-
 
 Sem pacote ou documento previsto, retorne o recibo persistido da operação e
 releia o registro pelo HTTPS; não chame checks de pacote ou entrega documental
@@ -802,7 +784,6 @@ com `truncar_centavos`, `valor_dia_arredondado`, fórmula além de
 linha de salário, a cota do salário-família do mês de admissão e as fórmulas
 `salario_horario`, `salario_minimo_proporcional` e
 `base_composta_razao_quantidades`. Pode exigir Refresh do conector.
-
 
 # Dataprev mensal na folha
 

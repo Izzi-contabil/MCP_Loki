@@ -806,3 +806,35 @@ a data de desligamento de `dados_rescisao`, se vier no pedido de criação; sem 
 (America/Sao_Paulo). Sem vínculo conhecido (mesma empresa, CPF e admissão), sem
 categoria declarada ou com erro de leitura, o caso segue. Detalhe e declaração da
 categoria: `folha_mensal` e `alteracao_cadastral`.
+
+## Reinício em lote autorizado por correção (rotina, 2.14.0)
+
+Vale quando a proprietária repassar `authorization_id` (`rst-` e 32 hex) e o
+`expected_snapshot` de cada caso, após uma correção `CL-N`. A rotina (`consultar` e
+`operar_casos` em `rescisao`; `atualizar_por_insumo_do_cliente` nem é exigida nem basta)
+reinicia **uma vez cada caso listado**, em `aguardando_revisao`, de forma simples, com o
+payload preservado (sem `replace_process_inputs`): `receive_case_data(case_id,
+request={schema_version: "loki.case-restart-authorized/1", authorization_id, case_id,
+expected_snapshot, human_message})`, com `case_id` igual ao argumento, `expected_snapshot`
+igual ao repassado e `human_message` que nomeia o `CL-N`. O recibo traz
+`requires_case_data`: `true` em caso legado (reenvie os dados pelo `receive_case_data`
+comum) e `false` em `structured-v1`. Depois, siga o fluxo normal
+(`run_prepared_case_workflow`); o pacote novo exige nova revisão e novo aceite humanos.
+Repetir o mesmo pedido devolve o recibo com `replayed: true`: releia `get_case`; em
+`em_preparacao`, o reinício desta autorização valeu e o fluxo normal segue; se o caso já
+voltou à revisão, não há segundo reinício: pare e avise a proprietária (autorização nova;
+o item consumido não bloqueia). Entre a autorização e a execução, `prepare_case_review` pela primeira vez, `record_package_checks` e decisão registrada no caso gravam evento e invalidam o item: a execução devolve `case_snapshot_changed`; pare e avise a proprietária, sem mandar o snapshot atual (dá `correction_restart_snapshot_mismatch`). Ler caso, dossiê e documentos não invalida.
+Não rode a rotina de correção durante uma janela de publicação do executor anterior: o
+reinício muda o censo de eventos e a publicação recusa.
+
+**Recusa** (`BLOCKED` com `code`; nada é consumido e o item segue aberto; não repita em
+laço). Corrija sozinha só `correction_restart_snapshot_mismatch` (reenvie o snapshot do
+recibo da concessão, não o atual do caso; se vier `replayed: true`, é o caso acima) e `correction_restart_message_requires_code` (a
+mensagem nomeia o `CL-N`); nos limites diários (`correction_restart_authorization_daily_limit`
+e `correction_restart_account_daily_limit`), espere o dia seguinte; `BUSY`
+(`authorization_change_busy`): repita a mesma chamada. Em qualquer outro `code`
+(`correction_restart_*`, `case_snapshot_changed`, `restart_requires_effect_reconciliation`,
+`case_simulation_refused`, `lifecycle_authorization_revoked`) ou no erro de ferramenta
+`caso_inexistente_ou_nao_autorizado` (sem escopo no caso), pare e avise a proprietária,
+pela Caixa, com o código: a autorização aberta bloqueia uma nova do mesmo caso, e ela decide
+entre revogar e autorizar de novo ou deixar o caso fora (o item fica aberto até vencer).

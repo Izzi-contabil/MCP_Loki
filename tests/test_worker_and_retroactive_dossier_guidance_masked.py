@@ -20,12 +20,9 @@ GUIDE = OPERATOR / "references/REAJUSTE_SALARIAL.md"
 DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
 SECTION_297 = "## 2.9.7: worker sem concessão por empresa e pendências do reajuste no dossiê"
 
-NOTICE = (
-    "**Continua da 2.9.7**",
-    "worker sem concessão por empresa",
-    "`retroactive_actions`",
-    "`diferenca_*`",
-)
+# 2.14.0: o aviso "Continua da 2.9.7" foi aposentado; o worker mora em `geral` ("Worker de
+# folha") e as pendências `diferenca_*` em `folha_mensal` e `reajuste_salarial`.
+NOTICE = ()
 STALE_NOTICE = (
     "## O que mudou nesta versão (2.9.6)",
     "A 2.9.5 e a 2.9.6 chegam juntas",
@@ -131,13 +128,12 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
 def test_general_notice_keeps_the_297_items_as_continuation() -> None:
     guide = text("geral")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
-    assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
-    assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
-        "**Continua da 2.9.7**"
-    )
-    assert notice.index("**Continua da 2.9.7**") < notice.index("**Continua da 2.9.6**")
-    assert notice.index("**Continua da 2.9.6**") < notice.index("**Continua da 2.8.0**")
+    for retired in ("2.9.7", "2.9.6", "2.8.0"):
+        assert f"**Continua da {retired}" not in notice, retired
+    assert_all(guide, ("**Worker de folha.** O worker não precisa de concessão por empresa",))
+    assert_all(text("folha_mensal"), ("`retroactive_actions`", "`diferenca_*`"))
+    assert_all(text("reajuste_salarial"), ("`retroactive_actions`",))
 
 
 def test_worker_needs_no_company_grant_and_routines_keep_theirs() -> None:
@@ -151,7 +147,7 @@ def test_worker_needs_no_company_grant_and_routines_keep_theirs() -> None:
         (
             "0. **Worker de folha sem concessão por empresa.**",
             "`worker_service_not_authorized`",
-            "repita o mesmo enqueue com o mesmo `request_ref`",
+            "o mesmo `request_ref` serve depois",
         ),
     )
     for guide in (general, payroll):

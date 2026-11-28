@@ -1587,3 +1587,37 @@ resposta servida mostrar o sinal.
   de quem tem categoria que não é de empregado no cadastro, é recusado com
   `categoria_sem_regime_clt` (`codigo` na criação). Vale só na criação, na competência do
   próprio processo (no 13º, o `ano`, que vale como dezembro, ou uma data completa).
+
+## 2.14.0: reinício em lote por correção
+
+Texto completo em `aprovacoes` (proprietária) e em `folha_mensal`, `admissao` e
+`rescisao` (rotina) de `loki_obter_instrucoes`. **Não há ferramenta nova nem capacidade
+nova.** O backend já está publicado. O schema de `preparar_autorizacao` ganhou a variante
+`restart_batch`: **Refresh do conector e conversa nova** só na conta de quem autoriza, além
+de atualizar o plugin; a rotina não precisa de Refresh (o envelope viaja em
+`receive_case_data`). O `tools/list` mudou só nesse ponto.
+
+- **Concessão (proprietária).** `preparar_autorizacao` com `operation = "restart_batch"`,
+  `correction_code` `CL-N`, `correction_kind` `loki` (com candidato aprovado e publicado) ou
+  `harness`, `company_id` e 1 a 100 `case_ids` em `aguardando_revisao` de admissão,
+  rescisão ou folha mensal; `ttl_hours` de 1 a 72 e `daily_limit` de 1 a 200. A prévia
+  vale 15 minutos. `aplicar_autorizacao` exige a mensagem da proprietária nomeando o
+  `CL-N` (`restart_batch_message_requires_code`) e recusa mensagem vazia ou com mais de
+  4000 caracteres (`confirmacao_humana_obrigatoria`). Recusa por caso:
+  `restart_batch_refused` com `refusals[].code` (inclusive `case_snapshot_changed` no apply).
+  Repasse à rotina, pela Caixa, o `authorization_id` e o `expected_snapshot` de cada caso.
+- **Revogação.** Mesma variante com `action: "revoke"` e `authorization_id`; não confere a
+  revisão da rotina, e `account_id` tem de ser a rotina da autorização
+  (`restart_authorization_not_found`). Fecha todos os itens abertos.
+- **Reautorizar.** Caso cuja autorização segue aberta (não revogada, não vencida, item não
+  consumido) só recebe nova concessão depois que a proprietária revoga a autorização
+  inteira: sem isso, `case_already_authorized`. Autorização revogada ou vencida e item
+  consumido não bloqueiam.
+- **Execução (rotina).** `receive_case_data` com `loki.case-restart-authorized/1`
+  (`authorization_id`, `case_id`, `expected_snapshot`, `human_message` com o `CL-N`), só com
+  `consultar` e `operar_casos`; pessoa não usa o envelope (`correction_restart_requires_routine`).
+  Toda recusa (`BLOCKED` com `code`) deixa o item sem consumir. A rotina resolve sozinha
+  `correction_restart_snapshot_mismatch` (reenviar o snapshot do recibo) e
+  `correction_restart_message_requires_code` (nomear o `CL-N`), e espera o dia seguinte nos
+  limites diários; nos demais códigos, para e avisa a proprietária, sem laço. Não rode a
+  rotina durante uma janela de publicação do executor anterior.

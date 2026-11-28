@@ -122,9 +122,9 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.39"
-    assert metadata["instructions_version"] == "2.13.0"
-    assert metadata["mcp_contract_version"] == "2.13.0"
+    assert metadata["provider_version"] == "0.4.40"
+    assert metadata["instructions_version"] == "2.14.0"
+    assert metadata["mcp_contract_version"] == "2.14.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -145,6 +145,7 @@ def test_versions_follow_the_additive_contract_patch() -> None:
         "2.11.0",
         "2.12.0",
         "2.13.0",
+        "2.14.0",
     ):
         assert provider.check_version(version, version)["compatible"] is True
     guide = provider.get("folha_mensal")
@@ -164,7 +165,21 @@ def test_every_domain_stays_under_the_file_limit() -> None:
 
 def test_payroll_domain_carries_queue_and_dossier_guidance() -> None:
     guide = text("folha_mensal")
-    assert_all(guide, (*QUEUE, *QUEUE_DOMAIN, *DIAGNOSTIC, *DIAGNOSTIC_DOMAIN))
+    # 2.14.0: os recibos do restart com `replace_payroll_population` e o recurso ocupado
+    # foram para `geral`, ao lado da correção da população da folha (abriu espaço na folha).
+    moved = (
+        "`population_hash`",
+        "`payroll_population_dependencies_busy`",
+        "`population_count`",
+        "`retryable: true`",
+    )
+    in_payroll = tuple(
+        item
+        for item in (*QUEUE, *QUEUE_DOMAIN, *DIAGNOSTIC, *DIAGNOSTIC_DOMAIN)
+        if item not in moved
+    )
+    assert_all(guide, in_payroll)
+    assert_all(text("geral"), moved)
 
 
 def test_general_points_to_payroll_and_explains_registration() -> None:

@@ -19,21 +19,22 @@ SECTION_298 = "## 2.9.8: rescisão, 13º, correções auditadas e arredondamento
 LIMIT = 65536
 
 NOTICE = (
-    "## O que mudou nesta versão (2.13.0)",
+    "## O que mudou nesta versão (2.14.0)",
     "O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o "
     "sinal indicado; sem o sinal, siga a orientação anterior do mesmo domínio.",
     "atualizar o plugin instalado",
-    "**Continua da 2.10.1:**",
-    "**Continua da 2.10.0**",
-    "`atualizar_por_insumo_do_cliente`",
-    "**Continua da 2.9.9**",
-    "`folha_divisor_mes`",
-    "**Refresh do conector só para a ferramenta nominal**",
-    "`rectify_case_admission_date`",
-    "`receive_case_data` com `request.schema_version =",
-    "loki.case-admission-date-rectification/1",
-    "**Continua da 2.9.8:**",
-    "**Continua da 2.9.7**",
+)
+# 2.14.0: os avisos "Continua da" anteriores à 2.12.0 foram aposentados (sem objeto depois do
+# recadastro dos conectores). Onde moram agora as regras que eles apontavam:
+RETIRED_CONTINUATIONS = (
+    "2.11.0",
+    "2.10.1",
+    "2.10.0",
+    "2.9.9",
+    "2.9.8",
+    "2.9.7",
+    "2.9.6",
+    "2.8.0",
 )
 STALE_NOTICE = (
     "## O que mudou nesta versão (2.9.9)",
@@ -174,10 +175,10 @@ def assert_none(guide: str, stale: tuple[str, ...]) -> None:
 def test_versions_follow_the_additive_contract_patch() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.39"
-    assert metadata["instructions_version"] == "2.13.0"
-    assert metadata["mcp_contract_version"] == "2.13.0"
-    assert metadata["recommended_plugin_version"] == "2.13.0"
+    assert metadata["provider_version"] == "0.4.40"
+    assert metadata["instructions_version"] == "2.14.0"
+    assert metadata["mcp_contract_version"] == "2.14.0"
+    assert metadata["recommended_plugin_version"] == "2.14.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -190,9 +191,10 @@ def test_versions_follow_the_additive_contract_patch() -> None:
         "2.11.0",
         "2.12.0",
         "2.13.0",
+        "2.14.0",
     ):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.11.0", "2.13.1")["compatible"] is False
+    assert provider.check_version("2.11.0", "2.14.1")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
@@ -200,9 +202,9 @@ def test_versions_follow_the_additive_contract_patch() -> None:
     ]
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.13.0", path.name
-        assert data["updated_at"] == "2026-11-27", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.13.0", path.name
+        assert data["version"] == "2.14.0", path.name
+        assert data["updated_at"] == "2026-11-28", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.14.0", path.name
 
 
 def test_every_domain_stays_within_the_size_limit() -> None:
@@ -214,23 +216,32 @@ def test_every_domain_stays_within_the_size_limit() -> None:
 
 def test_general_notice_is_conditional_and_limits_the_refresh_to_the_named_tool() -> None:
     guide = text("geral")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.13.0)")
+    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.14.0)")
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(notice, NOTICE)
     assert_none(notice, STALE_NOTICE)
-    assert notice.index("**Exige ação da operadora (2.13.0):**") < notice.index(
+    assert notice.index("**Exige ação da operadora (2.14.0):**") < notice.index(
         "**Vale quando o Loki for publicado:**"
     )
     assert notice.index("**Vale quando o Loki for publicado:**") < notice.index(
-        "**Continua da 2.11.0**"
+        "**Continua da 2.13.0:**"
     )
-    assert notice.index("**Continua da 2.11.0**") < notice.index("**Continua da 2.10.1:**")
-    assert notice.index("**Continua da 2.10.1:**") < notice.index("**Continua da 2.10.0**")
-    assert notice.index("**Continua da 2.10.0**") < notice.index("**Continua da 2.9.9**")
-    assert notice.index("**Continua da 2.9.9**") < notice.index("**Continua da 2.9.8:**")
-    assert notice.index("**Continua da 2.9.8:**") < notice.index("**Continua da 2.9.7**")
-    assert notice.index("**Continua da 2.9.7**") < notice.index("**Continua da 2.9.6**")
-    assert notice.index("**Continua da 2.9.6**") < notice.index("**Continua da 2.8.0**")
+    for retired in RETIRED_CONTINUATIONS:
+        assert f"**Continua da {retired}" not in notice, retired
+    body = flat(guide)
+    # 2.9.8: Refresh só da ferramenta nominal e retificação por `receive_case_data`.
+    admission = flat(text("admissao"))
+    assert "`rectify_case_admission_date(case_id, request)` exige o Refresh" in admission
+    assert "loki.case-admission-date-rectification/1" in admission
+    # 2.9.8: sufixos do motor (consignado e afastamento) mudaram de aviso para `geral`.
+    assert "`-worker-credit-allocation-v1`" in body
+    assert "`-employer-leave-v1`" in body
+    # 2.10.0: capacidade da rotina e divisor da folha seguem nos domínios.
+    assert "**Capacidade `atualizar_por_insumo_do_cliente` (2.10.0).**" in body
+    assert "`folha_divisor_mes`" in flat(text("folha_mensal"))
+    # 2.9.6: recusa do pacote pede nova preparação da revisão.
+    assert "Prepare de novo (`prepare_case_review`) a revisão que recusar" in body
+    assert "`pacote_mudou_desde_a_leitura`" in body
 
 
 def test_rescission_carries_notice_days_partial_notice_and_effective_days() -> None:
@@ -367,7 +378,9 @@ def test_consignado_allocation_and_employer_leave_are_carried() -> None:
             "Não lance a rubrica marcada",
         ),
     )
+    # 2.14.0: a regra do aviso da 2.9.8 mora agora em `geral` ("Sufixos do motor"); "dict
+    # livre" (aviso de que não havia Refresh para os campos opcionais) foi aposentado.
     assert_all(
         text("geral"),
-        ("`-worker-credit-allocation-v1`", "`restart_case`", "dict livre"),
+        ("`-worker-credit-allocation-v1`", "`-employer-leave-v1`", "`restart_case`"),
     )

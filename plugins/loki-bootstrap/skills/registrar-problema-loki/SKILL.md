@@ -536,3 +536,17 @@ Na 2.13.0 não são defeito, quando a resposta servida mostrar o sinal:
 `categoria_sem_regime_clt` na criação de caso (e como `reason` da simulação de
 rescisão). Declare ou corrija a categoria pela alteração cadastral ou pelo onboarding,
 com a data de efeito do início da pessoa naquela categoria.
+Na 2.14.0 não são defeito, quando a resposta servida mostrar o sinal, as recusas do
+reinício em lote por correção: na autorização, `restart_batch_refused` (com `refusals[]`),
+`restart_batch_message_requires_code`, `confirmacao_humana_obrigatoria` e
+`versao_desatualizada_ou_alteracao_expirada`; na execução, `correction_restart_*`,
+`case_snapshot_changed` e `restart_requires_effect_reconciliation`. A conduta depende do
+código: `correction_restart_snapshot_mismatch` (reenviar o snapshot do recibo da
+concessão), `correction_restart_message_requires_code` (nomear o `CL-N`) e os limites
+diários (esperar o dia seguinte) a rotina resolve; `*_revoked` e `*_expired` pedem
+autorização nova; `case_snapshot_changed`, `correction_restart_candidate_not_published` e
+`correction_restart_grantor_not_owner` pedem que a proprietária revogue a autorização
+inteira e autorize de novo os casos que ainda valem; caso com efeito
+(`restart_requires_effect_reconciliation`) ou simulação sai do reinício em lote. Autorização
+nova sem revogar a aberta é recusada com `case_already_authorized`. A conta que recebe
+`caso_inexistente_ou_nao_autorizado` ao executar não tem escopo no caso.

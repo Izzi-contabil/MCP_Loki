@@ -26,8 +26,9 @@ REFRESH_FLOWS = (
 )
 PAYROLL = (
     "## Janela de publicação e a fila de folha",
-    "**Na janela que publica esta versão**",
-    "**A partir das janelas seguintes**, não é mais preciso esvaziar a fila",
+    # 2.14.0: a frase sobre "a janela que publica esta versão" (a primeira com a re-fixação
+    # de jobs) era história e saiu; a regra vigente é a de não esvaziar a fila.
+    "**Não é preciso esvaziar a fila.**",
     "`case_job_build_repinned`",
     "`job_build_changed`",
     "`job_fingerprint_snapshot_changed`",
@@ -132,10 +133,10 @@ def assert_all(guide: str, required: tuple[str, ...]) -> None:
 def test_versions_follow_the_new_contract_minor() -> None:
     provider = InstructionsProvider()
     metadata = provider.metadata()
-    assert metadata["provider_version"] == "0.4.39"
-    assert metadata["instructions_version"] == "2.13.0"
-    assert metadata["mcp_contract_version"] == "2.13.0"
-    assert metadata["recommended_plugin_version"] == "2.13.0"
+    assert metadata["provider_version"] == "0.4.40"
+    assert metadata["instructions_version"] == "2.14.0"
+    assert metadata["mcp_contract_version"] == "2.14.0"
+    assert metadata["recommended_plugin_version"] == "2.14.0"
     assert metadata["minimum_plugin_version"] == "2.0.0"
     for version in (
         "2.0.0",
@@ -156,9 +157,10 @@ def test_versions_follow_the_new_contract_minor() -> None:
         "2.11.0",
         "2.12.0",
         "2.13.0",
+        "2.14.0",
     ):
         assert provider.check_version(version, version)["compatible"] is True
-    assert provider.check_version("2.11.0", "2.13.1")["compatible"] is False
+    assert provider.check_version("2.11.0", "2.14.1")["compatible"] is False
     release = json.loads(RELEASE.read_text(encoding="utf-8"))
     assert release["changes"]["compatible_tools"] == [
         "loki_obter_instrucoes",
@@ -166,8 +168,8 @@ def test_versions_follow_the_new_contract_minor() -> None:
     ]
     for path in DOMAINS.glob("*.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
-        assert data["version"] == "2.13.0", path.name
-        assert data["compatibility"]["mcp_contract_version"] == "2.13.0", path.name
+        assert data["version"] == "2.14.0", path.name
+        assert data["compatibility"]["mcp_contract_version"] == "2.14.0", path.name
     for path in DOMAINS.glob("*.md"):
         assert len(path.read_bytes()) <= 65536, path.name
 
@@ -178,12 +180,18 @@ def test_general_keeps_the_28_refresh_reminder() -> None:
     notice = guide[: guide.index("## Reaproveitar respostas e causas persistidas")]
     assert_all(
         notice,
+        ("**Exige ação da operadora (2.14.0):**",),
+    )
+    assert "**Continua da 2.8.0**" not in notice
+    # 2.14.0: o aviso da 2.8.0 foi aposentado; as mesmas ferramentas e o transporte sem Refresh
+    # moram em `alteracao_cadastral` (restauração, troca de código, revogação).
+    assert_all(
+        text("alteracao_cadastral"),
         (
-            "**Continua da 2.8.0**",
             "`restoration_declaration`",
-            "`preview_onboarding_termination_revocation`",
-            "`revoke_onboarding_termination`",
-            'receive_case_data(case_id="@connector")',
+            "`preview_onboarding_termination_revocation(onboarding_id",
+            "`revoke_onboarding_termination(onboarding_id",
+            'receive_case_data(case_id="@connector"',
         ),
     )
 

@@ -1,23 +1,26 @@
 """Entrega das orientações da 2.13.0 (categoria eSocial na folha e no cadastro, por alteração
 cadastral e por onboarding, e recusa de caso de quem não é empregado)."""
 
-import hashlib
-import json
+import re
 from pathlib import Path
-
-from mcp_loki_updates import InstructionsProvider
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins/loki-bootstrap"
 OPERATOR = PLUGIN / "skills/operar-loki"
 PROBLEMS = PLUGIN / "skills/registrar-problema-loki/SKILL.md"
 DOMAINS = ROOT / "src/mcp_loki_updates/data/domains"
-RELEASE = ROOT / "src/mcp_loki_updates/data/release.json"
 LIMIT = 65536
 PROCESSES = ("admissao", "rescisao", "ferias", "decimo_terceiro")
-# O reinício em lote por correção fica fora desta versão: nenhum texto o menciona. Os
-# marcadores são montados aqui para que a busca por eles no repositório não os encontre.
+# O reinício em lote por correção é da 2.14.0: nenhum texto da categoria (2.13.0) o menciona.
+# Os marcadores são montados aqui para que a busca por eles no repositório não os encontre.
 RESTART = ("restart" + "_batch", "correction" + "_restart", "case-restart" + "-authorized")
+
+
+def section_of(guide: str, title: str) -> str:
+    """A seção `title` até o próximo `## `: onde a categoria vive, sem o texto da 2.14.0."""
+    start = guide.index(title)
+    found = re.search(r"\s## ", guide[start + len(title) :])
+    return guide[start:] if found is None else guide[start : start + len(title) + found.start()]
 
 
 def flat(value: str) -> str:
@@ -33,15 +36,15 @@ def assert_all(body: str, markers: tuple[str, ...]) -> None:
         assert flat(marker) in body, marker
 
 
-def test_general_notice_leads_with_the_2130_no_refresh_and_keeps_the_2120_one() -> None:
+def test_general_notice_keeps_the_2130_no_refresh_line_and_the_2120_one() -> None:
     guide = (DOMAINS / "geral.md").read_text(encoding="utf-8")
-    assert guide.index("\n## ") + 1 == guide.index("## O que mudou nesta versão (2.13.0)")
+    assert "## O que mudou nesta versão (2.13.0)" not in guide
     assert "## O que mudou nesta versão (2.12.0)" not in guide
     notice = flat(guide[: guide.index("## Reaproveitar respostas e causas persistidas")])
     assert_all(
         notice,
         (
-            "**Exige ação da operadora (2.13.0):** atualizar o plugin instalado",
+            "**Continua da 2.13.0:**",
             "sem ferramenta nova nem Refresh do conector",
             "a categoria eSocial (seções 2.13.0) já está publicada",
             "Releia `get_process_contract` de `alteracao_cadastral` antes de declará-la",
@@ -49,24 +52,24 @@ def test_general_notice_leads_with_the_2130_no_refresh_and_keeps_the_2120_one() 
             "**Refresh do conector e conversa nova**",
         ),
     )
-    assert not any(token in notice for token in RESTART)
     order = (
-        "**Exige ação da operadora (2.13.0):**",
+        "**Exige ação da operadora (2.14.0):**",
         "**Vale quando o Loki for publicado:**",
+        "**Continua da 2.13.0:**",
         "**Continua da 2.12.0:**",
-        "**Continua da 2.11.0**",
-        "**Continua da 2.10.1:**",
-        "**Continua da 2.10.0**",
-        "**Continua da 2.9.9**",
-        "**Continua da 2.9.8:**",
     )
     positions = [notice.index(marker) for marker in order]
     assert positions == sorted(positions)
-    # A regra do consignado não pode ficar mais larga do que a 2.12.0 a escreveu.
+    # 2.14.0: avisos anteriores à 2.12.0 aposentados (sem objeto depois do recadastro dos
+    # conectores no endereço novo); cada regra que eles apontavam segue no domínio próprio.
+    for retired in ("2.11.0", "2.10.1", "2.10.0", "2.9.9", "2.9.8", "2.9.7", "2.9.6", "2.8.0"):
+        assert f"**Continua da {retired}" not in notice, retired
+    # A regra do consignado não pode ficar mais larga do que a 2.12.0 a escreveu; saiu do
+    # aviso e mora agora em `geral` (sufixos do motor), com o mesmo alcance.
     assert (
         "Folha com pessoa que confirma 2 ou mais contratos de consignado no mês "
         "(`-worker-credit-allocation-v1`)"
-    ) in notice
+    ) in flat(guide)
     assert len((DOMAINS / "geral.md").read_bytes()) <= LIMIT
 
 
@@ -102,9 +105,12 @@ def test_payroll_carries_non_employee_category_and_the_cadastre_rules() -> None:
     assert "nenhum cadastro guarda a categoria" not in guide
     assert "não recebem o fato de categoria hoje" not in guide
     assert "**Declare em TODA competência.**" in guide
-    # O reinício em lote continua inexistente nesta versão: nada o menciona.
-    assert "Só a proprietária abre a exceção" not in guide
-    assert not any(token in guide for token in RESTART)
+    # A seção da categoria não menciona o reinício em lote (que é da 2.14.0).
+    categoria = section_of(
+        guide, "## Categoria eSocial que não é de empregado e categoria no cadastro (2.13.0)"
+    )
+    assert not any(token in categoria for token in RESTART)
+    assert not any(token in section_of(guide, "## Vínculo intermitente") for token in RESTART)
 
 
 def test_cadastre_domain_says_how_to_declare_the_category_by_both_paths() -> None:
@@ -183,7 +189,12 @@ def test_other_processes_refuse_the_case_with_the_exact_code_and_its_limits() ->
         )
         # A divergência do texto servido acabou: a alteração cadastral aceita o campo.
         assert "o campo vai pelo onboarding" not in guide
-        assert not any(token in guide for token in RESTART)
+        categoria = section_of(
+            guide, "## Categoria eSocial que não é de empregado no cadastro (2.13.0)"
+        )
+        assert not any(token in categoria for token in RESTART)
+        if domain in {"ferias", "decimo_terceiro"}:
+            assert not any(token in guide for token in RESTART)
     thirteenth = read("decimo_terceiro")
     assert_all(
         thirteenth,
@@ -209,8 +220,7 @@ def test_plugin_mirrors_the_release() -> None:
     workflows = flat((OPERATOR / "references/WORKFLOWS.md").read_text(encoding="utf-8"))
     skill = flat((OPERATOR / "SKILL.md").read_text(encoding="utf-8"))
     problems = flat(PROBLEMS.read_text(encoding="utf-8"))
-    capacities = flat((OPERATOR / "references/CAPACIDADES_DP.md").read_text(encoding="utf-8"))
-    section = workflows[workflows.index("## 2.13.0:") :]
+    section = section_of(workflows, "## 2.13.0:")
     assert_all(
         section,
         (
@@ -237,34 +247,17 @@ def test_plugin_mirrors_the_release() -> None:
         "categoria_sem_regime_clt",
     ):
         assert code in problems, code
-    for text in (workflows, skill, problems, capacities):
-        assert not any(token in text for token in RESTART)
+    assert not any(token in section for token in RESTART)
+    # Os parágrafos 2.13.0 de operar-loki e de registrar-problema-loki não citam o reinício.
+    skill_2130 = skill[skill.index("Na 2.13.0") : skill.index("Na 2.14.0")]
+    problems_2130 = problems[problems.index("Na 2.13.0") : problems.index("Na 2.14.0")]
+    assert not any(token in skill_2130 + problems_2130 for token in RESTART)
 
 
-def test_release_versions_hashes_and_current_history() -> None:
-    metadata = InstructionsProvider().metadata()
-    assert metadata["provider_version"] == "0.4.39"
-    assert metadata["instructions_version"] == "2.13.0"
-    assert metadata["mcp_contract_version"] == "2.13.0"
-    assert metadata["recommended_plugin_version"] == "2.13.0"
-    assert metadata["minimum_plugin_version"] == "2.0.0"
-    manifest = json.loads((PLUGIN / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
-    assert manifest["version"] == "2.13.0"
-    release = json.loads(RELEASE.read_text(encoding="utf-8"))
-    for category, prefix in (
-        ("backend", "Contrato2.13.0"),
-        ("instructions", "Instruções2.13.0"),
-        ("plugin", "Plugin2.13.0"),
-    ):
-        entries = release["changes"][category]
-        assert len(entries) == 2 and "docs/MCP_UPDATES.md" in entries[0], category
-        assert entries[1].startswith(prefix), category
-    backend = release["changes"]["backend"][1]
-    assert "PRs #441 e #444" in backend and "sem Refresh do conector" in backend
-    assert not any(token in json.dumps(release["changes"]) for token in RESTART)
-    assert "bootstrap" not in release["changes"]["plugin"][1]
-    for name, hashes in release["domains"].items():
-        for suffix, key in (("md", "content_sha256"), ("json", "metadata_sha256")):
-            content = (DOMAINS / f"{name}.{suffix}").read_bytes()
-            assert hashlib.sha256(content).hexdigest() == hashes[key], (name, suffix)
-        assert len((DOMAINS / f"{name}.md").read_bytes()) <= LIMIT, name
+def test_release_history_keeps_the_2130_entry() -> None:
+    updates = (ROOT / "docs/MCP_UPDATES.md").read_text(encoding="utf-8")
+    entry = section_of(updates, "## Candidata 0.4.39 / contrato, instruções e plugin 2.13.0")
+    assert "PR #441" in entry and "PR #444" in entry and "nem Refresh do conector" in entry
+    assert not any(token in entry for token in RESTART)
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "**provider 0.4.39 / contrato, instruções e plugin 2.13.0**" in readme
