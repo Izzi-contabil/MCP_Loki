@@ -1,8 +1,17 @@
-# MCP Loki — contrato operacional 2.12.0
-Candidata **provider 0.4.38 / contrato, instruções e plugin 2.12.0**, 27/11/2026:
+# MCP Loki — contrato operacional 2.13.0
+Candidata **provider 0.4.39 / contrato, instruções e plugin 2.13.0**, 27/11/2026:
+categoria eSocial na folha mensal e no cadastro do vínculo (sócio e estagiário não
+são calculados; `categoria_esocial_nao_suportada`, `categoria_esocial_divergente` e
+`categoria_sem_regime_clt` na criação de 13º, férias, rescisão, admissão e simulação
+de rescisão). Não há ferramenta nova nem Refresh do conector: o `tools/list` não mudou,
+e o `get_process_contract("alteracao_cadastral")` ganhou a propriedade opcional
+`categoria_esocial` em `changes`; basta atualizar o plugin. O backend da categoria já
+está em `main` do Project-loki (PRs #441 e #444).
+
+Edição anterior **provider 0.4.38 / contrato, instruções e plugin 2.12.0**, 27/11/2026:
 o Loki mudou de servidor e passa a responder em `https://loki.izzicontabil.com.br/mcp`
 (o endereço anterior devolve 503); o conector de conta de pessoa precisa ser
-recadastrado no endereço novo. O contrato muda: há **ferramentas novas**
+recadastrado no endereço novo. O contrato mudou: há **ferramentas novas**
 (`confirm_termination`, `preview_onboarding_vacation_balance_retirement` e
 `retire_onboarding_vacation_balance`) e a capacidade `confirmar_rescisao` entra no
 schema de `preparar_autorizacao`, então a conta da Ana precisa de **Refresh do conector e
@@ -275,11 +284,11 @@ Edição anterior **provider0.4.10 / contrato, instruções e plugin2.6.1**,09/1
 
 Edição anterior **provider0.4.9 / contrato, instruções e plugin2.6.0**,08/11/2026: conciliação aditivaONB, reaproveitamento de respostaDP após falha de schema, diagnóstico mensal persistido e representação explícita de afastamento no consumidor rescisório. O conteúdo depende da publicação do backend e dos contratos servidos; não comprova instalação ou aceite na rotina daAna.
 
-O pacote `mcp-loki-updates` **0.4.38** entrega instruções **2.12.0** ao backend.
+O pacote `mcp-loki-updates` **0.4.39** entrega instruções **2.13.0** ao backend.
 A entrega padrão é autenticada ao solicitante; Drive Izzi permanece opção futura
 explícita, sem configuração ou ativação nesta entrega.
 
-O plugin nativo `loki-orientacoes@loki-equipe` **2.12.0** contém bootstrap, leitores
+O plugin nativo `loki-orientacoes@loki-equipe` **2.13.0** contém bootstrap, leitores
 externos e guias de operação. A distribuição não é um servidor independente.
 OAuth, autorização, cálculos, banco, documentos e decisões pertencem ao Loki.
 

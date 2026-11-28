@@ -666,3 +666,83 @@ novamente S-2200 para provar a mesma identidade já conciliada por fontes sufici
 Referências diferentes podem preparar drafts distintos. O contrato declara
 `allowed_multiple_preparations=true` e `execution_deduplication_verified=false`;
 idempotência do pedido não é deduplicação fiscal para uma futura execução.
+
+## Categoria eSocial do vínculo no cadastro (2.13.0)
+
+Vale quando `get_company_onboarding_contract` listar `categoria_esocial` em
+`employee_parameters.data_schema` (texto de 3 dígitos, padrão `^[0-9]{3}$`, opcional) ou
+`get_process_contract("alteracao_cadastral")` trouxer a mesma propriedade em
+`dados_alteracao_cadastral.changes`. É parâmetro individual do vínculo e a fonte da
+categoria para a folha e para os demais processos. Nenhuma ferramenta é nova e o
+`tools/list` não mudou: não há Refresh do conector; o que mudou foi o contrato do
+processo, que você lê pelo `get_process_contract`.
+
+**Data de efeito: o início da pessoa naquela categoria** (em geral a admissão ou o
+início do vínculo na categoria), **nunca a data do envio**. A folha, o 13º e a
+rescisão leem a categoria vigente na competência do próprio processo: com a data de
+hoje, os meses anteriores não a enxergam, a folha calcula a pessoa como empregada e o
+13º ou a rescisão são criados. O campo da data é `effective_on` na alteração cadastral e no fato do onboarding
+(`data_efeito` no perfil documental).
+
+- **Caminho 1: alteração cadastral** (declarar ou corrigir a categoria de uma pessoa
+  já cadastrada). O caso `alteracao_cadastral` aceita `categoria_esocial` em
+  `dados_alteracao_cadastral.changes`, ao lado dos outros campos do perfil.
+  1. `create_case` do processo `alteracao_cadastral` com `funcionario` (`cpf`,
+     `data_admissao`) e uma `occurrence_ref` **nova a cada declaração ou correção**:
+     reaproveitar a referência recusa o efeito com `effect_reference_already_applied`.
+  2. `get_documentary_profile(case_id, funcionario_id, as_of)` com `as_of` igual à
+     `effective_on`; guarde o `profile_hash`.
+  3. `receive_case_data` com `dados_alteracao_cadastral = {effective_on, competencia,
+     expected_profile_hash, changes: {"categoria_esocial": "723"}}`: `competencia` é o
+     mês da `effective_on` (`AAAA-MM`), `expected_profile_hash` é o `profile_hash` do
+     passo 2, e `request_ref` e `expected_snapshot` (o `input_snapshot` de `get_case`)
+     seguem a regra de sempre. Valor sem 3 dígitos é recusado na recepção. A primeira
+     declaração de um vínculo sem categoria vem com a pendência informativa
+     `prior_value_missing` no recibo factual, porque não há valor anterior a comparar;
+     não é defeito.
+  4. Receber os dados não aplica nada. Só o efeito grava a categoria no vínculo:
+     `apply_case_effects` com `request_ref`, `expected_snapshot` igual ao
+     `correction_snapshot` de `get_case`, `human_message` e `message_reference` da
+     operadora e `authorize_operational_effects: true`. Exige conta de pessoa com
+     `decidir_chat` e `corrigir_dados` (a rotina não aplica); `identity_source` é
+     opcional. Recusas: `effect_snapshot_changed` (releia o caso),
+     `employee_profile_changed` (o perfil mudou desde o passo 2: refaça-o) e
+     `employee_change_authority_required`. Releia o registro antes de afirmar aplicação.
+  Corrigir (de `723` para `101`, por exemplo) é uma nova alteração cadastral, com
+  `occurrence_ref` nova e a **mesma `effective_on` da declaração errada** (ou a data em que
+  a nova categoria passa a valer, se for depois). Nunca uma data anterior à da declaração
+  errada, porque vale a de data de efeito maior (na mesma data, a gravada depois), nem
+  anterior à admissão (`effect_before_admission`).
+- **Caminho 2: fato `parametrizacao` do onboarding** (carga de vínculos). Como os outros
+  parâmetros individuais (pensão, VT, adicionais), no lote de onboarding da empresa:
+  1. `create_company_onboarding(cliente_slug, empresa_cnpj, reference)` (ou reutilize o
+     lote da empresa).
+  2. `submit_company_onboarding_chunk(onboarding_id, declaration)` com
+     `schema_version: "loki.company-onboarding/1"`, `reference` (do chunk, obrigatório),
+     `reuse_registered_company: true` e,
+     em `workers`, um trabalhador que continua levando `reference`, `cpf`, `nome` e
+     `data_admissao` (e `existing_employee_id` quando o vínculo já existe), com o fato
+     `facts: [{reference, kind: "parametrizacao", effective_on, data:
+     {"categoria_esocial": "723"}}]`; a fonte é opcional e, omitida, vira declaração
+     nativa do pedido.
+  3. `validate_company_onboarding(onboarding_id)` e, depois de mostrar a linha à
+     operadora, `apply_company_onboarding(onboarding_id, validation_hash)`, com as
+     capacidades de onboarding de sempre.
+  Em caso `aberto` ou `em_preparacao`, também o perfil documental
+  (`import_documentary_profile`, com `parametrizacao.categoria_esocial`, `data_efeito`
+  (o mesmo início da pessoa na categoria), `competencia` igual ao mês de `data_efeito`,
+  `field_sources` com a fonte do campo e `identity_source`, documentos anexados ao caso). Corrigir categoria
+  já aplicada pelo onboarding segue a regra de `replaces_fact_id` acima.
+- **Recomendação.** Declare a categoria no cadastro de todo sócio, estagiário e
+  intermitente **antes** de rodar folha.
+- **Efeito na folha** (detalhe em `folha_mensal`): folha sem o campo usa a do cadastro;
+  folha e cadastro diferentes dão `categoria_esocial_divergente` e a pessoa não é
+  calculada até alinhar; o cadastro vence a memória do caso. Categoria que não começa
+  com `1` não é calculada (`categoria_esocial_nao_suportada`): o Loki ainda não calcula
+  pró-labore nem bolsa de estágio.
+- **Exigência de cadastro.** Para quem não é empregado o cadastro exige só os
+  dependentes de IRRF; sindicato, escala, VT e salário-família não são cobrados.
+  Empregado ou campo ausente: a exigência de sempre.
+- **Outros processos.** Criar caso de 13º, férias, rescisão ou admissão, e simulação de
+  rescisão, de quem tem categoria que não é de empregado é recusado com
+  `categoria_sem_regime_clt` (seção própria em cada domínio).

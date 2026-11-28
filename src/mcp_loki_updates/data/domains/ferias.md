@@ -677,3 +677,20 @@ recalcula nada sozinho.
 A descrição da ressalva do repouso mudou: agora diz que a véspera de feriado
 tem regra e declaração próprias. Revisões já preparadas com essa ressalva
 precisam ser preparadas de novo; casos aprovados ou entregues não mudam.
+
+## Categoria eSocial que não é de empregado no cadastro (2.13.0)
+
+Vale quando a recusa abaixo aparecer. Quem tem, no cadastro do vínculo,
+`categoria_esocial` que não começa com `1` (723 sócio com pró-labore, 901
+estagiário) não passa por férias no Loki: `create_case` recusa antes de gravar, com
+`codigo` `categoria_sem_regime_clt` (`mode` `HUMAN_DECISION`; `proxima_acao`: conduzir
+o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la por
+alteração cadastral, com a data de efeito do início da pessoa naquela categoria
+(domínio `alteracao_cadastral`), e recriar o caso). O caso não é criado. Limites: vale só na
+criação (categoria cadastrada depois de o caso existir não o derruba, e o reenvio de
+caso já existente não a relê); `vinculo_nao_clt_*`, de `contrato.dados.categoria_vinculo`,
+vem antes. A categoria é lida na competência do próprio processo: a do caso; senão
+a data de início do gozo de `dados_ferias`, se vier no pedido de criação; sem nada disso, o mês corrente
+(America/Sao_Paulo). Sem vínculo conhecido (mesma empresa, CPF e admissão), sem
+categoria declarada ou com erro de leitura, o caso segue. Detalhe e declaração da
+categoria: `folha_mensal` e `alteracao_cadastral`.

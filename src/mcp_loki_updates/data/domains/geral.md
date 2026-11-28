@@ -1,21 +1,24 @@
 # Operação do Loki
 
-## O que mudou nesta versão (2.12.0)
+## O que mudou nesta versão (2.13.0)
 
 Atualizações devem ser imperceptíveis para a operadora: mostre este aviso uma vez,
 curto. O Loki pode chegar em partes: cada item vale quando a resposta servida mostrar o sinal indicado; sem o sinal,
 siga a orientação anterior do mesmo domínio.
 
-**Exige ação da operadora (2.12.0):** atualizar o plugin instalado e, por haver
+**Exige ação da operadora (2.13.0):** atualizar o plugin instalado; sem ferramenta
+nova nem Refresh do conector.
+
+**Vale quando o Loki for publicado:** nada pendente; a categoria eSocial (seções 2.13.0)
+já está publicada. Releia `get_process_contract` de `alteracao_cadastral` antes de declará-la.
+
+**Continua da 2.12.0:** por haver
 ferramentas novas (`confirm_termination` e as duas de
 retirada de saldo de férias, em `alteracao_cadastral`), fazer **Refresh do conector e conversa
 nova**, só quando ela for usar uma delas ou conceder `confirmar_rescisao` por
-`preparar_autorizacao` (a capacidade entrou no enum do schema); o resto não exige.
-**Endereço novo:** desde 27/11/2026 o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
+`preparar_autorizacao`; o resto não exige.
+**Endereço novo:** o Loki responde em `https://loki.izzicontabil.com.br/mcp` (o anterior devolve
 503); o conector de conta de pessoa precisa ser recadastrado nele.
-
-**Vale quando o Loki for publicado:** seções 2.12.0 de `admissao`, `ferias`,
-`folha_mensal`, `rescisao`, `aprovacoes` e `alteracao_cadastral`.
 
 **Continua da 2.11.0**, sem Refresh: concessões, catálogo de rubricas v2 e
 `adoption_effects` do onboarding.
@@ -29,8 +32,7 @@ nova** (`preparar_autorizacao` ganhou `atualizar_por_insumo_do_cliente`); 13º
 **Continua da 2.9.9**: 13º (cobertura, 1ª parcela paga, horas) e folha
 (`restart_case` em revisão, `folha_divisor_mes`, fórmulas do mapa).
 
-**Continua da 2.9.8:** rescisão (aviso, saldo pelos dias efetivos), 13º (janela da média,
-fatos opacos), arredondamento do centavo, consignado e afastamento pago. **Refresh do conector só para a
+**Continua da 2.9.8:** rescisão, 13º, arredondamento do centavo, consignado e afastamento pago. **Refresh do conector só para a
 ferramenta nominal** `rectify_case_admission_date`; sem ele a retificação sai por
 `receive_case_data` com `request.schema_version =
 "loki.case-admission-date-rectification/1"`. Folha com pessoa que confirma 2 ou

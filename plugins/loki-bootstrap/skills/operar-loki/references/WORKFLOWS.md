@@ -1546,3 +1546,44 @@ a #438, em main `d0bcdd3d`).
   linha utilizável no mapa deixa a folha da pessoa parcial com
   `credito_trabalhador_mapeamento_pendente`; acrescente ao mapa uma linha de desconto
   com a mesma `rubrica_loki`, código do Domínio e INSS, FGTS e IRRF `sem_efeito`.
+
+## 2.13.0: categoria eSocial
+
+Texto completo em `folha_mensal`, `alteracao_cadastral`, `admissao`, `rescisao`,
+`ferias` e `decimo_terceiro` de `loki_obter_instrucoes`. **Não há ferramenta nova e não há
+Refresh do conector**: o `tools/list` não mudou; o `get_process_contract("alteracao_cadastral")`
+ganhou a propriedade opcional `categoria_esocial` em `changes`. Basta atualizar o plugin.
+O backend da categoria já está em `main` (PRs #441 e #444); cada item vale quando a
+resposta servida mostrar o sinal.
+
+- **Categoria que não é de empregado na folha (`folha_mensal`).** `categoria_esocial`
+  de 3 dígitos em `dados_folha.funcionarios[*]`; categoria que não começa com `1`
+  (723 sócio com pró-labore, 901 estagiário) deixa a pessoa em `nao_calculados`
+  (`vinculo_nao_suportado`, código `categoria_esocial_nao_suportada`, próxima ação
+  `retirar_categoria_nao_clt_da_folha_mensal`) e os demais calculam. O Loki ainda não
+  calcula pró-labore nem bolsa de estágio. O `111` segue com o código próprio. A
+  pendência aberta lembra a categoria dentro do caso da competência.
+- **Categoria no cadastro (`alteracao_cadastral`).** Folha sem o campo usa a do cadastro;
+  folha e cadastro diferentes dão `categoria_esocial_divergente` e a pessoa não é
+  calculada até alinhar; o cadastro vence a memória do caso; quem não é empregado exige
+  só dependentes de IRRF. **Declare a categoria de todo sócio, estagiário e intermitente
+  antes de rodar folha**, por um de dois caminhos:
+  - **Alteração cadastral:** `create_case` de `alteracao_cadastral`,
+    `get_documentary_profile` (guarde o `profile_hash`), `receive_case_data` com
+    `dados_alteracao_cadastral = {effective_on, competencia, expected_profile_hash,
+    changes: {"categoria_esocial": "723"}}` e `apply_case_effects` com a intenção humana.
+    A primeira declaração vem com a pendência informativa `prior_value_missing`.
+  - **Onboarding (carga):** `create_company_onboarding`,
+    `submit_company_onboarding_chunk` (trabalhador com `reference`, `cpf`, `nome`,
+    `data_admissao` e o fato `parametrizacao` com `effective_on` e
+    `data: {"categoria_esocial": "723"}`), `validate_company_onboarding` e
+    `apply_company_onboarding`.
+  - **Data de efeito (`effective_on`):** o início da pessoa naquela categoria (em geral
+    a admissão ou o início do vínculo na categoria), nunca a data do envio. A folha, o
+    13º e a rescisão leem a categoria vigente na competência do processo: com a data de
+    hoje, os meses anteriores não a enxergam e a pessoa é calculada como empregada.
+- **Outros processos.** `create_case` de 13º, férias, rescisão ou admissão, e a simulação
+  de rescisão (`code` `case_simulation_refused`, `reason` `categoria_sem_regime_clt`),
+  de quem tem categoria que não é de empregado no cadastro, é recusado com
+  `categoria_sem_regime_clt` (`codigo` na criação). Vale só na criação, na competência do
+  próprio processo (no 13º, o `ano`, que vale como dezembro, ou uma data completa).

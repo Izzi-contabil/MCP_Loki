@@ -790,3 +790,19 @@ nem schema mudou; só o conteúdo das respostas encolheu. O catálogo vem em
   que você leu: quando ele mudar em `get_dp_capabilities`, releia o contrato antes de
   montar o envio. Não espere schema, seções nem catálogo dentro de `get_dp_capabilities`.
 
+## Categoria eSocial que não é de empregado no cadastro (2.13.0)
+
+Vale quando a recusa abaixo aparecer. Quem tem, no cadastro do vínculo,
+`categoria_esocial` que não começa com `1` (723 sócio com pró-labore, 901
+estagiário) não passa por rescisão no Loki: `create_case` recusa antes de gravar, com
+`codigo` `categoria_sem_regime_clt` (`mode` `HUMAN_DECISION`; `proxima_acao`: conduzir
+o processo fora do Loki ou, se a categoria cadastrada estiver errada, corrigi-la por
+alteração cadastral, com a data de efeito do início da pessoa naquela categoria
+(domínio `alteracao_cadastral`), e recriar o caso). O caso não é criado. A simulação de rescisão recusa pela mesma regra, com `code` `case_simulation_refused` e `reason` `categoria_sem_regime_clt`, lendo a competência do caso de origem ou, na simulação sem caso de origem, a do desligamento hipotético. Limites: vale só na
+criação (categoria cadastrada depois de o caso existir não o derruba, e o reenvio de
+caso já existente não a relê); `vinculo_nao_clt_*`, de `contrato.dados.categoria_vinculo`,
+vem antes. A categoria é lida na competência do próprio processo: a do caso; senão
+a data de desligamento de `dados_rescisao`, se vier no pedido de criação; sem nada disso, o mês corrente
+(America/Sao_Paulo). Sem vínculo conhecido (mesma empresa, CPF e admissão), sem
+categoria declarada ou com erro de leitura, o caso segue. Detalhe e declaração da
+categoria: `folha_mensal` e `alteracao_cadastral`.

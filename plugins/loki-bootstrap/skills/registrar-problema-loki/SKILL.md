@@ -531,3 +531,8 @@ aviso `texto_contrato_prazo_determinado_nao_homologado`; `preparation_identity_c
 no reinício de férias pela rotina; as recusas `onboarding_vacation_balance_*` da retirada
 de saldo de férias. Endereço antigo do Loki devolvendo 503 é a mudança de servidor, não
 falha: recadastre o conector no endereço novo.
+Na 2.13.0 não são defeito, quando a resposta servida mostrar o sinal:
+`categoria_esocial_nao_suportada` e `categoria_esocial_divergente` na folha mensal, e
+`categoria_sem_regime_clt` na criação de caso (e como `reason` da simulação de
+rescisão). Declare ou corrija a categoria pela alteração cadastral ou pelo onboarding,
+com a data de efeito do início da pessoa naquela categoria.
